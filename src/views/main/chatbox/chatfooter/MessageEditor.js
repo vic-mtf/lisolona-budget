@@ -15,6 +15,7 @@ export default function MessageEditor ({
     setDisabledHeader,
     textFieldRef,
     showToolbar,
+    handleSendMessage
 }) {
     const [formats, setFormats] = useState([]);
     const [listMode, setListMode] = useState(null);
@@ -116,6 +117,7 @@ export default function MessageEditor ({
                 }}
                 onFocus={() => setDisabledHeader(false)}
                 textFieldRef={textFieldRef}
+                handleSendMessage={handleSendMessage}
             />
         </MuiBox>
     )

@@ -5,7 +5,7 @@ export default function NavigationRight () {
     return (
        <Navigation
           anchor="right"  
-          open={false}
+          open={true}
        />
     );
 }

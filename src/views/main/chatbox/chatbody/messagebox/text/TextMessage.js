@@ -1,6 +1,7 @@
-import { Box as MuiBox, createTheme, ThemeProvider, useTheme } from '@mui/material';
+import { Box as MuiBox } from '@mui/material';
 import Typography from '../../../../../../components/Typography';
-import { useBorderRadius } from '../MessageBox';
+// import { useBorderRadius } from '../MessageBox';
+import parse from 'html-react-parser';
 
 export default function TextMessage ({content, bgcolor, borderRadius}) {
 
@@ -10,14 +11,14 @@ export default function TextMessage ({content, bgcolor, borderRadius}) {
                 <Typography
                     bgcolor={bgcolor}
                     width="auto"
-                    p={3}
-                    py={1.5}
-                    //display="inline-block"
+                    px={3}
                     borderRadius={borderRadius}
                     overflow="hidden"
                     display="flex"
                 >
-                {content}
+                <div>
+                    {parse(content)}
+                </div>
                 </Typography>
             </MuiBox>
         </MuiBox>

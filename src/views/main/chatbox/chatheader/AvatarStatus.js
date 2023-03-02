@@ -1,38 +1,81 @@
-import { Badge, createTheme, Stack, ThemeProvider, Toolbar } from '@mui/material';
+import { 
+    createTheme, 
+    Stack, 
+    ThemeProvider, 
+    Box as MuiBox,
+    AvatarGroup,
+} from '@mui/material';
 import React from 'react';
 import Avatar from '../../../../components/Avatar';
 import Typography from '../../../../components/Typography';
-import CustomBadge, { greenColor } from '../../../../components/CustomBadge'; 
+import appConfig from '../../../../configs/app-config.json';
+import { useSelector } from 'react-redux';
+import timeHumanReadable from '../../../../utils/timeHumanReadable';
 
 export default function AvatarStatus ({online}) {
+    const { name, type, members, updatedAt, user } = useSelector(store => {
+        const { chatId, contacts, conversations } = store.data;
+        const contact = conversations?.find(({id}) => id === chatId) || 
+        contacts?.find(({id}) => id === chatId);
+        return {
+            ...contact, 
+            members: contact?.origin?.members?.map(
+                ({_id: user, role}) => store.user?.id !== user?._id && ({
+                    ...user,
+                    role,
+                    id: user?._id,
+                    origin: user,
+                    name: `${user?.fname || ''} ${ user?.lname || ''} ${user?.mname || ''}`.trim(),
+                })
+            )?.filter(name => name),
+        };
+    } );
+
     return (
             <React.Fragment>
-                {/* <CustomBadge
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    variant="dot"
-                    overlap="circular"
-                    online={online}
-                >
-                    <Avatar
-                        sx={{
-                            border: theme => `2px solid ${theme.palette.background.paper}`,
-                            bgcolor: 'primary.main'
-                        }}
-                    />
-                </CustomBadge> */}
                 <ThemeProvider theme={createTheme({palette: {mode: 'dark'}})}>
-                    <Stack spacing={-.5} flexGrow={1}>
+                    <Stack 
+                        spacing={-.2} 
+                        flexGrow={1} 
+                        textOverflow="ellipsis" 
+                        overflow="hidden"
+                    >
                         <Typography
                             color="text.primary" 
                             variant="body1" 
-                            children="Mongolo fataki" 
+                            children={name}
                             fontWeight="bold"
+                            textOverflow="ellipsis"
+                            overflow="hidden"
+                            noWrap
                         />
+                        {type !== 'room' ?
                         <Typography
                             color="text.secondary" 
                             variant="caption" 
-                            children="Actif maintenant" 
+                            textOverflow="ellipsis"
+                            overflow="hidden"
+                            noWrap
+                            children={
+                                updatedAt ? 
+                                'Dernière interaction, ' 
+                                + timeHumanReadable(updatedAt, true)
+                                .toLocaleLowerCase() : 
+                                'Commencer nouvelle discussion'
+                            } 
+                        /> :
+                        <Typography
+                            color="text.secondary" 
+                            variant="caption" 
+                            noWrap
+                            textOverflow="ellipsis"
+                            children={`Membres: ${
+                                members?.map((member, index, members) => 
+                                `${member?.name}`
+                                ).join(', ')
+                            }`} 
                         />
+                        }
                     </Stack>
                 </ThemeProvider>
             </React.Fragment>

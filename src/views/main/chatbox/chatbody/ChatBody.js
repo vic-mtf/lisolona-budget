@@ -1,76 +1,67 @@
 import {
-    Box as MuiBox
+    Box as MuiBox, Chip
 } from '@mui/material';
-import Box from '../../../../components/Box';
+import { useEffect, useRef } from 'react';
 import scrollBarSx from '../../../../utils/scrollBarSx';
-import MessageBox from './messagebox/MessageBox';
 import MessageGroupBox from './messagebox/MessageGroupBox';
-import messages from './messagebox/messages';
-
-
-const groupMss = messages.reduce((accumulator, currentValue) => {
-       const newAccumulator = [];
-       const classGroup = `group_${Math.round(Math.random() * 3)}`;
-       const callback = ({classGroup: _classGroup}) => _classGroup === classGroup;
-       const index = accumulator?.findIndex && accumulator?.findIndex(callback);
-      console.log(index);
-       if(index === undefined)  {
-            const messages = [
-                {
-                    classGroup: `group_${Math.round(Math.random() * 3)}`,
-                    children: [accumulator],
-                },
-                {
-                    classGroup,
-                    children: [currentValue],
-                }
-            ];
-            if(messages[0].classGroup === messages[1].children)
-                newAccumulator.push({
-                    classGroup,
-                    children :[
-                        ...messages[0].children, 
-                        ...messages[1].children
-                    ],
-                });
-            else newAccumulator?.push(...messages);
-
-       } else {
-            if(index === -1) {
-                const message = {
-                    classGroup,
-                    children: [currentValue],
-                };
-                newAccumulator?.push(...accumulator, message);
-            } else {
-                newAccumulator?.push(...accumulator);
-                newAccumulator?.find(callback)?.children?.push(currentValue)
-            }
-       }
-    return newAccumulator;
-    
-    });
-
+import useMessage from '../../../../utils/useMessage';
+import { useSelector } from 'react-redux';
+import { useSocket } from '../../../../utils/SocketIOProvider';
 
 export default function ChatBody () {
-   
+    const rootElRef = useRef();
+    const groupMessages = useMessage();
+    const chatId = useSelector(store => store.data?.chatId);
+    const socket = useSocket();
+    useEffect(() => {
+        const root = rootElRef.current;
+        if(chatId)
+            root.scrollTop = root?.scrollHeight;
+    }, [rootElRef.current, chatId]);
+
+    useEffect(() => {
+        const handleScrool = () => {
+            const root = rootElRef.current;
+            const top = root?.scrollHeight;
+            root?.scrollTo({
+                top,
+                behavior: "smooth",
+              });
+        };
+        socket?.on('direct-chat', handleScrool);
+
+        return () => {
+            socket?.off('direct-chat', handleScrool)
+        };
+    },[rootElRef.current, socket]);
+
     return (
         <MuiBox
             overflow="auto"
             px={5}
             flexGrow={1}
             height={0}
+            ref={rootElRef}
             sx={{
                 ...scrollBarSx,
             }}
         >
             <MuiBox my={2}>
+            <MuiBox 
+                my={1} 
+                justifyContent="center" 
+                display="flex"
+            >
+                <Chip
+                    label={`Commencez une nouvelle conversation`}
+                />
+            </MuiBox>
                 {
-                    groupMss.map(({classGroup, children}, index) => (
+                    groupMessages.map(({date, messages, fullTime}) => (
                         <MessageGroupBox
-                            date={classGroup}
-                            messages={children}
-                            key={index}
+                            date={date}
+                            messages={messages}
+                            key={fullTime}
                         />
                     ))
                 }

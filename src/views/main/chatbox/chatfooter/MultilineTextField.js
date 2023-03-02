@@ -14,7 +14,8 @@ export default function MultilineTextField ({
     onBlur,
     onFocus,
     showPlaceHolder,
-    textFieldRef
+    textFieldRef,
+    handleSendMessage
 }) {
     const keyBindingFn = event => {
         const checkEnterKey = event.code?.toUpperCase() === 'ENTER' && 
@@ -22,12 +23,7 @@ export default function MultilineTextField ({
 
         if(checkEnterKey) {
             if(getDraftText(editorState))
-                handleChange(
-                    EditorState.moveFocusToEnd(
-                        EditorState.createEmpty()
-                    )
-                );
-
+                handleSendMessage();
             return event.preventDefault();
         }
         return getDefaultKeyBinding(event);

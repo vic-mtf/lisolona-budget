@@ -2,9 +2,14 @@ import { Drawer, Toolbar, Box as MuiBox, useTheme, useMediaQuery } from "@mui/ma
 
 export const drawerWidth = 400;
 
-export default function Navigation ({children, toolBarProps, color, disableTooBar, ...otherProps}) {
+export default function Navigation ({
+    children, 
+    toolBarProps, 
+    color, 
+    disableTooBar, 
+    ...otherProps
+}) {
     const theme = useTheme();
-    //const matches = useMediaQuery(theme);
     
     return (
         <MuiBox
@@ -13,7 +18,7 @@ export default function Navigation ({children, toolBarProps, color, disableTooBa
             sx={{
                 width: drawerWidth,
                 flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { 
+                '& .MuiDrawer-paper': { 
                     width: drawerWidth, 
                     boxSizing: 'border-box',
                     background: color || 'background.paper'

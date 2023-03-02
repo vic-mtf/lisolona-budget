@@ -49,11 +49,7 @@ export default function AttachFile() {
               arrow
               FabProps={{
                 size: 'small',
-                sx: {
-                    right: 0,
-                    p:0,
-
-                }
+                sx: { right: 0, p:0,}
               }}
             />
           ))}

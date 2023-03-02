@@ -15,7 +15,14 @@ import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import IconButton from "../../../../components/IconButton";
 import CustomBadge from "../../../../components/CustomBadge";
 
-export default function RelatedContactItem ({avatarSrc, name, email}) {
+export default function RelatedContactItem ({
+    avatarSrc, 
+    name, 
+    email, 
+    onClick,
+    action,
+    selected
+}) {
     const [contextMenu, setContextMenu] = React.useState(null);
     const [showSecondaryAction, setShowSecondaryAction] = React.useState(false);
     const handleContextMenu = event => {
@@ -23,7 +30,7 @@ export default function RelatedContactItem ({avatarSrc, name, email}) {
         const mouseX = event.clientX + 2;
         const mouseY = event.clientY - 6;
         setContextMenu(
-        contextMenu === null ? {mouseX, mouseY} : null,
+            contextMenu ? {mouseX, mouseY} : null,
         );
     };
 
@@ -31,7 +38,7 @@ export default function RelatedContactItem ({avatarSrc, name, email}) {
         <React.Fragment>
             <ListItem
                 disablePadding
-                secondaryAction={
+                secondaryAction={ action ||
                     <Stack direction="row" spacing={1}>   
                         <Zoom in={showSecondaryAction}>  
                             <Tooltip title="Lancer un appel vidéo" arrow>     
@@ -55,13 +62,15 @@ export default function RelatedContactItem ({avatarSrc, name, email}) {
                 <ListItemButton 
                     sx={{overflow: 'hidden'}}
                     onContextMenu={handleContextMenu}
+                    selected={selected}
+                    onClick={onClick}
                 >
                 <ListItemAvatar>
                     <CustomBadge
                             overlap="circular"
                             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             variant="dot"
-                            online={Math.random() > .5}
+                            online={false}
                         >
                             <Avatar
                                 src={avatarSrc}

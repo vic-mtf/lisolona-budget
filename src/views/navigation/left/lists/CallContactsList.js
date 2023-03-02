@@ -1,24 +1,35 @@
 import React from 'react';
-import { alpha, Divider, List } from '@mui/material';
+import { 
+    // alpha, 
+    // Divider, 
+    List, 
+    Stack 
+} from '@mui/material';
 import useScrollEnd from '../../../../utils/useScrollEnd';
 import Box from '../../../../components/Box';
 import useShadow from './useShadow';
-import CallContactItem from '../contacts/CallContactItem';
-import timeHumanReadable from '../../../../utils/timeHumanReadable';
+// import CallContactItem from '../contacts/CallContactItem';
+// import timeHumanReadable from '../../../../utils/timeHumanReadable';
 import scrollBarSx from '../../../../utils/scrollBarSx';
+import Typography from '../../../../components/Typography';
+import { useSelector } from 'react-redux';
+import LoadingContactItem from '../contacts/LoadingContactItem';
+import LoadingList from './LoadingList';
+import EmptyContentMessage from './EmptyContentMessage';
 
 
 export default function CallContactsList () {
     const [atEnd, scrollProps] = useScrollEnd();
     const shadow = useShadow();
+    const calls = useSelector(store => 
+        store?.data?.calls
+    );
 
     return (
         <Box 
             overflow="hidden" 
-            sx={{
-                boxShadow: atEnd ? 0 : shadow,
-                transition: "box-shadow 0.2s",
-            }}
+            boxShadow={atEnd ? 0 : shadow}
+            sx={{transition: "box-shadow 0.2s"}}
         >
             <List
                 dense
@@ -28,9 +39,23 @@ export default function CallContactsList () {
                     height: "100%",
                     width: 'auto',
                     ...scrollBarSx,
+                    '& ul': { padding: 0 },
                 }}
-            > 
-            {
+            >
+                <LoadingList 
+                    loading={calls === null} 
+                    lengthItem={9}
+                />
+                <EmptyContentMessage
+                    title="Journal d'appels vide"
+                    show={calls?.length === 0}
+                    description={`
+                        Informations relatives aux appels vidéo et audio (entrants et sortants) 
+                        de façons détaillée s'affichent dans cette section
+                        pour assurer une parfaite traçabilité des échanges.`
+                    }
+                />
+            {/* {
                 contacts.map((contact, index) => (
                     <React.Fragment key={contact._id}>
                         <CallContactItem 
@@ -48,84 +73,10 @@ export default function CallContactsList () {
                         }
                     </React.Fragment>
                 ))
-            } 
+            }  */}
+
+                
             </List>
         </Box>
     );
 }
-
-const contacts = [
-    {
-        name: 'Victor mongolo',
-        lastNotice: 'Salut mon frere je suis déjà chez toi',
-        avatarSrc: '/',
-        _id: 'hxdgshdjghhs2454',
-    },
-    {
-        name: 'Obed Ngolo',
-        lastNotice: 'Tu es à la maison ?',
-        avatarSrc: '/',
-        _id: 'fdfjhdfvhhs2454',
-    },
-    {
-        name: 'Naomi kingale',
-        lastNotice: 'Bonjour mon cher !',
-        avatarSrc: '/',
-        _id: 'fdfjhdfvhhsdfjbf544',
-    },
-    {
-        name: 'Filia Mula',
-        lastNotice: 'Ndeko omoni message ya maman ?',
-        avatarSrc: '/',
-        _id: 'fsdbshdvhsdfj545444',
-    },
-    {
-        name: 'Daniel Mputu',
-        lastNotice: 'Je suis pret pour te voir',
-        avatarSrc: '/',
-        _id: 'fdsjhdgfhgsdvhhsdfjbf565894',
-    },
-    {
-        name: 'Eliel Maboso',
-        lastNotice: `Ce soir ci je te partage un document lié à la Dantic`,
-        avatarSrc: '/',
-        _id: 'wxbvcbfsdysgevhhsd45544',
-    },
-    {
-        name: 'Victor mongolo tanzey fataki',
-        lastNotice: 'Salut mon frere je suis déjà chez toi',
-        avatarSrc: '/',
-        _id: 'hxdgdhwvdshdjghhs2454',
-    },
-    {
-        name: 'Obed Ngolo',
-        lastNotice: 'Tu es à la maison ?',
-        avatarSrc: '/',
-        _id: 'fdfjdjfbjdffvhhs2454',
-    },
-    {
-        name: 'Naomi kingale',
-        lastNotice: 'Bonjour mon cher !',
-        avatarSrc: '/',
-        _id: 'fdfjhdfjhvsdsdfjbf544',
-    },
-    {
-        name: 'Filia Mula',
-        lastNotice: 'Ndeko omoni message ya maman ?',
-        avatarSrc: '/',
-        _id: 'fsdbshjfhbhfdfj545444',
-    },
-    {
-        name: 'Daniel Mputu',
-        lastNotice: 'Je suis pret pour te voir',
-        avatarSrc: '/',
-        _id: 'fdsjhddfddvhhsdfjbf565894',
-    },
-    {
-        name: 'Eliel Maboso',
-        lastNotice: `Ce soir ci je te partage un document lié à la Dantic`,
-        avatarSrc: '/',
-        _id: 'wxbvcbfsdydffvhhsd45544',
-    },
-
-]

@@ -16,7 +16,6 @@ function App() {
   const userSave = useSelector(store => 
     store?.app?.user && decrypt(store.app?.user)
   );
-
   const dispatch = useDispatch();
   useTimer({
     expiryTimestamp: (() => {
@@ -46,7 +45,7 @@ function App() {
       }
     }
   });
-  console.log(socket)
+
   useEffect(() => {
     let timer;
     let handleAutoConnexion;
@@ -77,9 +76,7 @@ function App() {
     }
 }, [connected, dispatch]);
 
-
   return (
-    
     <BoxGradient>
         {(startApp && socket) ? 
         <RouterProvider 

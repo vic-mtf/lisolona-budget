@@ -3,17 +3,30 @@ import { Divider, Stack } from '@mui/material';
 import Box from '../../../components/Box';
 import Header from './Header';
 import ShortcutOptions  from './shortcut/ShortcutOptions';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import RelatedContactsList from './lists/RelatedContactsList';
 import ChatContactsList from './lists/ChatContactsList';
 import CallContactsList from './lists/CallContactsList';
 import NotificationList from './lists/NotificationList';
+import { useSocket } from '../../../utils/SocketIOProvider';
+import mssAudio  from '../../../assets/Eventually-Sms.mp3';
 
 export default function NavigationLeft () {
     const [navigation, setNavigation] = useState(0);
     const Panel = useCallback(({value, children}) => 
         navigation === value && children, [navigation]
     );
+    const socket = useSocket();
+
+    useEffect(() => {
+        socket.on('invitations', ({invitations}) => {
+            if(invitations?.length){
+                const audio = new Audio();
+                audio.src = mssAudio;
+                audio.autoplay = true;
+            }
+        });
+    },[socket]);
 
     return (
         <Navigation

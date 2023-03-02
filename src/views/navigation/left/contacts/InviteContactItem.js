@@ -17,11 +17,14 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import Button from "../../../../components/Button";
 import Typography from "../../../../components/Typography";
 import capStr from "../../../../utils/capStr";
+import { LoadingButton } from "@mui/lab";
+import useAxios from '../../../../utils/useAxios';
+import { useSelector } from "react-redux";
 
-export default function InviteContactItem ({avatarSrc, name, email, date}) {
+export default function InviteContactItem ({avatarSrc, name, email, date, id}) {
     const [contextMenu, setContextMenu] = useState(null);
     const [showSecondaryAction, setShowSecondaryAction] = useState(false);
-    
+  
     const handleContextMenu = event => {
         event.preventDefault();
         const mouseX = event.clientX + 2;
@@ -34,6 +37,7 @@ export default function InviteContactItem ({avatarSrc, name, email, date}) {
     return (
         <React.Fragment>
             <ListItem
+                alignItems="flex-start"
                 secondaryAction={
                     <Stack spacing={1}> 
                         <Typography
@@ -65,10 +69,15 @@ export default function InviteContactItem ({avatarSrc, name, email, date}) {
                 <ListItemText
                     primary={name}
                     secondary={
-                        <Stack spacing={1} direction="row" mt={1}>
-                            <Button variant="contained" fullWidth>Accepter</Button>
-                            <Button variant="outlined" fullWidth>Refuser</Button>
-                        </Stack>
+                        <React.Fragment>
+                            <Typography 
+                                variant="caption" 
+                                color="text.secondary"
+                            >{email}</Typography>
+                            <ButtonActions
+                                id={id}
+                            />
+                        </React.Fragment>
                     }
                     primaryTypographyProps={{
                         component: 'div', 
@@ -79,7 +88,6 @@ export default function InviteContactItem ({avatarSrc, name, email, date}) {
                     secondaryTypographyProps={{
                         component: "div",
                         noWrap: true,
-                        title: email,
                     }}
                     sx={{mr: 1}}
                 />
@@ -114,5 +122,46 @@ export default function InviteContactItem ({avatarSrc, name, email, date}) {
                 // }}
             ></Menu>
         </React.Fragment>
+    )
+}
+
+const ButtonActions = ({id: _id}) => {
+    const config = {
+        data: {_id},
+        method: 'post',
+        headers: {
+            'Authorization': `Bearer ${useSelector(store  => store.user?.token)}`
+          }
+    };
+    const [{loading: loadingAccept,}, onAccept] = useAxios(
+        { url: 'api/chat/accept', ...config },
+        { manual: true}
+    );
+    const [{loading: loadingRefuse,}, onRefuse] = useAxios(
+       {url: 'api/chat/reject', ...config}, 
+       { manual: true}
+    );
+
+    return (
+        <Stack spacing={1} direction="row" mt={1}>
+            <LoadingButton 
+                variant="contained" 
+                children="Accepter" 
+                fullWidth
+                size="small"
+                loading={loadingAccept}
+                sx={{textTransform: 'none'}}
+                onClick={onAccept}
+            />
+            <LoadingButton  
+                variant="outlined" 
+                children="Refuser" 
+                fullWidth
+                size="small"
+                sx={{textTransform: 'none'}}
+                loading={loadingRefuse}
+                onClick={onRefuse}
+           />
+        </Stack>
     )
 }

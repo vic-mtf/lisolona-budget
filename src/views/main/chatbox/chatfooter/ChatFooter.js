@@ -5,6 +5,10 @@ import {
 import ToolbarFooter from "./ToolbarFooter";
 import MessageEditor from "./MessageEditor";
 import { EditorState, convertToRaw } from "draft-js";
+import VoiceNoteEqualizer from "./voice-note-equalizer/VoiceNoteEqualizer";
+import draftToHtml from 'draftjs-to-html';
+import { useSocket } from "../../../../utils/SocketIOProvider";
+import { useSelector } from "react-redux";
 
 export default function ChatFooter () {
     const [sendable, setSendable] = useState(false);
@@ -12,6 +16,18 @@ export default function ChatFooter () {
     const [disabledHeader, setDisabledHeader] = useState(false);
     const [showToolbar, setShowToolbar] = useState(true);
     const textFieldRef = useRef();
+    const [recording, setRecording] = useState(false);
+    const { type, to } = useSelector(store => {
+        const chatId = store.data.chatId;
+        const interlocutor = store.data.conversations
+        ?.find(({id}) => id === chatId);
+        const type = interlocutor?.type;
+        return {
+            to: type === 'room' ? chatId : interlocutor?.interlocutorId,
+            type,
+        };
+    });
+    const socket = useSocket();
 
     const handleChange = event => {
         setEditorState(event);
@@ -21,6 +37,28 @@ export default function ChatFooter () {
         if(!value.length && sendable)
             setSendable(false);
     };
+
+    const handleToggleRecording = () => setRecording( 
+        recording => !recording
+    );
+
+    const handleSendMessage = () => {
+        if(getDraftText(editorState)) {
+            const rawContentState = convertToRaw(editorState.getCurrentContent());
+            const content = draftToHtml(rawContentState);
+            socket?.emit(`${type}-message`, {
+                content, to,
+                date: new Date(),
+                type: 'text',
+            });
+            handleChange(
+                EditorState.moveFocusToEnd(
+                    EditorState.createEmpty()
+                )
+            );
+        }
+    }
+
     useEffect(() => {
         textFieldRef.current?.focus();
     }, [textFieldRef])
@@ -28,15 +66,15 @@ export default function ChatFooter () {
   return (
     <MuiBox
         bgcolor="background.paper"
-        py={1}
+        p={1}
         display="flex"
         width="100%"
         alignItems="center"
         justifyContent="center"
-        sx={{
-            borderTop: theme => `1px solid ${theme.palette.divider}`
-        }}
-        
+        flexDirection="column"
+        overflow="hidden"
+        position="relative"
+        sx={{borderTop: theme => `1px solid ${theme.palette.divider}`}}
     >
         <Paper
             sx={{
@@ -44,7 +82,7 @@ export default function ChatFooter () {
                 border: (theme) => `1px solid ${theme.palette.divider}`,
                 flexWrap: 'wrap',
                 flexDirection: 'column',
-                width: '80%',
+                width: '100%',
             }}
             elevation={disabledHeader ? 0 : 2}
         >
@@ -55,13 +93,22 @@ export default function ChatFooter () {
                 setDisabledHeader={setDisabledHeader}
                 textFieldRef={textFieldRef}
                 showToolbar={showToolbar}
+                handleSendMessage={handleSendMessage}
             />
             <ToolbarFooter
                 sendable={sendable}
                 showToolbar={showToolbar}
+                handleChange={handleChange}
+                editorState={editorState}
                 toggleShowToolbar={(event, value) => setShowToolbar(value)}
+                handleToggleRecording={handleToggleRecording}
+                handleSendMessage={handleSendMessage}
             />
         </Paper>
+        {recording && 
+        <VoiceNoteEqualizer
+            handleToggleRecording={handleToggleRecording}
+        />}
     </MuiBox>
   );
 }

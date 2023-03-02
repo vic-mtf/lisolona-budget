@@ -6,8 +6,11 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import MoreOption from './moreoptions/MoreOption';
+import { useTheme } from '@emotion/react';
 
 export default function ChatHeader () {
+    const theme = useTheme();
 
     return (
             <Toolbar
@@ -31,11 +34,9 @@ export default function ChatHeader () {
                             <LocalPhoneOutlinedIcon fontSize="small"/>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Plus d'options" arrow>
-                        <IconButton sx={{mx: 1}}>
-                            <MoreVertOutlinedIcon fontSize="small"/>
-                        </IconButton>
-                    </Tooltip>
+                    <MoreOption
+                        theme={theme}
+                    />
                 </ThemeProvider>
             </Toolbar>
     );

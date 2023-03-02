@@ -1,5 +1,6 @@
 import { Badge, styled } from "@mui/material";
 import { grey } from "@mui/material/colors";
+import propTypes from 'prop-types';
 
 export const greenColor = '#44b700';
 export const greyColor = grey[500];
@@ -37,7 +38,11 @@ const CustomBadge = styled(Badge,
 }));
 
 CustomBadge.defaultProps = {
-    online: true,
+  online: true,
 }
 
+CustomBadge.propTypes = {
+  onLine: propTypes.bool,
+  active: propTypes.bool,
+}
 export default CustomBadge;

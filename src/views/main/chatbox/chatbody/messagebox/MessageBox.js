@@ -24,7 +24,7 @@ export default function MessageBox ({
     const borderRadius = useBorderRadius(1, isYourself, joinBox);
     
     return (
-        <MuiBox mt={joinBox ? .35 : 2.5}>
+        <MuiBox mt={joinBox ? .25 : 2.5}>
           <MuiBox display="flex">
             <Stack
                 direction={isYourself ? 'row-reverse' : "row" }
@@ -44,6 +44,7 @@ export default function MessageBox ({
                         sx={{
                             width: 25,
                             height: 25,
+                            border: 'none',
                         }}
                         src={avatarSrc}
                         srcSet={avatarSrc}
@@ -56,7 +57,6 @@ export default function MessageBox ({
                         <Stack 
                             direction="row" 
                             spacing={1} 
-                            //minWidth={300} 
                             display="flex" 
                             justifyContent={isYourself ? 'right' : 'left'}
                         >
@@ -64,7 +64,6 @@ export default function MessageBox ({
                             <Typography 
                                 variant="caption" 
                                 color="text.secondary"
-                                //noWrap
                             >{name},</Typography>}
                             <Typography 
                                 variant="caption" 

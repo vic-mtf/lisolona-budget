@@ -5,7 +5,7 @@ import Home from "./home/Home";
 
 
 export default function Main () {
-    const data = useSelector(store => store.data.elements);
+    const chatId = useSelector(store => store.data.chatId);
 
     return (
         <MuiBox 
@@ -16,8 +16,11 @@ export default function Main () {
             }}
         overflow="hidden"
         >
-            <ChatBox/>
-            {/* <Home/> */}
+           {chatId ?
+            <ChatBox
+                chatId={chatId}
+            /> :
+            <Home/>}
         </MuiBox>
     )
 }

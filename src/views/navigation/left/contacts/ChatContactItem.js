@@ -4,18 +4,38 @@ import {
     ListItemText,
     Menu,
     ListItem,
-    Badge
+    Badge,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React from "react";
+import React, { useRef } from "react";
+import { useSelector } from "react-redux";
 import Avatar from "../../../../components/Avatar";
+import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
 import CustomBadge from "../../../../components/CustomBadge";
 import Typography from "../../../../components/Typography";
 import timeHumanReadable from "../../../../utils/timeHumanReadable";
+import parse from 'html-react-parser';
+import { convert } from "html-to-text";
 
-export default function ChatContactItem ({avatarSrc, name, lastNotice, lastDate}) {
+export default function ChatContactItem ({
+    avatarSrc, 
+    name, 
+    lastNotice: _lastNotice, 
+    updatedAt,
+    lastDate, 
+    online,
+    type,
+    onClick,
+    ...otherPorps
+}) {
     const [contextMenu, setContextMenu] = React.useState(null);
-    
+    const selected = useSelector(
+        store => store.data?.chatId === otherPorps?.id
+    );
+    const lastNotice = convert(
+        _lastNotice, 
+        { wordwrap: 130 }
+    );
     return (
         <React.Fragment>
             <ListItem
@@ -23,6 +43,7 @@ export default function ChatContactItem ({avatarSrc, name, lastNotice, lastDate}
             >
                 <ListItemButton 
                     sx={{overflow: 'hidden'}}
+                    selected={selected}
                     onContextMenu={event => {
                         event.preventDefault();
                         const mouseX = event.clientX + 2;
@@ -31,20 +52,38 @@ export default function ChatContactItem ({avatarSrc, name, lastNotice, lastDate}
                         contextMenu === null ? {mouseX, mouseY} : null,
                         );
                     }}
+                    onClick={onClick}
                 >
                 <ListItemAvatar>
+                    {type === 'direct'&&
                     <CustomBadge 
                         overlap="circular"
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                         variant="dot"
-                        online={Math.random() > .5}
+                        online={online}
                     >
                         <Avatar
                             src={avatarSrc}
                             srcSet={avatarSrc}
                             alt={name}
+                            children={name?.charAt(0)}
                         />
-                    </CustomBadge>
+                    </CustomBadge>}
+                    {type === 'room'&&
+                    <CustomAvatarGroup>
+                        <Avatar
+                            src={avatarSrc}
+                            srcSet={avatarSrc}
+                            //alt={name}
+                            //children={name?.charAt(0)}
+                        />
+                        <Avatar
+                            src={avatarSrc}
+                            srcSet={avatarSrc}
+                            alt={name}
+                            //children={name?.charAt(0)}
+                        />
+                    </CustomAvatarGroup>}
                 </ListItemAvatar>
                 <ListItemText
                     primary={
@@ -58,9 +97,7 @@ export default function ChatContactItem ({avatarSrc, name, lastNotice, lastDate}
                             />
                             <Typography 
                                 noWrap 
-                                children={timeHumanReadable(
-                                  Date.now() - (parseInt(Math.random() * 24 * 30) * 60 *60 * 1000)
-                                )} 
+                                children={timeHumanReadable(updatedAt)} 
                                 variant="caption" 
                                 color="text.secondary"
                             />
@@ -78,7 +115,7 @@ export default function ChatContactItem ({avatarSrc, name, lastNotice, lastDate}
                                 color="text.secondary"
                             />
                             <Badge 
-                                badgeContent={parseInt(Math.random() * 1000)} 
+                                badgeContent={0} 
                                 color="primary"
                                 sx={{
                                     width: 20,

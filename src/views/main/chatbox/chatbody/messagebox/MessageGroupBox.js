@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box as MuiBox, 
     Chip, 
@@ -13,43 +13,45 @@ export default function MessageGroupBox ({date, messages}) {
         <MuiBox
             mb={10}
         >
+            
+            <Divider
+                variant="middle"
+                sx={{
+                    position: 'relative',
+                    top: '30px'
+                }}
+            >
+                    <Chip 
+                        //size="small" 
+                        label={date} 
+                        sx={{opacity: 0}} 
+                    />
+            </Divider>
             <MuiBox 
                 component={ListSubheader}
                 bgcolor="transparent"
                 mb={2}
+                justifyContent="center"
+                display="flex"
+                pt={.5}
             >
-                <Divider
-                    variant="middle"
-                >
+
                     <Chip 
-                        //size="small" 
-                        label={"12/05/2022"} 
+                        size="small" 
+                        label={date} 
                         sx={{
-                            bgcolor: 'background.paper',
-                            border: theme => `1px solid ${theme.palette.divider}`,
+                            //bgcolor: 'primary.main',
+                            //border: theme => `1px solid ${theme.palette.divider}`,
                         }} 
                     />
-                </Divider>
             </MuiBox>
             {
-                messages.map(message => {
-                    const isYourself = Math.random() > .5;
-                    const userId = isYourself ? 'aaaa_': ['aaaa_b', 'aaaa_c'][
-                        Math.round(Math.random() * 3)
-                    ];
-                    return ({
-                        ...message, 
-                        userId,
-                        isYourself
-                    });
-
-                }).map((message, index, messages) => (
+                messages?.map((message, index, messages) => (
                     <MessageBox
                         key={index} 
                         {...message}
                         hideAvatar={
-                            messages[index + 1]?.userId === message?.userId
-                            
+                            messages[index + 1]?.userId === message?.userId 
                         }
                         joinBox={
                             messages[index - 1]?.userId === message?.userId

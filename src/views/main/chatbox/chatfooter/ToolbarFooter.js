@@ -14,21 +14,40 @@ import MicOutlinedIcon from '@mui/icons-material/MicOutlined';
 import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import ViewStreamOutlinedIcon from '@mui/icons-material/ViewStreamOutlined';
 import AttachFile from './AttachFile';
+import { getDraftText } from './ChatFooter';
+import { EditorState } from 'draft-js';
+import { useSelector } from 'react-redux';
+import { useSocket } from '../../../../utils/SocketIOProvider';
+import draftToHtml from 'draftjs-to-html';
+import { convertToRaw } from 'draft-js';
 
 export default function ToolbarFooter ({
     sendable,
     showToolbar,
-    toggleShowToolbar
+    toggleShowToolbar,
+    editorState,
+    handleChange,
+    handleToggleRecording,
+    handleSendMessage
 }) {
     const theme = useTheme();
     const transitionDuration = {
         enter: theme.transitions.duration.enteringScreen,
         exit: theme.transitions.duration.leavingScreen,
     };
+    const hanldeSubmit = index => [
+        handleSendMessage, 
+        handleToggleRecording
+    ][index];
 
     return (
         <MuiBox
-            sx={{display: 'flex', flexWrap: 'wrap', p: .5, position: 'relative'}}
+            sx={{
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                p: .5, 
+                position: 'relative'
+            }}
         >
             <Stack
                 direction="row"
@@ -82,6 +101,7 @@ export default function ToolbarFooter ({
                         title={fab.title}
                         size="small"
                         disabled={fab.disabled}
+                        onClick={hanldeSubmit(index)}
                     >
                         {fab.icon}
                     </Fab>
@@ -107,7 +127,7 @@ const fabs = [
       label: 'Mic',
       title: 'Enregistrer un message',
       id: '_mic',
-      disabled: true,
+      //disabled: true,
       value: (sendable, index) => !sendable && index === 1 ,
     },
   ];
