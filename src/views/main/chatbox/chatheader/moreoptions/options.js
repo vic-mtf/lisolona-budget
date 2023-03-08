@@ -3,17 +3,31 @@ import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefault
 import store from '../../../../../redux/store';
 import { addData } from '../../../../../redux/data';
 
-const options = user => [
+const options = (contact, callback) => [
     {
         label: `Fermer la discution`,
-        icon: <DisabledByDefaultOutlinedIcon/>,
+        //icon: <DisabledByDefaultOutlinedIcon/>,
         onClick() {
             store.dispatch(addData({key: 'chatId', data: null}));
+            if(typeof callback === 'function')
+                callback();
         },
     },
     {
-        label: `Infos du ${user?.type === 'room' ? 'Lisanga' : 'contact'}`,
-        icon: <InfoOutlinedIcon/>
+        label: `Infos du ${contact?.type === 'room' ? 'Lisanga' : 'contact'}`,
+        //icon: <InfoOutlinedIcon/>,
+        onClick() {
+            const name = '_user-infos';
+            const customEvent = new CustomEvent(
+                name, {
+                    detail: {name, contact}
+                }
+            );
+            document.getElementById('root')
+            .dispatchEvent(customEvent);
+            if(typeof callback === 'function')
+                callback();
+        }
     },
 ]
 export default options;

@@ -18,12 +18,11 @@ export default function ChatFooter () {
     const textFieldRef = useRef();
     const [recording, setRecording] = useState(false);
     const { type, to } = useSelector(store => {
-        const chatId = store.data.chatId;
-        const interlocutor = store.data.conversations
-        ?.find(({id}) => id === chatId);
-        const type = interlocutor?.type;
+        const chatId = store.data?.chatId;
+        const contact = store.data.contacts?.find(({id}) => id === chatId);
+        const type = contact ? 'direct' : 'room';
         return {
-            to: type === 'room' ? chatId : interlocutor?.interlocutorId,
+            to: chatId,
             type,
         };
     });

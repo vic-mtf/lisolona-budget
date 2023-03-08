@@ -14,6 +14,9 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import IconButton from "../../../../components/IconButton";
 import CustomBadge from "../../../../components/CustomBadge";
+import highlightWord from "../../../../utils/highlightWord";
+import { useDispatch, useSelector } from "react-redux";
+import { addTeleconference } from "../../../../redux/teleconference";
 
 export default function RelatedContactItem ({
     avatarSrc, 
@@ -21,10 +24,17 @@ export default function RelatedContactItem ({
     email, 
     onClick,
     action,
-    selected
+    selected,
+    id,
 }) {
+    const {search, isCalling} = useSelector(store => {
+            const search = store.data?.search;
+            const isCalling = store?.teleconference?.isCalling;
+            return {search, isCalling};
+        });
     const [contextMenu, setContextMenu] = React.useState(null);
     const [showSecondaryAction, setShowSecondaryAction] = React.useState(false);
+    const dispatch = useDispatch();
     const handleContextMenu = event => {
         event.preventDefault();
         const mouseX = event.clientX + 2;
@@ -33,7 +43,18 @@ export default function RelatedContactItem ({
             contextMenu ? {mouseX, mouseY} : null,
         );
     };
-
+    
+    const handleCallClient = type => () => {
+        dispatch(addTeleconference({
+            key: 'data',
+            data: {
+                type,
+                isCalling: true,
+                clientId: id,
+                variant: 'outgoing'
+            }
+        }))
+    };
     return (
         <React.Fragment>
             <ListItem
@@ -41,15 +62,24 @@ export default function RelatedContactItem ({
                 secondaryAction={ action ||
                     <Stack direction="row" spacing={1}>   
                         <Zoom in={showSecondaryAction}>  
-                            <Tooltip title="Lancer un appel vidéo" arrow>     
-                                <IconButton>
+                            <Tooltip 
+                                title={isCalling ? "Un appel en cours..." : "Lancer un appel vidéo"} 
+                                arrow
+                            >     
+                                <IconButton
+                                    onClick={handleCallClient('video')}
+                                >
                                     <VideocamOutlinedIcon fontSize="small"/>
                                 </IconButton>
                             </Tooltip>   
                         </Zoom> 
                         <Zoom in={showSecondaryAction}>
-                            <Tooltip title="Lancer un appel" arrow>     
-                                <IconButton>
+                            <Tooltip title={isCalling ? "Un appel en cours..." : "Lancer un appel"} 
+                                arrow
+                            >     
+                                <IconButton
+                                     onClick={handleCallClient('audio')}
+                                >
                                     <LocalPhoneOutlinedIcon fontSize="small"/>
                                 </IconButton>
                             </Tooltip> 
@@ -80,8 +110,8 @@ export default function RelatedContactItem ({
                     </CustomBadge>
                 </ListItemAvatar>
                 <ListItemText
-                    primary={name}
-                    secondary={email}
+                    primary={highlightWord(name, search)}
+                    secondary={highlightWord(email, search)}
                     primaryTypographyProps={{
                         component: 'div', 
                         noWrap: true,

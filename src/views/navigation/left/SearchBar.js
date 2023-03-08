@@ -1,20 +1,40 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { useDispatch, useSelector } from 'react-redux';
+import { addData } from '../../../redux/data';
+import { useEffect, useState } from 'react';
 
 export default function SearchBar () {
-    return (
-        <Search sx={{mr: 1}}>
-            <SearchIconWrapper>
-              <SearchOutlinedIcon fontSize="small" />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Chercher…"
-              sx={{fontSize: 15}}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-    )
+  const initValue = useSelector(store => store.data?.search)
+  const [value, setValue] = useState(initValue);
+  const dispatch = useDispatch();
+  const onChange = event => setValue(event.target.value?.trim());
+  useEffect(() => {
+    dispatch(
+      addData({
+        key:'search', 
+        data: value,
+      })
+    );
+  },[value]);
+  
+  return (
+      <Search sx={{mr: 1}}>
+          <SearchIconWrapper>
+            <SearchOutlinedIcon fontSize="small" />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Chercher…"
+            sx={{fontSize: 15}}
+            inputProps={{ 
+              'aria-label': 'search',
+              onChange,
+              value,
+            }}
+          />
+        </Search>
+  )
 }
 
 const Search = styled('div')(({ theme }) => ({

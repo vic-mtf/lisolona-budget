@@ -16,6 +16,7 @@ import Typography from "../../../../components/Typography";
 import timeHumanReadable from "../../../../utils/timeHumanReadable";
 import parse from 'html-react-parser';
 import { convert } from "html-to-text";
+import highlightWord from "../../../../utils/highlightWord";
 
 export default function ChatContactItem ({
     avatarSrc, 
@@ -29,8 +30,12 @@ export default function ChatContactItem ({
     ...otherPorps
 }) {
     const [contextMenu, setContextMenu] = React.useState(null);
-    const selected = useSelector(
-        store => store.data?.chatId === otherPorps?.id
+    const { selected, search } = useSelector(
+        store => {
+            const selected = store.data?.chatId === otherPorps?.id;
+            const search = store.data?.search;
+            return {selected, search}
+        }
     );
     const lastNotice = convert(
         _lastNotice, 
@@ -90,7 +95,7 @@ export default function ChatContactItem ({
                         <Stack direction="row" spacing={1} >
                             <Typography 
                                 title={name} 
-                                children={name} 
+                                children={highlightWord(name, search)} 
                                 flexGrow={1} 
                                 noWrap 
                                 textOverflow="ellipsis"

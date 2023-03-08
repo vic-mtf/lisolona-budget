@@ -12,7 +12,7 @@ export default function RecordStatus ({
     analyseur, 
     chunks,
     mediaRecorderRef,
-    handleToggleRecordin
+    handleToggleRecording
 }) {
 
     const handleSendVoice = () => {
@@ -26,7 +26,7 @@ export default function RecordStatus ({
                     new Blob(chunks, { type: "audio/ogg;codecs=opus" })
                 )
             );
-            handleToggleRecordin();
+            handleToggleRecording();
         }
     },[chunks])
 

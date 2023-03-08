@@ -6,9 +6,28 @@ import IconButton from '../../../../../components/IconButton';
 import Menu from '../../../../../components/Menu';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import options from './options';
+import { useSelector } from 'react-redux';
 
 export default function MoreOption ({theme}) {
     const anchorElRef = useRef();
+    const constact = useSelector(store => {
+        const { chatId, contacts, conversations } = store.data;
+        const contact = conversations?.find(({id}) => id === chatId) || 
+            contacts?.find(({id}) => id === chatId);
+        return {
+            ...contact, 
+            members: contact?.origin?.members?.map(
+                ({_id: user, role}) => store.user?.id !== user?._id && ({
+                    ...user,
+                    role,
+                    id: user?._id,
+                    origin: user,
+                    name: `${user?.fname || ''} ${ user?.lname || ''} ${user?.mname || ''}`.trim(),
+                })
+            )?.filter(name => name),
+        };
+    });
+
     const [open, setOpen] = useState(false);
     const handleClose = () => {
         setOpen(false)
@@ -35,16 +54,12 @@ export default function MoreOption ({theme}) {
                         vertical: 'bottom',
                         horizontal: 'center',
                     }}
-                    // transformOrigin={{
-                    //     vertical: 'top',
-                    //     horizontal: 'letf',
-                    // }}
                 >
-                    {options().map(({label, icon, onClick}) => (
+                    {options(constact, handleClose).map(({label, icon, onClick}) => (
                         <MenuItem key={label} onClick={onClick}>
-                            <ListItemIcon>
+                            {!!icon && <ListItemIcon>
                                 {icon}
-                            </ListItemIcon>
+                            </ListItemIcon>}
                             <ListItemText
                                 primary={label}
                             />

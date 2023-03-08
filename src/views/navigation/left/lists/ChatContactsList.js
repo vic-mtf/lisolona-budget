@@ -22,37 +22,18 @@ export default function ChatContactsList () {
     const socket = useSocket();
     const dispatch = useDispatch();
     const { conversations, user} = useSelector(store => { 
+        const conversations = store.data?.conversations;
+        const search = store.data?.search;
         return {
-            conversations: [...store.data?.conversations].sort(
+            conversations: conversations && [...conversations].sort(
                 (a, b) => 
                     (new Date(b?.updatedAt)).getTime() - 
                     (new Date(a?.updatedAt)).getTime()
-            ),
+            ).filter(({name}) => new RegExp(search,'ig').test(name)),
             user: store.user,
         }
         
     });
-
-    useEffect(() => {
-        const handelGetChat = ({chats}) => {
-            const data = getParseData(chats, user);
-            dispatch(addData({
-                key: 'data',
-                data: {
-                    conversations: data,
-                    chatGroups: chats?.filter(chatGroup => 
-                        chatGroup?.type === 'room'
-                    ),
-                }
-            }))
-        };
-        socket?.on('chats', handelGetChat);
-       // if(conversations === null) 
-        socket?.emit('direct-chat');
-        return () => {
-            socket?.off('chats', handelGetChat);
-        };
-    }, [socket]);
 
     return (
         <React.Fragment>
@@ -106,111 +87,3 @@ export default function ChatContactsList () {
         </React.Fragment>
     );
 }
-
-const getParseData = (_data, user) => {
-    const data = _data?.map((chat, index, chats) => {
-        const interlocutor = chat.members.find(
-            ({_id: interlocutor}) => interlocutor._id !== user?.id
-        )?._id;
-        const {fname, lname, mname} = interlocutor || {};
-        const name = chat?.name || interlocutor ? 
-        `${fname} ${lname} ${mname}`.trim() : 'Moi';
-        const lastNotice = [
-            {
-            content: chat.type === 'room' && 
-            `Vous êtes dans un nouveau Lisanga`
-            },
-            ...chat?.messages
-        ]?.find((message, index, messages) => 
-            index === messages.length - 1
-        )?.content;
-        
-        return  {
-            origin: chat,
-            id: chat?._id,
-            type: chat?.type,
-            lastNotice,
-            updatedAt: chat?.updatedAt,
-            name,
-            avatarSrc: chat?.image,
-            online: false,
-            interlocutorId: interlocutor?._id,
-        }
-    });
-    return data
-}
-// const contacts = [
-//     {
-//         name: 'Victor mongolo',
-//         lastNotice: 'Salut mon frere je suis déjà chez toi',
-//         avatarSrc: '/',
-//         _id: 'hxdgshdjghhs2454',
-//     },
-//     {
-//         name: 'Obed Ngolo',
-//         lastNotice: 'Tu es à la maison ?',
-//         avatarSrc: '/',
-//         _id: 'fdfjhdfvhhs2454',
-//     },
-//     {
-//         name: 'Naomi kingale',
-//         lastNotice: 'Bonjour mon cher !',
-//         avatarSrc: '/',
-//         _id: 'fdfjhdfvhhsdfjbf544',
-//     },
-//     {
-//         name: 'Filia Mula',
-//         lastNotice: 'Ndeko omoni message ya maman ?',
-//         avatarSrc: '/',
-//         _id: 'fsdbshdvhsdfj545444',
-//     },
-//     {
-//         name: 'Daniel Mputu',
-//         lastNotice: 'Je suis pret pour te voir',
-//         avatarSrc: '/',
-//         _id: 'fdsjhdgfhgsdvhhsdfjbf565894',
-//     },
-//     {
-//         name: 'Eliel Maboso',
-//         lastNotice: `Ce soir ci je te partage un document lié à la Dantic`,
-//         avatarSrc: '/',
-//         _id: 'wxbvcbfsdysgevhhsd45544',
-//     },
-//     {
-//         name: 'Victor mongolo tanzey fataki',
-//         lastNotice: 'Salut mon frere je suis déjà chez toi',
-//         avatarSrc: '/',
-//         _id: 'hxdgdhwvdshdjghhs2454',
-//     },
-//     {
-//         name: 'Obed Ngolo',
-//         lastNotice: 'Tu es à la maison ?',
-//         avatarSrc: '/',
-//         _id: 'fdfjdjfbjdffvhhs2454',
-//     },
-//     {
-//         name: 'Naomi kingale',
-//         lastNotice: 'Bonjour mon cher !',
-//         avatarSrc: '/',
-//         _id: 'fdfjhdfjhvsdsdfjbf544',
-//     },
-//     {
-//         name: 'Filia Mula',
-//         lastNotice: 'Ndeko omoni message ya maman ?',
-//         avatarSrc: '/',
-//         _id: 'fsdbshjfhbhfdfj545444',
-//     },
-//     {
-//         name: 'Daniel Mputu',
-//         lastNotice: 'Je suis pret pour te voir',
-//         avatarSrc: '/',
-//         _id: 'fdsjhddfddvhhsdfjbf565894',
-//     },
-//     {
-//         name: 'Eliel Maboso',
-//         lastNotice: `Ce soir ci je te partage un document lié à la Dantic`,
-//         avatarSrc: '/',
-//         _id: 'wxbvcbfsdydffvhhsd45544',
-//     },
-
-// ]

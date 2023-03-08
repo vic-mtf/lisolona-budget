@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Divider, List, ListSubheader, Toolbar } from '@mui/material';
 import useScrollEnd from '../../../../utils/useScrollEnd';
 import Box from '../../../../components/Box';
@@ -9,40 +9,29 @@ import scrollBarSx from '../../../../utils/scrollBarSx';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
-import { useSocket } from '../../../../utils/SocketIOProvider';
+//import { useSocket } from '../../../../utils/SocketIOProvider';
 import { addData } from '../../../../redux/data';
 import InvitationRequestForm from './InvitationRequestForm';
 
 export default function RelatedContactsList () {
     const [atEnd, scrollProps] = useScrollEnd();
-    const socket = useSocket();
+    //const socket = useSocket();
     const shadow = useShadow();
     const { contacts, conversations } = useSelector(store => {
-        const contacts = store?.data?.contacts ?
-        groupArrayInAlphaOrder(store?.data?.contacts) : 
+        const search = store.data?.search;
+        const contacts = store.data?.contacts ?
+        groupArrayInAlphaOrder(
+            store?.data?.contacts?.filter(
+                ({name, email}) => 
+                    new RegExp(search,'ig').test(name) || new RegExp(search,'ig').test(email)
+                ),
+            ) : 
         null;
         const conversations = store?.data?.conversations
         return {contacts, conversations}
     });
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        socket.on('contacts', ({contacts}) => {
-            const data = contacts?.map(contact => {
-                const name = `${contact.fname} ${contact.lname} ${contact.mname}`.trim()
-                return {
-                    origin: contact,
-                    name,
-                    email: contact?.email,
-                    id: contact?._id,
-                };
-            });
-            dispatch(addData({key: 'contacts', data}));
-        });
-        //if(contacts === null)
-        socket?.emit('contacts');
-    },[socket]);
-    
     return (
         <React.Fragment>
             <Toolbar variant="dense">
@@ -95,11 +84,8 @@ export default function RelatedContactsList () {
                                 <React.Fragment key={contact.id}>
                                     <RelatedContactItem 
                                         {...contact}
-                                        onClick={() => {
-                                            const id = conversations?.filter(({type}) => type === 'direct')
-                                            .find(({interlocutorId}) => interlocutorId === contact.id)?.id;
-                                            dispatch(addData({key: 'chatId', data: id || contact.id}))
-                                        }}
+                                        onClick={() => dispatch(addData({key: 'chatId', data: contact.id}))
+                                        }
                                     />
                                     {index !== contacts.length - 1 && 
                                     <Divider variant="inset" component="li" />

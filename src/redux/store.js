@@ -11,9 +11,10 @@ import persistStore from "redux-persist/es/persistStore";
 import app from "./app";
 import user from "./user";
 import data from "./data";
+import teleconference from "./teleconference";
 
 const store = configureStore({
-    reducer: { app, user, data },
+    reducer: { app, user, data, teleconference},
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

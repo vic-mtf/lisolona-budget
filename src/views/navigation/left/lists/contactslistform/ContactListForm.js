@@ -21,7 +21,7 @@ import useAxios from '../../../../../utils/useAxios';
 import { useSelector } from 'react-redux';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
-import ContactsList from './ConstactsList';
+import ContactsList from './ContactsList';
 import KeyboardBackspaceOutlinedIcon  from '@mui/icons-material/KeyboardBackspaceOutlined';
 import Typography from '../../../../../components/Typography';
 import IconButton from '../../../../../components/IconButton';

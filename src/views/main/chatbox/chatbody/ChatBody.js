@@ -4,19 +4,19 @@ import {
 import { useEffect, useRef } from 'react';
 import scrollBarSx from '../../../../utils/scrollBarSx';
 import MessageGroupBox from './messagebox/MessageGroupBox';
-import useMessage from '../../../../utils/useMessage';
 import { useSelector } from 'react-redux';
 import { useSocket } from '../../../../utils/SocketIOProvider';
 
-export default function ChatBody () {
+export default function ChatBody ({groupMessages}) {
     const rootElRef = useRef();
-    const groupMessages = useMessage();
     const chatId = useSelector(store => store.data?.chatId);
     const socket = useSocket();
+    
     useEffect(() => {
         const root = rootElRef.current;
+        const top = root?.scrollHeight;
         if(chatId)
-            root.scrollTop = root?.scrollHeight;
+            root?.scrollTo({top});
     }, [rootElRef.current, chatId]);
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateChat } from "../redux/data";
 import { useSocket } from "./SocketIOProvider";
@@ -7,10 +7,11 @@ import timeHumanReadable from "./timeHumanReadable";
 export default function useMessage () {
     const socket = useSocket();
     const dispatch = useDispatch();
-    const {messages, chatId, conversations, savedMessages} = useSelector(store => {
+    const { messages, userId, conversations } = useSelector(store => {
         const conversations = store?.data?.conversations;
         const chatId = store?.data?.chatId;
         const savedMessages = conversations?.find(item => item?.id === chatId)?.origin?.messages;
+        
         const messages = savedMessages?.map(message => {
             const sender = message?.sender;
             const name = `${sender?.fname} ${sender?.lname} ${sender?.mname}`.trim();
@@ -29,21 +30,28 @@ export default function useMessage () {
                 origin: message,
             }
         });
-        return {messages, chatId, savedMessages};
+        return { 
+            messages, 
+            userId: store.user?.id,
+            conversations,
+        };
     });
 
     const groupMss = useMemo(() => groupMessage(messages), [messages]);
-    
+    const isSound = useCallback((id) => 
+        conversations?.find((user) => id === user.id),
+        [conversations]
+    );
+
     useEffect(() => {
-        const getDirectMessage = ({messages}) => {
-            const newMessages = [];
-            [...messages].forEach(message => {
-                const isNotFound = !savedMessages.find(({_id}) => message?._id === _id);
-                if(isNotFound)
-                    newMessages.push(message);
-            });
-            console.log(newMessages);
-            dispatch(updateChat({chatId, messages}))
+        const getDirectMessage = ({messages, _id, type, members}) => {
+            const chatId = type === 'room' ?
+             _id : members?.map(user => user?._id)
+             ?.find(({_id}) => _id !== userId)?._id;
+             
+           if(isSound(chatId))
+                dispatch(updateChat({chatId, messages}));
+            else socket?.emit('direct-chat');
         }
         socket.on('direct-chat', getDirectMessage);
         return () => {

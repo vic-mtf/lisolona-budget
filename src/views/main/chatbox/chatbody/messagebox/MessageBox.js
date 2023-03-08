@@ -86,6 +86,7 @@ export default function MessageBox ({
                                 bgcolor={isYourself ? 
                                     theme.palette.grey[200] : 
                                 'background.paper'}
+                                isYourself={isYourself}
                                 borderRadius={borderRadius}
                             />
                         }

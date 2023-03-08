@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import Typography from "../../../../../components/Typography";
 import RecordStatus from "./RecordStatus";
 
-export default function VoiceNoteEqualizer ({handleToggleRecordin}) {
+export default function VoiceNoteEqualizer ({handleToggleRecording}) {
     const theme = useTheme();
     const audioRef = useRef(null);
     const mediaRecorderRef = useRef();
@@ -86,7 +86,7 @@ export default function VoiceNoteEqualizer ({handleToggleRecordin}) {
                     analyseur={analyseur}
                     chunks={chunks}
                     mediaRecorderRef={mediaRecorderRef}
-                    handleToggleRecordin={handleToggleRecordin}
+                    handleToggleRecording={handleToggleRecording}
                 />: microPerm?.state?.match(/prompt|denied/) &&
                 <Typography 
                     align="center" 

@@ -12,6 +12,7 @@ const data = createSlice({
         contacts: null,
         calls: null,
         chatGroups: null,
+        search: '',
     },
     reducers: {
         addData(state, actions) {
@@ -40,7 +41,7 @@ const data = createSlice({
         updateChat(state, actions) {
             const { chatId, messages } = actions.payload;
             const conversations = [...state.conversations];
-            const targetConversation = conversations.find(item => item?.id === chatId);
+            const targetConversation = conversations?.find(({id}) => id === chatId);
             const savedMessages = targetConversation?.origin?.messages;
             const newMessages = [];
             [...messages].forEach(message => {
