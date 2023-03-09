@@ -30,9 +30,10 @@ export default function AnswerButton () {
     >
     <Fab
         color="success"
-        sx={{mx: 1}}
+        sx={{mx: 1, borderRadius: 1, boxShadow: 0}}
         onClick={hanldeAnswerCall}
         size="small"
+        variant="extended"
     >
         <PhoneIcon fontSize="small" />
     </Fab>

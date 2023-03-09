@@ -7,12 +7,15 @@ import { maxScreen } from '../Container';
 import React, { useMemo } from 'react';
 import AnswerButton from './AnswerButton';
 import { useSelector } from 'react-redux';
+import CallTimer from './CallTimer';
+import ScreenSharingButton from './ScreenSharingButton';
+import MembersButton from './MembersButton';
 
 export default function Footer ({
     handleChangePage,
     page,
 }) {
-    const { calls, pickedUp } = useTeleconference();
+    const { calls, pickedUp, loading } = useTeleconference();
     const { variant, type } = useSelector(store => {
         const variant = store.teleconference.variant;
         const type = store.teleconference.type;
@@ -35,8 +38,11 @@ export default function Footer ({
         >
             {pickedUp &&
             <React.Fragment> 
+                {!loading && <CallTimer/> } 
                 {type === 'video' && <ToggleCameraButton/> }
                 <ToggleMicButton/>  
+                <ScreenSharingButton/>  
+                {/* {<MembersButton/>} */}
             </React.Fragment>}
             {(variant === 'incoming' && !pickedUp) && <AnswerButton/>}  
             <HangUpCallButton/>     

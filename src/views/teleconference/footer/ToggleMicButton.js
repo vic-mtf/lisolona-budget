@@ -2,7 +2,6 @@ import KeyboardVoiceOutlinedIcon from '@mui/icons-material/KeyboardVoiceOutlined
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import { Tooltip } from '@mui/material';
 import { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
 import IconButton from "../../../components/IconButton";
 import { useTeleconference } from '../../../utils/useTeleconferenceProvider';
 
@@ -22,11 +21,12 @@ export default function ToggleMicButton () {
   >
     <IconButton
         onClick={() => setTurnOn(turnOn => !turnOn)}
-        sx={{mx: 1}}
+        sx={{mx: .5}}
+        size="medium"
     >
       {turnOn ? 
-      (<KeyboardVoiceOutlinedIcon fontSize="small" /> ) :
-      (<MicOffOutlinedIcon fontSize="small" />)
+      (<KeyboardVoiceOutlinedIcon/> ) :
+      (<MicOffOutlinedIcon/>)
       }
     </IconButton>
   </Tooltip>

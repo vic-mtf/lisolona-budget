@@ -16,7 +16,7 @@ export default function ConfigAppWrapper ({ children }) {
   
     return ( 
       <ThemeProvider theme={theme}>
-            {children}
+        {children}
       </ThemeProvider>
       );
   }

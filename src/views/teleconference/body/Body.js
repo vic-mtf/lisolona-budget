@@ -80,7 +80,7 @@ export default function Body ({page}) {
                         color="inherit"
                     />
                 </div>
-                <Typography color="white">Chargement...</Typography>
+                <Typography color="white">Veuillez patienter...</Typography>
             </MuiBox>}
         </Grid>
     )

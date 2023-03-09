@@ -9,25 +9,21 @@ import Typography from '../../../components/Typography';
 import waitSong from '../../../assets/mixkit-on-hold-ringtone-1361.wav';
 import RignSon from '../../../assets/ring-tone-68676.mp3';
 import ringingSong from '../../../assets/Halloween-Cradles.mp3';
-import { useEffect, useRef, useState } from 'react';
+import unansweredSong from '../../../assets/textnotific_f57e30705281695.mp3';
+import rejectedSong from '../../../assets/textnot_6edac1824932819.mp3';
+import React, { useEffect, useMemo, useState } from 'react';
 import useAxios from '../../../utils/useAxios';
 import { useSelector } from 'react-redux';
 import { useSocket } from '../../../utils/SocketIOProvider';
 import { useTeleconference } from '../../../utils/useTeleconferenceProvider';
 
 export default function CallStatus () {
-   const [connected, setConnected] = useState(false);
-   const { options, setOptions, pickedUp, setPickedUp } = useTeleconference();
-   const socket = useSocket();
-   const audioRef = useRef(new Audio());
-   const {
-        token, 
-        members, 
-        name, 
-        type, 
-        variant, 
-        callType, 
-        clientId
+    const [connected, setConnected] = useState(false);
+    const { options, setOptions, pickedUp, setPickedUp, status } = useTeleconference();
+    const socket = useSocket();
+    const audio = useMemo(() => new Audio(), []);
+    const { 
+        token, members, name, type, variant, callType, clientId
     } = useSelector(store => {
     const token = store.user?.token;
     const clientId = store.teleconference?.clientId;
@@ -49,21 +45,28 @@ export default function CallStatus () {
     return {
         token, members, name, type, variant, callType, clientId
     };
-   });
-   const [,refetch] = useAxios(
+    });
+    const [,refetch] = useAxios(
     {   
         url: `/api/chat/rtc/${type}/${clientId}/publisher/uid`,
         headers: {'Authorization': `Bearer ${token}`}
     },
     {manual: true}
-   );
-   useEffect(() => {
-    const audio = audioRef.current;
-    if(variant === 'outgoing') {     
-        if (connected) audio.src = RignSon;
-        else audio.src = waitSong;
-    } else 
-        audio.src = ringingSong;
+    );
+    useEffect(() => {
+    switch(variant) {
+        case 'outgoing': 
+            if(status === 'calling')  {
+                if (connected) audio.src = RignSon;
+                else audio.src = waitSong;
+            }
+            if(status === 'unanswered')
+                audio.src = unansweredSong;
+            if(status === 'rejected')
+                audio.src = rejectedSong;
+            break;
+        default:  audio.src = ringingSong;;
+    }
     audio.loop = true;
     audio.autoplay = true;
     if(pickedUp) {
@@ -74,7 +77,7 @@ export default function CallStatus () {
         audio.pause();
         audio.src = null;
     }
-   }, [connected, variant, pickedUp]);
+    }, [connected, variant, pickedUp, status, audio]);
 
     useEffect(() => {
         const timer = window.setTimeout(() => {
@@ -169,13 +172,26 @@ export default function CallStatus () {
                     <Typography align="center" variant="h5" paragraph>
                         {name}
                     </Typography>
-                    {variant === 'outgoing' ?
+                    {status === 'calling' &&
+                    <React.Fragment>
+                        {variant === 'outgoing' ?
+                        <Typography align="center" paragraph>
+                            {connected ? 'Entrain de sonner' : 'Connexion en cours...'}
+                        </Typography>: 
+                        <Typography align="center" paragraph>
+                            Appel entrant
+                        </Typography>}
+                    </React.Fragment>}
+                    {status === 'unanswered' &&
                     <Typography align="center" paragraph>
-                        {connected ? 'Entrain de sonner' : 'Connexion en cours...'}
-                    </Typography>: 
+                        Pas de reponse
+                    </Typography>
+                    }
+                    {status === 'rejected' &&
                     <Typography align="center" paragraph>
-                        Appel entrant
-                    </Typography>}
+                        Appel réjeté
+                    </Typography>
+                    }
                 </ThemeProvider>
             </MuiBox>
         </MuiBox>

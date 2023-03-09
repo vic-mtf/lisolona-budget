@@ -25,11 +25,12 @@ export default function ToggleCameraButton () {
   >
     <IconButton
         onClick={() => setTurnOn(turnOn => !turnOn)}
-        sx={{mx: 1}}
+        sx={{mx: .5}}
+        size="medium"
     >
       {turnOn ? 
-      (<VideocamOutlinedIcon fontSize="small" /> ) :
-      (<VideocamOffOutlinedIcon fontSize="small" />)
+      (<VideocamOutlinedIcon/> ) :
+      (<VideocamOffOutlinedIcon/>)
       }
     </IconButton>
   </Tooltip>

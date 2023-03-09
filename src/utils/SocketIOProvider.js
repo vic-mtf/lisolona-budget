@@ -38,8 +38,10 @@ export default function SocketIOProvider ({children}) {
             };
             dispatch(addNotification({data}));
         };
-        if(!socket && token) 
+        if(!socket && token){ 
             socketRef.current = io(`${axiosConfig.baseURL}?token=${token}`);
+            setSocket(socketRef.current);
+        }
         socketRef.current?.on('connexion', handleConnexion);
         socketRef.current?.on('invitations', getInvitaions);
         return () => {

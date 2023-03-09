@@ -9,15 +9,20 @@ export default function SearchBar () {
   const initValue = useSelector(store => store.data?.search)
   const [value, setValue] = useState(initValue);
   const dispatch = useDispatch();
-  const onChange = event => setValue(event.target.value?.trim());
+  const onChange = event => setValue(event.target.value);
   useEffect(() => {
     dispatch(
       addData({
         key:'search', 
-        data: value,
+        data: value?.trim(),
       })
     );
-  },[value]);
+  },[value, dispatch]);
+
+  useEffect(() => {
+    if(value === '')
+       setValue(initValue);
+  },[value, initValue])
   
   return (
       <Search sx={{mr: 1}}>
