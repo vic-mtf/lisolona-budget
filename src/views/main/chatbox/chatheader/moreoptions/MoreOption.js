@@ -55,8 +55,8 @@ export default function MoreOption ({theme}) {
                         horizontal: 'center',
                     }}
                 >
-                    {options(constact, handleClose).map(({label, icon, onClick}) => (
-                        <MenuItem key={label} onClick={onClick}>
+                    {options(constact, handleClose).map(({label, icon, onClick, disabled}) => (
+                        <MenuItem key={label} onClick={onClick} disabled={disabled}>
                             {!!icon && <ListItemIcon>
                                 {icon}
                             </ListItemIcon>}

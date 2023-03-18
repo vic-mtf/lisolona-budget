@@ -4,9 +4,15 @@ import useMessage from "../../utils/useMessage";
 import ChatBox from "./chatbox/ChatBox";
 import Home from "./home/Home";
 import { drawerWidth } from "../navigation/Navigation";
+import React from "react";
 
 export default function Main ({open}) {
-    const chatId = useSelector(store => store.data.chatId);
+    const {chatId, showChat} = useSelector(store => {
+        const chatId = store.data.chatId;
+        const showChat = store.teleconference?.meetingMode === 'none' ||
+        !store.teleconference?.privileged;
+        return {chatId, showChat}
+    });
     const groupMessages = useMessage();
 
     return (
@@ -23,12 +29,14 @@ export default function Main ({open}) {
                 }),
             }}
         >
-           {chatId ?
-            <ChatBox
-                chatId={chatId}
-                groupMessages={groupMessages}
-            /> :
-            <Home/>}
+            {showChat && 
+            <React.Fragment>
+                {chatId ?
+                (<ChatBox
+                    chatId={chatId}
+                    groupMessages={groupMessages}
+                />) : (<Home/>)}
+            </React.Fragment>}
         </MuiBox>
     )
 }

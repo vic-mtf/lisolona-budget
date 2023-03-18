@@ -13,6 +13,7 @@ import mssAudio  from '../../../assets/Eventually-Sms.mp3';
 import { useDispatch, useSelector } from 'react-redux';
 import { addData } from '../../../redux/data';
 import getParseData from '../../../utils/getParseData';
+import NetworkProblemChecker from './NetworkProblemChecker';
 
 export default function NavigationLeft () {
     const [navigation, setNavigation] = useState(0);
@@ -55,7 +56,7 @@ export default function NavigationLeft () {
             socket?.off('chats', handelGetChat);
             socket?.off('invitations', handleSignaling);
         };
-    }, [socket]);
+    }, [socket, dispatch, user]);
 
     useEffect(() => {
         if(chatId !== savedChatIdRef.current) {
@@ -67,7 +68,7 @@ export default function NavigationLeft () {
             .dispatchEvent(customEvent);
             savedChatIdRef.current = chatId;
         }
-    },[chatId, savedChatIdRef.current])
+    },[chatId])
 
     return (
         <Navigation
@@ -103,6 +104,7 @@ export default function NavigationLeft () {
                     <Panel value={3}>
                         <NotificationList/>
                     </Panel>
+                    <NetworkProblemChecker/>
                 </Box>
             </Stack>
         </Navigation>

@@ -77,7 +77,9 @@ function App() {
 }, [connected, dispatch]);
 
   return (
-    <BoxGradient>
+    <BoxGradient
+      overflow="hidden"
+    >
         {(startApp && socket) ? 
         <RouterProvider 
           router={router}

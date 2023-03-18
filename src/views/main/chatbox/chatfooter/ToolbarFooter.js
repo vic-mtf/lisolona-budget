@@ -127,7 +127,7 @@ const fabs = [
       label: 'Mic',
       title: 'Enregistrer un message',
       id: '_mic',
-      //disabled: true,
+      disabled: true,
       value: (sendable, index) => !sendable && index === 1 ,
     },
   ];

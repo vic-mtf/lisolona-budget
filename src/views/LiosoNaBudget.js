@@ -29,14 +29,21 @@ export default function Archives () {
 },[socket, dispatch]);
 
     return (
-      <React.Fragment>
+      <MuiBox
+        display="flex"
+        flex={1}
+        width="100%"
+        flexDirection="column"
+        position="relative"
+        overflow="hidden"
+      >
         <MuiBox sx={{ display: 'flex', flex: 1, width: "100%"}}>
           <CssBaseline />
             <NavigationLeft/>
             <MainRight/>
         </MuiBox>
         <Teleconference/>
-      </React.Fragment>
+      </MuiBox>
     )
 }
 

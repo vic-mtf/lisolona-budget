@@ -40,7 +40,7 @@ export default function Header ({onChangeNavigation, navigation}) {
             nbr: 0
         },
         {
-            label: 'Contactes',
+            label: 'Contacts',
             icon: <ContactsOutlinedIcon/>,
             nbr: 0
         },
@@ -66,13 +66,16 @@ export default function Header ({onChangeNavigation, navigation}) {
                         Lisolo Na Budget
                     </Typography>
                     <Tooltip title="Plus d'options" arrow>
-                        <IconButton
-                            aria-label="more"
-                            ref={anchorEl}
-                            onClick={() => setAnchor(anchorEl?.current)}
-                        >
-                            <MoreVertOutlinedIcon fontSize="small"/>
-                        </IconButton>
+                        <div>
+                            <IconButton
+                                aria-label="more"
+                                disabled
+                                ref={anchorEl}
+                                onClick={() => setAnchor(anchorEl?.current)}
+                            >
+                                <MoreVertOutlinedIcon fontSize="small"/>
+                            </IconButton>
+                        </div>
                     </Tooltip>
                 </Toolbar>
             </ThemeProvider>

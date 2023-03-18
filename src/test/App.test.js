@@ -1,13 +1,19 @@
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import { Box } from '@mui/material';
-import Teleconference from '../views/teleconference/Teleconference';
+import React, { useRef } from "react";
+import ResizeDragContainer from "./ResizeDragContainer";
+
 
 export default function Apptest() {
+  const coordsRef = useRef({
+    width: 300,
+    height: 200,
+    backgroundColor: 'red',
+  })
+ 
   return (
-    <Teleconference/>
+    <React.Fragment>
+      <ResizeDragContainer coordsRef={coordsRef}>
+
+      </ResizeDragContainer>
+    </React.Fragment>
   );
 }

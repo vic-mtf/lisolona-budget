@@ -105,9 +105,13 @@ export default function ShortcutOptions () {
           <Toolbar variant="dense" disableGutters sx={{display: 'flex', justifyContent: 'center'}}>
             <Stack spacing={1} my={2}>
                 <Tooltip title="Paramètre" arrow placement="right-start">
-                    <IconButton>
-                        <SettingsOutlinedIcon fontSize="small"/>
-                    </IconButton>
+                    <div>
+                        <IconButton
+                            disabled
+                        >
+                            <SettingsOutlinedIcon fontSize="small"/>
+                        </IconButton>
+                    </div>
                 </Tooltip>
                 <Tooltip title="Sortir" arrow placement="right-start">
                     <IconButton

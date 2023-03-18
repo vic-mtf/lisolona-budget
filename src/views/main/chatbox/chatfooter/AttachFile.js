@@ -36,6 +36,7 @@ export default function AttachFile() {
             size: 'small',
             color: 'inherit',
             title: 'Joindre un document',
+            disabled: true,
             sx:{
                 boxShadow: 0,
             }

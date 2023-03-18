@@ -27,14 +27,14 @@ export default function RelatedContactItem ({
     selected,
     id,
 }) {
-    const {search, isCalling} = useSelector(store => {
+    const {search, disabled} = useSelector(store => {
             const search = store.data?.search;
+            const disabled = store?.teleconference?.meetingMode !== 'no-meeting';
             const isCalling = store?.teleconference?.isCalling;
-            return {search, isCalling};
+            return {search, disabled};
         });
     const [contextMenu, setContextMenu] = React.useState(null);
     const [showSecondaryAction, setShowSecondaryAction] = React.useState(false);
-    const dispatch = useDispatch();
     const handleContextMenu = event => {
         event.preventDefault();
         const mouseX = event.clientX + 2;
@@ -44,16 +44,17 @@ export default function RelatedContactItem ({
         );
     };
     
-    const handleCallClient = type => () => {
-        dispatch(addTeleconference({
-            key: 'data',
-            data: {
-                type,
-                isCalling: true,
-                clientId: id,
-                variant: 'outgoing'
-            }
-        }))
+    const handleCallContact = mediaType => () => {
+        const root = document.getElementById('root');
+        const name = '_call-contact';
+        const detail = {
+            type: 'direct',
+            mediaType,
+            name,
+            id,
+        };
+        const customEvent = new CustomEvent(name,{detail})
+        root.dispatchEvent(customEvent);
     };
     return (
         <React.Fragment>
@@ -62,27 +63,37 @@ export default function RelatedContactItem ({
                 secondaryAction={ action ||
                     <Stack direction="row" spacing={1}>   
                         <Zoom in={showSecondaryAction}>  
-                            <Tooltip 
-                                title={isCalling ? "Un appel en cours..." : "Lancer un appel vidéo"} 
-                                arrow
-                            >     
-                                <IconButton
-                                    onClick={handleCallClient('video')}
-                                >
-                                    <VideocamOutlinedIcon fontSize="small"/>
-                                </IconButton>
-                            </Tooltip>   
+                            <div>   
+                                <Tooltip 
+                                    title={disabled ? "Un appel en cours..." : "Lancer un appel vidéo"} 
+                                    arrow
+                                >   
+                                    <div>  
+                                        <IconButton
+                                            onClick={handleCallContact('video')}
+                                            disabled={disabled}
+                                        >
+                                            <VideocamOutlinedIcon fontSize="small"/>
+                                        </IconButton>
+                                    </div>  
+                                </Tooltip>   
+                            </div>   
                         </Zoom> 
                         <Zoom in={showSecondaryAction}>
-                            <Tooltip title={isCalling ? "Un appel en cours..." : "Lancer un appel"} 
-                                arrow
-                            >     
-                                <IconButton
-                                     onClick={handleCallClient('audio')}
-                                >
-                                    <LocalPhoneOutlinedIcon fontSize="small"/>
-                                </IconButton>
-                            </Tooltip> 
+                            <div>   
+                                <Tooltip title={disabled ? "Un appel en cours..." : "Lancer un appel"} 
+                                    arrow
+                                >   
+                                    <div>    
+                                        <IconButton
+                                            onClick={handleCallContact('audio')}
+                                            disabled={disabled}
+                                        >
+                                            <LocalPhoneOutlinedIcon fontSize="small"/>
+                                        </IconButton>
+                                    </div>  
+                                </Tooltip> 
+                            </div>   
                         </Zoom>
                     </Stack>
                 }

@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 const Teleconference = createContext(null);
 export const useTeleconference = () => useContext(Teleconference);
 
-export default function TeleconferenceProvider ({children, options: initOpts}) {
+export default function TeleconferenceProvider ({children, options: initOpts, otherProps}) {
     const [options, setOptions] = useState(initOpts);
     const [pickedUp, setPickedUp] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -61,7 +61,8 @@ export default function TeleconferenceProvider ({children, options: initOpts}) {
     const values = { 
         agoraEngine, calls, pickedUp, options, 
         setOptions, setPickedUp, isCompatible, 
-        loading, status, setStatus
+        loading, status, setStatus, setCalls,
+        setLoading, ...otherProps,
     };
     useEffect(() => {
     handelJoinChannel();

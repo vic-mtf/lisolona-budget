@@ -8,24 +8,28 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import MoreOption from './moreoptions/MoreOption';
 import { useTheme } from '@emotion/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addTeleconference } from '../../../../redux/teleconference';
+import { useSelector } from 'react-redux';
 
 export default function ChatHeader ({chatId}) {
     const theme = useTheme();
-    const isCalling = useSelector(store => store.teleconference.isCalling);
-    const dispatch = useDispatch();
+    const {type, disabled} = useSelector(store => {
+        const disabled = store.teleconference?.meetingMode !== 'none';
+        const type = store.data.contacts.find(({id}) => id === chatId) ? 
+        'direct' : 'room';
+        return {disabled, type}
+    });
 
-    const handleCallClient = type => () => {
-        dispatch(addTeleconference({
-            key: 'data',
-            data: {
-                type,
-                isCalling: true,
-                clientId: chatId,
-                variant: 'outgoing',
-            }
-        }))
+    const handleCallContact = mediaType => () => {
+        const root = document.getElementById('root');
+        const name = '_call-contact';
+        const detail = {
+            id: chatId,
+            mediaType,
+            name,
+            type,
+        };
+        const customEvent = new CustomEvent(name,{detail})
+        root.dispatchEvent(customEvent);
     };
 
     return (
@@ -36,34 +40,37 @@ export default function ChatHeader ({chatId}) {
                 <AvatarStatus/>
                 <ThemeProvider theme={createTheme({palette: {mode: 'dark'}})}>
                     <Tooltip title="Chercher" arrow>
-                        <IconButton 
-                            sx={{mx: 1}}
-                        >
-                            <SearchOutlinedIcon fontSize="small"/>
-                        </IconButton>
+                        <div>
+                            <IconButton 
+                                sx={{mx: 1}}
+                                disabled
+                            >
+                                <SearchOutlinedIcon fontSize="small"/>
+                            </IconButton>
+                        </div>
                     </Tooltip>
                     <Tooltip 
-                        title={isCalling ? "Un appel en cours..." : "Lancer l'appel vidéo" }
+                        title={disabled ? "Un appel en cours..." : "Lancer l'appel vidéo" }
                         arrow
                     >
                         <div>
                             <IconButton 
                                 sx={{mx: 1}} 
-                                disabled={isCalling}
-                                onClick={handleCallClient('video')}
+                                disabled={disabled}
+                                onClick={handleCallContact('video')}
                             >
                                 <VideocamOutlinedIcon fontSize="small"/>
                             </IconButton>
                         </div>
                     </Tooltip>
-                    <Tooltip title={isCalling ? "Un appel en cours..." : "Lancer l'appel"} 
+                    <Tooltip title={disabled ? "Un appel en cours..." : "Lancer l'appel"} 
                         arrow
                     >
                         <div>
                             <IconButton 
                                 sx={{mx: 1}} 
-                                disabled={isCalling}
-                                onClick={handleCallClient('audio')}
+                                disabled={disabled}
+                                onClick={handleCallContact('audio')}
                             >
                                 <LocalPhoneOutlinedIcon fontSize="small"/>
                             </IconButton>

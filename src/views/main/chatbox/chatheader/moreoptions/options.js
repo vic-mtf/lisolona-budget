@@ -1,5 +1,5 @@
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
+// import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+// import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
 import store from '../../../../../redux/store';
 import { addData } from '../../../../../redux/data';
 
@@ -16,6 +16,7 @@ const options = (contact, callback) => [
     {
         label: `Infos du ${contact?.type === 'room' ? 'Lisanga' : 'contact'}`,
         //icon: <InfoOutlinedIcon/>,
+        disabled: true,
         onClick() {
             const name = '_user-infos';
             const customEvent = new CustomEvent(

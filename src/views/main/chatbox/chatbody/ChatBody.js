@@ -17,7 +17,7 @@ export default function ChatBody ({groupMessages}) {
         const top = root?.scrollHeight;
         if(chatId)
             root?.scrollTo({top});
-    }, [rootElRef.current, chatId]);
+    }, [chatId]);
 
     useEffect(() => {
         const handleScrool = () => {
@@ -33,7 +33,7 @@ export default function ChatBody ({groupMessages}) {
         return () => {
             socket?.off('direct-chat', handleScrool)
         };
-    },[rootElRef.current, socket]);
+    },[socket]);
 
     return (
         <MuiBox
