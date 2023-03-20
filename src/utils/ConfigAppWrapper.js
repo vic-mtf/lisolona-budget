@@ -10,7 +10,7 @@ export default function ConfigAppWrapper ({ children }) {
     
     useLayoutEffect(() => {
       document.head.parentElement.lang = lang;
-      document.body.parentElement.style.backgroundColor = bgcolor;
+      document.head.parentElement.style.backgroundColor = bgcolor;
       document.body.style.backgroundColor = bgcolor;
     }, [lang, bgcolor]);
   

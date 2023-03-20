@@ -13,8 +13,6 @@ export default function Main ({open}) {
         !store.teleconference?.privileged;
         return {chatId, showChat}
     });
-    const groupMessages = useMessage();
-
     return (
         <MuiBox 
             component="main" 
@@ -31,11 +29,7 @@ export default function Main ({open}) {
         >
             {showChat && 
             <React.Fragment>
-                {chatId ?
-                (<ChatBox
-                    chatId={chatId}
-                    groupMessages={groupMessages}
-                />) : (<Home/>)}
+                {chatId ? <ChatBox chatId={chatId}/> : <Home/>}
             </React.Fragment>}
         </MuiBox>
     )

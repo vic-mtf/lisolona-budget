@@ -1,19 +1,17 @@
-import useOutgoingCallAction from "./useOutgoingCallAction";
-import useInComingCallAction from "./useInComingCallAction";
+import useOutgoingCallAction from "./outgoing/useOutgoingCallAction";
 import React from "react";
-import CallActionResponse from "./CallActionResponse";
-import useCreateStream from "./useCreateStream";
-import { useTeleconference } from "../../../utils/TeleconferenceProvider";
-import useUserPublishedAction from "./useUserPublishedAction";
+import CallActionResponse from "./response/CallActionResponse";
+import useCreateTracks from "./tracks/useCreateTracks";
+import useInComingCallAction from "./incoming/useInComingCallAction";
+import useUserPublishedAction from "./publish/useUserPublishedAction";
 
 export default function ActionsWrapper ({children}) {
-    const [{stream}] = useTeleconference();
     useOutgoingCallAction();
     useInComingCallAction();
-    useCreateStream();
-    useUserPublishedAction();
+    useCreateTracks();
+    useUserPublishedAction()
 
-    return ( stream &&
+    return (
         <React.Fragment>
           <CallActionResponse/>
           {children}

@@ -6,14 +6,12 @@ import { useEffect, useRef } from 'react';
 
 export default function VideoFrame ({data}) {
     const frameRef = useRef();
-    console.log(data);
     useEffect(() => {
         const frame = frameRef.current;
         const videoTrack = data?.tracks?.videoTrack;
-        //frame.querySelector('video')?.remove();
+        frame.querySelector('video')?.parentNode?.remove();
         if(data.mediaType === 'video')
             videoTrack?.play(frame);
-        console.log(data);
     });
 
     

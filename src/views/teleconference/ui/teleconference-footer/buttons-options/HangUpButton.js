@@ -4,10 +4,11 @@ import {
 import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
 import { useSocket } from '../../../../../utils/SocketIOProvider';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTeleconference } from '../../../../../utils/TeleconferenceProvider';
+//import { useTeleconference } from '../../../../../utils/TeleconferenceProvider';
 import answerRingtone from '../../../../../utils/answerRingtone';
 import { initializeState } from '../../../../../redux/teleconference';
 import { useCallback } from 'react';
+import { useTeleconference } from '../../../../../utils/TeleconferenceProvider';
 
 export default function HangUpButton () {
     const {from, type, mode} = useSelector(store => {
@@ -18,6 +19,7 @@ export default function HangUpButton () {
         const mode = store.teleconference.meetingMode;
         return {from, type, mode};
     });
+    const [{timers}] = useTeleconference();
     const socket = useSocket();
     const dispatch = useDispatch();
 
@@ -27,19 +29,19 @@ export default function HangUpButton () {
           'on': 'end',
           'outgoing': 'stop',
         };
-        console.log(from);
-          socket.emit('hang-up',{
-            from, 
-            type,
-            details: {response: responses[mode]}
-          });
-          dispatch(initializeState());
-          const ringtone = answerRingtone({
-            type: 'disconnect', 
-            audio: new Audio(),
-          });
-          ringtone.loop = false;
-    });
+        timers.forEach(timer => window.clearTimeout(timer));
+        socket.emit('hang-up',{
+          from, 
+          type,
+          details: {response: responses[mode]}
+        });
+        dispatch(initializeState());
+        const ringtone = answerRingtone({
+          type: 'disconnect', 
+          audio: new Audio(),
+        });
+        ringtone.loop = false;
+    }, [dispatch, from, mode, socket, type, timers]);
 
     return (
         <Fab

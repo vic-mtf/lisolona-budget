@@ -1,12 +1,13 @@
 import { Toolbar, Box as MuiBox, createTheme, ThemeProvider, Stack, Divider, CardMedia } from "@mui/material";
 import Box from "../../../components/Box";
 import Typography from "../../../components/Typography";
-import appConfig from '../../../configs/app-config.json';
 import CarouselPub from "./CarouselPub";
 import _logo_geid from '../../../assets/geid_logo_blue_without_title.webp';
+import useMessage from "../../../utils/useMessage";
 
 export default function Home () {
-
+    useMessage();
+    
     return (
         <Box>
           <Box

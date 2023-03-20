@@ -15,15 +15,19 @@ import EmptyContentMessage from './EmptyContentMessage';
 import { useSocket } from '../../../../utils/SocketIOProvider';
 import { addData } from '../../../../redux/data';
 import ContactListForm from './contactslistform/ContactListForm';
+import { addTeleconference } from '../../../../redux/teleconference';
 
 export default function ChatContactsList () {
     const [atEnd, scrollProps] = useScrollEnd();
     const shadow = useShadow();
-    const socket = useSocket();
     const dispatch = useDispatch();
-    const { conversations, user} = useSelector(store => { 
+    const { conversations, targetId} = useSelector(store => { 
         const conversations = store.data?.conversations;
         const search = store.data?.search;
+        const modeId = store.teleconference.meetingId;
+        const type = store.teleconference.type;
+        const from = store.teleconference.from;
+        const targetId = type === 'direct' ? from:modeId
         return {
             conversations: conversations && [...conversations].sort(
                 (a, b) => 
@@ -31,9 +35,19 @@ export default function ChatContactsList () {
                     (new Date(a?.updatedAt)).getTime()
             ).filter(({name}) => new RegExp(search,'ig').test(name)),
             user: store.user,
+            targetId
         }
         
     });
+
+    const handleClick = chatId => () => {
+        dispatch(addData({key: 'data', data: {chatId}}));
+        let params = { key: 'privileged'};
+        if(targetId === chatId)
+            params.data = true;
+        else  params.data = false;
+        dispatch(addTeleconference(params));
+    }
 
     return (
         <React.Fragment>
@@ -68,12 +82,7 @@ export default function ChatContactsList () {
                         <React.Fragment key={contact.id}>
                             <ChatContactItem 
                                 {...contact}
-                                onClick={() => dispatch(
-                                    addData({
-                                        key: 'chatId', 
-                                        data: contact.id
-                                    })
-                                )}
+                                onClick={handleClick(contact.id)}
                             />
                             {index !== contacts.length - 1 && 
                             <Divider variant="inset" component="li" />

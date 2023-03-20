@@ -6,8 +6,11 @@ import ChatHeader from './chatheader/ChatHeader';
 import ChatBody from './chatbody/ChatBody';
 import ChatFooter from './chatfooter/ChatFooter';
 import Box from '../../../components/Box';
+import useMessage from '../../../utils/useMessage';
 
-export default function ChatBox ({groupMessages, chatId}) {
+export default function ChatBox ({chatId}) {
+    const groupMessages = useMessage();
+    
     return (
         <Box
             overflow="hidden"

@@ -1,92 +1,90 @@
 import ScreenShareOutlinedIcon from '@mui/icons-material/ScreenShareOutlined';
 import StopScreenShareOutlinedIcon from '@mui/icons-material/StopScreenShareOutlined';
-import IconButton from '../../../../../components/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import AgoraRTC from 'agora-rtc-sdk-ng';
-import { BottomNavigationAction, Tab, Tooltip } from '@mui/material';
+import { BottomNavigationAction, Tooltip, Zoom } from '@mui/material';
 import Typography from '../../../../../components/Typography';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTeleconference } from '../../../../../utils/TeleconferenceProvider';
 import { addTeleconference } from '../../../../../redux/teleconference';
 
 export default function ToggleScreenSharingButton () {
-    const turnOn = useSelector(store => store.teleconference.screenSharing);
+    const {turnOn, mode} = useSelector(store => {
+        const turnOn = store.teleconference.screenSharing;
+        const mode = store.teleconference.meetingMode;
+        return {turnOn, mode};
+    });
     const [loading, setLoading] = useState(false);
+    const [stream, setStream] = useState(null)
     const dispatch = useDispatch();
-    const [{localTracks, tracksRef, displayStream, agoraEngine}, {setDisplayStream}] = useTeleconference();
-
+    const [{localTracks, agoraEngine}, {setScreenVideoTrack}] = useTeleconference();
 
     const handleToggleScreenSharing = useCallback(async () => {
-        const videoTrack = localTracks?.videoTrack;
-        const screenTrack = tracksRef.current?.screenTrack;
-        let data = turnOn;
+        const {videoTrack, screenVideoTrack} = localTracks || {}
+        let params;
         setLoading(true);
         if(!turnOn) {
             try {
-                const displayStream = await navigator.mediaDevices.getDisplayMedia();
-                setDisplayStream(displayStream);
-                const [screenTrackStream] = displayStream.getVideoTracks();
-                const screenTrack = AgoraRTC.createCustomVideoTrack({
-                    mediaStreamTrack: screenTrackStream,
-                });
+                const screenVideoTrack = await AgoraRTC.createScreenVideoTrack();
+                const mediaStream = new MediaStream([screenVideoTrack.getMediaStreamTrack()]);
+                setStream(mediaStream);
+                setScreenVideoTrack(screenVideoTrack);
                 videoTrack.stop();
                 await agoraEngine.unpublish(videoTrack);
-                await agoraEngine.publish(screenTrack);
-                data = true;
-                tracksRef.current = {
-                    screenTrack
-                };
+                await agoraEngine.publish(screenVideoTrack);
+                params = {key: 'screenSharing', data: true};
             } catch (error) {console.log(error)}
         } else {
-                screenTrack.stop();
-                await agoraEngine.unpublish(screenTrack);
+                screenVideoTrack.stop();
+                await agoraEngine.unpublish(screenVideoTrack);
                 await agoraEngine.publish(videoTrack);
-                data = false;
-                displayStream.getTracks().forEach(strack => strack.stop());
-                setDisplayStream(null);
+                setScreenVideoTrack(null);
+                screenVideoTrack.close();
+                const tracks = stream.getTracks();
+                tracks.forEach((track) => track.stop());
+                params = {key: 'screenSharing', data: false};
         }
         setLoading(false);
-        dispatch(addTeleconference({
-            key: 'screenSharing',
-            data,
-        }))
-    }, [displayStream, setLoading, loading, setDisplayStream, tracksRef, turnOn]);
+        if(params) dispatch(addTeleconference(params))
+    }, [setLoading, setScreenVideoTrack, turnOn, localTracks, dispatch, agoraEngine, stream]);
 
     useEffect(() => {
-        if(displayStream)
-            displayStream.onremovetrack = handleToggleScreenSharing;
-    }, [handleToggleScreenSharing]);
+        if(stream && turnOn)
+            stream.oninactive = handleToggleScreenSharing;
+    }, [stream, handleToggleScreenSharing, turnOn]);
 
     return (
-        <Tooltip
-            title={turnOn ? "Arreter le parge d'écran" : "Partager votre écran"}
-            arrow
-        >
-             <div>
-                <BottomNavigationAction
-                    icon={turnOn ?
-                    <StopScreenShareOutlinedIcon fontSize="small"/> :
-                    <ScreenShareOutlinedIcon fontSize="small"/>
-                    } 
-                    disabled={loading}
-                    label={
-                        <Typography 
-                            variant="caption" 
-                            fontSize="10px" 
-                            color="inherit"
-                        >
-                            Partage écran
-                        </Typography>
-                    }
-                    showLabel
-                    selected={turnOn}
-                    onClick={handleToggleScreenSharing}
-                    sx={{
-                        borderRadius: 1,
-                        color: 'inherit'
-                    }}
-                />
-            </div>
-        </Tooltip>
+        <Zoom in={mode === 'on'}>
+            <Tooltip
+                title={turnOn ? "Arreter le parge d'écran" : "Partager votre écran"}
+                arrow
+            >
+                <div>
+                    <BottomNavigationAction
+                        icon={turnOn ?
+                        <StopScreenShareOutlinedIcon fontSize="small"/> :
+                        <ScreenShareOutlinedIcon fontSize="small"/>
+                        } 
+                        disabled={loading}
+                        label={
+                            <Typography 
+                                variant="caption" 
+                                fontSize="10px" 
+                                color="inherit"
+                            >
+                                Partage écran
+                            </Typography>
+                        }
+                        showLabel
+                        selected={turnOn}
+                        onClick={handleToggleScreenSharing}
+                        sx={{
+                            borderRadius: 1,
+                            color: 'inherit'
+                        }}
+                    />
+                </div>
+            </Tooltip>
+        </Zoom>
     )
 }

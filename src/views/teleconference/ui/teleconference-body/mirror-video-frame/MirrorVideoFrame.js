@@ -9,23 +9,23 @@ import { useSelector } from "react-redux";
 
 export default function MirrorVideoFrame ({gridProps}) {
     const containerRef = useRef();
-    const [{stream, localTracks}, ] = useTeleconference();
+    const [{localTracks}, ] = useTeleconference();
     const {mode, component} = useSelector(store => {
         const component = store.teleconference
         ?.videoMirrorMode === 'float' ?
         FloatFrame : GridFrame;
-        return {component, stream, localTracks};
+        return {component, localTracks};
     });
-
+    
     useEffect(() => {
         const videoTrack = localTracks?.videoTrack;
         const container = containerRef.current;
         let video = container?.querySelector('video');
         video?.remove();
-        if(videoTrack && stream && containerRef.current) {
+        if(videoTrack && containerRef.current) {
             videoTrack.play(container);
             let video = container?.querySelector('video');
-            video.style.transform = 'scale(-1,1)';
+            //video.style.transform = 'scale(-1,1)';
             video.parentNode.style.backgroundColor = 'transparent';
         }  
     });

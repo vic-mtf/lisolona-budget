@@ -50,7 +50,6 @@ export default function Archives () {
 const MainRight = () => {
   const [open, setOpen] = useState(false);
   const [contact, setContact] = useState();
-
   useEffect(() => {
     const root = document.getElementById('root');
     const handleOpenContact = event =>  {
@@ -59,7 +58,6 @@ const MainRight = () => {
       setOpen(state === undefined ? !open : state);
       if(contact)
         setContact(contact);
-      //console.log(event.detail?.contact);
     };
     root.addEventListener(
       '_user-infos',

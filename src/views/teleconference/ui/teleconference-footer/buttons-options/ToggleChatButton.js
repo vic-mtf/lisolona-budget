@@ -1,14 +1,15 @@
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import { BottomNavigationAction } from '@mui/material';
 import Typography from '../../../../../components/Typography';
+import { useTeleconferenceUI } from '../../TeleconferenceUI';
 
 export default function ToggleChatButton () {
     //const [turnOn, setTurnOn] = useState(false);
-
+    const [,{setOpenChatBox}] = useTeleconferenceUI();
     return (
        <div>
             <BottomNavigationAction
-                disabled
+                onClick={() =>setOpenChatBox(state => !state)}
                 icon={<ChatOutlinedIcon fontSize="small" />} 
                 label={
                     <Typography
@@ -20,8 +21,10 @@ export default function ToggleChatButton () {
                     </Typography>
                 }
                 showLabel
-                //onClick={() => setTurnOn(state => !state)}
-                sx={{borderRadius: 1}}
+                sx={{
+                    borderRadius: 1, 
+                    color: 'inherit'
+                }}
             />
         </div>
     )

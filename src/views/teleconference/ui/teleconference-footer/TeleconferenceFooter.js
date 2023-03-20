@@ -1,10 +1,9 @@
 import { 
     Toolbar,
     Box as MuiBox,
-    Slide
  } from '@mui/material'
 import { useSelector } from 'react-redux'
-//import LeftOptions from './LeftOptions';
+import LeftOptions from './LeftOptions';
 import LocalOptions from './LocalOptions'
 import RightOptions from './RightOptions'
 
@@ -18,8 +17,7 @@ export default function TeleconferenceFooter () {
                 flexGrow={1}
                 maxWidth={300}
             >
-                {/* <LeftOptions/> */}
-
+                <LeftOptions/>
             </MuiBox>
             <MuiBox flexGrow={1}>
             <LocalOptions/>

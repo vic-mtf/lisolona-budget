@@ -1,16 +1,12 @@
-import {
-    Fab
-} from '@mui/material';
+import { Fab } from '@mui/material';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import { useTeleconference } from '../../../../../utils/TeleconferenceProvider';
 import { useSocket } from '../../../../../utils/SocketIOProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTeleconference } from '../../../../../redux/teleconference';
+import usePublishLocalTracks from '../../../actions/publish/usePublishLocalTracks';
 export default function PickUpButton () {
-    const [
-        {audio}, 
-        {handlePublishLocalTracks}
-    ] = useTeleconference();
+    const [{audio}] = useTeleconference();
     const dispatch = useDispatch();
     const {from, type, joined} = useSelector(store => {
         const type = store.teleconference.type;
@@ -21,6 +17,8 @@ export default function PickUpButton () {
         return {from, type, joined};
     });
     const socket = useSocket();
+    const onPublishLocalTracks = usePublishLocalTracks();
+
     const handlePickUp = async () => {
         audio.src = null;
         socket.emit('pick-up', {from, type});
@@ -31,14 +29,13 @@ export default function PickUpButton () {
                 videoMirrorMode: 'float',
             }
         }));
-        if(joined) {
-            handlePublishLocalTracks();
-        } else {
+        if(joined) onPublishLocalTracks()
+        else {
             let timer, autoPickUp;
             (autoPickUp = () => {
                 timer = window.setTimeout(() => {
                     window.clearTimeout(timer);
-                    if(joined) handlePublishLocalTracks();
+                    if(joined) onPublishLocalTracks();
                     else autoPickUp()
                 }, 200);
             })();

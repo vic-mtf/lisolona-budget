@@ -31,7 +31,6 @@ export default function MeetingStatus () {
             response,
         };
     });
-    console.log(response);
     return (
         <MuiBox
             position="absolute"

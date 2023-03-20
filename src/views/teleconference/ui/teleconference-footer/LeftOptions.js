@@ -2,24 +2,19 @@ import {
     Box as MuiBox,
     Stack
 } from '@mui/material';
-import ToggleChatButton from './buttons-options/ToggleChatButton';
-import ToggleListMembersButton from './buttons-options/ToggleListMembersButton';
-import ToggleSharScreen from './buttons-options/ToggleScreenSharingButton';
+import RaiseHandButton from './buttons-options/RaiseHandButton';
 
 export default function LeftOptions () {
     return (
         <MuiBox
-            justifyContent="right"
+            justifyContent="left"
             alignItems="center"
             display="flex"
             component={Stack}
             spacing={2}
             direction="row"
-            bgcolor="red"
         >
-          <ToggleSharScreen/>
-          <ToggleChatButton/>
-          <ToggleListMembersButton/>
+          <RaiseHandButton/>
         </MuiBox>
     )
 }

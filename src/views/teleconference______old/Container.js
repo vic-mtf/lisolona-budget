@@ -12,7 +12,6 @@ export default function Container () {
     const [page, setPage] = useState(1);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-        //console.log(newPage);
     };
 
     return (

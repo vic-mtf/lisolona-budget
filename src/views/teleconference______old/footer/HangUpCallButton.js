@@ -22,10 +22,10 @@ export default function HangUpCallButton () {
   const dispatch = useDispatch();
 
   const hanldeHangUpCall = useCallback((hot='user') => {
-    agoraEngine?.localTracks.forEach(strack => {
-      strack?.close();
-      strack?.stop();
-    });
+    // agoraEngine?.localTracks.forEach(strack => {
+    //   strack?.close();
+    //   strack?.stop();
+    // });
     agoraEngine?.leave();
     dispatch(addTeleconference({
         key: 'data', 

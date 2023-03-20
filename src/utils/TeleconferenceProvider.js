@@ -1,8 +1,6 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { useDispatch, useSelector } from "react-redux";
-import { addTeleconference } from "../redux/teleconference";
-
+import { useSelector } from "react-redux";
 const Teleconference = createContext(null);
 export const useTeleconference = () => useContext(Teleconference);
 const AGORA_PARAMS = {
@@ -11,111 +9,73 @@ const AGORA_PARAMS = {
 };
 
 export default function TeleconferenceProvider ({children}) {
-    const [stream, setStream] = useState(null);
-    const [displayStream, setDisplayStream] = useState(null);
+    const [videoTrack, setVideoTrack] = useState(null);
+    const [audioTrack, setAudioTrack] = useState(null);
+    const [screenVideoTrack, setScreenVideoTrack] = useState(null);
     const [participants, setParticipants] = useState([]);
-    const {id, options, mediaType} = useSelector(store => {
-        const options = store.teleconference?.options;
-        const mediaType = store.teleconference?.mediaType;
-        const id = store.user?.id;
-        return {id, options, mediaType};
+    const { mode } = useSelector(store => {
+        const mode = store.teleconference?.meetingMode;
+        return {mode};
     });
-    const tracksRef = useRef(null);
-    const dispatch = useDispatch();
-    const audio = useMemo(() => new Audio() ,[]);
+    const values = useMemo(() => {
+        const audio = new Audio();
+        const timers = [];
+        return {audio, timers};
+    },[]);
     const localTracks = useMemo(() => {
-        let tracks = null;
-        if(stream) {
-           const [streamVideoTrack] = stream.getVideoTracks();
-           const [streamAudioTrack] = stream.getAudioTracks();
-           const videoTrack = AgoraRTC.createCustomVideoTrack({
-            mediaStreamTrack: streamVideoTrack,
-           });
-           const audioTrack = AgoraRTC.createCustomAudioTrack({
-            mediaStreamTrack: streamAudioTrack,
-           });
-           tracks = {
-            uid: id,
-            videoTrack,
-            audioTrack
-           };
-        }
-        return tracks;
-    }, [stream, id]);
-    
+        let tracks = {};
+        if(videoTrack) tracks.videoTrack = videoTrack;
+        if(audioTrack) tracks.audioTrack = audioTrack;
+        if(screenVideoTrack) tracks.screenVideoTrack = screenVideoTrack;
+        return Object.keys(tracks).length === 0 ? null : tracks;
+    }, [videoTrack, audioTrack, screenVideoTrack]);
+
+    const customerIsAvailableing = useMemo(() => Boolean(localTracks), [localTracks]);
     const agoraEngine = useMemo(() => {
         let agoraClient = null;
-        if(stream) 
+        if(customerIsAvailableing) { 
             agoraClient = AgoraRTC.createClient(AGORA_PARAMS);
+            values.agoraEngine = agoraClient;
+        }
         return agoraClient;
-    }, [stream]);
+    }, [customerIsAvailableing, values]);
 
-    const handleJoinChannel = useCallback(async (calback) => {
-        if(options && stream) {
-            const {appId, channel, channelToken} = options;
-            let status;
-            dispatch(addTeleconference({
-                key: 'loading',
-                data: true,
-            }));
-            try {
-                await agoraEngine.join(appId, channel, channelToken, id);
-                status = 'success';
-                dispatch(addTeleconference({
-                    key: 'joined',
-                    data: true,
-                }));
-            } catch (error) {
-                dispatch(addTeleconference({
-                    key: 'date',
-                    data: {loading: false, error: 'call'}
-                }));
-                status = 'error';
-            }
-            if(typeof calback === 'function')
-                calback(status, agoraEngine);
-            
+    const onLeaveChannel = useCallback(async() => {
+        const agoraEngine = values.agoraEngine;
+        if(agoraEngine && mode === 'none') {
+            await agoraEngine.leave();
+            delete values.agoraEngine;
+            setParticipants([]);
         }
-    }, [options, id, agoraEngine, dispatch, stream]);
-
-    const handlePublishLocalTracks =  useCallback(async () => {
-        if(stream) {
-            dispatch(addTeleconference({key: 'loading', data: true}));
-            try {
-                const tracks = [
-                    mediaType === 'video' && localTracks?.videoTrack,
-                    localTracks?.audioTrack
-                ].filter(track => track);
-                await agoraEngine.publish(tracks);
-            } catch (error) {
-                dispatch(addTeleconference({key: 'error', data: 'call'}));
-            }
-            dispatch(addTeleconference({key: 'loading', data: false}));
-        }
-    },[localTracks, agoraEngine, dispatch, addTeleconference, stream, mediaType]);
+    }, [values.agoraEngine, setParticipants, mode]);
 
     const getters = {
-        stream, 
+        ...values,
         localTracks, 
         participants,
-        audio,
         agoraEngine,
-        displayStream,
-        tracksRef
     };
     const setters = {
-        setStream, 
         setParticipants, 
-        handleJoinChannel,
-        handlePublishLocalTracks,
-        setDisplayStream,
+        setVideoTrack,
+        setAudioTrack,
+        setScreenVideoTrack,
     };
+    
+    useEffect(()=> {
+        const {timers, audio, agoraEngine} = values;
+        if(mode === 'on' || mode === 'none') {
+            timers.forEach(timer => window.clearTimeout(timer));
+            audio.src = null;
+            while(timers.length) timers.pop();
+        }
+        onLeaveChannel();
+    }, [mode, values, onLeaveChannel]);
 
     return (
         <Teleconference.Provider 
             value={[getters, setters]}
-        >
-          {children}
+        >{children}
         </Teleconference.Provider>
     )
 };
