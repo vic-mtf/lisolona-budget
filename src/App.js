@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import BoxGradient from "./components/BoxGradient";
@@ -77,9 +77,7 @@ function App() {
 }, [connected, dispatch]);
 
   return (
-    <BoxGradient
-      overflow="hidden"
-    >
+    <BoxGradient overflow="hidden">
         {(startApp && socket) ? 
         <RouterProvider 
           router={router}

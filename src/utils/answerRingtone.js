@@ -7,6 +7,7 @@ import signalRing from '../assets/ton-mobi.mp3';
 import busyPhoneRing from '../assets/busyphone.mp3';
 import sendMessageRing from '../assets/banana-peel-slip-zip-sound.wav';
 import answeringMachineRing from '../assets/answering-machine.wav';
+import actionRing from '../assets/s8note_s1tyd7115333623.mp3';
 import errorRing from '../assets/computer-error.wav';
 
 const nameSpace = 'GEID_LISOLONABUDGET_AUDIO_RINGTONE_SYTEME';
@@ -45,6 +46,9 @@ export default function answerRingtone({type, audio: _audio}) {
                 break;
             case 'send' : 
                 audio.src = sendMessageRing;
+                break;
+            case 'action' : 
+                audio.src = actionRing;
                 break;
             case 'answering-machine' : 
                 audio.src = answeringMachineRing;

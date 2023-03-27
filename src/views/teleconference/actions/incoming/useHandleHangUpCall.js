@@ -17,15 +17,14 @@ export default function useHandleHangUpCall () {
     const [{audio, timers}] = useTeleconference();
     useEffect(() => {
         let ringtone;
-        const handleHangUpCall = ({details}) => {
-            console.log('***********', 'hang-up', details)
+        const handleHangUpCall = ({details}) => {   
             if(mode === 'incoming') {
                 const {response} = details;
                 switch(response) {
                     case 'stop':
                         timers.forEach(timer => window.clearTimeout(timer));
                         audio.src = null;
-                        dispatch(initializeState())
+                        dispatch(initializeState());
                         break;
                     default: break;
                 }
@@ -51,5 +50,5 @@ export default function useHandleHangUpCall () {
         return () => {
             socket?.off('hang-up', handleHangUpCall);
         }
-    },[dispatch, socket, mode, audio, error]);
+    },[dispatch, socket, mode, audio, error, timers]);
 }

@@ -198,6 +198,7 @@ export default function ContactListForm () {
                             color="inherit"
                             sx={{ml: 1}}
                             fullWidth
+                            disabled
                         >
                             Inviter un contact
                         </Button>

@@ -1360,7 +1360,7 @@
 
 "@interactjs/types@1.10.17":
   version "1.10.17"
-  resolved "https://registry.yarnpkg.com/@interactjs/types/-/types-1.10.17.tgz#1649de06d9ead790c81ecece76736b852bdfc77e"
+  resolved "https://registry.npmjs.org/@interactjs/types/-/types-1.10.17.tgz"
   integrity sha512-X2JpoM7xUw0p9Me0tMaI0HNfcF/Hd07ZZlzpnpEMpGerUZOLoyeThrV9P+CrBHxZrluWJrigJbcdqXliFd0YMA==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
@@ -2809,15 +2809,15 @@ agent-base@6:
     debug "4"
 
 agora-rtc-sdk-ng@^4.16.1:
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.16.1.tgz#54f72870ab4670805c4cf1b5562b3b0762b53c6a"
-  integrity sha512-9ccs22X/BEAGe5tIGx2OqWkGpdvuGoB7xq72BouuR5HhP0WVBIBimixOvXXftlY9SwDWsBfKhBV23EtA7jtrTA==
+  version "4.17.0"
+  resolved "https://registry.npmjs.org/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.17.0.tgz"
+  integrity sha512-TmqnvWr7J9cVm62KzE3jhBjVcQpcvxj0GoSMHUylce5GWZrN6rkDLgcPNvhNmPPK5Slqwsx/d70FrWM7T3ngQw==
   dependencies:
     agora-rte-extension "^1.2.3"
 
 agora-rte-extension@^1.2.3:
   version "1.2.3"
-  resolved "https://registry.yarnpkg.com/agora-rte-extension/-/agora-rte-extension-1.2.3.tgz#979b96df0146300296f9f37212ffa67656c698ef"
+  resolved "https://registry.npmjs.org/agora-rte-extension/-/agora-rte-extension-1.2.3.tgz"
   integrity sha512-k3yNrYVyzJRoQJjaJUktKUI1XRtf8J1XsW8OzYKFqGlS8WQRMsES1+Phj2rfuEriiLObfuyuCimG6KHQCt5tiw==
 
 ajv-formats@^2.1.1:
@@ -3493,7 +3493,7 @@ cliui@^7.0.2:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
-clsx@^1.1.1, clsx@^1.2.1:
+clsx@^1.1.0, clsx@^1.1.1, clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -5249,6 +5249,11 @@ globby@^11.0.4, globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
+goober@^2.0.33:
+  version "2.1.12"
+  resolved "https://registry.npmjs.org/goober/-/goober-2.1.12.tgz"
+  integrity sha512-yXHAvO08FU1JgTXX6Zn6sYCUFfB/OJSX8HHjDSgerZHZmFKAb08cykp5LBw5QnmyMcZyPRMqkdyHUSSzge788Q==
+
 gopd@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/gopd/-/gopd-1.0.1.tgz"
@@ -5626,7 +5631,7 @@ inline-style-parser@0.1.1:
 
 interactjs@^1.10.17:
   version "1.10.17"
-  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.10.17.tgz#aed66a63020cd092236133f9149e6448dc405d72"
+  resolved "https://registry.npmjs.org/interactjs/-/interactjs-1.10.17.tgz"
   integrity sha512-grjHJgnWkCoQLmAlk2yalNd1r0ztUhXLJNVjSOfWn1wfNNgU2tx1cDEkro9WYerDNC9UG3MZTeD4O6zOM5gbIA==
   dependencies:
     "@interactjs/types" "1.10.17"
@@ -6992,6 +6997,14 @@ normalize-url@^6.0.1:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-6.1.0.tgz"
   integrity sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==
 
+notistack@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/notistack/-/notistack-3.0.1.tgz"
+  integrity sha512-ntVZXXgSQH5WYfyU+3HfcXuKaapzAJ8fBLQ/G618rn3yvSzEbnOB8ZSOwhX+dAORy/lw+GC2N061JA0+gYWTVA==
+  dependencies:
+    clsx "^1.1.0"
+    goober "^2.0.33"
+
 npm-run-path@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/npm-run-path/-/npm-run-path-4.0.1.tgz"
@@ -8299,7 +8312,7 @@ react@^18.2.0:
 
 reactablejs@^0.3.0:
   version "0.3.0"
-  resolved "https://registry.yarnpkg.com/reactablejs/-/reactablejs-0.3.0.tgz#d4c876d3810436dd507409cd741977ae28d4e9dc"
+  resolved "https://registry.npmjs.org/reactablejs/-/reactablejs-0.3.0.tgz"
   integrity sha512-4ccVyirslzGLcAx54N42zv/gKIy5uYmbkzFxIQdW+ipcEuUffiuV9gukse/TlvtT4mhTRmVgHaNBctetaeVb+Q==
 
 read-cache@^1.0.0:

@@ -19,30 +19,33 @@ export default function ToggleScreenSharingButton () {
     const dispatch = useDispatch();
     const [{localTracks, agoraEngine}, {setScreenVideoTrack}] = useTeleconference();
 
-    const handleToggleScreenSharing = useCallback(async () => {
+    const handleToggleScreenSharing = useCallback(async (state) => {
         const {videoTrack, screenVideoTrack} = localTracks || {}
         let params;
         setLoading(true);
-        if(!turnOn) {
+        const screenSharing = typeof state === 'boolean' ? state : turnOn;
+        if(screenSharing) {
+            screenVideoTrack.stop();
+            await agoraEngine.unpublish(screenVideoTrack);
+            if(videoTrack?.enable)
+                await agoraEngine.publish(videoTrack);
+            setScreenVideoTrack(null);
+            screenVideoTrack.close();
+            const tracks = stream.getTracks();
+            tracks.forEach((track) => track.stop());
+            params = {key: 'screenSharing', data: false};
+        } else {
             try {
                 const screenVideoTrack = await AgoraRTC.createScreenVideoTrack();
                 const mediaStream = new MediaStream([screenVideoTrack.getMediaStreamTrack()]);
                 setStream(mediaStream);
                 setScreenVideoTrack(screenVideoTrack);
-                videoTrack.stop();
-                await agoraEngine.unpublish(videoTrack);
+                //videoTrack.stop();
+                if(videoTrack)
+                    await agoraEngine.unpublish(videoTrack);
                 await agoraEngine.publish(screenVideoTrack);
                 params = {key: 'screenSharing', data: true};
             } catch (error) {console.log(error)}
-        } else {
-                screenVideoTrack.stop();
-                await agoraEngine.unpublish(screenVideoTrack);
-                await agoraEngine.publish(videoTrack);
-                setScreenVideoTrack(null);
-                screenVideoTrack.close();
-                const tracks = stream.getTracks();
-                tracks.forEach((track) => track.stop());
-                params = {key: 'screenSharing', data: false};
         }
         setLoading(false);
         if(params) dispatch(addTeleconference(params))
@@ -51,8 +54,8 @@ export default function ToggleScreenSharingButton () {
     useEffect(() => {
         if(stream && turnOn)
             stream.oninactive = handleToggleScreenSharing;
-    }, [stream, handleToggleScreenSharing, turnOn]);
-
+        if(mode === 'none') handleToggleScreenSharing(true);
+    }, [stream, handleToggleScreenSharing, turnOn, mode]);
     return (
         <Zoom in={mode === 'on'}>
             <Tooltip

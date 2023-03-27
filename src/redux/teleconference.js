@@ -18,6 +18,7 @@ const initialState = {
     response: null,
     error: null,
     joined: false,
+    priorityTargetId: null,
 };
 
 const teleconference = createSlice({

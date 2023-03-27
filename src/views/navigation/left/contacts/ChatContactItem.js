@@ -1,22 +1,18 @@
 import { 
     ListItemButton, 
-    ListItemAvatar, 
     ListItemText,
     Menu,
     ListItem,
     Badge,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useRef } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import Avatar from "../../../../components/Avatar";
-import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
-import CustomBadge from "../../../../components/CustomBadge";
 import Typography from "../../../../components/Typography";
 import timeHumanReadable from "../../../../utils/timeHumanReadable";
-import parse from 'html-react-parser';
 import { convert } from "html-to-text";
 import highlightWord from "../../../../utils/highlightWord";
+import ContactAvatar from "./ContactAvatar";
 
 export default function ChatContactItem ({
     avatarSrc, 
@@ -37,10 +33,7 @@ export default function ChatContactItem ({
             return {selected, search}
         }
     );
-    const lastNotice = convert(
-        _lastNotice, 
-        { wordwrap: 130 }
-    );
+    const lastNotice = convert(_lastNotice, { wordwrap: 130 });
     return (
         <React.Fragment>
             <ListItem
@@ -53,43 +46,16 @@ export default function ChatContactItem ({
                         event.preventDefault();
                         const mouseX = event.clientX + 2;
                         const mouseY = event.clientY - 6;
-                        setContextMenu(
-                        contextMenu === null ? {mouseX, mouseY} : null,
-                        );
+                        setContextMenu(contextMenu === null ? {mouseX, mouseY} : null);
                     }}
                     onClick={onClick}
                 >
-                <ListItemAvatar>
-                    {type === 'direct'&&
-                    <CustomBadge 
-                        overlap="circular"
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        variant="dot"
-                        online={online}
-                    >
-                        <Avatar
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
-                            alt={name}
-                            children={name?.charAt(0)}
-                        />
-                    </CustomBadge>}
-                    {type === 'room'&&
-                    <CustomAvatarGroup>
-                        <Avatar
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
-                            //alt={name}
-                            //children={name?.charAt(0)}
-                        />
-                        <Avatar
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
-                            alt={name}
-                            //children={name?.charAt(0)}
-                        />
-                    </CustomAvatarGroup>}
-                </ListItemAvatar>
+                <ContactAvatar
+                    id={otherPorps.id}
+                    avatarSrc={avatarSrc}
+                    type={type}
+                    name={name}
+                />
                 <ListItemText
                     primary={
                         <Stack direction="row" spacing={1} >
@@ -164,10 +130,6 @@ export default function ChatContactItem ({
                     vertical: 'bottom',
                     horizontal: 'center',
                 }}
-                // transformOrigin={{
-                //     vertical: 'top',
-                //     horizontal: 'letf',
-                // }}
             ></Menu>
         </React.Fragment>
     )

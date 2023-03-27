@@ -1,5 +1,5 @@
 import { Backdrop, Box as MuiBox, Fade, Slide, Zoom } from '@mui/material';
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTeleconference } from '../../../utils/TeleconferenceProvider';
 import { drawerWidth } from '../../navigation/Navigation';
@@ -50,6 +50,7 @@ export default function TeleconferenceUI ({children}) {
                                 easing: theme.transitions.easing.sharp,
                                 duration: theme.transitions.duration.leavingScreen,
                             }),
+                            position: 'relative',
                         }}
                     >
                         <TeleconferenceHeader/>

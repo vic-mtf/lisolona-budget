@@ -28,6 +28,7 @@ export default function Header ({onChangeNavigation, navigation}) {
     const notificationsNumber = useSelector(
         store => store?.data?.notifications?.length || 0
     );
+    
     const navigationOptions = [
         {
             label: 'Conversations',
@@ -50,6 +51,7 @@ export default function Header ({onChangeNavigation, navigation}) {
             nbr: notificationsNumber,
         }
     ];
+
     return (
         <React.Fragment>
             <ThemeProvider theme={createTheme({palette:{mode: 'dark'}})}>

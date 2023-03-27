@@ -12,6 +12,13 @@ export default function ConfigAppWrapper ({ children }) {
       document.head.parentElement.lang = lang;
       document.head.parentElement.style.backgroundColor = bgcolor;
       document.body.style.backgroundColor = bgcolor;
+      document.body.ondblclick = event => {
+        event.stopPropagation();
+        event.preventDefault();
+        if(document.fullscreenElement) 
+            document.exitFullscreen();
+        else document.body.requestFullscreen();
+    }
     }, [lang, bgcolor]);
   
     return ( 

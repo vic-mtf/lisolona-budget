@@ -1,24 +1,33 @@
 import {
-    Box as MuiBox, Card, createTheme, Slide, ThemeProvider, Toolbar, Tooltip
+    Box as MuiBox, 
+    Card, 
+    createTheme, 
+    Slide, 
+    ThemeProvider, 
+    Toolbar, 
+    Tooltip
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import interact from 'interactjs';
 import CoPresentOutlinedIcon from '@mui/icons-material/CoPresentOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import IconButton from '../../../../../components/IconButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addTeleconference } from '../../../../../redux/teleconference';
 
 export default function FloatFrame ({children}) {
     const elRef = useRef();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
+    const {disabledGrid} = useSelector(store => {
+        const disabledGrid = Boolean(store.teleconference.priorityTargetId);
+        return {disabledGrid}
+    });
     const handleChangeMirrorMode = data => () => 
         dispatch(addTeleconference({
             key: 'videoMirrorMode',
             data,
-        }))
-
+        }));
     useEffect(() => {
         interact(elRef.current)
         .draggable({
@@ -58,8 +67,9 @@ export default function FloatFrame ({children}) {
                 top: '10px',
                 overflow: 'hidden',
                 justifyContent: 'center',
-                alignItems: 'center'
-                
+                alignItems: 'center',
+                bgcolor: '#09162a',
+                border: theme => `.1px solid ${theme.palette.background.paper}`
             }}
         >
             <ThemeProvider theme={createTheme({palette: { mode: 'dark'}})}>
@@ -78,14 +88,17 @@ export default function FloatFrame ({children}) {
                     >
                         <Tooltip 
                             arrow 
-                            title="Afficher dans l'écran d'appel"
+                            title="Afficher sur la grille"
                         >
-                            <IconButton
-                                sx={{mx: 1}}
-                                onClick={handleChangeMirrorMode('grid')}
-                            >
-                                <CoPresentOutlinedIcon fontSize="small"/>
-                            </IconButton>
+                            <div>
+                                <IconButton
+                                    sx={{mx: 1}}
+                                    onClick={handleChangeMirrorMode('grid')}
+                                    disabled={disabledGrid}
+                                >
+                                    <CoPresentOutlinedIcon fontSize="small"/>
+                                </IconButton>
+                            </div>
                         </Tooltip>
                         <Tooltip 
                             arrow 

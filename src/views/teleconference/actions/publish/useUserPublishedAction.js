@@ -1,35 +1,45 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useTeleconference } from "../../../../utils/TeleconferenceProvider";
 
 export default function useUserPublishedAction () {
     const [{agoraEngine, participants}, {setParticipants}] = useTeleconference();
-    const participantRef = useRef({tracks: {}, mediaType: null});
-
     useEffect(() => {
-        const newParticipant = participantRef.current;
         const handleUserPublished = async (user, mediaType) => {
             await agoraEngine?.subscribe(user, mediaType);
+            const newParticipant = {tracks: {}, mediaType: null};
             if(mediaType === 'video') {
                 newParticipant.tracks.videoTrack = user.videoTrack;
+                newParticipant.tracks.audioTrack = user.audioTrack;
                 newParticipant.tracks.uid = user.uid;
-                newParticipant.mediaType = mediaType;
+                if(!newParticipant.mediaType)
+                    newParticipant.mediaType = mediaType;
             }
+            
             if(mediaType === 'audio') {
                 newParticipant.tracks.audioTrack = user.audioTrack;
                 newParticipant.tracks.uid = user.uid;
-                newParticipant.mediaType = mediaType;
-                user?.audioTrack?.play();
+                if(!newParticipant.mediaType)
+                    newParticipant.mediaType = mediaType;
             }
-            //console.log('**********publication**********', {user, mediaType});
+
             setParticipants(users => {
                 const participants = [...users];
                 const index = participants?.findIndex(
-                    participant => 
-                    participant?.tracks?.uid === user?.uid
+                    participant => participant?.tracks?.uid === user?.uid
                 );
                 if(index === -1)
                     participants.push(newParticipant);
-                else participants[index] =  newParticipant;
+                else {
+                    const oldParticipant = participants[index];
+                    participants[index] =  {
+                        ...newParticipant, 
+                        mediaType: oldParticipant.mediaType,
+                        tracks: {
+                            ...oldParticipant.tracks,
+                            ...newParticipant.tracks,
+                        }
+                    };
+                }
                 return [...participants];
             }); 
         }
@@ -42,7 +52,47 @@ export default function useUserPublishedAction () {
             })
         }
         const handleUserUnPublished = (user, mediaType) => {
-           // console.log('**********depublication**********', {audioTrack: user.audioTrack, mediaType});
+            if(mediaType === 'video') {
+                setParticipants(users => {
+                    const participants = [...users];
+                    const index = participants?.findIndex(
+                        participant => participant?.tracks?.uid === user?.uid
+                    );
+                    if(index !== -1) {
+                        const oldParticipant = participants[index];
+                        delete participants[index].tracks?.videoTrack;
+                        participants[index] =  {
+                            mediaType: oldParticipant.mediaType,
+                            tracks: {
+                                ...oldParticipant.tracks,
+                                audioTrack: user.audioTrack,
+                                videoTrack: undefined,
+                            }
+                        };
+                    };
+                    return [...participants];
+                }); 
+            }
+            if(mediaType === 'audio') {
+                setParticipants(users => {
+                    const participants = [...users];
+                    const index = participants?.findIndex(
+                        participant => participant?.tracks?.uid === user?.uid
+                    );
+                    if(index !== -1) {
+                        const oldParticipant = participants[index];
+                        delete participants[index].tracks?.audioTrack;
+                        participants[index] =  {
+                            mediaType: oldParticipant.mediaType,
+                            tracks: {
+                                ...oldParticipant.tracks,
+                                videoTrack: user.videoTrack,
+                            }
+                        };
+                    }
+                    return [...participants];
+                }); 
+            }
         }
         agoraEngine?.on('user-published', handleUserPublished);
         agoraEngine?.on('user-unpublished', handleUserUnPublished);

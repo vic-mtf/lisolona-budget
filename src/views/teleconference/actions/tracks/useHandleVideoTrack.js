@@ -9,10 +9,11 @@ export default function useHandleVideoTrack () {
     const [error, setError] = useState();
     const [{localTracks, agoraEngine},{setVideoTrack}] = useTeleconference();
     const [stream, setStream] = useState();
-    const {mode, video} = useSelector(store => {
+    const {mode, video, isNotScreenSharing} = useSelector(store => {
         const mode = store.teleconference.meetingMode;
         const video = store.teleconference.video;
-        return {mode, video};
+        const isNotScreenSharing = !store.teleconference.screenSharing;
+        return {mode, video, isNotScreenSharing};
     });
 
     useEffect(() => {
@@ -46,5 +47,15 @@ export default function useHandleVideoTrack () {
             setStream(null)
         }
     }, [mode, localTracks, setVideoTrack, video, agoraEngine, stream]);
+
+    useEffect(() => {
+        const videoTrack = localTracks?.videoTrack;
+        const notFoundTrack = !agoraEngine?.localTracks.find(
+            ({trackMediaType}) => trackMediaType === 'video'
+        );
+            if(mode === 'on' && videoTrack && notFoundTrack && isNotScreenSharing && video)
+                (async () => await agoraEngine.publish(videoTrack))();
+    },[mode, localTracks, agoraEngine, video, isNotScreenSharing])
+
     return error;
 } 

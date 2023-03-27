@@ -17,7 +17,7 @@ export default function RelatedContactsList () {
     const [atEnd, scrollProps] = useScrollEnd();
     //const socket = useSocket();
     const shadow = useShadow();
-    const { contacts, conversations } = useSelector(store => {
+    const { contacts } = useSelector(store => {
         const search = store.data?.search;
         const contacts = store.data?.contacts ?
         groupArrayInAlphaOrder(
@@ -27,8 +27,7 @@ export default function RelatedContactsList () {
                 ),
             ) : 
         null;
-        const conversations = store?.data?.conversations
-        return {contacts, conversations}
+        return {contacts}
     });
     const dispatch = useDispatch();
 

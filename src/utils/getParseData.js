@@ -18,7 +18,7 @@ export default function getParseData  (_data, user) {
             lastNotice,
             updatedAt: chat?.updatedAt,
             name,
-            avatarSrc: chat?.image,
+            avatarSrc: chat?.type === 'direct' ? interlocutor?.imageUrl : chat?.imageUrl,
             online: false,
         }
     });

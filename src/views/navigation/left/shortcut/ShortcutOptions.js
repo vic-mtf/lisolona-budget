@@ -1,15 +1,14 @@
 import { Stack, Toolbar, Tooltip, Box as MuiBox, Tabs, MenuItem } from "@mui/material";
 import React from "react";
 import IconButton from "../../../../components/IconButton";
-import Avatar from "../../../../components/Avatar";
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
-import CustomBadge from "../../../../components/CustomBadge";
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
 import AvatarProfile from "./AvatarProfile";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSkeleton from "../../../../components/Skeleton";
 import { addData } from "../../../../redux/data";
+import ShortcutAvatar from "./ShortcutAvatar";
 
 export default function ShortcutOptions () {
     const {chatGroups, chatId} = useSelector(store => {
@@ -59,13 +58,13 @@ export default function ShortcutOptions () {
                             }
                         }}
                     >
-                        <Avatar 
+                        <ShortcutAvatar
+                            name={name}
                             alt={name}  
                             src={avatarSrc}
-                            srcSet={avatarSrc || image}
-                            children={name?.charAt(0)}
+                            id={_id}
+                            len={1}
                             title={`Lisanga: ${name}\nDescription: ${description}`}
-                            
                         />
                     </Tab>
                     )).slice(0, 100)}

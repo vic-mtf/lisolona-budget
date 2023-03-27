@@ -17,6 +17,7 @@ import CustomBadge from "../../../../components/CustomBadge";
 import highlightWord from "../../../../utils/highlightWord";
 import { useDispatch, useSelector } from "react-redux";
 import { addTeleconference } from "../../../../redux/teleconference";
+import ContactAvatar from "./ContactAvatar";
 
 export default function RelatedContactItem ({
     avatarSrc, 
@@ -29,7 +30,7 @@ export default function RelatedContactItem ({
 }) {
     const {search, disabled} = useSelector(store => {
             const search = store.data?.search;
-            const disabled = store?.teleconference?.meetingMode !== 'no-meeting';
+            const disabled = store?.teleconference?.meetingMode !== 'none';
             const isCalling = store?.teleconference?.isCalling;
             return {search, disabled};
         });
@@ -106,20 +107,11 @@ export default function RelatedContactItem ({
                     selected={selected}
                     onClick={onClick}
                 >
-                <ListItemAvatar>
-                    <CustomBadge
-                            overlap="circular"
-                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                            variant="dot"
-                            online={false}
-                        >
-                            <Avatar
-                                src={avatarSrc}
-                                srcSet={avatarSrc}
-                                alt={name}
-                            />
-                    </CustomBadge>
-                </ListItemAvatar>
+                 <ContactAvatar
+                    avatarSrc={avatarSrc}
+                    name={name}
+                    id={id}
+                 />   
                 <ListItemText
                     primary={highlightWord(name, search)}
                     secondary={highlightWord(email, search)}
@@ -160,10 +152,6 @@ export default function RelatedContactItem ({
                     vertical: 'bottom',
                     horizontal: 'center',
                 }}
-                // transformOrigin={{
-                //     vertical: 'top',
-                //     horizontal: 'letf',
-                // }}
             ></Menu>
         </React.Fragment>
     )

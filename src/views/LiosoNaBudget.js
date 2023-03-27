@@ -21,6 +21,7 @@ export default function Archives () {
                 name,
                 email: contact?.email,
                 id: contact?._id,
+                avatarSrc: contact?.imageUrl,
             };
         });
         dispatch(addData({key: 'contacts', data}));

@@ -1,19 +1,17 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { useSelector } from "react-redux";
+
 const Teleconference = createContext(null);
 export const useTeleconference = () => useContext(Teleconference);
-const AGORA_PARAMS = {
-    codec: 'vp8', 
-    mode: 'rtc'
-};
+const AGORA_PARAMS = {codec: 'vp8', mode: 'rtc'};
 
 export default function TeleconferenceProvider ({children}) {
     const [videoTrack, setVideoTrack] = useState(null);
     const [audioTrack, setAudioTrack] = useState(null);
     const [screenVideoTrack, setScreenVideoTrack] = useState(null);
     const [participants, setParticipants] = useState([]);
-    const { mode } = useSelector(store => {
+    const {mode} = useSelector(store => {
         const mode = store.teleconference?.meetingMode;
         return {mode};
     });
@@ -22,6 +20,7 @@ export default function TeleconferenceProvider ({children}) {
         const timers = [];
         return {audio, timers};
     },[]);
+
     const localTracks = useMemo(() => {
         let tracks = {};
         if(videoTrack) tracks.videoTrack = videoTrack;
@@ -63,7 +62,7 @@ export default function TeleconferenceProvider ({children}) {
     };
     
     useEffect(()=> {
-        const {timers, audio, agoraEngine} = values;
+        const {timers, audio} = values;
         if(mode === 'on' || mode === 'none') {
             timers.forEach(timer => window.clearTimeout(timer));
             audio.src = null;
@@ -73,9 +72,8 @@ export default function TeleconferenceProvider ({children}) {
     }, [mode, values, onLeaveChannel]);
 
     return (
-        <Teleconference.Provider 
-            value={[getters, setters]}
-        >{children}
+        <Teleconference.Provider value={[getters, setters]}>
+            {children}
         </Teleconference.Provider>
     )
 };

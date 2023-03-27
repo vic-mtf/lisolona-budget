@@ -1,34 +1,39 @@
 import {
-    Box as MuiBox, createTheme, Grid, ThemeProvider, useTheme
+    Box as MuiBox, 
+    Grid
 } from '@mui/material';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTeleconference } from '../../../../utils/TeleconferenceProvider';
-import { useTeleconferenceUI } from '../TeleconferenceUI';
 import gridSystem from './gridSystem';
 import MeetingStatus from './meeting-status/MeetingStatus';
 import MirrorVideoFrame from './mirror-video-frame/MirrorVideoFrame';
 import VideoFrame from './video-frame/VideoFrame';
-import BoxGradient from '../../../../components/BoxGradient';
-import Avatar from '../../../../components/Avatar';
 
 export default function TeleconferenceBody () {
-    const {show, showStatus, self} = useSelector(store => {
-        const show = store.teleconference?.video;
+    const {showStatus, self, priorityTargetId} = useSelector(store => {
         const self = Number(store.teleconference?.videoMirrorMode === 'grid');
         const showStatus = store.teleconference?.meetingMode !== 'on';
-        return {show, showStatus, self}
+        const priorityTargetId = store.teleconference?.priorityTargetId;
+        return {showStatus, self, priorityTargetId};
     });
     const [{participants} ] = useTeleconference();
-    
-    const grids = useMemo(() => participants, [participants]);
+    const grids = useMemo(() => {
+        const users = priorityTargetId ? 
+        [participants.find(({tracks}) => tracks.uid === priorityTargetId)] :
+        participants
+        return users;
+    }, [participants, priorityTargetId]);
+
     const gridNumber = useMemo(() => grids?.length + self
     ,[grids, self]);
 
     const sytemGrid = useMemo(() => 
-        grids.length === 0 ? 12 : (12 / gridSystem[gridNumber])
-    ,[grids, gridNumber]);
-   
+        (grids.length === 0 || showStatus) ? 
+        12 : (12 / gridSystem[gridNumber])
+    ,[grids, gridNumber, showStatus]);
+    console.log(participants);
+
     return (
         <MuiBox
             display="flex"
@@ -43,19 +48,19 @@ export default function TeleconferenceBody () {
                 display="flex"
                 justifyContent="center"
             >
-            {show &&
-            <MirrorVideoFrame
-                gridProps={{
-                    xs: sytemGrid,
-                    display: 'flex',
-                    sx: {
-                        border: theme => 
-                        `.1px solid ${theme.palette.background.paper}`,
-                    }
-                }}
-            />}
-                {showStatus && <MeetingStatus/>}
-                {grids.map((data, index) =>
+                <MirrorVideoFrame
+                    gridProps={{
+                        xs: sytemGrid,
+                        display: 'flex',
+                        sx: {
+                            border: theme => 
+                            `.1px solid ${theme.palette.background.paper}`,
+                        }
+                    }}
+                />
+                {showStatus ? 
+                (<MeetingStatus/>) :
+                grids.map((data, index) =>
                     <Grid
                         item
                         key={index}
@@ -76,14 +81,6 @@ export default function TeleconferenceBody () {
                             sx={{overflow: 'hidden', bgcolor: '#09162a'}}
                         >
                             <VideoFrame data={data}/>
-                            {/* <Avatar
-                                sx={{
-                                    width: 70,
-                                    height: 70,
-                                    border: 'none',
-                                    borderRadius: 1,
-                                }}
-                            /> */}
                         </MuiBox>
                     </Grid>
                 )}

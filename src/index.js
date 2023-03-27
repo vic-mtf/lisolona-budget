@@ -6,6 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ConfigAppWrapper from './utils/ConfigAppWrapper';
 import SocketIOProvider from './utils/SocketIOProvider';
+import { SnackbarProvider } from 'notistack';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -14,7 +15,9 @@ root.render(
       <ReduxProvider store={store}>
         <SocketIOProvider>
           <ConfigAppWrapper>
-            <App/>
+              <SnackbarProvider>
+                <App/>
+              </SnackbarProvider>
           </ConfigAppWrapper>
         </SocketIOProvider>
       </ReduxProvider>

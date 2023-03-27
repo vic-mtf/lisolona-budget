@@ -20,6 +20,6 @@ export default function usePublishLocalTracks () {
             };
             dispatch(addTeleconference(data));
         }
-    },[localTracks, agoraEngine, dispatch, addTeleconference]);
+    },[localTracks, agoraEngine, dispatch]);
     return handlePublishLocalTracks;
 }
