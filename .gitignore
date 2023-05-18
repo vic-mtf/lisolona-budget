@@ -22,3 +22,7 @@ build.zip
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# private data
+/public/videos
+/public/workers
