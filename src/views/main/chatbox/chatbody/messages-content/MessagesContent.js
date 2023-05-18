@@ -46,9 +46,9 @@ function MessageContent ({rootRef: _rootRef, target}) {
     };
     const loadingMessages = await messageWorker.getMessages(data);
     console.log(loadingMessages);
-    // setMessageGrouping(
-    //   messageGrouping => messageGrouping.concat([event.data])
-    // );
+    setMessageGrouping(
+      messageGrouping => messageGrouping.concat(loadingMessages)
+    );
   }, [userId, target, messages]);
 
   useLayoutEffect(() => {

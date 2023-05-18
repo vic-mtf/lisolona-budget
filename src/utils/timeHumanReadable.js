@@ -1,6 +1,6 @@
 export default function timeHumanReadable (
     _date = new Date(), 
-    diabledNum = false, 
+    disabledNum = false, 
     params={showDetail: false 
 }) {
     const now = new Date();
@@ -19,7 +19,7 @@ export default function timeHumanReadable (
         
         let gap = 0;
         if(nowDay === dateDay)
-            return diabledNum ? `Aujourd'hui ${showDetail ? 'à ' + getHours : ''}`.trim() : getHours;
+            return disabledNum ? `Aujourd'hui ${showDetail ? 'à ' + getHours : ''}`.trim() : getHours;
         if(nowDay > dateDay)
             gap = nowDay - dateDay;
         if(dateDay > nowDay) 

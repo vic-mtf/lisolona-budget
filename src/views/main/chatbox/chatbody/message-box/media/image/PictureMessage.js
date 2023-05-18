@@ -3,18 +3,21 @@ import {
     Box as MuiBox,
 } from '@mui/material';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export default function PictureMessage ({src, srcSet, height, width, minHeight, minWidth}) {
     const [loaded, setLoaded] = useState(false);
-    
+    const size = useMemo(() => ({
+        ...height ? {height} : {}, 
+        ...width ? {width} : {},
+        ...minHeight ? {minHeight} : {}, 
+        ...minWidth ? {minWidth} : {}, 
+    }), [height, width, minHeight, minWidth]);
+
     return (
         <MuiBox
             display="flex"
-            height={height}
-            width={width}
-            minHeight={minHeight}
-            minWidth={minWidth}
+            {...size}
             justifyContent="center"
             alignItems="center"
             position="relative"
@@ -23,7 +26,7 @@ export default function PictureMessage ({src, srcSet, height, width, minHeight, 
             <CardMedia
                 component="img"
                 srcSet={srcSet}
-                src={src.toString()}
+                src={src}
                 loading="lazy"
                 onLoad={() => {
                     setLoaded(true);
@@ -31,9 +34,8 @@ export default function PictureMessage ({src, srcSet, height, width, minHeight, 
                 sx={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'contain',
-                    //backdropFilter: theme => `blur(${theme.customOptions.blur})`,
-                   // filter: theme =>  `blur(${theme.customOptions.blur})`,
+                    objectFit: 'cover',
+                    filter: loaded ? null : theme =>  `blur(${theme.customOptions.blur})`,
                 }}
             />
             {!loaded &&

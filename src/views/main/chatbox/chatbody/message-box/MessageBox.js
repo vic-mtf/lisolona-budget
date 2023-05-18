@@ -10,7 +10,6 @@ import TextMessage from './text/TextMessage';
 import MessageState from './MessageState';
 import MediaMessage from './media/MediaMessage';
 import { useBorderRadius } from './useBorderRadius';
-import getServerUri from '../../../../../utils/getServerUri';
 export default function MessageBox ({
     isMine, 
     avatarSrc, 
@@ -26,13 +25,7 @@ export default function MessageBox ({
 }) {
     const theme = useTheme();
     const borderRadius = useBorderRadius(1, isMine, joinBox);
-    if(medias)
-        console.log(medias?.map((media) => ({
-            ...media,
-            src: getServerUri({pathname: media.content}),
-            type: media.subType,
-        }))
-        )
+    
     return (
         <MuiBox
             component="div"
@@ -111,7 +104,6 @@ export default function MessageBox ({
                             data={
                                 medias?.map((media) => ({
                                     ...media,
-                                    src: getServerUri({pathname: media.content}),
                                     type: media.subType,
                                 }))
                             }

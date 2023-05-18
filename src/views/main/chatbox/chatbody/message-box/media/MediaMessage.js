@@ -1,21 +1,16 @@
-import React, { useMemo } from "react";
-import { 
-    CardActionArea, 
-    CardMedia, 
-    ImageList, 
-    ImageListItem, 
-    Box as MuiBox, 
-    useTheme 
-} from "@mui/material";
+import React, { useCallback, useState } from "react";
+import { } from "@mui/material";
 import AudioMessage from "./audio/AudioMessage";
-import Typography from "../../../../../../components/Typography";
-import PictureMessage from "./image/PictureMessage";
-import resizeGrid from "./resizeGrid";
-import VideoMessage from "./video/VideoMessage";
-import ImageButton, {ImageBackdrop, Image} from "../../../../../../components/ImgeButton";
 
-export default function MediaMessage ({data, type, bgcolor, borderRadius}) {
+import VisualMessage from "./VisualMessage";
+import MediaReader from "./MediaReader";
+
+export default function MediaMessage ({data, type, bgcolor, borderRadius, target}) {
     const [audio] = data;
+    const [defaultValue, setDefaultValue] = useState(null);
+    const handleCloseReader = useCallback(() => setDefaultValue(null), []);
+    const handleClickIMedia = useCallback((media) => setDefaultValue(media), []);
+
     return (
         <React.Fragment>
             {type === 'audio' ? 
@@ -23,117 +18,17 @@ export default function MediaMessage ({data, type, bgcolor, borderRadius}) {
                 data={audio} 
                 borderRadius={borderRadius}
             /> : 
-            <VisualMessage 
+            <VisualMessage
                 data={data} 
                 bgcolor={bgcolor} 
                 borderRadius={borderRadius}
+                onClickIMedia={handleClickIMedia}
             />}
+            <MediaReader
+                defaultValue={defaultValue}
+                onClose={handleCloseReader}
+                target={target}
+            />
         </React.Fragment>
-    );
-}
-
-const VisualMessage = ({data, bgcolor, borderRadius}) => {
-    const isMine = true;
-    const theme = useTheme();
-    const len = useMemo(() => data.length, [data.length]);
-
-    return (
-         <MuiBox display="flex" width="100%">
-            <MuiBox display="flex" width="100%">
-                <Typography
-                    bgcolor={bgcolor}
-                    width="100%"
-                    borderRadius={borderRadius}
-                    display="flex"
-                    flexDirection="column"
-                    color={isMine ? theme.palette.text.primary : 'inherit'}
-                    position="relative"
-                    textOverflow="ellipsis"
-                >
-                <MuiBox
-                    component="div"
-                    mx={.25}
-                    sx={{
-                        wordWrap: 'break-word',
-                        overflowWrap: 'break-word',
-                        wordBreak: "break-word",
-                        overflow: 'hidden',
-                        "&:after": {
-                            content: '""',
-                            position: 'absolute',
-                            bottom: 0,
-                            width: '100%',
-                            height: 30,
-                            background: theme => 
-                            `linear-gradient(90deg, transparent, transparent, transparent, ${bgcolor})`,
-                            boxSizing: 'inherit',
-                        }
-                    }}
-                >
-                    {<ImageList
-                        sx={{
-                            maxWidth: 300,
-                            maxHeight: 300,
-                            overflow: 'clip',
-                            borderRadius,
-                            my: .25,
-                            p: 0,
-                        }}
-                        rowHeight="auto"
-                        gap={1}
-                    >
-                    {data.slice(0, 4).map((item, index, items) => {
-                    const {cols, rows, ...otherProps} = resizeGrid(index, len);
-                    const Item = item.type === "image" ? PictureMessage : VideoMessage;
-                    return (
-                        <ImageListItem 
-                            key={index} 
-                            cols={cols}
-                            rows={rows}
-                            sx={{
-                                borderRadius: 1,
-                                overflow: 'clip',
-                            }}
-                        > {(len > 4 && index === 3) ?
-                            <ImageButton
-                                focusRipple
-                                style={{
-                                    width: otherProps.width,
-                                    height: otherProps.height,
-                                }}
-                            >
-                                <Item
-                                    {...item}
-                                    {...otherProps}
-                                />
-                                <ImageBackdrop className="MuiImageBackdrop-root" />
-                                <Image>
-                                <Typography
-                                    component="span"
-                                    variant="subtitle1"
-                                    color="inherit"
-                                    sx={{
-                                    position: 'relative',
-                                    }}
-                                >
-                                    +{len - 4}
-                              </Typography>
-                            </Image>
-                          </ImageButton> :
-                         (<CardActionArea>
-                            <Item
-                                {...item}
-                                {...otherProps}
-                            />
-                         </CardActionArea>)
-                        }
-                        </ImageListItem>
-                    );
-                    })}
-                    </ImageList>}
-                </MuiBox>
-                </Typography>
-            </MuiBox>
-        </MuiBox>
     );
 }

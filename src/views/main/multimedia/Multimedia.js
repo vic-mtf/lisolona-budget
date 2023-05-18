@@ -1,11 +1,12 @@
 import { Dialog, Divider } from '@mui/material'
 import MultimediaHeader from './header/MultimediaHeader';
 import MultimediaContent from './content/MultimediaContent';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MultimediaFooter from './footer/MultimediaFooter';
 import { useLayoutEffect } from 'react';
+import timeHumanReadable from '../../../utils/timeHumanReadable';
 
-export default function Multimedia ({items, defaultValue, open, onClose, headerTitle}) {
+export default function Multimedia ({items, defaultValue, open, onClose}) {
     const [value, setValue] = useState(defaultValue > 0 ? defaultValue : 0);
     const [slideShow, setSlideShow] = useState(false);
     const openRef = useRef(false);
@@ -15,6 +16,21 @@ export default function Multimedia ({items, defaultValue, open, onClose, headerT
             setSlideShow(false)
     }, [slideShow, items.length]);
 
+    const userInfos = useMemo(() => {
+        const media = items[value];
+        let headerTitle;
+        if(media) {
+            headerTitle = `envoyé par ${
+                media.isMine ? 'vous' : media.name
+            }, ${
+                timeHumanReadable(media.createdAt, true)
+            }`;
+        }
+        return {
+            headerTitle,
+        }
+    }, [items, value])
+
     useLayoutEffect(() => {
         if(!openRef.current && defaultValue > 0) {
             setValue(defaultValue);
@@ -23,7 +39,7 @@ export default function Multimedia ({items, defaultValue, open, onClose, headerT
         if(openRef.current && defaultValue < 0) 
             openRef.current = false;
     }, [defaultValue])
-
+    
     return (
         <Dialog 
             open={open && defaultValue > -1} 
@@ -46,7 +62,7 @@ export default function Multimedia ({items, defaultValue, open, onClose, headerT
                 slideShow={slideShow}
                 setSlideShow={setSlideShow}
                 onClose={onClose}
-                title={headerTitle}
+                title={userInfos?.headerTitle}
             />
             <Divider/>
             <MultimediaContent

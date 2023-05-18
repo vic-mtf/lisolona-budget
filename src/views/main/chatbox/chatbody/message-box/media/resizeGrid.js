@@ -19,6 +19,6 @@ export default function resizeGrid (index=0, len=0, size=150) {
     let height = len === 1 ? undefined : rows * size ;
     let width = len === 1 ? undefined : cols * size;
     let minHeight = size;
-    let minWidth = size * 2;
+    let minWidth = len === 1 ? size * 2 : undefined;
     return {cols, rows, width, height, minHeight, minWidth};
 }

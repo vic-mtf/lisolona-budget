@@ -1,3 +1,5 @@
+import getServerUri from "./getServerUri";
+
 export default function structureMessages (_message=[], regExp=/video|image/) {
     const messages = [];
     const sortedDate = Array.isArray(_message) ? [..._message] : [];
@@ -9,11 +11,14 @@ export default function structureMessages (_message=[], regExp=/video|image/) {
         const isCurrentMedia = regExp.test(mss.subType);
         const lastMessage = messages[messages.length - 1];
         const isMediaStacked = Array.isArray(lastMessage?.medias) && 
-        lastMessage.isMine === mss.isMine;
+        lastMessage.isMine === mss.isMine
+        const message = {...mss};
         if(isCurrentMedia) {
-            if(isMediaStacked) lastMessage.medias.push(mss);
-            else messages.push({...mss, medias: [mss]});
-        } else messages.push(mss)
+            message.src =  getServerUri({pathname: mss.content}).toString();
+            message.srcSet = message.src;
+            if(isMediaStacked) lastMessage.medias.push(message);
+            else messages.push({...message, medias: [message]});
+        } else messages.push(message);
     });
     return messages.sort((a, b) => 
         (new Date(b.createdAt)).getTime() -
