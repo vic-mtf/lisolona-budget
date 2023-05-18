@@ -7,7 +7,7 @@ import {
     Toolbar, 
     Tooltip
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
@@ -21,15 +21,16 @@ import MoreOption from "./shortcut/MoreOption";
 import SearchBar from "./SearchBar";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
+import ActionWrapper from "./actions/ActionWrapper";
 
-export default function Header ({onChangeNavigation, navigation}) {
+export default function Header ({onChangeNavigation, navigation, onChangeSearch}) {
     const [anchor, setAnchor] = useState(null);
     const anchorEl = useRef();
     const notificationsNumber = useSelector(
         store => store?.data?.notifications?.length || 0
     );
     
-    const navigationOptions = [
+    const navigationOptions = useMemo(() => [
         {
             label: 'Conversations',
             icon: <ChatOutlinedIcon/>,
@@ -50,7 +51,7 @@ export default function Header ({onChangeNavigation, navigation}) {
             icon: <NotificationsNoneOutlinedIcon/>,
             nbr: notificationsNumber,
         }
-    ];
+    ], []);
 
     return (
         <React.Fragment>
@@ -82,7 +83,9 @@ export default function Header ({onChangeNavigation, navigation}) {
                 </Toolbar>
             </ThemeProvider>
             <Toolbar variant="dense" disableGutters sx={{px: 1}}>
-                <SearchBar/>
+                <SearchBar
+                    onChangeSearch={onChangeSearch}
+                />
                 <IconButton>
                     <FilterListOutlinedIcon fontSize="small"/>
                 </IconButton>
@@ -120,6 +123,7 @@ export default function Header ({onChangeNavigation, navigation}) {
                 onClose={() => setAnchor(null)}
                 anchorEl={anchor}
             />
+            <ActionWrapper/>
         </React.Fragment>
     )
 }

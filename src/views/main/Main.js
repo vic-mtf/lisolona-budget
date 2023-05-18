@@ -1,36 +1,38 @@
-import { Toolbar, Box as MuiBox, Divider } from "@mui/material";
+import { Box as MuiBox } from "@mui/material";
 import { useSelector } from "react-redux";
-import useMessage from "../../utils/useMessage";
 import ChatBox from "./chatbox/ChatBox";
 import Home from "./home/Home";
 import { drawerWidth } from "../navigation/Navigation";
-import React from "react";
+import React, { useMemo } from "react";
+import ActionWrapper from "./action/ActionWrapper";
+import Teleconference from "./teleconference/Teleconference";
 
-export default function Main ({open}) {
-    const {chatId, showChat} = useSelector(store => {
-        const chatId = store.data.chatId;
-        const showChat = store.teleconference?.meetingMode === 'none' ||
-        !store.teleconference?.privileged;
-        return {chatId, showChat}
-    });
+export default function Main () {
     return (
         <MuiBox 
             component="main" 
             overflow="hidden"
+            height="100vh"
             sx={{ 
                 flexGrow: 1, 
                 width: 0, 
-                mr: open ? 0 : -drawerWidth / 8,
+                ml: drawerWidth / 8,
                 transition: theme => theme.transitions.create(['margin', 'width'], {
                     easing: theme.transitions.easing.sharp,
                     duration: theme.transitions.duration.leavingScreen,
                 }),
             }}
         >
-            {showChat && 
-            <React.Fragment>
-                {chatId ? <ChatBox chatId={chatId}/> : <Home/>}
-            </React.Fragment>}
+            <ChatWrapper/>
+            <Teleconference/>
+            <ActionWrapper/>
         </MuiBox>
     )
 }
+
+const ChatWrapper = () => {
+    const target = useSelector(store => store.data?.target);
+    const open = useMemo(() => Boolean(target), [target]);
+    return (open ? <ChatBox /> : <Home/>);
+}
+

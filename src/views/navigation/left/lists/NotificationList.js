@@ -7,7 +7,7 @@ import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspace
 import useShadow from './useShadow';
 import IconButton from '../../../../components/IconButton';
 import Typography from '../../../../components/Typography';
-import InviteContactItem from '../contacts/InviteContactItem';
+import InviteContactItem from '../items/InviteContactItem';
 import timeHumanReadable from '../../../../utils/timeHumanReadable';
 import scrollBarSx from '../../../../utils/scrollBarSx';
 import LoadingList from './LoadingList';
@@ -16,7 +16,7 @@ import {  useSelector } from 'react-redux';
 import { useSocket } from '../../../../utils/SocketIOProvider';
 import { union } from 'lodash';
 
-export default function NotificationList () {
+export default function NotificationList ({search, navigation}) {
     const [atEnd, scrollProps] = useScrollEnd();
     const [currentList, setCurrentList] = useState(null);
     const shadow = useShadow();
@@ -26,7 +26,7 @@ export default function NotificationList () {
         InviteContactItem,
     ];
     
-    return (
+    return ( navigation === 3 &&
         <React.Fragment>
              {currentList && 
                 <Toolbar variant="dense" disableGutters sx={{mx: 1}}>
@@ -69,7 +69,7 @@ export default function NotificationList () {
                     <EmptyContentMessage
                         title="Aucune nouvelle notification"
                         show={union(
-                            ...notifications?.map(
+                            ...(notifications || [])?.map(
                                 ({children}) => [...children]
                             ))?.length === 0
                         }

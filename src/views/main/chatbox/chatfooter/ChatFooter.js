@@ -1,67 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { 
     Box as MuiBox, Paper
 } from "@mui/material";
-import ToolbarFooter from "./ToolbarFooter";
-import MessageEditor from "./MessageEditor";
+import ToolbarFooter from "./footer/ToolbarFooter";
+import MessageEditor from "./content/MessageEditor";
 import { EditorState, convertToRaw } from "draft-js";
 import VoiceNoteEqualizer from "./voice-note-equalizer/VoiceNoteEqualizer";
-import draftToHtml from 'draftjs-to-html';
-import { useSocket } from "../../../../utils/SocketIOProvider";
-import { useSelector } from "react-redux";
+import useSendMessage from "./useSendMessage";
+import FilesThumbView from "./header/FilesThumbView";
+import { useMemo } from "react";
 
-export default function ChatFooter () {
-    const [sendable, setSendable] = useState(false);
+export default function ChatFooter ({target}) {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
     const [disabledHeader, setDisabledHeader] = useState(false);
     const [showToolbar, setShowToolbar] = useState(true);
     const textFieldRef = useRef();
     const [recording, setRecording] = useState(false);
-    const { type, to } = useSelector(store => {
-        const chatId = store.data?.chatId;
-        const contact = store.data.contacts?.find(({id}) => id === chatId);
-        const type = contact ? 'direct' : 'room';
-        return {
-            to: chatId,
-            type,
-        };
-    });
-    const socket = useSocket();
+    const [files, setFiles] = useState([]);
 
-    const handleChange = event => {
-        setEditorState(event);
-        const value = getDraftText(event);
-        if(value.length && !sendable)
-            setSendable(true);
-        if(!value.length && sendable)
-            setSendable(false);
-    };
-
-    const handleToggleRecording = () => setRecording( 
-        recording => !recording
+    const handleChange = useCallback(event => setEditorState(event), []);
+    const sendable = useMemo(() => 
+        Boolean(getDraftText(editorState) || files.length), 
+        [editorState, files]
     );
-
-    const handleSendMessage = () => {
-        if(getDraftText(editorState)) {
-            const rawContentState = convertToRaw(editorState.getCurrentContent());
-            const content = draftToHtml(rawContentState);
-            socket?.emit(`${type}-message`, {
-                content, to,
-                date: new Date(),
-                type: 'text',
-            });
-            handleChange(
-                EditorState.moveFocusToEnd(
-                    EditorState.createEmpty()
-                )
-            );
-        }
-    }
-
-    useEffect(() => {
+    const handleToggleRecording = useCallback(() => setRecording(recording => !recording), []);
+    const handleSendMessage = useSendMessage({handleChange, target, editorState, files});
+    
+    useLayoutEffect(() => {
         textFieldRef.current?.focus();
-    }, [textFieldRef])
-  
+    }, [target]);
+
   return (
     <MuiBox
         bgcolor="background.paper"
@@ -73,8 +41,17 @@ export default function ChatFooter () {
         flexDirection="column"
         overflow="hidden"
         position="relative"
-        sx={{borderTop: theme => `1px solid ${theme.palette.divider}`}}
+        sx={{
+            borderTop: theme => `1px solid ${theme.palette.divider}`,
+            zIndex: theme => theme.zIndex.appBar,
+        }}
     >
+        {Boolean(files.length) &&
+        <FilesThumbView
+            files={files}
+            setFiles={setFiles}
+            target={target}
+        />}
         <Paper
             sx={{
                 display: 'flex',
@@ -93,6 +70,8 @@ export default function ChatFooter () {
                 textFieldRef={textFieldRef}
                 showToolbar={showToolbar}
                 handleSendMessage={handleSendMessage}
+                target={target}
+                key={target.id}
             />
             <ToolbarFooter
                 sendable={sendable}
@@ -102,6 +81,8 @@ export default function ChatFooter () {
                 toggleShowToolbar={(event, value) => setShowToolbar(value)}
                 handleToggleRecording={handleToggleRecording}
                 handleSendMessage={handleSendMessage}
+                setFiles={setFiles}
+                files={files}
             />
         </Paper>
         {recording && 
@@ -112,8 +93,7 @@ export default function ChatFooter () {
   );
 }
 
-export const getDraftText = event => convertToRaw(
-    event.getCurrentContent()
-)?.blocks
-.map(({ text }) => text)
-.join('\n').trim();
+export const getDraftText = event => 
+convertToRaw(
+    event.getCurrentContent())?.blocks.map(({text}) => text
+).join('\n').trim();

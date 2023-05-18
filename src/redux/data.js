@@ -1,25 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
-import persistReducer from "redux-persist/es/persistReducer";
-import storage from "redux-persist/lib/storage/session";
+
+const initialState = {
+    target: null,
+    notifications: null,
+    calls: null,
+};
 
 const data = createSlice({
     name: 'data',
-    initialState: {
-        chatId: null,
-        conversations: null,
-        messages: null,
-        notifications: null,
-        contacts: null,
-        calls: null,
-        chatGroups: null,
-        search: '',
-    },
+    initialState,
     reducers: {
         addData(state, actions) {
             const { key, data } = actions.payload;
             if(key === 'data')
-                Object.keys(data).forEach(_key => state[_key] = data[_key]);
+                Object.keys(data).forEach(_key => {
+                        state[_key] = data[_key]
+                });
             else state[key] = data;
+            const target = (key === 'target' && data) || data?.target;
+            if(target) {
+                state.target = {
+                    ...target
+                }
+                const messages = state.messageGrouping?.find(
+                    message => message.targetId === target.id
+                )?.messages;
+                state.messages = messages || [];
+            }
         },
         addNotification(state, actions) {
             const { data } = actions.payload;
@@ -38,34 +45,11 @@ const data = createSlice({
                 state.notifications = [...state.notifications]
                 .filter(({id}) => id !== data?.id);
         },
-        updateChat(state, actions) {
-            const { chatId, messages } = actions.payload;
-            const conversations = [...state.conversations];
-            const targetConversation = conversations?.find(({id}) => id === chatId);
-            const savedMessages = targetConversation?.origin?.messages;
-            const newMessages = [];
-            [...messages].forEach(message => {
-                const isNotFound = !savedMessages.find(({_id}) => message?._id === _id);
-                if(isNotFound)
-                    newMessages.push(message);
-            });
-            newMessages.sort((a, b) => 
-                (new Date(a?.createdAt)).getTime() - 
-                (new Date(b?.createdAt)).getTime()
-            );
-            const lastMessage = newMessages[newMessages.length - 1];
-            savedMessages?.push(...newMessages);
-            targetConversation.updatedAt = lastMessage?.createdAt;
-            targetConversation.lastNotice = lastMessage?.content;
-            state.conversations = [...conversations];
-        }
     }
 });
 
-export const { addData, addNotification, updateChat } = data.actions;
-export default persistReducer({
-    storage,
-    key:'__ROOT_GEID_DATA_LISOLONABUDGET_APP'
-}, 
-data.reducer
-);
+export const { 
+        addData, 
+        addNotification, 
+     } = data.actions;
+export default data.reducer;

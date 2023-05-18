@@ -16,7 +16,7 @@ export default function Navigation ({
             variant="permanent"
             component={Drawer}
             sx={{
-                width: drawerWidth,
+               width: otherProps?.open ? drawerWidth : 0,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': { 
                     width: drawerWidth, 

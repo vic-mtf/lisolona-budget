@@ -9,15 +9,22 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomSkeleton from "../../../../components/Skeleton";
 import { addData } from "../../../../redux/data";
 import ShortcutAvatar from "./ShortcutAvatar";
+import { useLiveQuery } from "dexie-react-hooks";
+import db from "../../../../database/db";
+import ContactListForm from "../lists/contact-list-form/ContactListForm";
 
 export default function ShortcutOptions () {
-    const {chatGroups, chatId} = useSelector(store => {
-        const {chatGroups, chatId} = store?.data;
-        return {chatGroups, chatId};
-    });
+    const groups = useLiveQuery(() => 
+        db.discussions.orderBy('createdAt')
+        .filter(({type}) => type === 'room')
+        .toArray()
+    )
+    const target = useSelector(store => store?.data?.target);
     const dispatch = useDispatch();
+
     return (
         <React.Fragment>
+          <ContactListForm/>
           <Toolbar variant="dense" disableGutters sx={{display: 'flex', justifyContent: 'center', mb:2}}>
             
                 <AvatarProfile/>
@@ -42,34 +49,33 @@ export default function ShortcutOptions () {
                         sx: {height: 10},
                     }}
                 >
-                    {chatGroups?.map(({
-                        name, 
-                        avatarSrc, 
-                        image,
-                        description, 
-                        _id
-                    }, index) => (
+                    {groups?.map((group, index) => (
                     <Tab 
                         key={index}
                         MenuItemProps={{
-                            selected: chatId === _id,
+                            selected: target?.id === group?.id,
                             onClick() {
-                                dispatch(addData({key: 'chatId', data: _id}))
+                                dispatch(
+                                    addData({
+                                        key: 'target', 
+                                        data: JSON.parse(JSON.stringify(group))
+                                    })
+                                )
                             }
                         }}
                     >
                         <ShortcutAvatar
-                            name={name}
-                            alt={name}  
-                            src={avatarSrc}
-                            id={_id}
+                            name={group?.name}
+                            alt={group?.name}  
+                            src={group?.avatarSrc}
+                            id={group?.id}
                             len={1}
-                            title={`Lisanga: ${name}\nDescription: ${description}`}
+                            title={`Lisanga: ${group?.name}\nDescription: ${group?.description}`}
                         />
                     </Tab>
                     )).slice(0, 100)}
                 </Tabs>
-                {chatGroups === null ?
+                {groups === undefined ?
                 [0, 1, 2, 4, 5, 6, 7, 8].map(key => (
                     <CustomSkeleton
                         key={key}
@@ -116,6 +122,7 @@ export default function ShortcutOptions () {
                     <IconButton
                         LinkComponent="a"
                         href="/"
+                        onClick={() => window.close()}
                     >
                         <ExitToAppOutlinedIcon fontSize="small"/>
                     </IconButton>

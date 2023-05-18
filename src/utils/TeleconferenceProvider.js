@@ -11,15 +11,12 @@ export default function TeleconferenceProvider ({children}) {
     const [audioTrack, setAudioTrack] = useState(null);
     const [screenVideoTrack, setScreenVideoTrack] = useState(null);
     const [participants, setParticipants] = useState([]);
-    const {mode} = useSelector(store => {
-        const mode = store.teleconference?.meetingMode;
-        return {mode};
-    });
+    const mode = useSelector(store => store.teleconference?.mode);
     const values = useMemo(() => {
         const audio = new Audio();
         const timers = [];
         return {audio, timers};
-    },[]);
+    }, []);
 
     const localTracks = useMemo(() => {
         let tracks = {};

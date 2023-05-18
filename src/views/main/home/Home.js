@@ -1,13 +1,11 @@
-import { Toolbar, Box as MuiBox, createTheme, ThemeProvider, Stack, Divider, CardMedia } from "@mui/material";
+import { Toolbar, Stack, Divider, CardMedia } from "@mui/material";
 import Box from "../../../components/Box";
 import Typography from "../../../components/Typography";
 import CarouselPub from "./CarouselPub";
 import _logo_geid from '../../../assets/geid_logo_blue_without_title.webp';
-import useMessage from "../../../utils/useMessage";
 
 export default function Home () {
-    useMessage();
-    
+
     return (
         <Box>
           <Box
@@ -23,7 +21,15 @@ export default function Home () {
                 direction="row" 
                 width={500} 
                 my={1}
-                divider={<Divider flexItem orientation="vertical" sx={{bgcolor: 'text.secondary'}}/>}
+                divider={
+                <Divider 
+                    flexItem 
+                    orientation="vertical" 
+                    sx={{
+                        bgcolor: 'text.secondary',
+                        borderWidth: 1,
+                    }}
+                />}
                 display="flex"
                 justifyContent="center"
             >
@@ -35,7 +41,6 @@ export default function Home () {
                 <Typography
                     noWrap
                     variant="h4"
-                    fontWeight="bold"
                 >Lisolo Na Budget</Typography>
             </Stack>
             <Typography color="text.secondary">

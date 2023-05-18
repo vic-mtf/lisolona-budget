@@ -11,9 +11,9 @@ import { useSelector } from 'react-redux';
 export default function MoreOption ({theme}) {
     const anchorElRef = useRef();
     const constact = useSelector(store => {
-        const { chatId, contacts, conversations } = store.data;
-        const contact = conversations?.find(({id}) => id === chatId) || 
-            contacts?.find(({id}) => id === chatId);
+        const { targetId, contacts, conversations } = store.data;
+        const contact = conversations?.find(({id}) => id === targetId) || 
+            contacts?.find(({id}) => id === targetId);
         return {
             ...contact, 
             members: contact?.origin?.members?.map(

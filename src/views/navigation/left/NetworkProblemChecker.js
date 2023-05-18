@@ -1,12 +1,21 @@
 import useOnLine from "../../../utils/useOnLine"
 import { Alert, Slide } from "@mui/material";
 import SignalWifiBadOutlinedIcon from '@mui/icons-material/SignalWifiBadOutlined';
+import { useEffect, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { setStatus } from "../../../redux/status";
 
 export default function NetworkProblemChecker ({direction}) {
-    const error = !useOnLine();
-    return error && (
+    const online = useOnLine();
+    const dispatch = useDispatch();
+    const open = useMemo(() => !online, [online])
+    useEffect(() => {
+        if(open) dispatch(setStatus({}));
+    }, [open, dispatch]);
+    
+    return open && (
         <Slide 
-            in={error} 
+            in={open} 
             direction={direction}
         >
             <Alert

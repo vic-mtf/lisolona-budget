@@ -1,31 +1,28 @@
 import React from 'react';
 import { 
-    // alpha, 
-    // Divider, 
+    Divider, 
     List, 
-    Stack 
 } from '@mui/material';
 import useScrollEnd from '../../../../utils/useScrollEnd';
 import Box from '../../../../components/Box';
 import useShadow from './useShadow';
-// import CallContactItem from '../contacts/CallContactItem';
-// import timeHumanReadable from '../../../../utils/timeHumanReadable';
+import timeHumanReadable from '../../../../utils/timeHumanReadable';
 import scrollBarSx from '../../../../utils/scrollBarSx';
-import Typography from '../../../../components/Typography';
 import { useSelector } from 'react-redux';
-import LoadingContactItem from '../contacts/LoadingContactItem';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
+import CurrentCallContactItem from '../items/CurrentCallContactItem';
 
 
-export default function CallContactsList () {
+export default function CallContactsList ({search, navigation}) {
     const [atEnd, scrollProps] = useScrollEnd();
     const shadow = useShadow();
-    const calls = useSelector(store => 
-        store?.data?.calls
-    );
-
-    return (
+    
+    const calls = []
+    const currentCalls = useSelector(store => store?.teleconference?.currentCalls);
+    const allCalls  = [...calls || [], ...currentCalls || []];
+    
+    return ( navigation === 1 &&
         <Box 
             overflow="hidden" 
             boxShadow={atEnd ? 0 : shadow}
@@ -43,39 +40,50 @@ export default function CallContactsList () {
                 }}
             >
                 <LoadingList 
-                    loading={calls === null} 
+                    loading={allCalls === null} 
                     lengthItem={9}
                 />
                 <EmptyContentMessage
                     title="Journal d'appels vide"
-                    show={calls?.length === 0}
+                    show={allCalls?.length === 0}
                     description={`
-                        Informations relatives aux appels vidéo et audio (entrants et sortants) 
+                        Informations relatives à vos appels 
                         de façons détaillée s'affichent dans cette section
-                        pour assurer une parfaite traçabilité des échanges.`
+                        pour une parfaite traçabilité des échanges.`
                     }
                 />
-            {/* {
-                contacts.map((contact, index) => (
-                    <React.Fragment key={contact._id}>
-                        <CallContactItem 
+                {
+                currentCalls?.map((contact, index) => (
+                    <React.Fragment key={contact.id}>
+                        <CurrentCallContactItem
                             {...contact}
-                            date={timeHumanReadable(
-                                Date.now() - (Math.random() * 2592 * (10**6)),
-                                true,
-                                {showDetail: true}
-                            )}
-                            type={['incoming', 'missed', 'outgoing'][Math.round(Math.random() * 3)]}
-                            format={Math.random() > .5 ? 'video' : 'audio'}
+                            date={timeHumanReadable(contact?.createdAt)}
                         />
-                        {index !== contacts.length - 1 && 
+                        {index !== allCalls.length - 1 && 
                         <Divider variant="inset" component="li" />
                         }
                     </React.Fragment>
                 ))
-            }  */}
-
-                
+            } 
+            {
+                // calls.map((contact, index) => (
+                //     <React.Fragment key={contact._id}>
+                //         <CallContactItem 
+                //             {...contact}
+                //             date={timeHumanReadable(
+                //                 Date.now() - (Math.random() * 2592 * (10**6)),
+                //                 true,
+                //                 {showDetail: true}
+                //             )}
+                //             type={['incoming', 'missed', 'outgoing'][Math.round(Math.random() * 3)]}
+                //             format={Math.random() > .5 ? 'video' : 'audio'}
+                //         />
+                //         {index !== calls.length - 1 && 
+                //         <Divider variant="inset" component="li" />
+                //         }
+                //     </React.Fragment>
+                // ))
+            } 
             </List>
         </Box>
     );

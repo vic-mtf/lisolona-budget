@@ -1,6 +1,7 @@
 {
   "name": "geid-lisolonabudget-app",
   "version": "0.1.0",
+  "main": "public/electron.js",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -17,8 +18,11 @@
     "axios": "^1.3.2",
     "axios-hooks": "^4.0.0",
     "crypto-js": "^4.1.1",
+    "dexie": "^4.0.1-alpha.10",
+    "dexie-react-hooks": "^1.1.3",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
+    "emoji-picker-react": "^4.4.8",
     "html-react-parser": "^3.0.9",
     "html-to-text": "^9.0.4",
     "interactjs": "^1.10.17",
@@ -27,23 +31,29 @@
     "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-image-zooom": "^1.1.0",
     "react-material-ui-carousel": "^3.4.2",
+    "react-quick-pinch-zoom": "^4.6.0",
     "react-redux": "^8.0.5",
     "react-resizable": "^3.0.4",
+    "react-responsive-pinch-zoom-pan": "^0.3.0",
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",
     "react-timer-hook": "^3.0.5",
-    "reactablejs": "^0.3.0",
+    "react-zoom-pan-pinch": "^3.0.7",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.6.1",
+    "unsplash-js": "^7.0.15",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "deploy": "rm -r build.zip build;PUBLIC_URL=/apps/lisolonabudget react-scripts build;zip -r build.zip build && scp build.zip root@137.184.96.252:server/GEID_Valise/public/geid-platform/lisolonabudget"
+    "deploy": "rm -r build.zip build;PUBLIC_URL=/apps/lisolonabudget react-app-rewired build;zip -r build.zip build && scp build.zip root@137.184.96.252:server/GEID_Valise/public/geid-platform/lisolonabudget",
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -62,5 +72,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0",
+    "electron": "^23.2.0",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-react-devtools": "^0.5.3",
+    "react-app-rewired": "^2.2.1",
+    "react-dev-tools": "^0.0.1",
+    "wait-on": "^7.0.1",
+    "workerize-loader": "^2.0.2"
   }
 }

@@ -1,33 +1,10 @@
 import { CssBaseline, Box as MuiBox } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addData } from "../redux/data";
-import { useSocket } from "../utils/SocketIOProvider";
 import Main from "./main/Main";
 import NavigationLeft from "./navigation/left/NavigationLeft";
 import NavigationRight from "./navigation/right/NavigationRight";
-import Teleconference from "./teleconference/Teleconference";
 
-export default function Archives () {
-  const socket = useSocket();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    socket.on('contacts', ({contacts}) => {
-        const data = contacts?.map(contact => {
-            const name = `${contact.fname} ${contact.lname} ${contact.mname}`.trim()
-            return {
-                origin: contact,
-                name,
-                email: contact?.email,
-                id: contact?._id,
-                avatarSrc: contact?.imageUrl,
-            };
-        });
-        dispatch(addData({key: 'contacts', data}));
-    });
-    socket?.emit('contacts');
-},[socket, dispatch]);
+export default function LiosoNaBudget () {
 
     return (
       <MuiBox
@@ -43,7 +20,6 @@ export default function Archives () {
             <NavigationLeft/>
             <MainRight/>
         </MuiBox>
-        <Teleconference/>
       </MuiBox>
     )
 }
@@ -64,7 +40,6 @@ const MainRight = () => {
       '_user-infos',
       handleOpenContact
     );
-
     return () =>  {
       root.removeEventListener('_user-infos',
       handleOpenContact);
@@ -73,9 +48,7 @@ const MainRight = () => {
 
   return (
     <React.Fragment>
-      <Main
-        open={open}
-      />
+      <Main open={open}/>
       <NavigationRight
         open={open}
         contact={contact}

@@ -1,47 +1,22 @@
-import React from "react";
-// import { styled } from '@mui/material/styles';
-// import { Badge, Avatar, Stack, Box } from '@mui/material';
+//import React, { useEffect, useState } from 'react';
+//import Worker from '../workers/messages.worker';
+//import { useSelector } from 'react-redux';
 
-// const StyledBadge = styled(Box)(({ theme }) => ({
-//     backgroundColor: '#44b700',
-//     color: '#44b700',
-//     height: 10,
-//     width: 10,
-//     //boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-//     '&::after': {
-//       position: 'absolute',
-//       top: 0,
-//       left: 0,
-//       width: '100%',
-//       height: '100%',
-//       borderRadius: 1,
-//       animation: 'ripple 1.2s infinite  alternate ease-in-out',
-//       border: '1px solid currentColor',
-//       content: '""',
-//     },
-//   '@keyframes ripple': {
-//     '0%': {
-//       transform: 'scale(.1)',
-//       opacity: 0,
-//     },
-//     '100%': {
-//       transform: 'scale(2.5)',
-//       opacity: 1,
-//     },
-//   },
-// }));
+//const worker  = Worker();
 
-
-
-export default function Apptest() {
- 
-  return (
-    <React.Fragment>
-      {/* <Stack
-        position="relative"
-      >
-          <StyledBadge/>
-      </Stack> */}
-    </React.Fragment>
-  );
+export default function AppTest() {
+  // const [result, setResult] = useState(null);
+  // const userId = useSelector(store => store.user.id);
+  // const handleClick = () => {
+  //   worker.getMessages({userId}).then((result) => {
+  //     console.log(result);
+  //   })
+  // };
+  return null;
+  //  (
+  //   <div>
+  //     <button onClick={handleClick}>Calculate</button>
+  //     {result && <p>Result: {result}</p>}
+  //   </div>
+  // );
 }

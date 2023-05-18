@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import appConfig from '../configs/app-config.json';
-
 const { lang, colors: { primary: { mode } } } = appConfig;
 
 const app = createSlice({

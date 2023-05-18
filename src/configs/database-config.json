@@ -1,0 +1,85 @@
+{
+    "name": "__ROOT_GEID_DATABASE_LISOLONABUDGET_APP",
+    "version": 1,
+    "options": {
+        "allowEmptyDB": true
+    },
+    "stores": [
+        {
+            "name": "discussions",
+            "keys": [
+                "id", 
+                "targetId",
+                "name", 
+                "members",
+                "createdBy",
+                "lastNotice",
+                "discription",
+                "avatarSrc",
+                "avatarBuffer",
+                "type",
+                "updatedAt",
+                "createdAt",
+                "origin"
+            ]
+        },
+        {
+            "name": "messages",
+            "keys": [
+                "id",
+                "sended",
+                "type",
+                "content",
+                "buffer",
+                "targetId",
+                "isMine",
+                "timeout",
+                "remonteId",
+                "refId",
+                "readed",
+                "status",
+                "subType",
+                "updatedAt",
+                "createdAt",
+                "localId",
+                "origin"
+            ]
+        },
+        {
+            "name": "contacts",
+            "keys": [
+                "id",
+                "name",
+                "email",
+                "grade",
+                "avatarSrc",
+                "avatarBuffer",
+                "role",
+                "firstName",
+                "lastName",
+                "middleName",
+                "origin",
+                "updatedAt"
+            ]
+        },
+        {
+            "name": "calls",
+            "keys": [
+                "id",
+                "status",
+                "caller",
+                "title",
+                "description",
+                "duration",
+                "updatedAt",
+                "isMine",
+                "options",
+                "channel",
+                "createdAt",
+                "startedAt",
+                "endedAt",
+                "origin"
+            ]
+        }
+    ]
+}

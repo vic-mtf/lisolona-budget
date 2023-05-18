@@ -5,25 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addData } from '../../../redux/data';
 import { useEffect, useState } from 'react';
 
-export default function SearchBar () {
-  const initValue = useSelector(store => store.data?.search)
-  const [value, setValue] = useState(initValue);
-  const dispatch = useDispatch();
-  const onChange = event => setValue(event.target.value);
-  useEffect(() => {
-    dispatch(
-      addData({
-        key:'search', 
-        data: value?.trim(),
-      })
-    );
-  },[value, dispatch]);
+export default function SearchBar ({onChangeSearch}) {
+  const [value, setValue] = useState('');
+  const onChange = event => {
+    setValue(event.target.value);
+    onChangeSearch(event)
+  };
 
-  useEffect(() => {
-    if(value === '')
-       setValue(initValue);
-  },[value, initValue])
-  
   return (
       <Search sx={{mr: 1}}>
           <SearchIconWrapper>

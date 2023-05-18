@@ -8,7 +8,7 @@ const options = (contact, callback) => [
         label: `Fermer la discution`,
         //icon: <DisabledByDefaultOutlinedIcon/>,
         onClick() {
-            store.dispatch(addData({key: 'chatId', data: null}));
+            store.dispatch(addData({key: 'target', data: null}));
             if(typeof callback === 'function')
                 callback();
         },

@@ -1,4 +1,4 @@
-import LoadingContactItem from "../contacts/LoadingContactItem";
+import LoadingItem from "../items/LoadingItem";
 
 export default function LoadingList ({loading, lengthItem = 8}) {
     return (
@@ -9,7 +9,7 @@ export default function LoadingList ({loading, lengthItem = 8}) {
                 array.push(`${i}th-item`);
             return array;
          })().map(key => (
-            <LoadingContactItem
+            <LoadingItem
                 key={key}
             />
         ))

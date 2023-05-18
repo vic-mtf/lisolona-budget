@@ -1,13 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    meetingId: null,
-    meetingMode: 'none' || 'on' || 'outgoing' || 'incoming',
-    members: [],
+    mode: 'none' || 'on' || 'outgoing' || 'incoming',
     mediaType: null,
-    type: null,
-    screenMode: 'full' || 'medium',
-    privileged: false,
     video: true,
     audio: true,
     screenSharing: false,
@@ -19,19 +14,27 @@ const initialState = {
     error: null,
     joined: false,
     priorityTargetId: null,
+    openMiniChatBox: false,
+    screen: 'none',
+    currentCalls: null,
 };
 
 const teleconference = createSlice({
     name: 'teleconference',
-    initialState,
+    initialState: {
+        ...initialState,
+        currentCalls: null,
+    },
     reducers: {
         addTeleconference(state, actions) {
             const { key, data } = actions.payload;
             if(key === 'data')
-                Object.keys(data).forEach(
-                    _key => state[_key] = data[_key]
-                );
-            else state[key] = data;
+                Object.keys(data).forEach(_key => {
+                    if(JSON.stringify(state[_key]) !== JSON.stringify(data[_key]))
+                        state[_key] = data[_key]
+                });
+            else if(JSON.stringify(state[key]) !== JSON.stringify(data)) 
+                state[key] = data;
         },
         initializeState(state, actions) {
             const { key, data } = actions?.payload || {};

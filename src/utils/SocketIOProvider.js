@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import axiosConfig from '../configs/axios-config.json';
@@ -8,13 +8,13 @@ const SocketIO = createContext(null);
 export const useSocket = () => useContext(SocketIO);
 
 export default function SocketIOProvider ({children}) {
-    const [socket, setSocket] = useState(null);
     const token = useSelector(store => store?.user?.token);
-    const socketRef = useRef();
     const dispatch = useDispatch();
-    
+    const socket = useMemo(() => token ? 
+        io(`${axiosConfig.baseURL}?token=${token}`) : null, 
+        [token]
+    );
     useEffect(() => {
-        const handleConnexion = () => setSocket(socketRef.current);
         const getInvitaions = ({invitations}) => {
             const data = {
                 indexItem: 0,
@@ -38,17 +38,11 @@ export default function SocketIOProvider ({children}) {
             };
             dispatch(addNotification({data}));
         };
-        if(!socket && token){ 
-            socketRef.current = io(`${axiosConfig.baseURL}?token=${token}`);
-            setSocket(socketRef.current);
-        }
-        socketRef.current?.on('connexion', handleConnexion);
-        socketRef.current?.on('invitations', getInvitaions);
+        socket?.on('invitations', getInvitaions);
         return () => {
-            socketRef.current?.off('connexion', handleConnexion);
-            socketRef.current?.off('invitations', getInvitaions);
+            socket?.off('invitations', getInvitaions);
         }
-    },[socket, token]);
+    },[socket, token, dispatch]);
    
     return (
         <SocketIO.Provider value={socket}>
