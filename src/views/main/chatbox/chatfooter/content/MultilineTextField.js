@@ -1,10 +1,14 @@
 import { Editor, getDefaultKeyBinding } from "draft-js";
 import 'draft-js/dist/Draft.css';
-import { Box as MuiBox } from "@mui/material";
+import "prismjs/themes/prism.css";
+import { Box as MuiBox, useTheme } from "@mui/material";
 import { Search } from "../../../../../components/SearchInput";
 import scrollBarSx from "../../../../../utils/scrollBarSx";
 import { getDraftText } from "../ChatFooter";
 import { useMemo } from "react";
+import styleMap from "./styleMap";
+import blockStyleFn from "./editor-custom-style/blockStyleFn";
+//import blockRendererFn from "./editor-custom-style/blockRendererFn";
 
 export default function MultilineTextField ({
     editorState, 
@@ -30,11 +34,10 @@ export default function MultilineTextField ({
     };
 
     const placeholderMessage = useMemo(() => 
-    `Ecrire à ${target.type === 'room' ? 'Lisanga ' : ''}${target.name}...`, [target])
+    `Ecrire à ${target?.type === 'room' ? 'Lisanga ' : ''}${target?.name}...`, [target])
 
     return (
         <MuiBox
-            px={.5}
             display="flex"
             overflow="hidden"
             width="100%"
@@ -48,13 +51,14 @@ export default function MultilineTextField ({
                         '& div.DraftEditor-root ': {
                             fontSize: theme => theme.typography.body2.fontSize,
                             width: '100%',
-                            zIndex: theme => theme.zIndex.drawer + 100
+                            zIndex: theme => theme.zIndex.drawer + 100,
                         },
                         '& div.DraftEditor-editorContainer': {
                             width: "100%",
                             overflow: 'auto',
                             maxHeight: 200,
                             ...scrollBarSx,
+                           
                         }
                     }}
                 >
@@ -67,6 +71,8 @@ export default function MultilineTextField ({
                         ref={textFieldRef}
                         onBlur={onBlur}
                         onFocus={onFocus}
+                        customStyleMap={styleMap}
+                        blockStyleFn={blockStyleFn}
                     />
                 </MuiBox>
             </Search>

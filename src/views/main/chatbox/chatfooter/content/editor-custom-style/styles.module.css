@@ -1,0 +1,29 @@
+.blockquote {
+    margin-left: 24px;
+    border-left: 4px solid #CCC;
+    padding-left: 6px;
+}
+.codeBlock {
+    background: rgba(31,31,31, .01);
+    margin: 0;
+    padding: 2.5px 5px;
+    
+};
+.codeBlock * {
+    font-family: 'Open Sans, Montserrat, sans-serif';
+}
+.textLeft div {
+    text-align: left;
+}
+
+.textRight div {
+    text-align: right;
+}
+
+.textCenter div {
+    text-align: center;
+}
+
+.textJustified div {
+    text-align: justify;
+}

@@ -45,7 +45,6 @@ export default function TextMessage ({
                     component="div"
                     mx={2.5}
                     sx={{
-                        wordWrap: 'break-word',
                         overflowWrap: 'break-word',
                         wordWrap: 'break-word',
                         wordBreak: "break-word",
@@ -61,7 +60,12 @@ export default function TextMessage ({
                                 `linear-gradient(transparent, 10%, ${bgcolor})`,
                                 boxSizing: 'inherit',
                             }
-                        }
+                        },
+                        '& blockquote': {
+                            marginLeft: '24px',
+                            borderLeft: '4px solid #CCC',
+                            paddingLeft: '6px',
+                        },
                     }}
                 >
                     {parse(content)}

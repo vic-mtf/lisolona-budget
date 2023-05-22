@@ -15,7 +15,7 @@ import resizeGrid from "./resizeGrid";
 export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMedia}) {
     const isMine = true;
     const theme = useTheme();
-    const len = useMemo(() => data.length, [data.length]);
+    const len = useMemo(() => data?.length, [data?.length]);
     
     return (
          <MuiBox display="flex" width="100%">
@@ -62,7 +62,7 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                         rowHeight="auto"
                         gap={1}
                     >
-                    {data.slice(0, 4).map((item, index, items) => {
+                    {data?.slice(0, 4).map((item, index, items) => {
                     const {cols, rows, ...otherProps} = resizeGrid(index, len);
                     const Item = item.type === "image" ? PictureMessage : VideoMessage;
                     return (

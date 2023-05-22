@@ -5,9 +5,9 @@ import {
     ToggleButton,
 } from '@mui/material';
 import CustomToggleButtonGroup from "../../../../../components/CustomToggleButtonGroup";
-import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
-import { listFormatOption, textFormatOptions } from './textFormatting';
+import { listFormatOption, textAlignOptions, textFormatOptions } from './textFormatting';
 import { RichUtils } from 'draft-js';
+import AddLinkButton from './AddLinkButton';
 
 export default function ToolbarHeader ({
     formats,
@@ -16,7 +16,9 @@ export default function ToolbarHeader ({
     disabled,
     handleChangeFormat,
     listMode,
-    showToolbar
+    showToolbar,
+    textFieldRef
+    //align
 }) {
     const handleChangInlineStyle = (event, format) => {
         event.preventDefault();
@@ -36,7 +38,7 @@ export default function ToolbarHeader ({
     }
     const onMouseDown = event => event.preventDefault();
     return ( showToolbar && 
-        <MuiBox overflow="hidden">
+        <MuiBox overflow="hidden" onMouseDown={onMouseDown}>
             <MuiBox 
                 sx={{
                     display: 'flex', 
@@ -88,17 +90,34 @@ export default function ToolbarHeader ({
                         </ToggleButton>
                     ))}
                 </CustomToggleButtonGroup>
-                <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
+                {/* <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
                 <CustomToggleButtonGroup
                     size="small"
-                    aria-label="text formatting list"
-                    disabled
-                    //</MuiBox>={disabled}
+                    aria-label="align text"
+                    value={[align]}
+                    disabled={disabled}
                 >
-                    <ToggleButton value="listNumbered" aria-label="bold">
-                        <AddLinkOutlinedIcon fontSize="small" />
-                    </ToggleButton>
-                </CustomToggleButtonGroup>
+                {
+                    textAlignOptions.map(option => (
+                        <ToggleButton 
+                            value={option.id}
+                            aria-label={option.id}
+                            key={option.id}
+                            onMouseDown={onMouseDown}
+                            onClick={event => handleChangeTextBlock(event, option.id)}
+                            title={option.title}
+                        >
+                            {option.icon}
+                        </ToggleButton>
+                    ))
+                }
+                </CustomToggleButtonGroup> */}
+                <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
+                <AddLinkButton
+                    editorState={editorState}
+                    handleChange={handleChange}
+                    textFieldRef={textFieldRef}
+                />
             </MuiBox>
         </MuiBox>
     );

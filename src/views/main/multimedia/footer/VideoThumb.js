@@ -22,9 +22,6 @@ export default function VideoThumb({src, coverUrl}) {
             height={65}
             width={65}
             src={src}
-            onLoad={(event) => {
-                console.log(event)
-            }}
         >
             <video
                 src={src}

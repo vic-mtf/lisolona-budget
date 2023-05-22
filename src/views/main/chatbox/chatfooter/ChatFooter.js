@@ -9,9 +9,10 @@ import VoiceNoteEqualizer from "./voice-note-equalizer/VoiceNoteEqualizer";
 import useSendMessage from "./useSendMessage";
 import FilesThumbView from "./header/FilesThumbView";
 import { useMemo } from "react";
+import decorators from "./content/editor-custom-style/decorators";
 
 export default function ChatFooter ({target}) {
-    const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+    const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorators));
     const [disabledHeader, setDisabledHeader] = useState(false);
     const [showToolbar, setShowToolbar] = useState(true);
     const textFieldRef = useRef();
@@ -27,7 +28,7 @@ export default function ChatFooter ({target}) {
     const handleSendMessage = useSendMessage({handleChange, target, editorState, files});
     
     useLayoutEffect(() => {
-        textFieldRef.current?.focus();
+       textFieldRef.current?.focus();
     }, [target]);
 
   return (
@@ -71,7 +72,7 @@ export default function ChatFooter ({target}) {
                 showToolbar={showToolbar}
                 handleSendMessage={handleSendMessage}
                 target={target}
-                key={target.id}
+                key={target?.id}
             />
             <ToolbarFooter
                 sendable={sendable}

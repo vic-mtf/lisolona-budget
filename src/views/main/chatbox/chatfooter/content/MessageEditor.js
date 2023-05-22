@@ -20,11 +20,13 @@ export default function MessageEditor ({
 }) {
     const [formats, setFormats] = useState([]);
     const [listMode, setListMode] = useState(null);
+    const [align, setAlign] = useState(null);
 
     const handleChangeFormat = format => {
         const _style = format.toUpperCase();
         const isFormat = textFormatOptions.find(({id}) => id  === _style);
         const isList = listFormatOption.find(({id}) => id === format);
+        const isAlign = ['left', 'right', 'center', 'justify'].find(align => align === format)
         if(isFormat)
             setFormats(
                 formats => formats.find(style => style === _style) ?
@@ -35,6 +37,7 @@ export default function MessageEditor ({
             setListMode(
                 listMode => listMode === format ? '' : format
             );
+        if(isAlign) setAlign(format)
     };
   
     const handleKeyCommand = (_command, editorState) => {
@@ -85,13 +88,6 @@ export default function MessageEditor ({
 
     return (
         <MuiBox
-            onClick={event => {
-                if(disabledHeader) {
-                    event.preventDefault();
-                    textFieldRef.current?.focus();
-                    handleChange(editorState);
-                }
-            }}
             display="flex"
             overflow="hidden"
             flexDirection="column"
@@ -100,11 +96,13 @@ export default function MessageEditor ({
             <ToolbarHeader
                 formats={formats}
                 listMode={listMode}
+                align={align}
                 handleChangeFormat={handleChangeFormat}
                 editorState={editorState}
                 handleChange={handleChange}
                 disabled={disabledHeader}
                 showToolbar={showToolbar}
+                textFieldRef={textFieldRef}
             />
             <MultilineTextField
                 handleChange={handleChangeFormatAutomatically}
@@ -114,6 +112,7 @@ export default function MessageEditor ({
                 onBlur={() => {
                     setFormats([]);
                     setListMode(null);
+                    setAlign(null);
                     setDisabledHeader(true);
                 }}
                 onFocus={() => setDisabledHeader(false)}

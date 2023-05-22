@@ -129,7 +129,7 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
                 const localTime = (new Date (message.updatedAt)).getTime();
                 const remonteTime = (new Date (remonteMessage.updatedAt)).getTime();
                 if(localTime !== remonteTime)
-                    updateDiscussions.push({
+                    updateMessages.push({
                         key: message.id,
                         changes: {
                             content: remonteMessage?.content,

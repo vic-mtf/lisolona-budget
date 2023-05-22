@@ -6,7 +6,7 @@ import VisualMessage from "./VisualMessage";
 import MediaReader from "./MediaReader";
 
 export default function MediaMessage ({data, type, bgcolor, borderRadius, target}) {
-    const [audio] = data;
+    const [audio] = Array.isArray(data) ? data: [];
     const [defaultValue, setDefaultValue] = useState(null);
     const handleCloseReader = useCallback(() => setDefaultValue(null), []);
     const handleClickIMedia = useCallback((media) => setDefaultValue(media), []);

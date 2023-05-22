@@ -6,7 +6,7 @@ import MultimediaFooter from './footer/MultimediaFooter';
 import { useLayoutEffect } from 'react';
 import timeHumanReadable from '../../../utils/timeHumanReadable';
 
-export default function Multimedia ({items, defaultValue, open, onClose}) {
+export default function Multimedia ({items, defaultValue, open, onClose, headerTitle}) {
     const [value, setValue] = useState(defaultValue > 0 ? defaultValue : 0);
     const [slideShow, setSlideShow] = useState(false);
     const openRef = useRef(false);
@@ -18,18 +18,18 @@ export default function Multimedia ({items, defaultValue, open, onClose}) {
 
     const userInfos = useMemo(() => {
         const media = items[value];
-        let headerTitle;
+        let title;
         if(media) {
-            headerTitle = `envoyé par ${
+            title = headerTitle || `envoyé par ${
                 media.isMine ? 'vous' : media.name
             }, ${
                 timeHumanReadable(media.createdAt, true)
             }`;
         }
         return {
-            headerTitle,
+            headerTitle: title,
         }
-    }, [items, value])
+    }, [items, value, headerTitle])
 
     useLayoutEffect(() => {
         if(!openRef.current && defaultValue > 0) {

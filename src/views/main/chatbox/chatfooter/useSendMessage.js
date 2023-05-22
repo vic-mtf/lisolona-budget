@@ -4,6 +4,7 @@ import { EditorState, convertToRaw } from "draft-js";
 import db from "../../../../database/db";
 import { useCallback } from "react";
 import { getDraftText } from "./ChatFooter";
+import decorators from "./content/editor-custom-style/decorators";
 
 export default function useSendMessage ({handleChange, editorState, target, files, setFile}) {
     const socket  = useSocket();
@@ -28,7 +29,7 @@ export default function useSendMessage ({handleChange, editorState, target, file
             };
             handleChange(
                 EditorState.moveFocusToEnd(
-                    EditorState.createEmpty()
+                    EditorState.createEmpty(decorators)
                 )
             );
             await db.messages.add(message);
@@ -49,7 +50,7 @@ export default function useSendMessage ({handleChange, editorState, target, file
                     createdAt: new Date(date),
                 });
             }
-            socket?.emit(`${target.type}-message`, {
+            socket?.emit(`${target?.type}-message`, {
                 content, 
                 to: target?.id,
                 date,
@@ -77,6 +78,6 @@ export default function useSendMessage ({handleChange, editorState, target, file
                 };
             });
         }
-    }, [target, editorState, handleChange, socket]);
+    }, [target, editorState, handleChange, socket, files]);
     return handleSendMessage;
 }

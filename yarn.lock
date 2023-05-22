@@ -4415,6 +4415,16 @@ dotenv@^10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
+dracula-prism@^2.1.13:
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/dracula-prism/-/dracula-prism-2.1.13.tgz#bafa4b4ff0ef2e54115ba45f39213a2a2b50f225"
+  integrity sha512-mgm8Nr/X0RGUz/wpha88dKN/xw0QIGK8BQmWXrzgtOp9be+qcKiFEa2J5SQ3+/WNvL5sPPtNQXPL+Vy//Q8+dg==
+
+draft-js-prism-decorator@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/draft-js-prism-decorator/-/draft-js-prism-decorator-0.1.1.tgz#b55e6aa84015c4e37894957908f6764ed47e9066"
+  integrity sha512-ouGZO+fuGRRjgF7GNsAgtMOWE3Cct/qj2znExw8fGRFrncg8iHNGepfplSG6evPbkEIOWlpqgYpD29jL3s6Eng==
+
 draft-js@^0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.11.7.tgz#be293aaa255c46d8a6647f3860aa4c178484a206"
@@ -8431,6 +8441,11 @@ pretty-format@^29.0.0, pretty-format@^29.5.0:
     "@jest/schemas" "^29.4.3"
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
+
+prismjs@^1.29.0:
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.29.0.tgz#f113555a8fa9b57c35e637bba27509dcf802dd12"
+  integrity sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
