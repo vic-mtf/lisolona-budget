@@ -1,0 +1,6 @@
+const messages = {
+    '': {
+        title: '',
+        content: '',
+    }
+};
