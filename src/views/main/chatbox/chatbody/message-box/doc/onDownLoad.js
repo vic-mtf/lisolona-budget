@@ -20,19 +20,22 @@ export default function onDownload ({
         total: size,
         type: 'get',
         name,
+        cancel () {
+            xhr.abort();
+        }
     };
     downloadsRef.current.push(initData)
     xhr.open('GET', url);
-    xhr.responseType = 'arraybuffer';
+    xhr.responseType = 'blob';
     xhr.addEventListener('progress', event => {
-        console.log(`Téléchargé ${event.loaded} octets sur ${event.total}`);
+        //console.log(`Téléchargé ${event.loaded} octets sur ${event.total}`);
         initData.loaded = event.loaded;
         initData.total = event.total;
     });
         xhr.addEventListener('load', event => {
     if (xhr.status === 200) {
-        console.log(`Téléchargement terminé (${xhr.response.byteLength} octets téléchargés)`);
-        const file = new File([xhr.response], name, { type });
+        const file = xhr.response;
+        file.name = name;
         const userId = store.getState().user?.id;
         downloadsRef.current = downloadsRef.current.filter(
             download => download?.id !== id

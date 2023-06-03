@@ -7,9 +7,9 @@ import Typography from "../../../../../../../components/Typography";
 import getFormatTime from "../../../../../../../utils/getFormatTime";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 
-export default function VideoMessage ({src, width, height}) {
+export default function VideoMessage ({src, width, height, buffer}) {
     const [duration, setDuration] = useState(null);
-   
+    
     return (
         <MuiBox
             display="flex"
@@ -29,6 +29,7 @@ export default function VideoMessage ({src, width, height}) {
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
+                    //filter: theme => buffer ? 'none' : `blur(${theme.customOptions.blur})`,
                 }}
             />
             {duration !== null &&

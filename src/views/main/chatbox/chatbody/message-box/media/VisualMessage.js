@@ -14,11 +14,19 @@ import ImageButton, { Image, ImageBackdrop } from "../../../../../../components/
 import resizeGrid from "./resizeGrid";
 import IconButton from "../../../../../../components/IconButton";
 import CircularProgressIconButton from "./CircularProgressIconButton";
+import MediaItem from "./MediaItem";
+import LoadingMedia from "./LoadingMedia";
+import getServerUri from "../../../../../../utils/getServerUri";
+import React from "react";
 
-export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMedia, isMine}) {
+export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMedia, isMine, sended}) {
     const theme = useTheme();
     const len = useMemo(() => data?.length, [data?.length]);
-    
+    // const loading = useMemo(() => 
+    //     isMine && !sended,
+    //     [isMine, sended]
+    // );
+ 
     return (
          <MuiBox display="flex" width="100%">
             <MuiBox display="flex" width="100%">
@@ -51,21 +59,12 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                                 background: theme => 
                                 `linear-gradient(90deg, transparent, transparent, transparent, ${bgcolor})`,
                                 boxSizing: 'inherit',
+                                zIndex: 2,
                             },
                         } : {}
                     }}
                 >
-                    <CircularProgressIconButton
-                        sx={{
-                            position: 'absolute',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            zIndex: 1,
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    />
+                    {/* {loading && <LoadingMedia/>} */}
                     {<ImageList
                         sx={{
                             maxWidth: 330,
@@ -80,7 +79,7 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                     >
                     {data?.slice(0, 4).map((item, index, items) => {
                     const {cols, rows, ...otherProps} = resizeGrid(index, len);
-                    const Item = item.type === "image" ? PictureMessage : VideoMessage;
+                    const openButtonRef = React.createRef();
                     return (
                         <ImageListItem
                             key={index} 
@@ -98,10 +97,15 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                                     height: otherProps.height,
                                 }}
                                 onClick={() => onClickIMedia(item)}
+                                LinkComponent="div"
+                                ref={openButtonRef}
                             >
-                                <Item
+                                <MediaItem
                                     {...item}
                                     {...otherProps}
+                                    bgcolor={bgcolor}
+                                    seeMore={len - 4}
+                                    openButtonRef={openButtonRef}
                                 />
                                 <ImageBackdrop className="MuiImageBackdrop-root" />
                                 <Image>
@@ -119,10 +123,13 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                           </ImageButton> :
                          (<CardActionArea
                             onClick={() => onClickIMedia(item)}
+                            ref={openButtonRef}
                          >
-                            <Item
+                            <MediaItem
                                 {...item}
                                 {...otherProps}
+                                url={getServerUri({pathname: item?.content})}
+                                openButtonRef={openButtonRef}
                             />
                          </CardActionArea>)
                         }

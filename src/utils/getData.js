@@ -1,9 +1,6 @@
 import db from "../database/db";
 
-const MAX_ACTIONS = 2;
-
 export default async function getData ({chats, contacts: cts, inivitation, userId}, callback) {
-    let status = 0;
     const discussions = [];
     const newDiscussions = [];
     const updateDiscussions = [];
@@ -91,92 +88,95 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
     const messagesIds = messages.map(({id}) => id);
     const contactsIds = contacts.map(({id}) => id);
 
-    db.discussions.bulkGet(discussionsIds).then(async data => {
-        data.forEach((discussion, index) => {
-            const remonteDiscussion = discussions[index];
-            if(discussion) {
-                const localTime = (new Date (discussion.updatedAt)).getTime();
-                const remonteTime = (new Date (remonteDiscussion.updatedAt)).getTime();
-                if(localTime !== remonteTime)
-                    updateDiscussions.push({
-                        key: discussion.id,
-                        changes: {
-                            name: remonteDiscussion.name, 
-                            members: remonteDiscussion.members,
-                            lastNotice: remonteDiscussion.lastNotice,
-                            avatarSrc: remonteDiscussion.avatarSrc,
-                            updatedAt: new Date(remonteDiscussion?.updatedAt),
-                            lastNoticeType: remonteDiscussion?.lastNoticeType,
-                            discription: remonteDiscussion?.discription,
-                            origin: remonteDiscussion.origin,
-                        }
-                    })
-            }
-            else newDiscussions.push(remonteDiscussion);
+    const promiseDiscussions = new Promise((resolve, reject) => {
+        db.discussions.bulkGet(discussionsIds).then(async data => {
+            data.forEach((discussion, index) => {
+                const remonteDiscussion = discussions[index];
+                if(discussion) {
+                    const localTime = (new Date (discussion.updatedAt)).getTime();
+                    const remonteTime = (new Date (remonteDiscussion.updatedAt)).getTime();
+                    if(isNaN(localTime) ||  localTime < remonteTime)
+                        updateDiscussions.push({
+                            key: discussion.id,
+                            changes: {
+                                name: remonteDiscussion.name, 
+                                members: remonteDiscussion.members,
+                                lastNotice: remonteDiscussion.lastNotice,
+                                avatarSrc: remonteDiscussion.avatarSrc,
+                                updatedAt: new Date(remonteDiscussion?.updatedAt),
+                                lastNoticeType: remonteDiscussion?.lastNoticeType,
+                                discription: remonteDiscussion?.discription,
+                                origin: remonteDiscussion.origin,
+                            }
+                        })
+                }
+                else newDiscussions.push(remonteDiscussion);
+            });
+            try {
+                if(newDiscussions.length)
+                    await db.discussions.bulkAdd(newDiscussions);
+                if(updateDiscussions.length)
+                    await db.discussions.bulkUpdate(updateDiscussions);
+                resolve('update');
+            } catch (e) { reject(e); }
         });
-        if(newDiscussions.length)
-           await db.discussions.bulkAdd(newDiscussions);
-        if(updateDiscussions.length)
-           await db.discussions.bulkUpdate(updateDiscussions);
-        status += 1;
-        if(typeof callback === 'function' && MAX_ACTIONS === status)
-            callback();
     });
-    db.messages.bulkGet(messagesIds).then(async data => {
-        data.forEach((message, index) => {
-            const remonteMessage = messages[index];
-            if(message) {
-                const localTime = (new Date (message.updatedAt)).getTime();
-                const remonteTime = (new Date (remonteMessage.updatedAt)).getTime();
-                if(localTime !== remonteTime)
-                    updateMessages.push({
-                        key: message.id,
-                        changes: {
-                            content: remonteMessage?.content,
-                            avatarSrc: remonteMessage?.imageUrl,
-                            status: remonteMessage?.status,
-                            sended: true,
-                            updatedAt: remonteMessage.updatedAt || remonteMessage?.createdAt,
-                            origin: remonteMessage.origin,
-                        }
-                    });
-            }
-            else newMessages.push(remonteMessage);
+    const promiseMessages = new Promise((resolve, reject) => {
+        db.messages.bulkGet(messagesIds).then(async data => {
+            data.forEach((message, index) => {
+                const remonteMessage = messages[index];
+                if(message) {
+                    const localTime = (new Date (message.updatedAt)).getTime();
+                    const remonteTime = (new Date (remonteMessage.updatedAt)).getTime();
+                    if(localTime !== remonteTime)
+                        updateMessages.push({
+                            key: message.id,
+                            changes: {
+                                content: remonteMessage?.content,
+                                avatarSrc: remonteMessage?.imageUrl,
+                                status: remonteMessage?.status,
+                                sended: true,
+                                updatedAt: remonteMessage.updatedAt || remonteMessage?.createdAt,
+                                origin: remonteMessage.origin,
+                            }
+                        });
+                }
+                else newMessages.push(remonteMessage);
+            });
+            try {
+                if(newMessages.length)
+                    await db.messages.bulkAdd(newMessages);
+                if(updateMessages.length)
+                    await db.messages.bulkUpdate(updateMessages);
+                resolve('update');
+            } catch (e) { reject(e); }
         });
-        let loaded = false;
-        if(newMessages.length)
-            loaded = Boolean(
-                await db.messages.bulkAdd(newMessages)
-            );
-        if(updateMessages.length)
-            loaded = Boolean(
-                await db.messages.bulkUpdate(updateMessages)
-            );
-        status += 1;
-        if(typeof callback === 'function' && MAX_ACTIONS === status)
-            callback();
     });
-    db.contacts.bulkGet(contactsIds).then(async data => {
-        data.forEach((contact, index) => {
-            const remonteContact = contacts[index];
-            if(contact) {
-                const localTime = (new Date (contact.updatedAt)).getTime();
-                const remonteTime = (new Date (contact.updatedAt)).getTime();
-                if(localTime !== remonteTime)
-                    updateContacts.push({
-                        key: remonteContact.id,
-                        changes: { ...remonteContact}
-                    })
-            }
-            else newContacts.push(remonteContact);
+    const promiseContacts = new Promise((resolve, reject) => {
+        db.contacts.bulkGet(contactsIds).then(async data => {
+            data.forEach((contact, index) => {
+                const remonteContact = contacts[index];
+                if(contact) {
+                    const localTime = (new Date (contact.updatedAt)).getTime();
+                    const remonteTime = (new Date (contact.updatedAt)).getTime();
+                    if(localTime !== remonteTime)
+                        updateContacts.push({
+                            key: remonteContact.id,
+                            changes: { ...remonteContact}
+                        })
+                }
+                else newContacts.push(remonteContact);
+            });
+            try {
+                if(newContacts.length)
+                    await db.contacts.bulkAdd(newContacts);
+                if(updateContacts.length)
+                    await db.contacts.bulkUpdate(updateContacts);
+                resolve('update');
+            } catch (e) { reject(e); }
         });
-        if(newContacts.length)
-           await db.contacts.bulkAdd(newContacts);
-        if(updateContacts.length)
-           await db.contacts.bulkUpdate(updateContacts);
-        status += 1;
-        if(typeof callback === 'function' && MAX_ACTIONS === status)
-            callback();
+    })
+    Promise.all([promiseDiscussions, promiseMessages, promiseContacts]).then(() => {
+        if(typeof callback === 'function') callback();
     });
-    
 }

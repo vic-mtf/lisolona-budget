@@ -67,7 +67,7 @@ export default function TextMessage ({
                         },
                     }}
                 >
-                    {parse(content)}
+                    {parse(content?.toString())}
                 </MuiBox>
                 <MuiBox  mx={2.5}>
                     {showMore &&

@@ -121,12 +121,12 @@ const fabs = [
       value: (sendable, index) => sendable && index === 0 ,
     },
     {
-      color: 'inherit',
+      color: 'text.primary',
       icon: <MicOutlinedIcon fontSize="small"/>,
       label: 'Mic',
       title: 'Enregistrer',
       id: '_mic',
-      disabled: true,
+     // disabled: true,
       value: (sendable, index) => !sendable && index === 1 ,
     },
   ];

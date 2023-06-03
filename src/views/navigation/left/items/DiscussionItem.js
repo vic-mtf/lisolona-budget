@@ -23,7 +23,7 @@ export default function DiscussionItem ({
     onClick,
     selected,
     search,
-    ...otherPorps
+    ...otherProps
 }) {
     const [contextMenu, setContextMenu] = React.useState(null);
    
@@ -47,7 +47,7 @@ export default function DiscussionItem ({
                     }}
                 >
                 <AvatarStatus
-                    id={otherPorps.id}
+                    id={otherProps.id}
                     avatarSrc={avatarSrc}
                     type={type}
                     name={name}
@@ -73,9 +73,9 @@ export default function DiscussionItem ({
                     secondary={ 
                         <Notice
                             type={type}
-                            id={otherPorps.id}
+                            id={otherProps.id}
                             name={name}
-                            description={otherPorps.description}
+                            description={otherProps.description}
                             message={lastNotice}
                         />
                     }

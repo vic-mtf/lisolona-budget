@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTeleconference } from "../../../../redux/teleconference";
-import getParseData from "../../../../utils/getParseData";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import mssAudio  from '../../../../assets/Eventually-Sms.mp3';
 import getData from '../../../../utils/getData';

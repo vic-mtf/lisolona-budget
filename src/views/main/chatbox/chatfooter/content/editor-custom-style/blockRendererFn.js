@@ -9,7 +9,7 @@ export default function blockRendererFn(contentBlock) {
         props: {
           readOnly: false,
           onChange: (blockKey, code) => {
-            console.log(`Block ${blockKey} changed to: ${code}`);
+            //console.log(`Block ${blockKey} changed to: ${code}`);
           },
         },
       };

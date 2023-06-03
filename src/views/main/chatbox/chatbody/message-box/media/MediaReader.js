@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Multimedia from '../../../../multimedia/Multimedia';
 import MessageWorker from '../../../../../../workers/messages/messages.worker';
 import { useSelector } from 'react-redux';
@@ -29,11 +29,14 @@ export default function MediaReader ({defaultValue, onClose}) {
     }, [defaultValue, userId]);
 
     return (
-        <Multimedia
-            defaultValue={defaultItem || defaultItemRef.current}
-            items={items}
-            open={open}
-            onClose={onClose}
-        />
+        <React.Fragment>
+            <Multimedia
+                defaultValue={defaultItem || defaultItemRef.current}
+                items={items}
+                open={open}
+                onClose={onClose}
+            />
+        </React.Fragment>
+    
     )
 }

@@ -1,4 +1,5 @@
-import { Editor, getDefaultKeyBinding } from "draft-js";
+import {getDefaultKeyBinding } from "draft-js";
+import Editor from '@draft-js-plugins/editor';
 import 'draft-js/dist/Draft.css';
 import "prismjs/themes/prism.css";
 import { Box as MuiBox, useTheme } from "@mui/material";

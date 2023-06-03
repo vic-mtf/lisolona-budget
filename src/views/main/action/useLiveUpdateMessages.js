@@ -19,7 +19,7 @@ export default function useLiveUpdateMessages() {
         });
         Object.keys(group).forEach(id => {
             const groupMessage = structureMessages(group[id]);
-            const messages = groupMessage.slice(0, 20);
+            const messages = groupMessage;
             const total = groupMessage.length;
             pushMessages({id, messages, total});
         }); 

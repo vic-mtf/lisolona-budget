@@ -1,11 +1,11 @@
 import {
     Box as MuiBox,
-
+    useTheme,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import Avatar from '../../../../../../components/Avatar';
 import { useTeleconference } from '../../../../../../utils/TeleconferenceProvider';
-import genColorById from '../../../../../../utils/genColorById';
+import { generateColorsFromId } from '../../../../../../utils/genColorById';
 import getShort from '../../../../../../utils/getShort';
 
 export default function AvatarVoiceStatus ({
@@ -15,7 +15,7 @@ export default function AvatarVoiceStatus ({
     avatarSrc,
     videoTrack,
 }) {
-    const {rgb} = genColorById(uid);
+
    
     return (
         <MuiBox
@@ -32,23 +32,23 @@ export default function AvatarVoiceStatus ({
                 name={name} 
                 avatarSrc={avatarSrc}
                 videoTrack={videoTrack}
-                rgb={rgb}
             />
         </MuiBox>
     );
 }
 
-const AvatarWrapper = ({audioTrack, videoTrack, rgb, avatarSrc, name}) => {
+const AvatarWrapper = ({audioTrack, videoTrack, uid, avatarSrc, name}) => {
     const [show, setShow] = useState(!videoTrack?.enable);
+    const theme = useTheme();
+    const {text, background} = generateColorsFromId(uid, theme.palette.mode);
+
     const avatarSx = useMemo(() => ({
-        color: `rgba(${rgb.r},${rgb.g},${rgb.b})`,
+        color: text,
         bgcolor: theme => theme.palette.background.paper,
-        backgroundImage: `
-        radial-gradient(circle, transparent 0%, 
-        rgba(${rgb.r},${rgb.g},${rgb.b},1) 100%)`,
+        backgroundImage: `radial-gradient(circle, transparent 0%,${background} 100%)`,
         fontWeight: 'bold',
         fontSize: 20,
-    }), [rgb.r, rgb.g, rgb.b]);
+    }), [text, background]);
 
     return (
         <React.Fragment>
@@ -77,7 +77,7 @@ const AvatarWrapper = ({audioTrack, videoTrack, rgb, avatarSrc, name}) => {
                 videoTrack={videoTrack}
                 show={show}
                 setShow={setShow}
-                rgb={rgb}
+                color={text}
             />
             </MuiBox>
         </React.Fragment>
@@ -86,7 +86,7 @@ const AvatarWrapper = ({audioTrack, videoTrack, rgb, avatarSrc, name}) => {
 
 const AvatarVoice = ({
     audioTrack,  
-    rgb, 
+    color, 
     videoTrack,
     show, 
     setShow
@@ -120,7 +120,7 @@ const AvatarVoice = ({
             >
             <MuiBox
                 sx={{
-                    border: `2px solid rgba(${rgb.r},${rgb.g},${rgb.b})`,
+                    border: `2px solid ${color}`,
                     content: '""',
                     width: 60,
                     height: 60,

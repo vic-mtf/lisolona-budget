@@ -4,12 +4,18 @@ import AudioMessage from "./audio/AudioMessage";
 
 import VisualMessage from "./VisualMessage";
 import MediaReader from "./MediaReader";
+import getServerUri from "../../../../../../utils/getServerUri";
 
-export default function MediaMessage ({data, type, bgcolor, borderRadius, target, isMine}) {
+export default function MediaMessage ({data, type, bgcolor, borderRadius, target, isMine, sended}) {
     const [audio] = Array.isArray(data) ? data: [];
     const [defaultValue, setDefaultValue] = useState(null);
     const handleCloseReader = useCallback(() => setDefaultValue(null), []);
     const handleClickIMedia = useCallback((media) => setDefaultValue(media), []);
+
+    // id={props.id} 
+    // url={props.url} 
+    // type={props.type} 
+    // name={props.name} 
 
     return (
         <React.Fragment>
@@ -24,6 +30,7 @@ export default function MediaMessage ({data, type, bgcolor, borderRadius, target
                 borderRadius={borderRadius}
                 onClickIMedia={handleClickIMedia}
                 isMine={isMine}
+                sended={sended}
             />}
             <MediaReader
                 defaultValue={defaultValue}

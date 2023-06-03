@@ -1,5 +1,5 @@
 export default function getHueColorById (_id= '') {
-    const id = _id.toString(16);
+    const id = _id?.toString(16);
     const len = id?.length;
     const middle = Math.round(len / 2);
     let red = id.slice(0, 2).split('').reverse().join('');
@@ -27,24 +27,15 @@ export default function getHueColorById (_id= '') {
 }
 
 export function generateColorsFromId(id, theme) {
-    // Convertir l'id en un nombre hexadécimal
-    const num = parseInt(id.substr(-6), 16);
-  
-    // Définir un niveau de luminosité pour les couleurs en fonction du thème
+    const num = parseInt(id?.substr(-6), 16);
     let lightness;
     if (theme === 'light') {
       lightness = 70;
     } else {
       lightness = 30;
     }
-  
-    // Générer une couleur claire
     const colorLight = `hsl(${num % 360}, 100%, ${lightness}%)`;
-  
-    // Générer une couleur plus foncée pour le texte
     const colorDark = `hsl(${num % 360}, 100%, ${lightness - 30}%)`;
-  
-    // Retourner un objet avec les deux couleurs
     return {
       background: colorLight,
       text: colorDark

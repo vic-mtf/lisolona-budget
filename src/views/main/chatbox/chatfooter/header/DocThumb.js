@@ -2,7 +2,7 @@ import { CardMedia, Box as MuiBox, Stack } from "@mui/material";
 import Typography from "../../../../../components/Typography";
 import { useLayoutEffect, useMemo } from "react";
 import fileBaseExtension from "../../../../../utils/fileExtensionBase";
-import getFileExtension, {getName} from "../../../../../utils/getFileExtention";
+import getFileExtension, {getName} from "../../../../../utils/getFileExtension";
 import getFormatTime from "../../../../../utils/getFormatTime";
 import { useState } from "react";
 

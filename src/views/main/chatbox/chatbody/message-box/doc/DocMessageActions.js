@@ -4,6 +4,8 @@ import React from 'react';
 import onDownload from './onDownLoad';
 import getServerUri from '../../../../../../utils/getServerUri';
 import onSend from './onSend';
+import downloadFile from './downloadFile';
+import openFile from './openFile';
 
 export default function DocMessageActions ({
     buffer,
@@ -35,8 +37,12 @@ export default function DocMessageActions ({
                 (<React.Fragment>
                     { showViewer &&
                     <Button variant="outlined" fullWidth
+                        onClick={() => openFile(buffer)}
                     > Ouvrir</Button>}
-                    <Button variant="outlined" fullWidth
+                    <Button 
+                        variant="outlined"
+                        fullWidth
+                        onClick={() => downloadFile(buffer)}
                     > Enregister
                     </Button>
                 </React.Fragment>):
@@ -46,7 +52,7 @@ export default function DocMessageActions ({
                         variant="outlined" 
                         fullWidth
                         onClick={() => {
-                            download?.xhr.abort();
+                            download?.cancel();
                             downloadsRef.current = downloadsRef.current.filter(
                                 ({id}) => id !== download?.id
                             );
@@ -80,7 +86,7 @@ export default function DocMessageActions ({
                 variant="outlined" 
                 fullWidth
                 onClick={() => {
-                    download?.xhr.abort();
+                    download?.cancel();
                     downloadsRef.current = downloadsRef.current.filter(
                         ({id}) => id !== download?.id
                     );

@@ -1,4 +1,5 @@
 import Dexie from 'dexie';
+import "dexie-observable";
 import dbConfig from '../configs/database-config.json';
 const { 
     name, 

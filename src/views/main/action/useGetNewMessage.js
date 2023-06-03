@@ -6,11 +6,12 @@ import answerRingtone from "../../../utils/answerRingtone";
 
 export default function useGetNewMessage () {
     const userId = useSelector(store => store.user.id);
+    const target = useSelector(store => store.data.target);
     const socket = useSocket();
 
     useEffect(() => {
         const getNewMessage = ({messages, _id, type, members, ...otherPros}) => {
-            console.log({messages, _id, type, members, ...otherPros});
+            //console.log({messages, _id, type, members, ...otherPros});
             const contact = members?.find(({_id: user}) => user?._id !== userId)?._id;
             const targetId = type === 'room' ? _id : contact?._id;
             const message = messages[messages.length - 1];
@@ -18,10 +19,12 @@ export default function useGetNewMessage () {
             const sender = message.sender;
             const name = `${sender?.fname || ''} ${sender?.lname || ''} ${sender?.mname || ''}`.trim();
             const isMine = sender?._id === userId;
+
             const localMessage = {
                 remonteId: message?._id,
                 id,
                 type: message.type,
+                subType: message?.subtype?.toLowerCase(),
                 targetId,
                 content: message?.content,
                 avatarSrc: sender?.imageUrl,
@@ -34,7 +37,7 @@ export default function useGetNewMessage () {
                 updatedAt: message.updatedAt || message?.createdAt,
                 name,
             };
-
+            console.log('update', message, localMessage);
             db.messages.get(id).then(async data => {
                 if(data) {
                     const localTime = (new Date (data.updatedAt)).getTime();
@@ -56,18 +59,20 @@ export default function useGetNewMessage () {
                     }
 
                 };
-                const _name = '_new-message';
-                const root = document.getElementById('root');
-                const customEvent = new CustomEvent(_name, {
-                    detail: {name: _name, message: localMessage, updated: true}
-                });
-                root.dispatchEvent(customEvent);
+                // if(targetId === target?.id) {
+                //     const _name = '_new-message';
+                //     const root = document.getElementById('root');
+                //     const customEvent = new CustomEvent(_name, {
+                //         detail: {name: _name, message: localMessage, updated: true}
+                //     });
+                //     root.dispatchEvent(customEvent);
+                // }
             });
             db.discussions.get(localMessage.targetId).then(data => {
                 if(data) {
                     const localTime = (new Date (data.lastNotice.updatedAt)).getTime();
                     const remonteTime = (new Date (message.updatedAt)).getTime();
-                    if(localTime !== remonteTime) {
+                    if(isNaN(localTime) ||  localTime < remonteTime) {
                         db.discussions.update(localMessage.targetId, {
                             updatedAt: new Date (message.updatedAt),
                             lastNotice: message,
@@ -93,5 +98,5 @@ export default function useGetNewMessage () {
         return () => {
             socket?.off('direct-chat', getNewMessage);
         }
-    }, [socket, userId]);
+    }, [socket, userId, target]);
 }

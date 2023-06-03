@@ -12,7 +12,6 @@ import MediaMessage from './media/MediaMessage';
 import { useBorderRadius } from './useBorderRadius';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import DocMessage from './doc/DocMessage';
-
 export default function MessageBox ({
     isMine, 
     avatarSrc, 
@@ -34,11 +33,18 @@ export default function MessageBox ({
     const borderRadius = useBorderRadius(1, isMine, joinBox);
     const urlsRef = useRef([]);
 
-    const createUrl = useCallback(buffer => {
+    const createUrl = useCallback((buffer, id) => {
         let url;
+        let index = urlsRef.current.findIndex(url => url.id === id);
         if(buffer) {
-            url = URL.createObjectURL(buffer);
-            urlsRef.current.push(url);
+            if(index > - 1) {
+                URL.revokeObjectURL(urlsRef.current[index]?.url);
+                url = URL.createObjectURL(buffer);
+                urlsRef.current[index] = {url, id};
+            } else {
+                    url = URL.createObjectURL(buffer);
+                    urlsRef.current.push({url, id});
+            }
         }
         return url || null;
     }, []);
@@ -47,26 +53,17 @@ export default function MessageBox ({
         medias?.map((media) => ({
         ...media,
         type: media.subType,
-        src: createUrl(buffer),
-    })), [medias, buffer, createUrl]);
-
+        src: createUrl(media?.buffer, media.id),
+    })), [medias, createUrl]);
+  
     const setStatus =  useMemo(() => 
-        isMine && (!data?.length || data?.length === 1) ?
+        isMine ?
         <MessageState sended={sended} /> : null
-    , [isMine, data, sended]);
+    , [isMine, sended]);
 
     const bgColor = useMemo(() => isMine ? 
         theme.palette.grey[200] : theme.palette.background.paper,
     [isMine, theme]);
-
-    useEffect(() => {
-        return () => { 
-            urlsRef.current.forEach(url => {
-                URL.revokeObjectURL(url);
-            });
-            urlsRef.current = [];
-        }
-    },[]);
 
     return (
         <MuiBox
@@ -138,6 +135,8 @@ export default function MessageBox ({
                             borderRadius={borderRadius}
                             type={subType}
                             data={data}
+                            sended={sended}
+                            id={id}
                         />}
                         {type === 'doc' &&
                         <DocMessage

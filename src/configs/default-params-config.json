@@ -1,0 +1,46 @@
+[
+    {
+        "title": "account",
+        "label": "Compte"
+    },
+    {
+        "title": "audi&video",
+        "label": "Audio & Vidéo"
+    },
+    {
+        "title": "messages",
+        "label": "Messages",
+        "options": [
+            {
+                "title": "read",
+                "label":"Confirmer la lecture",
+                "value": true
+            },
+            {
+                "title": "auto-dowload-video",
+                "label":"Téléchargement automatique des vidéos",
+                "value": true
+            },
+            {
+                "title": "auto-dowload-image",
+                "label":"Téléchargement automatique des images",
+                "value": true
+            },
+            {
+                "title": "auto-dowload-audio",
+                "label":"Téléchargement automatique des audios",
+                "value": true
+            }
+        ]
+    },
+    {
+        "title": "notices",
+        "label": "Notifications",
+        "options": [
+            
+        ]
+    },
+    {
+
+    }
+]

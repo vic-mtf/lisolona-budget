@@ -1,12 +1,18 @@
 import {
     CardMedia,
     Box as MuiBox,
+    useTheme,
 } from '@mui/material';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import { useMemo, useState } from 'react';
 
-export default function PictureMessage ({src, srcSet, height, width, minHeight, minWidth}) {
+export default function PictureMessage ({src, srcSet, height, width, minHeight, minWidth, isMine, buffer}) {
     const [loaded, setLoaded] = useState(false);
+    const theme = useTheme();
+    const bgcolor = useMemo(() => isMine ? 
+        theme.palette.grey[200] : theme.palette.background.paper,
+    [isMine, theme]);
+
     const size = useMemo(() => ({
         ...height ? {height} : {}, 
         ...width ? {width} : {},
@@ -25,7 +31,7 @@ export default function PictureMessage ({src, srcSet, height, width, minHeight, 
         >
             <CardMedia
                 component="img"
-                srcSet={srcSet}
+                srcSet={src || srcSet}
                 src={src}
                 loading="lazy"
                 onLoad={() => {
@@ -35,9 +41,22 @@ export default function PictureMessage ({src, srcSet, height, width, minHeight, 
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    filter: loaded ? null : theme =>  `blur(${theme.customOptions.blur})`,
+                    //filter: theme => buffer ? 'none'  : `blur(${theme.customOptions.blur})`,
                 }}
             />
+            {(isMine && buffer) &&
+            <MuiBox
+                sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    width: '100%',
+                    height: 20,
+                    background: theme => 
+                    `linear-gradient(90deg, transparent, transparent, transparent, ${bgcolor})`,
+                    boxSizing: 'inherit',
+                    zIndex: 1
+                }}
+            />}
             {!loaded &&
             <MuiBox
                 position="absolute"

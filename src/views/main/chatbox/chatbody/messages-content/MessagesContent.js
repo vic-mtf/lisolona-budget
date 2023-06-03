@@ -10,6 +10,9 @@ import { useData } from "../../../../../utils/DataProvider";
 import dbConfig from '../../../../../configs/database-config.json';
 import MessageWorker from '../../../../../workers/messages/messages.worker';
 import ProgressiveScrollingContainer from "./ProgressiveScrollingContainer";
+import replaceObjects from '../../../../../utils/replaceObjects';
+import partitionArray from '../../../../../utils/partitionArray';
+
 import { unionBy } from "lodash";
 
 const messageWorker = MessageWorker();
@@ -20,9 +23,21 @@ function MessageContent ({rootRef: _rootRef, target}) {
   const userId = useSelector(store => store.user.id);
   ///const messageWorker = useMemo(() => new Worker(URL_WORKER), []);
   const [{messagesRef}] = useData();
+  const subMessages = useMemo(() => {
+    const data = messagesRef?.current[target?.id] || {
+      messages: [],
+      total: 0,
+    };
+    return {
+      ...data,
+      messages: data?.messages?.slice(0, 20)
+    };
+  }, 
+  [messagesRef, target?.id]
+  );
   const {total, messages: defaultMss} = useMemo(() => 
-    ({total: 0, messages: [], ...messagesRef?.current[target?.id] || {}}),
-    [messagesRef, target?.id]
+    ({total: 0, messages: [], ...subMessages || {}}),
+    [subMessages]
   );
   const [messageGrouping, setMessageGrouping] = useState([defaultMss]);
   const [newMessages, setNewMessages] = useState([]);
@@ -44,12 +59,17 @@ function MessageContent ({rootRef: _rootRef, target}) {
       offset: messages.length,
       target,
     };
+    const update =  messagesRef?.current[target?.id]?.messages;
     const loadingMessages = await messageWorker.getMessages(data);
-    console.log(loadingMessages);
     setMessageGrouping(
-      messageGrouping => messageGrouping.concat(loadingMessages)
-    );
-  }, [userId, target, messages]);
+      messageGrouping => {
+        const updateMessages  = replaceObjects(
+          update, 
+          messageGrouping?.flat()
+        );
+        return partitionArray(updateMessages).concat(loadingMessages);
+    });
+  }, [userId, target, messages, messagesRef]);
 
   useLayoutEffect(() => {
     const nameMessageEvent = '_new-message';
@@ -57,10 +77,13 @@ function MessageContent ({rootRef: _rootRef, target}) {
     const root = document.getElementById('root');
     const containerRoot = rootRef.current;
     const getNewMessage = event => {
-      const {message, updated} = event.detail;
+      const { message, updated } = event.detail;
       const isNews = Math.abs(rootRef.current.scrollTop) > MAX_OFFSET;
-      const isUpdatingOldMessage = Boolean(messageGrouping[0]?.find(({id}) => id === message.id));
-      if(isNews && !isUpdatingOldMessage) setNewMessages(messages => {
+      const isUpdatingOldMessage = Boolean(
+        messageGrouping.flat()?.find(({id}) => id === message.id)
+      );
+      if(isNews && !isUpdatingOldMessage) 
+      setNewMessages(messages => {
           const index = messages.findIndex(({id}) => id === message.id);
           if(index > -1 && updated) messages[index] = message;
           else messages.unshift(message);
@@ -79,9 +102,9 @@ function MessageContent ({rootRef: _rootRef, target}) {
     containerRoot?.addEventListener(nameScrollEvent, setScrollable);
     return () => {
       root.removeEventListener(nameMessageEvent, getNewMessage);
-      containerRoot?.removeEventListener(nameScrollEvent, setScrollable)
+      containerRoot?.removeEventListener(nameScrollEvent, setScrollable);
     };
-  }, [messageGrouping]);
+  }, [messageGrouping, target?.id, messagesRef]);
 
   useLayoutEffect(() => {
     if(isScrollableRef.current && newMessages.length === 0) {

@@ -14,8 +14,8 @@ import getPdfPageInfos from "../../../../../../utils/getPdfPageInfos";
 // import { useState } from "react";
 const messagesWorker = MessagesWorker();
 
-export default function DocMiniViewer ({id, tyeMIME, isText, coverUrl, content, cover, setInfos, buffer}) {
-    if(tyeMIME === 'application/pdf') 
+export default function DocMiniViewer ({id, typeMIME, isText, coverUrl, content, cover, setInfos, buffer}) {
+    if(typeMIME === 'application/pdf') 
         return (
             <PDFViewer
                 content={content}
@@ -36,10 +36,9 @@ const PDFViewer = ({content, id, cover, setInfos, buffer}) => {
     const userId = useSelector(store => store.user.id);
 
     useLayoutEffect(() => {
-        if(!coverUrl) {
+        if(!coverUrl && (buffer || content)) {
             getPdfPageInfos(
-                buffer ? URL.createObjectURL(buffer) :
-                getServerUri({pathname: content})
+                buffer || getServerUri({pathname: content})
                 .toString()
             ).then(data => {
                 const {numPages, coverUrl:cover} = data
@@ -84,3 +83,4 @@ const DocTextViewer = ({lang}) => {
       </MuiBox>
     )
 }
+  

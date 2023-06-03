@@ -1,7 +1,10 @@
 import * as pdfjsLib from 'pdfjs-dist';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/scripts/pdf.worker.min.js`;
 
-export default function getPdfPageInfos(pdfUrl) {
+export default function getPdfPageInfos(pdf) {
+  const isFile = pdf instanceof File;
+  const pdfUrl = isFile ? URL.createObjectURL(pdf) : pdf;
+  console.log(isFile);
   return new Promise((resolve, reject) => {
     const pdfDocPromise = pdfjsLib.getDocument(pdfUrl).promise;
     pdfDocPromise.then(async pdfDoc => {
@@ -22,7 +25,8 @@ export default function getPdfPageInfos(pdfUrl) {
           resolve({
             coverUrl: canvas.toDataURL(),
             numPages
-          })
+          });
+          if(isFile) URL.revokeObjectURL(pdfUrl);
         });
       } catch (err) {
         reject(err);

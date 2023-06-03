@@ -35,6 +35,7 @@ export default function GroupForm ({
                             sx={{
                                 borderRadius: 1.5,
                             }}
+                            LinkComponent="div"
                         > 
                             <Avatar
                                 sx={{

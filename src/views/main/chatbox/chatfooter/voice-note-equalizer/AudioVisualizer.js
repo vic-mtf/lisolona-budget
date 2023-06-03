@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react"
 import useFrequencyDataAudio from "../../../../../utils/useFrequencyDataAudio";
 
 
-export default function AudioVisualizer ({analyseur}) {
-    const data = useFrequencyDataAudio(analyseur, 40, 2000);
+export default function AudioVisualizer ({analyser}) {
+    const data = useFrequencyDataAudio(analyser, 40, 2000);
     const canvas = useRef();
     const theme = useTheme();
     const [canvasContext, setCanvasContext] = useState(null);
@@ -24,7 +24,7 @@ export default function AudioVisualizer ({analyseur}) {
                 canvasContext?.fillRect(...bar);
             });
         }
-    }, [data]);
+    }, [data, canvasContext, theme.palette.primary.main]);
 
     return (
         <React.Fragment>

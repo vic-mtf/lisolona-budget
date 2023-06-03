@@ -25,7 +25,7 @@ export default function ChatFooter ({target}) {
         [editorState, files]
     );
     const handleToggleRecording = useCallback(() => setRecording(recording => !recording), []);
-    const handleSendMessage = useSendMessage({handleChange, target, editorState, files});
+    const handleSendMessage = useSendMessage({handleChange, target, editorState, files, setFiles});
     
     useLayoutEffect(() => {
        textFieldRef.current?.focus();

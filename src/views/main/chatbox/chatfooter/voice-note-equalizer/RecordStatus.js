@@ -9,26 +9,25 @@ import AudioVisualizer from "./AudioVisualizer";
 import { useEffect } from "react";
 
 export default function RecordStatus ({
-    analyseur, 
+    analyser, 
     chunks,
     mediaRecorderRef,
-    handleToggleRecording
+    handleToggleRecording,
+    streamRef,
 }) {
 
     const handleSendVoice = () => {
+        const stream = streamRef?.current;
         mediaRecorderRef.current?.stop();
+        stream.getTracks().forEach(track => track.stop());
+        const file = new Blob(chunks, { type: "audio/ogg;codecs=opus" });
+        const audio = new Audio();
+        audio.autoplay = true;
+       // audio.src = URL.createObjectURL(file);
+       console.log(file, stream);
+        window.open(URL.createObjectURL(file));
+        handleToggleRecording();
     };
-
-    useEffect(() => {
-        if(chunks?.length) {
-            window.open(
-                URL.createObjectURL(
-                    new Blob(chunks, { type: "audio/ogg;codecs=opus" })
-                )
-            );
-            handleToggleRecording();
-        }
-    },[chunks])
 
     return (
         <Stack
@@ -47,7 +46,7 @@ export default function RecordStatus ({
                 <Timer/>
             </MuiBox>
             <AudioVisualizer
-                analyseur={analyseur}
+                analyser={analyser}
             />
             <MuiBox>
                 <Fab 

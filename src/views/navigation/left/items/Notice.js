@@ -12,7 +12,7 @@ export default function Notice ({badgeContent, id, type, name, description, mess
     const isNew = useMemo(() => badgeContent > 0, [badgeContent]);
     const defaultContent = useMemo(() => 
         type === 'direct' ?
-        `Votre invitaion a été accepté, vous en contact avec ${name}` :
+        `L'invitaion acceptée, vous en contact avec ${name}` :
         `Nouveau Lisanga: \n${description}`,
         [name, description]
     );
@@ -22,7 +22,8 @@ export default function Notice ({badgeContent, id, type, name, description, mess
             message?.content || defaultContent, { wordwrap: 130 }
         );
         return (
-            message?.type === 'text' ? {label} : types[
+            message?.type === 'text' ? {label} : 
+            types[
             message?.type === 'media' ?
             message.subtype.toLowerCase() : message?.type
         ]) || {label};
@@ -72,7 +73,7 @@ const  types = {
         icon: <KeyboardVoiceOutlinedIcon sx={{fontSize: '15px'}}  />,
         //label: "Audio"
     },
-    document: {
+    doc: {
         icon: <ArticleOutlinedIcon sx={{fontSize: '15px'}}  />,
         //label: "Document"
     },
