@@ -3,7 +3,6 @@ import {
     ClickAwayListener,
     DialogActions,
     Fade,
-    Box as MuiBox,
     Paper,
     Popper,
     TextField,
@@ -15,13 +14,11 @@ import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
 import Button from '../../../../../components/Button';
 import addLinkAction from './addLinkAction';
 import getEntity from './getEntity';
+import { useFooterContext } from '../ChatFooter';
 
-export default function AddLinkButton ({
-    editorState,
-    handleChange,
-    textFieldRef
-}) {
+export default function AddLinkButton () {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [{editorState}, {handleChange}] = useFooterContext();
     const urlRef = useRef();
     const textRef = useRef();
     const setFocus = event => event.target.focus();

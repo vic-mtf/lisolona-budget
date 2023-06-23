@@ -1,7 +1,6 @@
-import { Toolbar, Stack, Divider, CardMedia } from "@mui/material";
+import { Toolbar, Stack, Divider, CardMedia, Chip } from "@mui/material";
 import Box from "../../../components/Box";
 import Typography from "../../../components/Typography";
-import CarouselPub from "./CarouselPub";
 import _logo_geid from '../../../assets/geid_logo_blue_without_title.webp';
 
 export default function Home () {
@@ -15,7 +14,6 @@ export default function Home () {
             px={2}
           >
             <Toolbar variant="dense" />
-            <CarouselPub/>
             <Stack 
                 spacing={1} 
                 direction="row" 
@@ -43,15 +41,12 @@ export default function Home () {
                     variant="h4"
                 >Lisolo Na Budget</Typography>
             </Stack>
-            <Typography color="text.secondary">
-                Un environnement digital pour collaborer 
-                et innover en toute simplicité.
-            </Typography>
-            <Typography color="text.secondary">
-                Une plateforme complète pour fluidifier la communication et 
-                le travail collaboratif au ministère du budget
-            </Typography>
 
+            <Chip
+                variant="outlined"
+                label="Veuillez sélectionner une conversation pour entamer une discussion."
+                sx={{mt: 4}}
+            />
           </Box>
           <Stack 
                 display="flex" 
@@ -62,11 +57,11 @@ export default function Home () {
                 my={1}
                 divider={<Divider flexItem orientation="vertical" variant="middle" />}
             >
-                <Typography variant="caption" children="Ministère Du Budget" />
-                <Typography variant="caption" children="Secretariat Général" />
-                <Typography variant="caption" children="Direction Archives et Nouvelles Technologie de l'Information et de la Communication &copy;2022" />
+                {/* <Typography variant="caption" children="Ministère Du Budget" />
+                <Typography variant="caption" children="Secretariat Général" /> */}
+                <Typography color="text.secondary" variant="caption" children="Direction Archives et Nouvelles Technologie de l'Information et de la Communication &copy;2022" />
             </Stack>
-           <Stack 
+           {/* <Stack 
                 height={5} 
                 display="flex" 
                 direction="row" 
@@ -74,7 +69,7 @@ export default function Home () {
                 <Box flex={1} bgcolor="#0095c9" />
                 <Box flex={1} bgcolor="#fff24b" />
                 <Box flex={1} bgcolor="#db3832" />
-            </Stack>
+            </Stack> */}
         </Box>
     )
 }

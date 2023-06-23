@@ -1,10 +1,5 @@
-import { Box as MuiBox, Stack, Toolbar } from '@mui/material';
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import ImageZoom from "react-image-zooom";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import CustomSlider from '../../../../../components/CustomSlider';
-import IconButton from '../../../../../components/IconButton';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import { Box as MuiBox } from '@mui/material';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import ControlsBar from './ControlsBar';
 
 export default function VideoItem ({src, coverUrl, selected, title, description, containerInnerRootRef, index}) {

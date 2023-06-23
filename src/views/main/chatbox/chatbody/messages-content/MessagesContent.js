@@ -12,7 +12,6 @@ import MessageWorker from '../../../../../workers/messages/messages.worker';
 import ProgressiveScrollingContainer from "./ProgressiveScrollingContainer";
 import replaceObjects from '../../../../../utils/replaceObjects';
 import partitionArray from '../../../../../utils/partitionArray';
-
 import { unionBy } from "lodash";
 
 const messageWorker = MessageWorker();

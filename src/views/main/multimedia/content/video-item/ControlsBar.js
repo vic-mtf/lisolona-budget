@@ -1,7 +1,4 @@
 import { Box as MuiBox, Paper, Slide, Stack } from '@mui/material';
-import CustomSlider from '../../../../../components/CustomSlider';
-import IconButton from '../../../../../components/IconButton';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import VolumeButtonSlider from './VolumeButtonSlider';
 import PlayPauseButton from './PlayPauseButton';

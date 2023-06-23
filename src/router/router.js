@@ -3,6 +3,7 @@ import AppTest from "../test/App.test";
 import Cover from "../views/cover/Cover";
 import LiosoNaBudget from "../views/LiosoNaBudget";
 import SIgninPage from '../views/signin/SigninPage';
+import HomePage from "../views/home/HomePage";
 
 const protectedRoutes = () => [
     {
@@ -26,6 +27,10 @@ const bublicsRoutes = () => [
         element: <SIgninPage/>,
         path:  `${process.env.PUBLIC_URL.trim()}/account/signin`,
     },
+    {
+        element: <HomePage/>,
+        path:  `${process.env.PUBLIC_URL.trim()}/home/*`,
+    }
 ];
 
 const router = (getters, setters) => createBrowserRouter([

@@ -1,98 +1,101 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Grid } from '@mui/material';
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
-const AudioRecorder = () => {
-  const canvasRef = useRef(null);
-  const [mediaStream, setMediaStream] = useState(null);
-  const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
+export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize, radius}) => {
+  const recRef = useRef();
+  const requestAnimationFrameRef = useRef();
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const canvasCtx = canvas.getContext('2d');
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-
-    let analyser;
-    if (mediaStream) {
-      const audioContext = new AudioContext();
-      const source = audioContext.createMediaStreamSource(mediaStream);
-      analyser = audioContext.createAnalyser();
-      source.connect(analyser);
+    let bufferLength;
+    let dataArray;
+    if (analyser) {
+      analyser.fftSize = 64;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
     }
-
-    const drawWaveform = () => {
-      requestAnimationFrame(drawWaveform);
+    const {current: rect} = recRef;
+    
+    function renderFrame() {
+      requestAnimationFrameRef.current = requestAnimationFrame(renderFrame);
+      analyser?.getByteFrequencyData(dataArray);
+      let volume;
       if (analyser) {
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
         analyser.getByteTimeDomainData(dataArray);
-        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-        const sliceWidth = canvas.width * 1.0 / bufferLength;
-        let x = 0;
-        for (let i = 0; i < bufferLength; i++) {
-          const v = dataArray[i] / 128.0;
-          const y = v * canvas.height / 2;
-          if (i === 0) {
-            canvasCtx.moveTo(x, y);
-          } else {
-            canvasCtx.lineTo(x, y);
-          }
-          x += sliceWidth;
-        }
-        canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        canvasCtx.stroke();
+        volume = dataArray.reduce((acc, val) => acc + val, 0) / bufferLength;
+        volume /= 255;
       }
+      if(audioTrack) volume = audioTrack?.getVolumeLevel()
+      const rectSize = getValue(maxSize, size, volume);
+      console.log(rectSize, volume);
+      const rectCoord = ( maxSize - rectSize ) / 2;
+      rect.setAttribute("width", rectSize);
+      rect.setAttribute("height", rectSize);
+      rect.setAttribute("x", rectCoord);
+      rect.setAttribute("y", rectCoord);
+    }
+    renderFrame();
+    return () => {
+      window.cancelAnimationFrame(requestAnimationFrameRef.current);
     };
+  }, [analyser, size, maxSize, audioTrack]);
 
-    drawWaveform();
-  }, [mediaStream]);
+  return (
+    <svg
+      height={maxSize}
+      width={maxSize}
+    >
+      <rect 
+        rx={radius}
+        fill="transparent" 
+        stroke="red"
+        ref={recRef}
+        strokeWidth={2.5}
+      />
+    </svg>
+  );
+});
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    setMediaStream(stream);
+AudioVisualizer.defaultProps = {
+  size: 200,
+  maxSize: 300,
+  radius: 10,
+};
 
-    const recorder = new MediaRecorder(stream);
-    recorder.addEventListener('dataavailable', (event) => {
-      const blob = new Blob([event.data], { type: 'audio/wav' });
-      const url = URL.createObjectURL(blob);
-      console.log(url);
-    });
+function getValue(max, min, percentage) {
+  return min + (max - min) * percentage;
+}
 
-    recorder.start();
-    setMediaRecorder(recorder);
-    setIsRecording(true);
-  };
-
-  const stopRecording = () => {
-    if (isRecording) {
-      mediaRecorder.stop();
-      mediaStream.getTracks().forEach((track) => {
-        track.stop();
-      });
-      setMediaStream(null);
-      setMediaRecorder(null);
-      setIsRecording(false);
+export const VoiceTest = ({src}) => {
+  const [analyser, setAnalyser] = useState(null);
+  const audio = useMemo(()=> new Audio(src), [src]);
+  const analiserRef = useRef(null);
+  const handleClick = (event) => {
+    if(audio.paused) {
+      audio.play();
+      if(analiserRef.current)
+        setAnalyser(analiserRef.current)
+    }
+    else {
+      audio.pause();
+      setAnalyser(null)
+    }
+    if(!analiserRef.current) {
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      setAnalyser(analyser);
+      analiserRef.current = analyser;
+      const source = audioContext.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
     }
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <canvas ref={canvasRef} width="100%" height="100"></canvas>
-      </Grid>
-      <Grid item xs={6}>
-        <Button variant="contained" color="primary" onClick={startRecording} disabled={isRecording}>
-          Enregistrer
-        </Button>
-      </Grid>
-      <Grid item xs={6}>
-        <Button variant="contained" color="secondary" onClick={stopRecording} disabled={!isRecording}>
-          Arrêter
-        </Button>
-      </Grid>
-    </Grid>
-  );
-};
-
-export default AudioRecorder;
+    <div style={{height: 500, width: 500, background: 'white' }} onClick={handleClick}>
+      <AudioVisualizer
+        analyser={analyser}
+        maxSize={500}
+        size={300}
+      />
+    </div>
+  )
+}

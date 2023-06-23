@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { 
     Divider, 
     Toolbar
@@ -10,15 +10,15 @@ import EmptyContentMessage from './EmptyContentMessage';
 import { addData } from '../../../../redux/data';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import Lists from './Lists';
-import db from '../../../../database/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import LoadingItem from '../items/LoadingItem';
 import Button from '../../../../components/Button';
+import db from '../../../../database/db';
 
 export default function DiscussionList ({search, navigation}) {
     const [limit, setLimit] = useState(15);
     const discussions = useLiveQuery(() => 
-       db.discussions.orderBy('updatedAt')
+       db?.discussions.orderBy('updatedAt')
        .filter(({name}) =>
             new RegExp(
                 search.trim().split(/\s/).join('|'),

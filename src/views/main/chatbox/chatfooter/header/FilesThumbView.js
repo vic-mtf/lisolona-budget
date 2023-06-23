@@ -6,8 +6,10 @@ import {
 import FileThumb from './FileThumb';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Multimedia from '../../../multimedia/Multimedia';
+import { useFooterContext } from '../ChatFooter';
 
-export default function FilesThumbView ({files, setFiles, target}) {
+export default function FilesThumbView () {
+    const [{files, target}, {setFiles}] = useFooterContext();
     const [defaultFile, setDefaultFile] = useState(null);
     const filesUrlsRef = useRef([]);
     const valueRef = useRef(files.length - 1);

@@ -3,21 +3,21 @@ import {
 } from '@mui/material';
 import { RichUtils } from 'draft-js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { getDraftText } from '../ChatFooter';
+import { getDraftText, useFooterContext } from '../ChatFooter';
 import MultilineTextField from './MultilineTextField';
 import { listFormatOption, textFormatOptions } from '../header/textFormatting';
 import ToolbarHeader from '../header/ToolbarHeader';
 
-export default function MessageEditor ({
-    handleChange, 
-    editorState, 
-    disabledHeader,
-    setDisabledHeader,
-    textFieldRef,
-    showToolbar,
-    handleSendMessage,
-    target,
-}) {
+export default function MessageEditor () {
+    const [{
+        editorState,
+        disabledHeader,
+        textFieldRef,
+        showToolbar,
+        target,
+    }, {handleChange, handleSendMessage, setDisabledHeader
+    }] = useFooterContext();
+
     const [formats, setFormats] = useState([]);
     const [listMode, setListMode] = useState(null);
     const [align, setAlign] = useState(null);

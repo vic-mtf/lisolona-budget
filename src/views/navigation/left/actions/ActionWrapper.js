@@ -17,7 +17,6 @@ export default function ActionWrapper () {
     useEffect(() => {
         const handelGetChat = ({chats, ...otherPros}) => {
             getData({chats});
-           // console.log(chats, otherPros);
         };
         const handleSignaling = ({invitations}) => {
             if(invitations?.length) {

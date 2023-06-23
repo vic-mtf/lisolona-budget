@@ -5,6 +5,7 @@ import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
 import KeyboardVoiceOutlinedIcon from '@mui/icons-material/KeyboardVoiceOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
+import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
 import {  useMemo } from "react";
 import { convert } from "html-to-text";
 
@@ -14,7 +15,7 @@ export default function Notice ({badgeContent, id, type, name, description, mess
         type === 'direct' ?
         `L'invitaion acceptée, vous en contact avec ${name}` :
         `Nouveau Lisanga: \n${description}`,
-        [name, description]
+        [name, description, type]
     );
     
     const notice =  useMemo(() => {
@@ -76,6 +77,9 @@ const  types = {
     doc: {
         icon: <ArticleOutlinedIcon sx={{fontSize: '15px'}}  />,
         //label: "Document"
+    },
+    voice: {
+        icon: <MicNoneOutlinedIcon sx={{fontSize: '15px'}}  />,
     },
     call: {
         icon: <ContactPhoneOutlinedIcon sx={{fontSize: '15px'}}  />,

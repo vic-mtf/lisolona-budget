@@ -1,6 +1,6 @@
-import { Box, styled } from "@mui/material";
+import { Box, styled} from "@mui/material";
 
-const BoxGradient = styled( Box, {
+const BoxGradient = styled(Box, {
   })(({ colors }) => ({
     display: 'flex',
     flex: 1,

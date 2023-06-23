@@ -1,15 +1,15 @@
-import { useStopwatch } from "react-timer-hook"
 import Typography from "../../../../../components/Typography"
+import getFormatTime from "../../../../../utils/getFormatTime";
+import useTimer from "./useTimer";
 
-export default function Timer () {
-    const {seconds, minutes} = useStopwatch({autoStart: true});
+export default function Timer ({timeoutRef}) {
+    timeoutRef.current = useTimer(true, timeoutRef);
+
     return (
         <Typography 
-            variant="body1" 
             fontWeight="bold"
             color="text.secondary"
-        >
-            {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+        >{getFormatTime({currentTime: timeoutRef.current/ 1000}).trim()}
         </Typography>
     )
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import scrollBarSx from "../../../../../utils/scrollBarSx";
 import { 
     CircularProgress,
@@ -10,7 +10,7 @@ import { unionBy } from "lodash";
 
 const RATIO = .0;
 
-export default function ProgressiveScrollingContainer ({
+const ProgressiveScrollingContainer = ({
     onLoading, 
     children, 
     messages, 
@@ -20,7 +20,7 @@ export default function ProgressiveScrollingContainer ({
     setMessageGrouping,
     setNewMessages,
     rootRef: _rootRef
-}) {
+}) => {
     const rootRef = useRef();
     const sentinelRef = useRef();
     const scrollTopRef = useRef(0);
@@ -131,3 +131,5 @@ export default function ProgressiveScrollingContainer ({
     )
   
   }
+
+export default React.memo(ProgressiveScrollingContainer);

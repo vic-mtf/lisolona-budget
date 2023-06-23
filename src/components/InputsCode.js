@@ -10,6 +10,8 @@ export default function InputsCode ({
         value,
         values,
         readOnly,
+        type,
+        bluredEnd,
         codeRef: ref
     })  {
     const [_values, _setValues] = useState({
@@ -29,8 +31,8 @@ export default function InputsCode ({
     }, [len, size, value, values]);
 
     const handleChange = id => event => {
-        const value = event.target.value.trim().toString();
-        if(!~'0123456789'.indexOf(value)) return;
+        const value = event.target.value.trim().toString().toLowerCase();
+        if(!checkStringType(type, value)) return;
         const inputs = [..._values.inputs];
         inputs[id] = value;
         const read = id + 1;
@@ -39,6 +41,7 @@ export default function InputsCode ({
             inputs, 
             read
         });
+        if(bluredEnd) document.getElementById(`input_code_${read - 1}`)?.blur();
         document.getElementById(`input_code_${read}`)?.focus();
         if(ref)
             ref.current = {
@@ -94,7 +97,7 @@ export default function InputsCode ({
                                     height: sizes,
                                     width: sizes,
                                     textAlign: 'center',
-                                    fontSize: 30,
+                                    fontSize: sizes * 3/7,
                                 },
                                 value: _values.inputs[id] || '',
                             }}
@@ -123,4 +126,17 @@ InputsCode.defaultProps = {
     value: '',
     values: [],
     readOnly: false,
+    type: 'num'
 };
+
+function checkStringType(type, string) {
+    if (type === "alpha") 
+      return /^[a-zA-Z]+$/.test(string);
+    else if (type === "alphanum") 
+      return /^[a-zA-Z0-9]+$/.test(string);
+    else if (type === "num") 
+      return /^[0-9]+$/.test(string);
+    else 
+      return false;
+  }
+  

@@ -10,9 +10,11 @@ import TextMessage from './text/TextMessage';
 import MessageState from './MessageState';
 import MediaMessage from './media/MediaMessage';
 import { useBorderRadius } from './useBorderRadius';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import DocMessage from './doc/DocMessage';
-export default function MessageBox ({
+import VoiceMessage from './voice/VoiceMessage';
+
+const MessageBox = React.memo(({
     isMine, 
     avatarSrc, 
     content,
@@ -24,11 +26,13 @@ export default function MessageBox ({
     time,
     subType,
     medias,
+    timeout,
     cover,
     buffer,
     numPages,
+    createdAt,
     id,
-}) {
+}) => {
     const theme = useTheme();
     const borderRadius = useBorderRadius(1, isMine, joinBox);
     const urlsRef = useRef([]);
@@ -58,8 +62,12 @@ export default function MessageBox ({
   
     const setStatus =  useMemo(() => 
         isMine ?
-        <MessageState sended={sended} /> : null
-    , [isMine, sended]);
+        <MessageState 
+            sended={sended} 
+            timeout={timeout} 
+            createdAt={createdAt}
+        /> : null
+    , [isMine, sended, createdAt, timeout]);
 
     const bgColor = useMemo(() => isMine ? 
         theme.palette.grey[200] : theme.palette.background.paper,
@@ -152,17 +160,31 @@ export default function MessageBox ({
                             sended={sended}
                             numPages={numPages}
                         />}
-                        {setStatus}
+                        {type === 'voice' &&
+                        <VoiceMessage
+                            bgcolor={bgColor}
+                            isMine={Boolean(setStatus)}
+                            borderRadius={borderRadius}
+                            type={subType}
+                            content={content}
+                            name={name}
+                            id={id}
+                            buffer={buffer}
+                            sended={sended}
+                            avatarSrc={avatarSrc}
+                        />}
+                        {(type !== 'media') && setStatus}
                     </Paper>
                 </MuiBox>
             </Stack>
           </MuiBox>
         </MuiBox>
     );
-}
-
+});
 
 MessageBox.defaultProps = {
     type: 'text',
     isMine: false,
 };
+
+export default MessageBox;

@@ -6,10 +6,10 @@ const {
     version
 } = dbConfig;
 
-export default function initDataBase ({userId}) {
-    const db = new Dexie(`${name}-${userId}`, options);
+export default function initDataBase () {
+    const db = new Dexie(name, options);
     const stores = {};
     dbConfig.stores.forEach(({keys, name}) => stores[name] = keys.join(','));
-    db.version(version).stores(stores);
+    db?.version(version).stores(stores);
     return db;
 }

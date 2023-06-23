@@ -2,9 +2,9 @@ import getServerUri from "../../utils/getServerUri";
 import initDataBase from "../initDataBase";
 
 export default function getMedias ({userId, target}) {
-    const db = initDataBase({userId});
+    const db = initDataBase();
     return new Promise((resolve, reject) => {
-        db.messages
+        db?.messages
         .filter(({targetId, subType}) => 
             targetId === target.id && /video|image/.test(subType)
         ).toArray().then(data => {

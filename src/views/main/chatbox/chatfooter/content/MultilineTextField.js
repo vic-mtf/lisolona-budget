@@ -1,38 +1,31 @@
-import {getDefaultKeyBinding } from "draft-js";
 import Editor from '@draft-js-plugins/editor';
 import 'draft-js/dist/Draft.css';
 import "prismjs/themes/prism.css";
-import { Box as MuiBox, useTheme } from "@mui/material";
+import { Box as MuiBox } from "@mui/material";
 import { Search } from "../../../../../components/SearchInput";
 import scrollBarSx from "../../../../../utils/scrollBarSx";
-import { getDraftText } from "../ChatFooter";
+import { useFooterContext } from "../ChatFooter";
 import { useMemo } from "react";
 import styleMap from "./styleMap";
 import blockStyleFn from "./editor-custom-style/blockStyleFn";
-//import blockRendererFn from "./editor-custom-style/blockRendererFn";
 
-export default function MultilineTextField ({
-    editorState, 
-    handleChange,
-    handleKeyCommand,
-    onBlur,
-    onFocus,
-    showPlaceHolder,
-    textFieldRef,
-    handleSendMessage,
-    target,
-}) {
-    const keyBindingFn = event => {
-        const checkEnterKey = event.code?.toUpperCase() === 'ENTER' && 
-        !event.ctrlKey && !event.shiftKey;
+export default function MultilineTextField ({onBlur, onFocus, showPlaceHolder}) {
 
-        if(checkEnterKey) {
-            if(getDraftText(editorState))
-                handleSendMessage();
-            return event.preventDefault();
+    const [{
+        editorState,
+        textFieldRef,
+        target,
+    },{handleChange, handleKeyCommand, handleSendMessage}
+    ] = useFooterContext();
+
+    const handleReturn = (e) => {
+        if (!e.ctrlKey && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        return 'handled';
         }
-        return getDefaultKeyBinding(event);
-    };
+        return 'not-handled';
+    }; 
 
     const placeholderMessage = useMemo(() => 
     `Ecrire à ${target?.type === 'room' ? 'Lisanga ' : ''}${target?.name}...`, [target])
@@ -68,12 +61,13 @@ export default function MultilineTextField ({
                         editorState={editorState}
                         handleKeyCommand={handleKeyCommand}
                         placeholder={showPlaceHolder && placeholderMessage}
-                        keyBindingFn={keyBindingFn}
                         ref={textFieldRef}
                         onBlur={onBlur}
                         onFocus={onFocus}
                         customStyleMap={styleMap}
                         blockStyleFn={blockStyleFn}
+                        spellCheck
+                        handleReturn={handleReturn}
                     />
                 </MuiBox>
             </Search>

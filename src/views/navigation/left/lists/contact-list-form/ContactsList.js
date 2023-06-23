@@ -32,9 +32,8 @@ export default function ContactsList ({
             'ig'
         ).test(key),
     [search]);
-    
     const contacts = useLiveQuery(() => 
-       db.contacts.orderBy('name')
+       db?.contacts.orderBy('name')
        .filter(({name, email}) => 
             filterByKey(name) || filterByKey(email)
         ).reverse()

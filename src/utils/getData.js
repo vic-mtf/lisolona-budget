@@ -1,3 +1,4 @@
+import { chain } from "lodash";
 import db from "../database/db";
 
 export default async function getData ({chats, contacts: cts, inivitation, userId}, callback) {
@@ -89,7 +90,7 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
     const contactsIds = contacts.map(({id}) => id);
 
     const promiseDiscussions = new Promise((resolve, reject) => {
-        db.discussions.bulkGet(discussionsIds).then(async data => {
+        db?.discussions.bulkGet(discussionsIds).then(async data => {
             data.forEach((discussion, index) => {
                 const remonteDiscussion = discussions[index];
                 if(discussion) {
@@ -114,15 +115,15 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
             });
             try {
                 if(newDiscussions.length)
-                    await db.discussions.bulkAdd(newDiscussions);
+                    await db?.discussions.bulkAdd(filterObjects(newDiscussions));
                 if(updateDiscussions.length)
-                    await db.discussions.bulkUpdate(updateDiscussions);
+                    await db?.discussions.bulkUpdate(filterObjects(updateDiscussions));
                 resolve('update');
             } catch (e) { reject(e); }
         });
     });
     const promiseMessages = new Promise((resolve, reject) => {
-        db.messages.bulkGet(messagesIds).then(async data => {
+        db?.messages.bulkGet(messagesIds).then(async data => {
             data.forEach((message, index) => {
                 const remonteMessage = messages[index];
                 if(message) {
@@ -143,17 +144,18 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
                 }
                 else newMessages.push(remonteMessage);
             });
+            console.log(newMessages);
             try {
                 if(newMessages.length)
-                    await db.messages.bulkAdd(newMessages);
+                    await db?.messages.bulkAdd(filterObjects(newMessages));
                 if(updateMessages.length)
-                    await db.messages.bulkUpdate(updateMessages);
+                    await db?.messages.bulkUpdate(filterObjects(updateMessages));
                 resolve('update');
             } catch (e) { reject(e); }
         });
     });
     const promiseContacts = new Promise((resolve, reject) => {
-        db.contacts.bulkGet(contactsIds).then(async data => {
+        db?.contacts.bulkGet(contactsIds).then(async data => {
             data.forEach((contact, index) => {
                 const remonteContact = contacts[index];
                 if(contact) {
@@ -169,9 +171,9 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
             });
             try {
                 if(newContacts.length)
-                    await db.contacts.bulkAdd(newContacts);
+                    await db?.contacts.bulkAdd(filterObjects(newContacts));
                 if(updateContacts.length)
-                    await db.contacts.bulkUpdate(updateContacts);
+                    await db?.contacts.bulkUpdate(filterObjects(updateContacts));
                 resolve('update');
             } catch (e) { reject(e); }
         });
@@ -179,4 +181,12 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
     Promise.all([promiseDiscussions, promiseMessages, promiseContacts]).then(() => {
         if(typeof callback === 'function') callback();
     });
+}
+
+
+function filterObjects(objects) {
+  return chain(objects)
+    .filter(obj => obj.id != null)
+    .uniqBy('id')
+    .value();
 }

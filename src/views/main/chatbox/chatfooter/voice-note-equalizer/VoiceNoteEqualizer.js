@@ -1,110 +1,100 @@
 import { 
     Slide, 
-    useTheme,
     Box as MuiBox,
+    DialogContentText,
+    DialogActions,
+    DialogContent,
  } from "@mui/material";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import Typography from "../../../../../components/Typography";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import Button from '../../../../../components/Button';
 import RecordStatus from "./RecordStatus";
 import hasPermission from '../../../../../utils/getPermission';
+import { useFooterContext } from "../ChatFooter";
 
-export default function VoiceNoteEqualizer ({handleToggleRecording}) {
-    const theme = useTheme();
-    const streamRef = useRef(null);
-    const mediaRecorderRef = useRef();
-    const chunksRef = useRef([]);
-    const analyserRef = useRef(null);
-    const [microPerm, setMicroPerm] = useState(null);
-    const [allowed, setAllowed] = useState(false);
-
-    useLayoutEffect(() => {
-        const mediaDevices = navigator.mediaDevices
-        const allowedVoice = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
-        if(microPerm?.onchange === null)
-            microPerm.onchange = event => 
-            setAllowed(event.target.state !== 'denied');
-        if(allowedVoice && microPerm?.state !== 'denied') {
-            navigator.mediaDevices.getUserMedia({audio: true})
-            .then((stream) => {
-                setAllowed(true);
-                streamRef.current = stream;
-                const contexteAudio = new window.AudioContext();
-                analyserRef.current = contexteAudio.createAnalyser();
-                const source = contexteAudio.createMediaStreamSource(stream);
-                mediaRecorderRef.current = new MediaRecorder(stream);
-                mediaRecorderRef.current.start();
-                source.connect(analyserRef.current);
-                ///mediaRecorder.ondataavailable = event => chunksRef.current = [...chunksRef.current, event.data];
+export default function VoiceNoteEqualizer () {
+    const [stream, setStream] = useState(null);
+    const [permission, setPermission] = useState(null);
+    const allowed = useMemo(() => permission?.state === 'granted', [permission?.state])
+    const [{target}, {handleToggleRecording}] = useFooterContext();
+    const handleAudioStream = useCallback(() => {
+        const mediaDevices = navigator.mediaDevices;
+        if(permission?.state !== 'denied' && mediaDevices) {
+            mediaDevices.getUserMedia({audio: true})
+            .then(stream => {
+                setStream(stream);
             }).catch((err) => {
-              console.error(`The following getUserMedia error occurred: ${err}`);
-            })
+                console.error(`The following getUserMedia error occurred: ${err}`);
+              })
         }
-    },[microPerm, allowed]);
+    },[permission?.state]);
+
     useLayoutEffect(() => {
-        const permission = null;
-        (async() => {
-            permission = await hasPermission();
-            console.log(permission)
-         })();
-
-        return () => {
-
+        const handleChangeStreamState = (event) => {
+            if(permission?.state !== 'denied') 
+                handleAudioStream();
+            else setPermission(event?.target);
         };
-    });
-    useEffect(() => {
-        (async() => {
-           setMicroPerm(
-                await navigator.permissions.query({
-                    name: "microphone"
-                })
-            );
-        })()
-    }, []);
+        if(permission?.state === 'granted') {
+            handleAudioStream();
+            permission.addEventListener('change', handleChangeStreamState);
+        }
+        else (async() => setPermission (await hasPermission()))();
+        return () => {
+            permission?.removeEventListener('change', handleChangeStreamState);
+        };
+    },[permission, handleAudioStream]);
 
-    return ( null
-        // <Slide
-        //     direction="up"
-        //     in
-        //     style={{
-        //         position: 'absolute',
-        //         background: `linear-gradient(transparent 0%, ${
-        //             theme.palette.background.paper
-        //         } 50%)`,
-        //         height: '100%',
-        //         width: '100%',
-        //         bottom: 0,
-        //         zIndex: theme.zIndex.drawer + 1000,
-        //         transitionDelay: '2ms',
-        //     }}
-        // >
-        //     <MuiBox
-        //         height="100%"
-        //         width="100%"
-        //         display="flex"
-        //         alignItems="end"
-        //     >
-        //         {allowed ?
-        //         <RecordStatus
-        //             analyserRef={analyserRef}
-        //             chunksRef={chunksRef}
-        //             mediaRecorderRef={mediaRecorderRef}
-        //             streamRef={streamRef}
-        //             handleToggleRecording={handleToggleRecording}
-        //         />: microPerm?.state?.match(/prompt|denied/) &&
-        //         <Typography 
-        //             align="center" 
-        //             variant="body1" 
-        //             paragraph 
-        //             color="text.secondary"
-        //             p={1}
-        //         >
-        //             Autorisez <b>Lisolo Na Budget</b> à accéder au microphone de votre 
-        //             appareil pour vous permettre  d'enregistrer votre note vocale. 
-        //             {/* ouvrir le {microPerm?.state === 'denied' &&
-        //             <Link href="chrome://settings/content/microphone">paramètre</Link>} */}
-        //         </Typography>
-        //         }
-        //     </MuiBox>
-        // </Slide>
+    return (
+        <MuiBox
+            position="absolute"
+            height="100%"
+            width="100%"
+            bottom={0}
+            sx={{
+                position: 'absolute',
+                background: theme => `linear-gradient(transparent 0%, ${
+                    theme.palette.background.paper
+                } 30%)`,
+                zIndex: theme => theme.zIndex.tooltip,
+            }}
+        >
+        <Slide direction="up" in>
+            <MuiBox
+                height="100%"
+                width="100%"
+                display="flex"
+                alignItems="end"
+            >
+                {allowed  ?
+                (<RecordStatus
+                    stream={stream}
+                    handleToggleRecording={handleToggleRecording}
+                    target={target}
+                />):
+                <DialogContent>
+                    <DialogContentText
+                        variant="body2"
+                    >
+                        Veuillez accorder à l'application <b>Lisolo Na Budget</b> l'autorisation 
+                        d'accéder au microphone de votre appareil 
+                        afin de vous permettre d'enregistrer votre note vocale {
+                        permission?.state === 'denied' && '(Vérifier dans le paramètre)'
+                        }.
+                    </DialogContentText>
+                    <DialogActions sx={{ py: 0}}>
+                        <Button
+                            onClick={handleToggleRecording}
+                        >Annuler</Button>
+                        {permission?.state === 'prompt' &&
+                        <Button
+                            variant="contained"
+                            onClick={handleAudioStream}
+                        >Autoriser</Button>}
+                    </DialogActions>
+                </DialogContent>
+                }
+            </MuiBox>
+        </Slide>
+        </MuiBox>
     );
 }

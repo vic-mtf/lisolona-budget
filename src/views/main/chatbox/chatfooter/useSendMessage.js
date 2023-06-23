@@ -1,48 +1,44 @@
 import draftToHtml from "draftjs-to-html";
 import { useSocket } from "../../../../utils/SocketIOProvider";
-import { EditorState, convertToRaw } from "draft-js";
-import db from "../../../../database/db";
+import { convertToRaw } from "draft-js";
 import { useCallback } from "react";
 import { getDraftText } from "./ChatFooter";
-import decorators from "./content/editor-custom-style/decorators";
 import processData from "../../../../utils/processData";
 import getServerUri from "../../../../utils/getServerUri";
 import { useData } from "../../../../utils/DataProvider";
-import structureMessages from "../../../../utils/structureMessages";
 import store from "../../../../redux/store";
 import { initial } from "lodash";
+import editorStateEmpty from "./content/editorStateEmpty";
+import db from "../../../../database/db";
 
 export default function useSendMessage ({handleChange, editorState, target, files, setFiles}) {
     const socket  = useSocket();
     const [{downloadsRef}] = useData();
-
-     const handleSendMessage = useCallback(async() => {
+    
+    const handleSendMessage = useCallback(async() => {
+        handleChange(editorStateEmpty(editorState));
         const id = (Date.now() + 1).toString(16) + target.id;
-        const date = new Date().toString();
         if(files?.length) {
-           const {remonteData, localData} = processData(files, {target, date});
-           //console.log(localData);
-           const messages = structureMessages(localData);
-           await db.messages.bulkAdd(localData);
-           remonteData?.forEach(data => {
-                let groupId;
-                if(data.fileType === 'media') {
-                   const group = messages?.find(({medias}) => 
-                        medias?.find(({id}) => id === data?.clientId)
-                    );
-                    groupId = group?.id;
-                }
-                sendFile({
-                    data,
-                    groupId,
-                    downloadsRef,
-                });
-
-           });
-           messages?.forEach(message => dispatchMessage(message));
+           const {remonteData, localData} = processData(files, {
+                target, 
+                date: new Date()
+            });
+            localData?.forEach((message, index) => {
+                db.messages.add(message).then(
+                    () => {
+                        const data = remonteData[index];
+                        sendFile({
+                            data,
+                            downloadsRef,
+                            index
+                        });
+                    }
+                )
+            });
            setFiles([]);
         }
         if(getDraftText(editorState)) {
+            const createdAt = new Date().toString();
             const rawContentState = convertToRaw(editorState.getCurrentContent());
             const content = draftToHtml(rawContentState);
             const messageType = 'text';
@@ -52,22 +48,17 @@ export default function useSendMessage ({handleChange, editorState, target, file
                 targetId: target.id,
                 content,
                 avatarSrc: null,
-                createdAt: date,
+                createdAt,
                 isMine: true,
                 sended: false,
                 timeout: 5000
             };
-            handleChange(
-                EditorState.moveFocusToEnd(
-                    EditorState.createEmpty(decorators)
-                )
-            );
             await db.messages.add(message);
             const isExist = Boolean (await db.discussions.get(target.id));
             if(isExist)
                 await db.discussions.update(target?.id, {
                     lastNotice: message,
-                    updatedAt: new Date(date),
+                    updatedAt: new Date(createdAt),
                 });
             else {
                 await db.discussions.add({
@@ -76,24 +67,23 @@ export default function useSendMessage ({handleChange, editorState, target, file
                     lastNotice: message,
                     avatarSrc: target.avatarSrc,
                     type: 'direct',
-                    updatedAt: new Date(date),
-                    createdAt: new Date(date),
+                    updatedAt: new Date(createdAt),
+                    createdAt: new Date(createdAt),
                 });
             }
             socket?.emit(`${target?.type}-message`, {
                 content, 
                 to: target?.id,
-                date,
+                date: createdAt,
                 type: messageType,
                 clientId: id,
             });
-            dispatchMessage(message);
         }
-    }, [target, editorState, handleChange, socket, files, downloadsRef, setFiles]);
+    }, [target, editorState, socket, files, downloadsRef, setFiles, handleChange]);
     return handleSendMessage;
 }
 
-function sendFile({data, downloadsRef, groupId}) {
+export function sendFile({data, downloadsRef}) {
     const xhr = new XMLHttpRequest();
     const url = getServerUri({pathname: 'api/chat/file'});
     const token = store.getState()?.user?.token;
@@ -104,7 +94,6 @@ function sendFile({data, downloadsRef, groupId}) {
         loaded: null,
         type: 'post',
         name: data?.file?.name,
-        groupId,
         buffer: data.file,
         cancel () {
             xhr.abort();
@@ -138,13 +127,4 @@ function sendFile({data, downloadsRef, groupId}) {
     xhr.send(formData);
     return initial;
 };
-
-function dispatchMessage (message, updated = false) {
-    // const name = '_new-message';
-    // const root = document.getElementById('root');
-    // const customEvent = new CustomEvent(name, {
-    //     detail: {name, message, updated}
-    // });
-    // root.dispatchEvent(customEvent);
-}
   

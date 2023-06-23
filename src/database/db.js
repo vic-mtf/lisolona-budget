@@ -1,29 +1,48 @@
 import Dexie from 'dexie';
 import "dexie-observable";
 import dbConfig from '../configs/database-config.json';
-const { 
-    name, 
-    version, 
-    options, 
-    stores
-} = dbConfig;
-let db;
-const localData = window.localStorage.getItem(name);
-const _options = JSON.stringify(dbConfig.stores);
 
-export const initDataBase = _name => {
-    const localOptions = localData && JSON.parse(localData);
-    const userId = window.localStorage.getItem(`${name}-user-database-id`);
-    if(userId) {
-        db = new Dexie(`${name}-${userId}`, localOptions || options);
-        const _stores = {};
-        stores.forEach(({keys, name}) => {
-            _stores[name] = keys.join(',');
-        });
-        db.version(version).stores(_stores);
-        return db;
-    }
-}
-if(localData === _options)
-initDataBase();
+const db = new Dexie(dbConfig.name, dbConfig.options);
+const stores = {};
+dbConfig.stores.forEach(({keys, name}) => {
+    stores[name] = keys.join(',');
+});
+db.version(dbConfig.version).stores(stores);
+
 export default db;
+
+export function clearDatabase() {
+    return db.transaction('rw', db.tables, () => {
+      return Promise.all(db.tables.map(table => table.clear()));
+    });
+
+}
+
+async function checkTables() {
+    let dataBase = null;
+    try {
+      dataBase = await (new Dexie(dbConfig.name)).open();
+    } catch (e) {}
+   
+    const dbTables = dataBase?.tables.map(table => ({ 
+        name: table.name, 
+        keys: table.schema.indexes.map(index => index.name) 
+      })
+    );
+    const isSame = dbConfig.stores.every(store => {
+      const dbTable = dbTables?.find(table => table.name === store.name);
+      if (!dbTable) return false;
+      return store.keys.filter(key => key !== 'id').sort().join() === dbTable.keys.sort().join();
+    });
+    if(!isSame && dataBase) {
+        Dexie.getDatabaseNames().then(async names => {
+           await Promise.all(names.map(
+                name => new Promise((resolve, reject) => {
+                Dexie.delete(name).then(resolve).catch(reject);
+            })));
+            window.location.reload();
+        });
+    }
+
+}
+checkTables();

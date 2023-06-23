@@ -7,6 +7,9 @@ import {decrypt} from "./utils/crypt";
 import { changeValues } from "./redux/user";
 import { useTimer } from "react-timer-hook";
 import { useSocket } from "./utils/SocketIOProvider";
+import { useMemo } from "react";
+
+const channel = new BroadcastChannel('_geid_signin_connection_channel');
 
 function App() {
   const [startApp, setStartApp] = useState(false);
@@ -14,9 +17,8 @@ function App() {
   const socket = useSocket();
   const connected = useSelector(store => store?.user?.connected);
   const timerRef = useRef();
-  const userSave = useSelector(store => 
-    store?.app?.user && decrypt(store.app?.user)
-  );
+  const localUser  = useSelector(store => store?.app?.user)
+  const userSave = useMemo(() => localUser && decrypt(localUser), [localUser]);
   const dispatch = useDispatch();
   useTimer({
     expiryTimestamp: (() => {
@@ -44,23 +46,15 @@ function App() {
   });
 
   useEffect(() => {
-    const root =  document.getElementById('root');
     let handleAutoConnexion;
     if (!connected && isHome) 
-      (handleAutoConnexion = () => {
-            timerRef.current = window.setTimeout(() => {
-              const key = '_auto_connexion_data';
-              const data = localStorage.getItem(key);
-              if(data) {
-                  window.clearTimeout(timerRef.current);
-                  localStorage.removeItem(key);
-                  dispatch(changeValues(decrypt(data)));
-              } else handleAutoConnexion()
-            }, 100);
-      })();
-    root.addEventListener('_deconnected', handleAutoConnexion);
+      handleAutoConnexion = (event) => {
+        const {data} = event;
+        if(data) dispatch(changeValues(decrypt(data)));
+      };
+      channel.addEventListener('message', handleAutoConnexion);
     return () => {
-      root.removeEventListener('_deconnected', handleAutoConnexion);
+      channel.removeEventListener('message', handleAutoConnexion);
     }
 }, [connected, dispatch]);
 

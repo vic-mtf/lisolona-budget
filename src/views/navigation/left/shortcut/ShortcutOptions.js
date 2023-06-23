@@ -10,15 +10,18 @@ import CustomSkeleton from "../../../../components/Skeleton";
 import { addData } from "../../../../redux/data";
 import ShortcutAvatar from "./ShortcutAvatar";
 import { useLiveQuery } from "dexie-react-hooks";
-import db from "../../../../database/db";
 import ContactListForm from "../lists/contact-list-form/ContactListForm";
+import { useData } from "../../../../utils/DataProvider";
+import db from "../../../../database/db";
 
 export default function ShortcutOptions () {
+
     const groups = useLiveQuery(() => 
-        db.discussions.orderBy('createdAt')
+        db?.discussions.orderBy('createdAt')
         .filter(({type}) => type === 'room')
-        .toArray()
-    )
+        .toArray(),
+    []);
+    
     const target = useSelector(store => store?.data?.target);
     const dispatch = useDispatch();
 

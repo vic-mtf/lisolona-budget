@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import CustomSlider from "../../../../../components/CustomSlider";
 import Typography from "../../../../../components/Typography";
 import getFormatTime from "../../../../../utils/getFormatTime";

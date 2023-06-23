@@ -4,9 +4,11 @@ import fileExtensionBase from '../../../../../utils/fileExtensionBase';
 
 const docExts = [];
 fileExtensionBase.forEach(item => {
-  if(item.type === 'document' || item.type === 'audio')
-      docExts.push(...item.exts);
+  docExts.push(...item.exts);
 });
+
+export const acceptExtension = docExts.map(ext => `.${ext}`).join(',');
+
 const options = [
   { 
     icon: <ImageOutlinedIcon fontSize="small"  />, 

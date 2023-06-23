@@ -4,8 +4,9 @@ import {
 import { createTheme } from "@mui/material"
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
+import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
 
-export default function MessageState ({sended, read}) {
+export default function MessageState ({sended, readed, timeout, createdAt}) {
     const theme = createTheme({palette: {mode: 'light'}});
     
     return (
@@ -17,7 +18,10 @@ export default function MessageState ({sended, read}) {
         >
             {sended ? 
             <DoneOutlinedIcon sx={{fontSize:12}} /> :
-            <HistoryToggleOffOutlinedIcon sx={{fontSize:15}} />}
+            Date.now() - (new Date(createdAt)).getTime() > timeout ?
+            <RunningWithErrorsRoundedIcon color="error" sx={{fontSize:15}} /> :
+            <HistoryToggleOffOutlinedIcon sx={{fontSize:15}} />
+        }
         </MuiBox>
     )
 }

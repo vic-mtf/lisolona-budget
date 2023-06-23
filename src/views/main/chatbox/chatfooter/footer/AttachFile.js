@@ -1,14 +1,18 @@
 import  React, { useCallback } from 'react';
 import {
-    SpeedDialAction,
-    Box as MuiBox
+    Tooltip
 } from '@mui/material';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import CustomSpeedDial from '../../../../../components/CustomSpeedDial';
-//import AttachFileIcon from '@mui/icons-material/AttachFile';
-import options from './options';
 import { uniqWith } from 'lodash';
 import getFile from '../../../../../utils/getFile';
+import IconButton from '../../../../../components/IconButton';
+import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
+import fileExtensionBase from '../../../../../utils/fileExtensionBase';
+
+const docExts = [];
+fileExtensionBase.forEach(item => {
+  docExts.push(...item.exts);
+});
+const acceptExtension = docExts.map(ext => `.${ext}`).join(',')
 
 export default function AttachFile({setFiles}) {
 
@@ -34,48 +38,21 @@ export default function AttachFile({setFiles}) {
     }, [setFiles]);
 
   return (
-    <MuiBox
-          position="relative"
-          width={25}
-          height={35}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-    >
-      <MuiBox>
-        <CustomSpeedDial
-          ariaLabel="Ajouter"
-          icon={
-          <SpeedDialIcon 
-           // icon={<AttachFileIcon/>}
-          />}
-          direction="right"
-          FabProps={{
-            size: 'small',
-            color: 'background.paper',
-            title: 'Ajouter',
-            sx:{boxShadow: 0}
-          }}
-        >
-          {options.map((option) => {
-            const action = {...option};
-            delete action.action;
-
-            return (
-              <SpeedDialAction
-                key={option.tooltipTitle}
-                {...action}
-                arrow
-                onClick={handleClickAction(option.accept)}
-                FabProps={{
-                  size: 'small',
-                  sx: {right: 0, p: 0}
-                }}
-              />
-          );
-        })}
-        </CustomSpeedDial>
-      </MuiBox>
-    </MuiBox>
+    <Tooltip title="Attacher un fichier" arrow>
+        <div>
+            <IconButton
+              sx={{
+                transform: 'rotate(-45deg)',
+                transition: '200ms transform',
+                "&:hover": {
+                  transform: 'rotate(0)',
+                }
+              }}
+              onClick={() => handleClickAction(acceptExtension)()}
+            >
+                <AttachFileOutlinedIcon fontSize="small"/>
+            </IconButton>
+        </div>
+    </Tooltip>
   );
 }

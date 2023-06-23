@@ -3,9 +3,9 @@ const styleMap = {
         background: 'red',
         fontSite: '100px'
     },
-    'STRIKETHROUGH': {
-        textDecoration: 'underline',
-      },
+    // 'STRIKETHROUGH': {
+    //     textDecoration: 'STRIKETHROUGH',
+    //   },
 };
 
 export default styleMap;

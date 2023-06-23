@@ -13,9 +13,10 @@ import user from "./user";
 import data from "./data";
 import teleconference from "./teleconference";
 import status from "./status";
+import meeting from "./meeting";
 
 const store = configureStore({
-    reducer: {app, user, data, teleconference, status},
+    reducer: {app, user, data, teleconference, status, meeting},
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

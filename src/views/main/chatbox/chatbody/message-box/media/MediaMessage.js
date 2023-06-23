@@ -12,11 +12,6 @@ export default function MediaMessage ({data, type, bgcolor, borderRadius, target
     const handleCloseReader = useCallback(() => setDefaultValue(null), []);
     const handleClickIMedia = useCallback((media) => setDefaultValue(media), []);
 
-    // id={props.id} 
-    // url={props.url} 
-    // type={props.type} 
-    // name={props.name} 
-
     return (
         <React.Fragment>
             {type === 'audio' ? 

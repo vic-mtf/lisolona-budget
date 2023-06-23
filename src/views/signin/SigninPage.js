@@ -20,6 +20,8 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Link from '../../components/Link';
 
+const channel = new BroadcastChannel('_geid_signin_connection_channel');
+
 export default function SigninPage() {
     const [{loading}, refresh] = useAxios({},{manual: true});
     const [finished, setFinished] = useState(false);
@@ -31,10 +33,8 @@ export default function SigninPage() {
             const { user } = event.detail;
             dispatch(setUser(user));
             setFinished(true);
-            localStorage.setItem(
-                '_auto_connexion_data', user
-            );
-           window.close();
+            channel.postMessage(user, window?.location?.origin);
+            window.close();
         };
         document.getElementById('root')
         .addEventListener(

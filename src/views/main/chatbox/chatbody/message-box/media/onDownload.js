@@ -29,7 +29,6 @@ export default function onDownload ({
     xhr.open('GET', url);
     xhr.responseType = 'blob';
     xhr.addEventListener('progress', event => {
-        //console.log(`Téléchargé ${event.loaded} octets sur ${event.total}`);
         initData.loaded = event.loaded;
         initData.total = event.total;
     });

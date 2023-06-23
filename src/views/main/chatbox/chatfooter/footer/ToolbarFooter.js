@@ -15,21 +15,20 @@ import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import ViewStreamOutlinedIcon from '@mui/icons-material/ViewStreamOutlined';
 import AttachFile from './AttachFile';
 import { useCallback } from 'react';
+import { useFooterContext } from '../ChatFooter';
 
-export default function ToolbarFooter ({
-    sendable,
-    showToolbar,
-    toggleShowToolbar,
-    handleToggleRecording,
-    handleSendMessage,
-    setFiles
-}) {
+export default function ToolbarFooter () {
     const theme = useTheme();
     const transitionDuration = {
         enter: theme.transitions.duration.enteringScreen,
         exit: theme.transitions.duration.leavingScreen,
     };
-    const hanldeSubmit = useCallback(index => [
+    const [
+        {sendable, showToolbar}, 
+        {toggleShowToolbar, handleToggleRecording, handleSendMessage, setFiles}
+    ] = useFooterContext();
+
+    const handleSubmit = useCallback(index => [
         handleSendMessage, 
         handleToggleRecording
     ][index], [
@@ -100,7 +99,7 @@ export default function ToolbarFooter ({
                         title={fab.title}
                         size="small"
                         disabled={fab.disabled}
-                        onClick={hanldeSubmit(index)}
+                        onClick={handleSubmit(index)}
                     >
                         {fab.icon}
                     </Fab>

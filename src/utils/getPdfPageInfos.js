@@ -4,7 +4,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/scripts/pdf.
 export default function getPdfPageInfos(pdf) {
   const isFile = pdf instanceof File;
   const pdfUrl = isFile ? URL.createObjectURL(pdf) : pdf;
-  console.log(isFile);
   return new Promise((resolve, reject) => {
     const pdfDocPromise = pdfjsLib.getDocument(pdfUrl).promise;
     pdfDocPromise.then(async pdfDoc => {

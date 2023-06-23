@@ -6,6 +6,7 @@ import { useState } from "react";
 import Typography from "../../../../../../../components/Typography";
 import getFormatTime from "../../../../../../../utils/getFormatTime";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import CustomCardMedia from "../CustomCardMedia";
 
 export default function VideoMessage ({src, width, height, buffer}) {
     const [duration, setDuration] = useState(null);
@@ -20,7 +21,7 @@ export default function VideoMessage ({src, width, height, buffer}) {
             position="relative"
             overflow="hidden"
         >
-            <CardMedia
+            <CustomCardMedia
                 component="video"
                 preload="metadata"
                 onLoadedData={event => setDuration(event.target.duration)}

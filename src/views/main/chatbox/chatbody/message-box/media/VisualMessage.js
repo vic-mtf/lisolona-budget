@@ -4,20 +4,15 @@ import {
     useTheme, 
     ImageListItem,
     CardActionArea,
-    Paper
 } from "@mui/material";
 import { useMemo } from "react";
 import Typography from "../../../../../../components/Typography";
-import PictureMessage from "./image/PictureMessage";
-import VideoMessage from "./video/VideoMessage";
 import ImageButton, { Image, ImageBackdrop } from "../../../../../../components/ImgeButton";
 import resizeGrid from "./resizeGrid";
-import IconButton from "../../../../../../components/IconButton";
-import CircularProgressIconButton from "./CircularProgressIconButton";
 import MediaItem from "./MediaItem";
-import LoadingMedia from "./LoadingMedia";
 import getServerUri from "../../../../../../utils/getServerUri";
 import React from "react";
+import MessageState from "../MessageState";
 
 export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMedia, isMine, sended}) {
     const theme = useTheme();
@@ -26,7 +21,7 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
     //     isMine && !sended,
     //     [isMine, sended]
     // );
- 
+
     return (
          <MuiBox display="flex" width="100%">
             <MuiBox display="flex" width="100%">
@@ -49,19 +44,6 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                         wordBreak: "break-word",
                         overflow: 'hidden',
                         position: 'relative',
-                        ...isMine ? {
-                            "&:after": {
-                                content: '""',
-                                position: 'absolute',
-                                bottom: 0,
-                                width: '100%',
-                                height: 30,
-                                background: theme => 
-                                `linear-gradient(90deg, transparent, transparent, transparent, ${bgcolor})`,
-                                boxSizing: 'inherit',
-                                zIndex: 2,
-                            },
-                        } : {}
                     }}
                 >
                     {/* {loading && <LoadingMedia/>} */}
@@ -88,6 +70,7 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                             sx={{
                                 borderRadius: 1,
                                 overflow: 'clip',
+                                position: 'relative',
                             }}
                         > {(len > 4 && index === 3) ?
                             <ImageButton
@@ -133,6 +116,27 @@ export default function VisualMessage ({data, bgcolor, borderRadius, onClickIMed
                             />
                          </CardActionArea>)
                         }
+
+                        {item?.isMine &&
+                        <MuiBox
+                            sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                width: '100%',
+                                height: 20,
+                                background: theme => 
+                                `linear-gradient(90deg, transparent, transparent, transparent, ${bgcolor})`,
+                                boxSizing: 'inherit',
+                                zIndex: 1
+                            }}
+                            children={
+                                <MessageState 
+                                    sended={item?.sended} 
+                                    timeout={item?.timeout} 
+                                    createdAt={item?.createdAt}
+                                /> 
+                            }
+                        />}
                         </ImageListItem>
                     );
                     })}

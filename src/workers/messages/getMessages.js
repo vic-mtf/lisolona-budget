@@ -3,9 +3,9 @@ import initDataBase from "../initDataBase";
 const MAX_ARRAY_LENGTH = 20;
 
 export default function getMessages ({userId, offset, target}) {
-    const db = initDataBase({userId});
+    const db = initDataBase();
     return new Promise((resolve, reject) => {
-        db.messages
+        db?.messages
         .filter(({targetId}) => targetId === target.id)
         .toArray().then(data => {
             const messages = structureMessages(data);

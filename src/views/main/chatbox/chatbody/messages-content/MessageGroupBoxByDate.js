@@ -5,7 +5,7 @@ import Announcement from '../message-box/event/Announcement';
 import timeHumanReadable from '../../../../../utils/timeHumanReadable';
 import Typography from '../../../../../components/Typography';
 
-export default function MessageGroupBoxByDate ({messages, loadMore}) {
+const MessageGroupBoxByDate = ({messages, loadMore}) => {
     const grouping = messageGrouping(messages);
     return grouping?.map(({messages, date}, index) => (
         <React.Fragment key={date} >
@@ -70,3 +70,5 @@ const messageOptions = ({message, messages, index}) => {
     const time = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
     return {...message, time, hideAvatar, joinBox, key};
 };
+
+export default React.memo(MessageGroupBoxByDate);

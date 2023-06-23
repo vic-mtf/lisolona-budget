@@ -8,8 +8,8 @@ import { addData } from '../../../../redux/data';
 import InvitationRequestForm from './InvitationRequestForm';
 import Lists from './Lists';
 import { useLiveQuery } from 'dexie-react-hooks';
-import db from '../../../../database/db';
 import ContactItem from '../items/ContactItem';
+import db from '../../../../database/db';
 
 export default function ContactList ({search, navigation}) {
     const filterByKey = useCallback(key =>  new RegExp(
@@ -19,7 +19,7 @@ export default function ContactList ({search, navigation}) {
     [search]);
     
     const contacts = useLiveQuery(() => 
-       db.contacts.orderBy('name')
+       db?.contacts.orderBy('name')
        .filter(({name, email}) => 
             filterByKey(name) || filterByKey(email)
         ).reverse()
