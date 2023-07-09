@@ -22,8 +22,9 @@ export default function MicroButton ({getAudioStream}) {
     const handlerTogleMicro = useCallback(() => {
         if(permission?.state !== 'denied') {
             const stream = audioStreamRef.current;
-            if(micro.allowed) { 
-                toggleStreamActivation(stream, 'audio');
+            if(micro.allowed) {
+                if(stream) toggleStreamActivation(stream, 'audio');
+                else  getAudioStream()
                 dispatch(setMicroData({data: {active: !micro?.active}}));
             } else getAudioStream()
         } else {
@@ -77,10 +78,16 @@ export default function MicroButton ({getAudioStream}) {
                 disabled={permission?.state === "denied"}
                 sx={{
                     zIndex: 0,
-                    mx: 1
+                    mx: 1,
+                    borderRadius: 1,
                 }}
             >
-                {micro?.active ? <MicRoundedIcon/> : <MicOffRoundedIcon/>}
+                {micro?.active ? 
+                <MicRoundedIcon
+                    fontSize="small"
+                /> : <MicOffRoundedIcon
+                    fontSize="small"
+                />}
             </Fab>
         </Badge>
     );

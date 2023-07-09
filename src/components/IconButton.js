@@ -1,10 +1,12 @@
-import { styled, IconButton as MuiIconButton } from "@mui/material";
+import { styled, ToggleButton } from "@mui/material";
 
-const IconButton = styled(MuiIconButton)(() => ({
+const IconButton = styled(ToggleButton)(() => ({
    // textTransform: 'none',
+   border: 'none',
 }));
 
 export default IconButton;
 IconButton.defaultProps = {
- size: 'small',
-}
+   size: 'small',
+   value: ''
+};

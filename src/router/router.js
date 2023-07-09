@@ -4,18 +4,29 @@ import Cover from "../views/cover/Cover";
 import LiosoNaBudget from "../views/LiosoNaBudget";
 import SIgninPage from '../views/signin/SigninPage';
 import HomePage from "../views/home/HomePage";
+import Meeting from "../views/meeting/Meeting";
 
-const protectedRoutes = () => [
+const url = process.env.PUBLIC_URL.trim();
+
+const protectedRoutes = (getters, setters) => [
     {
-        element: <LiosoNaBudget/>,
-        path: '*',
-    }
+        element: getters?.isStarted?.current ? <Cover getters={getters} setters={setters}/> : <LiosoNaBudget/>,
+        path:  `${url}/*`,
+    },
 ];
 const unprotectedRouter = (getters, setters) => [
     {
-        element: <Cover getters={getters} setters={setters}/>,
-        path: '*',
-    }
+        element: <Navigate to="/home"/>,
+        path: `${url}/*`,
+    },
+    {
+        element: <HomePage/>,
+        path:  `${url}/home/*`,
+    },
+    {
+        element: <SIgninPage/>,
+        path:  `${url}/account/signin`,
+    },
 ];
 
 const bublicsRoutes = () => [
@@ -24,12 +35,8 @@ const bublicsRoutes = () => [
         path: '/test',
     },
     {
-        element: <SIgninPage/>,
-        path:  `${process.env.PUBLIC_URL.trim()}/account/signin`,
-    },
-    {
-        element: <HomePage/>,
-        path:  `${process.env.PUBLIC_URL.trim()}/home/*`,
+        element: <Meeting/> ,
+        path: `${url}/meeting/*`,
     }
 ];
 

@@ -23,14 +23,15 @@ export default function CameraButton ({getVideoStream}) {
         if(permission?.state !== 'denied') {
             const stream = videoStreamRef.current;
             if(camera.allowed) {
-                toggleStreamActivation(stream, 'video');
+                if(stream) toggleStreamActivation(stream, 'video');
+                else  getVideoStream()
                 dispatch(setCameraData({data: {active: !camera?.active}}));
             } else getVideoStream();
         } else {
             //message video ici
         }
     }, [videoStreamRef, camera, permission, dispatch, getVideoStream]);
-
+    
     useLayoutEffect(() => {
         if(!permission)
             getPermission('camera')
@@ -70,17 +71,19 @@ export default function CameraButton ({getVideoStream}) {
             }}
         > 
             <Fab
-                variant="circular"
                 size="small"
                 onClick={handlerToggleCamera}
                 color={camera?.active ? "primary" : "inherit"}
                 disabled={permission?.state === "denied"}
                 sx={{
                     zIndex: 0,
-                    mx: 1
+                    mx: 1,
+                    borderRadius: 1,
                 }}
             >
-                {camera?.active ? <VideocamRoundedIcon/> : <VideocamOffRoundedIcon/>}
+                {camera?.active ? 
+                <VideocamRoundedIcon fontSize="small"/> : 
+                <VideocamOffRoundedIcon fontSize="small"/>}
             </Fab>
         </Badge>
     );

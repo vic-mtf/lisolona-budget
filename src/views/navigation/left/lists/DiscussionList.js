@@ -9,14 +9,15 @@ import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
 import { addData } from '../../../../redux/data';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
-import Lists from './Lists';
+//import Lists from './Lists';
 import { useLiveQuery } from 'dexie-react-hooks';
 import LoadingItem from '../items/LoadingItem';
 import Button from '../../../../components/Button';
 import db from '../../../../database/db';
+import { FixedSizeList as List } from "react-window";
+import CustomList from './CustomList';
 
 export default function DiscussionList ({search, navigation}) {
-    const [limit, setLimit] = useState(15);
     const discussions = useLiveQuery(() => 
        db?.discussions.orderBy('updatedAt')
        .filter(({name}) =>
@@ -25,9 +26,9 @@ export default function DiscussionList ({search, navigation}) {
                 'ig'
             ).test(name)
         ).reverse()
-        .limit(limit)
         .toArray()
-    ,[search, limit]);
+    ,[search]);
+
     const length = useMemo(() => discussions?.length, [discussions]);
     
     return (navigation === 0 &&
@@ -51,18 +52,10 @@ export default function DiscussionList ({search, navigation}) {
                     }}
                 />
             </Toolbar>
-            <Lists
-                onScrollEnd={(event, state) => {
-                    if(state === 'down' && limit === length)
-                        setLimit(limit + 5);
-                }}
-            >
-                  <ListItems
-                    discussions={discussions}
-                    search={search}
-                  />  
-                  {limit === discussions && <LoadingItem/>}
-             </Lists>
+            <ListItems
+                discussions={discussions}
+                search={search}
+            />  
         </React.Fragment>
     );
 }
@@ -71,12 +64,36 @@ const  ListItems = ({discussions, search}) => {
     const dispatch = useDispatch();
     const id = useSelector(store => store.data.target?.id);
 
-
     const handleClickDicussion = useCallback(data => event => {
         event?.preventDefault();
         dispatch(addData({key: 'target', data}));
-    }, [dispatch
-    ]);
+    }, [dispatch]);
+
+    const rowRenderer = ({ index, style }) => {
+        const contact = discussions[index];
+        return (
+          <div style={style}>
+             <ChatContactItem 
+                {...contact}
+                selected={id === contact.id}
+                onClick={handleClickDicussion({
+                    id: contact?.id,
+                    name: contact?.name,
+                    members: contact?.members,
+                    lastNotice: contact?.lastNotice,
+                    createdBy: contact?.createdBy,
+                    avatarSrc: contact?.avatarSrc,
+                    type: contact?.type,
+                })}
+                search={search}
+            />
+            {index !== discussions.length - 1 && 
+            <Divider variant="inset" component="div" />
+            }
+          </div>
+        );
+    };
+
     
     return (
         <React.Fragment> 
@@ -86,28 +103,12 @@ const  ListItems = ({discussions, search}) => {
                 show={discussions?.length === 0}
                 description={`Commencer une nouvelle discuction avec un contact.`}
             />
-            {
-                discussions?.map((contact, index, discussions) => (
-                    <React.Fragment key={index}>
-                        <ChatContactItem 
-                            {...contact}
-                            selected={id === contact.id}
-                            onClick={handleClickDicussion({
-                                id: contact?.id,
-                                name: contact?.name,
-                                members: contact?.members,
-                                lastNotice: contact?.lastNotice,
-                                createdBy: contact?.createdBy,
-                                avatarSrc: contact?.avatarSrc,
-                                type: contact?.type,
-                            })}
-                            search={search}
-                        />
-                        {index !== discussions.length - 1 && 
-                        <Divider variant="inset" component="li" />
-                        }
-                    </React.Fragment>
-                ))
+            
+            {discussions?.length &&
+            <CustomList
+                rowRenderer={rowRenderer}
+                itemCount={discussions.length}
+            />
             } 
         </React.Fragment>
     )

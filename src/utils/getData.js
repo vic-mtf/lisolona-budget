@@ -122,6 +122,7 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
             } catch (e) { reject(e); }
         });
     });
+
     const promiseMessages = new Promise((resolve, reject) => {
         db?.messages.bulkGet(messagesIds).then(async data => {
             data.forEach((message, index) => {

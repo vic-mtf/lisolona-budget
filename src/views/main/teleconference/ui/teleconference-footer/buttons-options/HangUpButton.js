@@ -5,7 +5,6 @@ import { useSocket } from '../../../../../../utils/SocketIOProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import answerRingtone from '../../../../../../utils/answerRingtone';
 import { initializeState } from '../../../../../../redux/teleconference';
-
 import { useTeleconference } from '../../../../../../utils/TeleconferenceProvider';
 
 export default function HangUpButton () {
@@ -26,19 +25,27 @@ export default function HangUpButton () {
           'outgoing': 'stop',
         };
         timers.forEach(timer => window.clearTimeout(timer));
-        socket.emit('hang-up',{
+
+        socket.emit(
+          'hang-up',
+        {
           from: id, 
           type,
           details: {response: responses[mode]},
           callId,
+        }, 
+        function (data) {
+          console.log(data);
         });
+
+
         dispatch(initializeState());
         const ringtone = answerRingtone({
           type: 'disconnect', 
           audio: new Audio(),
         });
         ringtone.loop = false;
-    }, [dispatch, from, mode, socket, timers, callId]);
+    }, [dispatch, from, mode, socket, timers, callId, target]);
 
     return (
         <Fab

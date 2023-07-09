@@ -55,7 +55,7 @@ const MessageList = ({ messages, onScroll }) => {
         <AutoSizer>
           {({height, width}) => (
             <List
-              onRowsRendered={(e, r) => console.log('bonjour', e, r)}
+              //onRowsRendered={(e, r) => console.log(e)}
               width={width}
               height={height}
               rowCount={messages.length}

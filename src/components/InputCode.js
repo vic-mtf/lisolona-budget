@@ -21,7 +21,6 @@ export default function InputCode ({size, length, values, onChange, onComplete, 
                 setCodes(codes => [...codes, value]);
             }
         }
-        console.log(event.keyCode);
     }, [type, onChange]);
 
     const handleDelete = useCallback(({event, notControlled}) => {

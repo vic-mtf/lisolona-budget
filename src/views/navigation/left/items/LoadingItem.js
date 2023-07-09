@@ -17,9 +17,9 @@ export default function LoadingItem () {
                     <Skeleton 
                         variant="rounded" 
                         sx={{
-                            borderRadius: 2,
-                            width: 42,
-                            height: 42,
+                            borderRadius: .25,
+                            width: 40,
+                            height: 40,
                         }}
                     />
                 </ListItemAvatar>
@@ -31,13 +31,13 @@ export default function LoadingItem () {
                             justifyContent="center"
                         >
                             <CustomSkeleton 
-                                sx={{borderRadius: 1}} 
+                                sx={{borderRadius: .25}} 
                                 variant="rectangular" 
                                 height={20} 
                                 width="100%"
                             />
                             <CustomSkeleton 
-                                sx={{borderRadius: .5,}} 
+                                sx={{borderRadius: .25,}} 
                                 variant="rectangular" 
                                 height={10} 
                                 width="70%"

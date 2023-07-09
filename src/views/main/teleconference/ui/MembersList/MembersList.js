@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import Lists from "../../../../navigation/left/lists/Lists";
+import CustomList from "../../../../navigation/left/lists/CustomList";
 import { useMemo } from "react";
 import NavigationRight from "../mini-chatbox/navigation/right/NavigationRight";
 import { useTeleconference } from "../../../../../utils/TeleconferenceProvider";
@@ -34,13 +34,13 @@ export default function MembersList ({open}) {
             justifyContent="center"
             display="flex"
         >Aucun participant</Typography>}
-        <Lists>
+        <CustomList>
             {participants?.map(({uid}) => (
                 <ContactItem
                     {...members?.find(({id}) => uid === id) || []}
                 />
             ))}
-        </Lists>
+        </CustomList>
     </NavigationRight>
     );
 }

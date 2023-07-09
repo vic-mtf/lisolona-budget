@@ -1,7 +1,7 @@
 import { 
     ListItemAvatar, useTheme, 
 } from "@mui/material";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "../../../../components/Avatar";
 import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
 import CustomBadge from "../../../../components/CustomBadge";
@@ -9,8 +9,7 @@ import { generateColorsFromId } from "../../../../utils/genColorById";
 import getShort from "../../../../utils/getShort";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import { useSelector } from "react-redux";
-
-export default function AvatarStatus ({type, name, avatarSrc, id}) {
+function AvatarStatus ({type, name, avatarSrc, id}) {
     const status = useSelector(store => store.status[id]);
     const isEmited = useRef(true);
     const socket = useSocket();
@@ -43,19 +42,14 @@ export default function AvatarStatus ({type, name, avatarSrc, id}) {
                 variant="dot"
                 online={status === 'online'}
             >
-                <Avatar
+                <AvatarFadeLoading
                     src={avatarSrc}
                     srcSet={avatarSrc}
                     alt={name}
-                    children={getShort(name)}
-                    imgProps={{
-                        loading: "lazy"
-                    }}
+                    children={getShort(name)?.toUpperCase()}
                     sx={{
                         ...avatarSx,
                         textTransform: 'capitalize',
-                        width: 40,
-                        height: 40,
                     }}
                 />
             </CustomBadge>}
@@ -80,3 +74,18 @@ export default function AvatarStatus ({type, name, avatarSrc, id}) {
 AvatarStatus.defaultProps = {
     type: 'direct'
 }
+
+const AvatarFadeLoading = React.memo(({...props}) => {
+
+    return  (
+        <Avatar
+            {...props}
+            imgProps={{
+                loading: "lazy",
+            }}
+        />
+    );
+})
+
+
+export default React.memo(AvatarStatus);

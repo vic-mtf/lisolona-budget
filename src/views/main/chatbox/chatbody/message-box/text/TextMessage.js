@@ -1,22 +1,20 @@
 import { Box as MuiBox, createTheme } from '@mui/material';
 import Typography from '../../../../../../components/Typography';
 import Button from '../../../../../../components/Button';
-import parse from 'html-react-parser';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
 
 const MAX_HEIGHT = 500;
 
-export default function TextMessage ({
-        content, 
-        bgcolor, 
-        borderRadius,
-        isMine
-    }) {
+export default function TextMessage ({content, bgcolor, borderRadius, isMine}) {
     const theme = createTheme({palette: {mode: 'light'}});
     const [moreStep, setMoreStep] = useState(1);
     const [showMore, setShowMore] = useState(false);
     const rootRef = useRef();
     const handleShowMore = useCallback(() => setMoreStep(step => step + 1), []);
+    const sanitizedData = useCallback(() => ({
+        __html: DOMPurify.sanitize(content)
+    }), [content]);
 
     useLayoutEffect(() => {
         const rootHeight = parseInt(window.getComputedStyle(rootRef.current).height);
@@ -42,7 +40,7 @@ export default function TextMessage ({
                 >
                 <MuiBox
                     component="div"
-                    mx={2.5}
+                    mx={2}
                     sx={{
                         overflowWrap: 'break-word',
                         wordWrap: 'break-word',
@@ -66,9 +64,8 @@ export default function TextMessage ({
                             paddingLeft: '6px',
                         },
                     }}
-                >
-                    {parse(content?.toString())}
-                </MuiBox>
+                    dangerouslySetInnerHTML={sanitizedData()}
+                />
                 <MuiBox  mx={2.5}>
                     {showMore &&
                     <Button

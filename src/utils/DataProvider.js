@@ -1,18 +1,17 @@
-import { createContext, useContext, useMemo, useRef, useState } from "react"
+import { createContext, useContext, useMemo, useRef } from "react"
 import AgoraRTC from 'agora-rtc-sdk-ng';
 
 const Data = createContext();
 export const useData = () => useContext(Data);
 
 export default function DataProvider({children}) {
-    const [db, setDataBases] = useState(null);
     const messagesRef = useRef({});
     const downloadsRef = useRef([]);
     const voicesRef = useRef([]);
     const videosRef = useRef([]);
     const audioStreamRef = useRef(null);
     const videoStreamRef = useRef(null);
-
+    const secretCodeRef = useRef((Date.now() * 100).toString(16));
     const client = useMemo(() => 
         AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
     , []);
@@ -27,12 +26,11 @@ export default function DataProvider({children}) {
             videosRef,
             audioStreamRef,
             videoStreamRef,
+            secretCodeRef,
             client,
-            db
         },
         {
             pushMessages, 
-            setDataBases
         }
     ];
     return (<Data.Provider value={values}>{children}</Data.Provider>)

@@ -5,7 +5,8 @@ import IconButton from '../../../../components/IconButton';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MoreOption from './moreoptions/MoreOption';
 import { useTheme } from '@emotion/react';
-import CallButtons from './options-buttons/CallButtons';
+//import CallButtons from './options-buttons/CallButtons';
+import CallButton from './options-buttons/CallButton';
 
 export default function ChatHeader ({target}) {
     const theme = useTheme();
@@ -26,7 +27,10 @@ export default function ChatHeader ({target}) {
                             </IconButton>
                         </div>
                     </Tooltip>
-                    <CallButtons target={target}/>
+                    <CallButton 
+                        target={target}
+                        theme={theme}
+                    />
                     <MoreOption
                         theme={theme}
                         target={target}

@@ -6,8 +6,12 @@ import {
   
   import Typography from '../../../components/Typography';
   import CheckingCode from '../checking/CheckingCode';
+import openSignin from '../../../utils/openSignin';
 export default function Rejoin () {
-  
+    const handleOpenSignin = event => {
+      event?.preventDefault();
+      openSignin()
+    };
     return (
         <MuiBox
             px={2}
@@ -33,7 +37,8 @@ export default function Rejoin () {
             <Typography my={5}>
               La plateforme de réunions en ligne pour un travail 
               collaboratif efficace au sein du Ministère de Budget. 
-              Collaborez facilement avec vos collègues, où que vous soyez. <Link>Connectez-vous!</Link>
+              Collaborez facilement avec vos collègues, 
+              où que vous soyez. <Link href='#' onClick={handleOpenSignin}>Connectez-vous!</Link>
             </Typography>
           </MuiBox>
     )

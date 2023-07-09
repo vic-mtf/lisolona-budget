@@ -14,10 +14,14 @@ import { useCallback, useLayoutEffect, useMemo } from "react";
 import useAxios from "../../utils/useAxios";
 import { useSelector } from "react-redux";
 import getData from "../../utils/getData";
+import db, { clearDatabase } from "../../database/db";
+import { useNavigate } from "react-router-dom";
+import { useTimer } from "react-timer-hook";
 
 export default function Cover ({getters, setters}) {
     const token = useSelector(store => store.user.token);
     const userId = useSelector(store => store.user.id);
+    const navigateTo = useNavigate();
     const [{loading}, refresh] = useAxios({
         url: '/api/chat',
         headers: {Authorization: `Bearer ${token}`}
@@ -26,20 +30,44 @@ export default function Cover ({getters, setters}) {
 
     const handelLauncher = useCallback(async () => {
         setters?.setLoading(false);
-    },[setters]);
+        navigateTo('/');
+        getters.isStarted.current = false;
+    },[setters, navigateTo, getters]);
 
     const handleStartApp = useCallback(async () => {
-                try {
-                    const { data } = await refresh();
-                    const { chats, contacts, invitation, callHistory } = data || {};
-                    getData({chats, userId, contacts}, handelLauncher);
-                } catch(error) { handelLauncher(); }
+        const key = "a2f4c6d8e0b1f7a9c3e5d7b9f2a0c1e6";
+        const user = await db.user.get(key);
+        if(user && user?.userId !== userId) {
+            clearDatabase().then(() => {
+                window.location.reload();
+            });
+        }
+        else if(user === undefined) 
+            await db.user.put({id: key, userId});
+        try {
+            const { data } = await refresh();
+            const { chats, contacts, invitation, callHistory } = data || {};
+            getData({chats, userId, contacts}, handelLauncher);
+        } catch(error) { 
+            handelLauncher(); 
+        }
     }, [handelLauncher, refresh, userId]);
 
     useLayoutEffect(() => {
         if(userId && startApp) 
             handleStartApp();
     },[userId, startApp, handleStartApp]);
+
+    useTimer({
+        expiryTimestamp: (() => {
+          const time = new Date();
+          time.setMilliseconds(2800);
+          return time;
+        })(),
+        onExpire () {
+          if(!startApp) setters.setStartApp(true);
+        }
+    });
 
     return (
         <Box

@@ -1,4 +1,4 @@
-import { Drawer, Toolbar, Box as MuiBox, useTheme, useMediaQuery } from "@mui/material";
+import { Drawer, Toolbar, Box as MuiBox } from "@mui/material";
 
 export const drawerWidth = 400;
 
@@ -9,8 +9,7 @@ export default function Navigation ({
     disableTooBar, 
     ...otherProps
 }) {
-    const theme = useTheme();
-    
+
     return (
         <MuiBox
             variant="permanent"

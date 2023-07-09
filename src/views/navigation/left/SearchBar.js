@@ -1,9 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { useDispatch, useSelector } from 'react-redux';
-import { addData } from '../../../redux/data';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function SearchBar ({onChangeSearch}) {
   const [value, setValue] = useState('');

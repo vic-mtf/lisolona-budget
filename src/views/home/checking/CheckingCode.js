@@ -5,10 +5,11 @@ import InputCode from "../../../components/InputCode";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import queryString from "query-string";
+import useAxios from "../../../utils/useAxios";
 
 export default function CheckingCode ({setOptions, message}) {
     const location = useLocation();
-    const [loading, setLoading] = useState(false);
+    const [{loading}] = useAxios('api/chat/room/call/');
     const values = useMemo(() => 
         queryString.parse(location.search)?.code?.split('') || [], 
         [location]
@@ -17,7 +18,7 @@ export default function CheckingCode ({setOptions, message}) {
  
     useEffect(() => {
         if(code) {
-            setLoading(true);
+           // setLoading(true);
         }
     },[code]);
 
@@ -36,6 +37,8 @@ export default function CheckingCode ({setOptions, message}) {
                 open={loading}
                 sx={{
                  top: 82,
+                 background: theme => theme.palette.background.paper + 
+                 theme.customOptions.opacity,
                 }}
                 children={
                     <React.Fragment>

@@ -85,14 +85,14 @@ export default function ToolbarFooter () {
                         }ms`,
                         position: 'absolute',
                         right: '5px',
+                        bottom: '5px',
                     }}
                     unmountOnExit
                 >
                     <Fab 
                         sx={{
-                            m: 0, 
-                            p: 0, 
                             boxShadow: 0,
+                            borderRadius: 1,
                         }} 
                         aria-label={fab.label} 
                         color={fab.color}

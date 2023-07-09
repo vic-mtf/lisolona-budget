@@ -64,7 +64,7 @@ export default function ContactItem (props) {
                 disablePadding
                 secondaryAction={ action ||
                     <Stack direction="row" spacing={1}>   
-                        <Zoom in={showSecondaryAction}>  
+                        {/* <Zoom in={showSecondaryAction}>  
                             <div>   
                                 <Tooltip 
                                     title={disabled ? "Un appel en cours..." : "Lancer un appel vidéo"} 
@@ -80,7 +80,7 @@ export default function ContactItem (props) {
                                     </div>  
                                 </Tooltip>   
                             </div>   
-                        </Zoom> 
+                        </Zoom>  */}
                         <Zoom in={showSecondaryAction}>
                             <div>   
                                 <Tooltip title={disabled ? "Un appel en cours..." : "Lancer un appel"} 

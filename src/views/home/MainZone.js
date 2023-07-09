@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Checking from './checking/Checking';
 
 export default function MainZone () {
-    const [options, setOptions] = useState();
+    const [options, setOptions] = useState({});
     const location = useLocation();
     const checking = useMemo(() => 
         comparePathnames(location.pathname, 'home/checking'),

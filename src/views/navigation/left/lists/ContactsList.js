@@ -6,10 +6,10 @@ import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
 import { addData } from '../../../../redux/data';
 import InvitationRequestForm from './InvitationRequestForm';
-import Lists from './Lists';
 import { useLiveQuery } from 'dexie-react-hooks';
 import ContactItem from '../items/ContactItem';
 import db from '../../../../database/db';
+import CustomList from './CustomList';
 
 export default function ContactList ({search, navigation}) {
     const filterByKey = useCallback(key =>  new RegExp(
@@ -31,23 +31,73 @@ export default function ContactList ({search, navigation}) {
             <Toolbar variant="dense">
                 <InvitationRequestForm/>
             </Toolbar>
-                <Lists>
-                    <ListItems
-                        search={search}
-                        contacts={contacts}
-                    />
-                </Lists>
+            <ListItems
+                search={search}
+                contacts={contacts}
+            />
         </React.Fragment>
     );
 }
 
 const ListItems  = ({contacts, search}) => {
     const dispatch = useDispatch();
-    const contactsList = useMemo(() => 
-        contacts ? groupArrayInAlphaOrder(contacts) : null,
-        [contacts]
-    );
-    
+
+    const contactsList = useMemo(() => { 
+       return contacts ? groupArrayInAlphaOrder(contacts) : null;
+    },[contacts]);
+
+    const handleClickContact = useCallback(contact => {
+        dispatch(addData({
+            key: 'target', 
+            data: {
+                id: contact?.id,
+                name: contact?.name,
+                type: 'direct',
+                avatarSrc: contact?.avatarSrc,
+                createdAt: contact?.createdAt?.toString(),
+                updatedAt: contact?.updatedAt?.toString(),
+            }
+        }));
+    },[dispatch]);
+
+    const rowRenderer = ({index, style}) => {
+        const {label, children} = contactsList[index];
+        return (
+          <div style={style} >
+            <ListSubheader
+                sx={{
+                    fontWeight: 'bold',
+                    height: 50,
+                    top: 0,
+                    position: 'sticky',
+                    zIndex: 2,
+                    background: theme => `linear-gradient(transparent 0%, ${theme.palette.background.paper} 100%)`,
+                    backdropFilter: theme => `blur(${theme.customOptions.blur})`,
+                }}
+            >
+                {label}
+            </ListSubheader>
+            {
+                children?.map((contact, index, contacts) => (
+                    <React.Fragment key={index}>
+                        <ContactItem 
+                            {...contact}
+                            search={search}
+                            onClick={() => handleClickContact(contact)}
+                        />
+                        {contacts.length - 1 !== index && 
+                        <Divider variant="inset" component="div" />}
+                    </React.Fragment>
+                ))
+            }
+          </div>
+        );
+    };
+
+    const getItemSize = (index) => {
+        const contact = contactsList[index];
+        return 50 + (contact?.children?.length * 70)
+    }
 
     return (
         <React.Fragment>
@@ -62,45 +112,14 @@ const ListItems  = ({contacts, search}) => {
                         une adresse e-mail.`
                     }
                 />
-                {contactsList?.map(({label, children}) => (
-                    <li key={label}>
-                        <List dense>
-                            <ListSubheader 
-                                sx={{
-                                    bgcolor: 'transparent', 
-                                    position: 'static',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                               {label}
-                            </ListSubheader>
-                            {
-                            children.map((contact, index, contacts) => (
-                                <React.Fragment key={index}>
-                                    <ContactItem 
-                                        {...contact}
-                                        search={search}
-                                        onClick={() => dispatch(addData({
-                                            key: 'target', 
-                                            data: {
-                                                id: contact?.id,
-                                                name: contact?.name,
-                                                type: 'direct',
-                                                avatarSrc: contact?.avatarSrc,
-                                                createdAt: contact?.createdAt?.toString(),
-                                                updatedAt: contact?.updatedAt?.toString(),
-                                            }
-                                        }))}
-                                    />
-                                    {index !== contacts.length - 1 && 
-                                    <Divider variant="inset" component="li" />
-                                    }
-                                </React.Fragment>
-                            ))
-                            }
-                        </List>
-                    </li>
-                ))}
+                {Boolean(contactsList?.length) && 
+                 <CustomList
+                    itemCount={contactsList?.length}
+                    rowRenderer={rowRenderer}
+                    getItemSize={getItemSize}
+                    overscanCount={10}
+                 />
+                }
         </React.Fragment>
     );
 }

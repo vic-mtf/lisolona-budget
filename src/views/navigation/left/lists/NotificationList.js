@@ -97,13 +97,7 @@ export default function NotificationList ({search, navigation}) {
 }
 
 const MultiList = ({list, setCurrentList, items}) => (
-    list?.map(({
-        label, 
-        children, 
-        id, 
-        indexItem,
-
-    }) => !!children?.length && (
+    list?.map(({label, children, id, indexItem}) => Boolean(children?.length) && (
         <li key={id}>
             <List dense>
                 <ListSubheader 

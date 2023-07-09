@@ -12,7 +12,7 @@ import highlightWord from "../../../../utils/highlightWord";
 import AvatarStatus from "./AvatarStatus";
 import Notice from "./Notice";
 
-export default function DiscussionItem ({
+function DiscussionItem ({
     avatarSrc, 
     name, 
     lastNotice, 
@@ -114,3 +114,5 @@ export default function DiscussionItem ({
         </React.Fragment>
     )
 }
+
+export default React.memo(DiscussionItem);

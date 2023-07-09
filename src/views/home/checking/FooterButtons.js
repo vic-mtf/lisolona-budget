@@ -8,6 +8,7 @@ import { setCameraData, setMicroData } from "../../../redux/meeting";
 import store from '../../../redux/store';
 
 export default function FooterButtons ({videoRef}) {
+
     const [{audioStreamRef, videoStreamRef}] = useData();
     const dispatch = useDispatch();
 
@@ -28,6 +29,7 @@ export default function FooterButtons ({videoRef}) {
         }).then(stream => {
             videoStreamRef.current = stream;
             videoRef.current.srcObject = stream;
+            console.log(videoRef);
             dispatch(setCameraData({data: {active: true}}));
         }).catch(() => {});
     }, [dispatch, videoStreamRef, videoRef]);
@@ -43,6 +45,7 @@ export default function FooterButtons ({videoRef}) {
                 display: 'flex', 
                 justifyContent: 'center', 
                 width: '100%',
+                mb: 1.5
             }}
             variant="dense"
         >

@@ -55,3 +55,9 @@ margin:0
 ::-webkit-scrollbar-thumb {
   background: #0003;
 }
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 90deg;
+  inherits: true;
+}

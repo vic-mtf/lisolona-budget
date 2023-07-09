@@ -28,7 +28,7 @@ export default function Notice ({badgeContent, id, type, name, description, mess
             message?.type === 'media' ?
             message.subtype.toLowerCase() : message?.type
         ]) || {label};
-    }, [message?.content, defaultContent]);
+    }, [message, defaultContent]);
 
     return (
         <Stack direction="row" spacing={1} >

@@ -2,7 +2,19 @@ import {
     Menu as MuiMenu, styled,
 } from "@mui/material";
 
-const Menu = styled(MuiMenu)(({theme}) => ({
+const Menu = styled((props) => (
+    <MuiMenu
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      {...props}
+    />
+  ))(({theme}) => ({
     '& .MuiMenu-paper': {
         background: theme.palette.background.paper + 
         theme.customOptions.opacity,

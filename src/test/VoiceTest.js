@@ -25,14 +25,16 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
       }
       if(audioTrack) volume = audioTrack?.getVolumeLevel()
       const rectSize = getValue(maxSize, size, volume);
-      console.log(rectSize, volume);
+   
       const rectCoord = ( maxSize - rectSize ) / 2;
       rect.setAttribute("width", rectSize);
       rect.setAttribute("height", rectSize);
       rect.setAttribute("x", rectCoord);
       rect.setAttribute("y", rectCoord);
     }
-    renderFrame();
+    if(audioTrack || analyser)
+      renderFrame();
+    else window.cancelAnimationFrame(requestAnimationFrameRef.current);
     return () => {
       window.cancelAnimationFrame(requestAnimationFrameRef.current);
     };

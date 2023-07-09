@@ -1,7 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+import mergeObjects from "../utils/mergeObject";
 
 const initialState = {
     mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join',
+    options: null,
+    me: null,
+    id: null,
+    location: null,
+    createdAt: null,
+    startedAt: null,
+    joined: false,
     micro: {
         allowed: false,
         active: false,
@@ -14,6 +22,12 @@ const initialState = {
         input : {
             deviceId: null,
             label: null,
+            width: {
+                ideal: window?.opener?.innerWidth,
+            } ,
+            height:{
+                ideal: window?.opener?.innerHeight,
+            },
         },
         output: {
             deviceId: null,
@@ -35,7 +49,7 @@ const initialState = {
         active: false,
     },
 };
-
+// location
 const meeting = createSlice({
     name: 'meeting',
     initialState: {
@@ -80,6 +94,14 @@ const meeting = createSlice({
                     ...state.camera,
                    ...data,
                 };
+        },
+        setData(state, actions) {
+            const { data } = actions?.payload || {};
+            if(data) Object.keys(data)?.forEach(key => {
+                if(typeof state[key] === 'object')
+                    state[key] = mergeObjects(data[key], state[key])
+                else state[key] = data[key];
+            });
         }
     }
 });
@@ -88,6 +110,7 @@ export const {
     setAudioDevice, 
     setVideoDevice,
     setMicroData,
-    setCameraData
+    setCameraData,
+    setData
 } = meeting.actions;
 export default meeting.reducer;

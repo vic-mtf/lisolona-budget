@@ -82,6 +82,13 @@
                 "endedAt",
                 "origin"
             ]
+        },
+        {
+            "name": "user",
+            "keys": [
+                "id",
+                "userId"
+            ]
         }
     ]
 }

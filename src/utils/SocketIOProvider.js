@@ -6,17 +6,25 @@ import { addNotification } from '../redux/data';
 
 const SocketIO = createContext(null);
 export const useSocket = () => useContext(SocketIO);
-const options = {
+const defaultOptions = {
     transports: ['websocket'],
 };
 
-export default function SocketIOProvider ({children}) {
-    const token = useSelector(store => store?.user?.token);
+const openerSocket = window.openerSocket;
+
+export default function SocketIOProvider ({children, url, token, options}) {
+    const defaultToken = useSelector(store => store?.user?.token);
     const dispatch = useDispatch();
-    const socket = useMemo(() => token ? 
-        io(`${axiosConfig.baseURL}?token=${token}`, options) : null, 
-        [token]
-    );
+    
+    const socket = useMemo(() => {
+        const tk = token || defaultToken;
+        const baseURL = url || axiosConfig.baseURL;
+        if(openerSocket) 
+            return openerSocket
+        else 
+            return tk ? io(`${baseURL}?token=${tk}`, options || defaultOptions) : null
+    }, [token, url, defaultToken, options]);
+
     useEffect(() => {
         const getInvitaions = ({invitations}) => {
             const data = {
@@ -41,14 +49,15 @@ export default function SocketIOProvider ({children}) {
             };
             dispatch(addNotification({data}));
         };
-        socket?.on('invitations', getInvitaions);
+        if(!openerSocket)
+            socket?.on('invitations', getInvitaions);
         return () => {
             socket?.off('invitations', getInvitaions);
         }
     },[socket, token, dispatch]);
    
     return (
-        <SocketIO.Provider value={socket}>
+        <SocketIO.Provider value={openerSocket || socket}>
           {children}
         </SocketIO.Provider>
     );

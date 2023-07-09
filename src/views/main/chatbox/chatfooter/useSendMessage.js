@@ -41,6 +41,7 @@ export default function useSendMessage ({handleChange, editorState, target, file
             const createdAt = new Date().toString();
             const rawContentState = convertToRaw(editorState.getCurrentContent());
             const content = draftToHtml(rawContentState);
+
             const messageType = 'text';
             const message = {
                 id,

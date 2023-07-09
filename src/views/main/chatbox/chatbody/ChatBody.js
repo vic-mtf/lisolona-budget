@@ -3,8 +3,8 @@ import {
 } from '@mui/material';
 import { useMemo } from 'react';
 import MessagesContent from './messages-content/MessagesContent';
-import store from '../../../../redux/store';
-import ChatContainer from './messages/ChatContainer';
+//import store from '../../../../redux/store';
+// import ChatContainer from './messages/ChatContainer';
 
 export default function ChatBody ({target}) {
     const id = useMemo(() => target?.id, [target?.id]);
@@ -20,10 +20,10 @@ export default function ChatBody ({target}) {
             flex={1}
             key={id}
         >
-            {/* <MessagesContent target={target}/>   */}
-            <ChatContainer
+            <MessagesContent target={target}/>  
+            {/* <ChatContainer
                 target={target}
-            />
+            /> */}
         </MuiBox>
     )
 }
