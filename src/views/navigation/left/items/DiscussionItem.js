@@ -9,7 +9,7 @@ import React from "react";
 import Typography from "../../../../components/Typography";
 import timeHumanReadable from "../../../../utils/timeHumanReadable";
 import highlightWord from "../../../../utils/highlightWord";
-import AvatarStatus from "./AvatarStatus";
+import AvatarStatus from "../../../../components/AvatarStatus";
 import Notice from "./Notice";
 
 function DiscussionItem ({

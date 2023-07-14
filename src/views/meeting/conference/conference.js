@@ -7,32 +7,41 @@ import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import Navigation from './navigation/Navigation';
 import Footer from './footer/Footer';
+import EndMeeting from './actions/EndMeeting';
+import { useMeetingData } from '../../../utils/MeetingProvider';
 
 export const drawerWidth = 400;
 
 export default function Conference() {
+    const [{openEndMessageType}] = useMeetingData();
     const nav = useSelector(store => store.conference.nav);
     const open = useMemo(() => Boolean(nav), [nav]);
 
   return (
-    <Stack 
-        sx={{ 
-            display: 'flex',
-            flex: 1,
-            overflow: 'hidden',
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-        }}
-        divider={<Divider/>}
-    >
-      
-      <Main open={open}>
-        <Content/>
-      </Main>
-      <Footer/>
-      <Navigation open={open}/>
-    </Stack>
+    <>
+      <Stack 
+          sx={{ 
+              display: 'flex',
+              flex: 1,
+              overflow: 'hidden',
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+          }}
+          divider={<Divider/>}
+      >
+        
+        <Main open={open}>
+          <Content/>
+        </Main>
+        <Footer/>
+        <Navigation open={open}/>
+      </Stack>
+      <EndMeeting
+          open={Boolean(openEndMessageType)}
+          type={openEndMessageType || undefined}
+      />
+    </>
   );
 }
 

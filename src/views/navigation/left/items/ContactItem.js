@@ -15,8 +15,7 @@ import IconButton from "../../../../components/IconButton";
 import CustomBadge from "../../../../components/CustomBadge";
 import highlightWord from "../../../../utils/highlightWord";
 import { useDispatch, useSelector } from "react-redux";
-import { addTeleconference } from "../../../../redux/teleconference";
-import AvatarStatus from "./AvatarStatus";
+import AvatarStatus from "../../../../components/AvatarStatus";
 
 export default function ContactItem (props) {
     const {
@@ -29,7 +28,7 @@ export default function ContactItem (props) {
         id,
         search,
     } = props;
-    const mode = useSelector(store => store?.teleconference?.mode);
+    const mode = useSelector(store => store?.metting?.mode);
     const disabled = useMemo(() => mode !== 'none');
     const [contextMenu, setContextMenu] = useState(null);
     const [showSecondaryAction, setShowSecondaryAction] = useState(false);

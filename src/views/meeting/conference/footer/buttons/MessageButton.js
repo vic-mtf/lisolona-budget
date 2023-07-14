@@ -23,6 +23,7 @@ export default function MessageButton ({getVideoStream}) {
                     size="small"
                     color="primary"
                     selected={selected}
+                    disabled
                     onClick={() => dispatch(
                         setData({
                              data :{ nav: selected ? null : 'message' }

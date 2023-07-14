@@ -23,6 +23,7 @@ export default function ListMemberButton ({getVideoStream}) {
                     size="small"
                     color="primary"
                     selected={selected}
+                    disabled
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,

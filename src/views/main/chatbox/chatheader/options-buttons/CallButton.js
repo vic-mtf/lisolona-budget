@@ -7,7 +7,7 @@ import Groups3OutlinedIcon from '@mui/icons-material/Groups3Outlined';
 import CastRoundedIcon from '@mui/icons-material/CastRounded';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Menu from '../../../../../components/Menu';
 import { useState } from 'react';
 import { useRef } from 'react';
@@ -15,20 +15,21 @@ import openNewWindow from "../../../../../utils/openNewWindow";
 import { encrypt } from "../../../../../utils/crypt";
 import { useData } from '../../../../../utils/DataProvider';
 import { setData } from '../../../../../redux/meeting';
+import { useSocket } from '../../../../../utils/SocketIOProvider';
 
 export default function CallButton  ({target, theme}) {
     const mode = useSelector(store => store.meeting?.mode);
+    const socket = useSocket();
     const dispatch = useDispatch();
     const disabled = useMemo(() => mode !==  'none', [mode]);
     const [{secretCodeRef}] = useData();
     const [anchorEl, setAnchorEl] = useState(null);
     const anchorElRef = useRef();
 
-    const handleOpenMeeting = () => {
+    const handleOpenMeeting = mode => {
         const wd = openNewWindow({
             url: '/meeting/',
         });
-        const mode = 'outgoing';
         wd.geidMeetingData = encrypt({
             target,
             mode,
@@ -36,9 +37,11 @@ export default function CallButton  ({target, theme}) {
             defaultCallingState: 'before',
         });
         if(wd) {
-            dispatch(setData({ data: {mode}}))
+            dispatch(setData({ data: {mode}}));
+            wd.openerSocket = socket;
         }
     }
+    
     const onOpen = () => {
         setAnchorEl(anchorElRef.current);
     };
@@ -47,6 +50,10 @@ export default function CallButton  ({target, theme}) {
         {
             Icon: Groups3OutlinedIcon,
             label: 'Démarrer une réunion instantanée',
+            onClick () {
+                setAnchorEl(null);
+                handleOpenMeeting('prepare');
+            }
         },
         {
             Icon: HistoryToggleOffRoundedIcon,
@@ -70,7 +77,7 @@ export default function CallButton  ({target, theme}) {
                         sx={{mx: 1}} 
                         disabled={disabled}
                         ref={anchorElRef}
-                        onClick={() => target?.type === 'room' ? onOpen() : handleOpenMeeting()}
+                        onClick={() => target?.type === 'room' ? onOpen() : handleOpenMeeting('outgoing')}
                     >  
                             <LocalPhoneOutlinedIcon fontSize="small"/>
                             {target?.type === "room" && <ExpandMoreIcon fontSize="small"/>}
@@ -92,10 +99,11 @@ export default function CallButton  ({target, theme}) {
                         }
                     }}
                 >
-                    {menuItems.map(({label, Icon, disabled}, key) => (
+                    {menuItems.map(({label, Icon, disabled, onClick}, key) => (
                         <MenuItem 
                             key={key}
                             disabled={disabled}
+                            onClick={onClick}
                         > 
                         {<Icon fontSize="small"/>} {label}
                         </MenuItem>

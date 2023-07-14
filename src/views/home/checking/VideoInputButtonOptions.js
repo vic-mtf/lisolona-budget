@@ -51,8 +51,8 @@ export default function VideoInputButtonOptions () {
 
     useLayoutEffect(() => {
         const devices = devicesRef.current;
-        navigator.mediaDevices.enumerateDevices()
-        .then(_devices => {
+        navigator?.mediaDevices?.enumerateDevices()
+        ?.then(_devices => {
             const videoInputs = [];
             _devices.filter(device => device.kind === 'videoinput')
             .forEach(device => {

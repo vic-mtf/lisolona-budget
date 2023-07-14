@@ -25,7 +25,6 @@ import CustomBadge from "../../../../components/CustomBadge";
 import AvatarStatus from "./AvatarStatus";
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import { useDispatch } from "react-redux";
-import { addTeleconference } from "../../../../redux/teleconference";
 // type = incoming | outgoing | missed
 // format = audio | video
 
@@ -66,20 +65,20 @@ export default function CurrentCallContactItem (props) {
         const customEvent = new CustomEvent(name, {
             detail: {name, ...props}
         });
-        dispatch(addTeleconference({
-            key: 'data',
-            data: {
-                mode: 'join',
-                meetingId: id,
-                privileged: true,
-                date,
-                videoMirrorMode: 'grid',
-                from,
-                response: 'join',
-                type: 'room',
-                audio: true,
-            }
-        }));
+        // dispatch(addTeleconference({
+        //     key: 'data',
+        //     data: {
+        //         mode: 'join',
+        //         meetingId: id,
+        //         privileged: true,
+        //         date,
+        //         videoMirrorMode: 'grid',
+        //         from,
+        //         response: 'join',
+        //         type: 'room',
+        //         audio: true,
+        //     }
+        // }));
         root.dispatchEvent(customEvent);
     };
 

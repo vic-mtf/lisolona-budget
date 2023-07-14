@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import useAudio from "../../../../utils/useAudio";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
@@ -16,6 +16,7 @@ import clearTimer from "../../../../utils/clearTimer";
 export default function useRinging(callState, setCallState) {
     const socket = useSocket();
     const [{client}] = useData();
+    const ringingRef = useRef(false);
 
     const ringingAudio = useAudio(ringing_src);
     const endCallAudio = useAudio(end_call_src);
@@ -74,7 +75,8 @@ export default function useRinging(callState, setCallState) {
             socket.on('hang-up', handleRejectOutgoing);
         }
 
-        if(callState === 'incoming' && mode === "incoming") {
+        if(callState === 'incoming' && mode === "incoming" && !ringingRef.current) {
+            ringingRef.current = true;
             ringRef.current?.clearAudio();
             clearTimer(timerRef.current);
             ringRef.current = songAudio;

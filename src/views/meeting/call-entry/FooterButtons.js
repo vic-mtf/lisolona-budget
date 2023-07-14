@@ -12,21 +12,27 @@ import { setCameraData, setMicroData } from "../../../redux/meeting";
 import CameraButton from "./CameraButton";
 import MicroButton from "./MicroButton";
 import AnswerButton from "./AnswerButton";
+import { useMeetingData } from "../../../utils/MeetingProvider";
+import AgoraRTC from "agora-rtc-sdk-ng";
 
 export default function FooterOptions ({videoRef, handleCall, callState, media, setCallState}) {
     const camera = useSelector(store => store.meeting.camera);
     const dispatch = useDispatch();
     const [{videoStreamRef, audioStreamRef}] = useData();
-
+    const [{localTrackRef}] = useMeetingData();
     const getAudioStream = useCallback(() => {
         const audioDevice = store.getState().meeting.audio.input;
         navigator.mediaDevices.getUserMedia({
             audio: audioDevice.deviceId ? audioDevice : true,
         }).then(stream => {
             audioStreamRef.current = stream;
+            const [mediaStreamTrack] = stream.getAudioTracks();
+            localTrackRef.current.audioTrack = AgoraRTC.createCustomAudioTrack({
+                mediaStreamTrack,
+            });
             dispatch(setMicroData({data: {active: true}}));
         }).catch(() => {});
-    }, [audioStreamRef, dispatch]);
+    }, [audioStreamRef, dispatch, localTrackRef]);
     const showButton = useCallback((...states) => states.includes(callState), [callState]);
     const getVideoStream = useCallback(() => {
         const videoDevice = store.getState().meeting.video.input;
@@ -38,9 +44,13 @@ export default function FooterOptions ({videoRef, handleCall, callState, media, 
         }).then(stream => {
             videoStreamRef.current = stream;
             videoRef.current.srcObject = stream;
+            const [mediaStreamTrack] = stream.getVideoTracks();
+            localTrackRef.current.videoTrack = AgoraRTC.createCameraVideoTrack({
+                mediaStreamTrack,
+            });
             dispatch(setCameraData({data: {active: true}}));
         }).catch(() => {});
-    }, [dispatch, videoStreamRef, videoRef]);
+    }, [dispatch, videoStreamRef, videoRef, localTrackRef]);
 
     useLayoutEffect(() => {
         videoRef.current.style.opacity = camera.active ? 1 : 0

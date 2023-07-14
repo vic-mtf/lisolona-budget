@@ -17,7 +17,7 @@ export default function RaiseHandButton ({getVideoStream}) {
                 <IconButton
                     size="small"
                     color="primary"
-                    selected
+                    disabled
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,

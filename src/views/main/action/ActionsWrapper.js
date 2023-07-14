@@ -1,8 +1,10 @@
-import useCall from "./useCall";
+import useDirectCall from "./useDirectCall";
+import useRoomCall from "./useRoomCall";
 import useCallChannel from "./useCallChannel";
 
 export default function ActionsWrapper () {
-    useCall();
+    useDirectCall();
+    useRoomCall();
     useCallChannel();
     return null;
 }

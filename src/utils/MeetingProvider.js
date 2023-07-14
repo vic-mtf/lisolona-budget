@@ -20,6 +20,8 @@ export default function MeetingProvider ({children}) {
     const [remoteTracks, settersRemoteTracks] = useTableRef();
     const [fictitiousMembers, settersFictitiousMembers] = useTableRef();
     const [participants, settersParticipants] = useTable();
+    const [openEndMessageType, setOpenEndMessageType] = useState(null);
+    const isChangeModeRef = useRef(true);
     const ringRef = useRef(null);
     const timerRef = useRef(null);
     const localTrackRef = useRef({
@@ -33,7 +35,8 @@ export default function MeetingProvider ({children}) {
         const { uid } = user;
         const index = uid - 1;
         const target = membersRef.current[index]?.identity;
-        const find = settersParticipants.getObjectById(target?.id);
+        const find = settersParticipants.getObjectById(target?._id);
+        console.log(meetingData.mode, find, index, target);
         if(target && !find) {
             settersParticipants.updateObject({
                 uid,
@@ -45,7 +48,7 @@ export default function MeetingProvider ({children}) {
         }
         if(!target && !find)
             settersFictitiousMembers.updateObject({id: uid, uid});
-    },[membersRef, settersFictitiousMembers, settersParticipants]);
+    },[membersRef, settersFictitiousMembers, settersParticipants, meetingData]);
 
     const handleUserLeft = useCallback(user => {
         const { uid } = user;
@@ -54,23 +57,22 @@ export default function MeetingProvider ({children}) {
         );
         if(target) { 
             settersParticipants.deleteObject(target.id);
-            settersMembers.deleteObject(target.id);
+            //settersMembers.deleteObject(target.id);
             //messages
         }
         else {
-            settersFictitiousMembers.deleteObject(uid);
+            //settersFictitiousMembers.deleteObject(uid);
             //messages
         }
         settersRemoteTracks.deleteObject(uid);
     }, [
-        settersFictitiousMembers, 
+        //settersFictitiousMembers, 
         settersParticipants,
-        settersMembers
+        settersRemoteTracks
     ]);
 
     const handleUserPublished = useCallback(async (user, mediaType) => {
         const uid = user.uid;
-        const index = uid - 1;
         handleUserJoin(user);
         await client.subscribe(user, mediaType);
         const key = mediaType + 'Track';
@@ -112,6 +114,7 @@ export default function MeetingProvider ({children}) {
         localTrackRef,
         remoteTracks,
         fictitiousMembers,
+        openEndMessageType,
         membersRef,
         participants,
         meetingData,
@@ -123,6 +126,7 @@ export default function MeetingProvider ({children}) {
         settersMembers,
         settersParticipants,
         settersRemoteTracks,
+        setOpenEndMessageType,
         setMeetingData (newData) {
             if(newData) setMeetingData(
                 data => ({...data, ...newData})
@@ -132,7 +136,8 @@ export default function MeetingProvider ({children}) {
     };
 
     useLayoutEffect(() => {
-        if(meetingData && mode === 'none') {
+        if(meetingData && mode === 'none' && isChangeModeRef.current) {
+            isChangeModeRef.current = false;
             const { mode, origin } = meetingData;
             const { 
                 callDetails: options,
@@ -143,12 +148,13 @@ export default function MeetingProvider ({children}) {
             } = origin || {};
             const data = origin ? { id, options, createdAt, location } : {};
             dispatch(setData({ data: {mode, ...data}}));
-            if(members)
+            if(members) {
                 settersMembers.addObjects(
                     members.map(
-                        member => ({...member,id: member.identity._id,})
+                        member => ({...member, id: member.identity._id,})
                     )
                 );
+            }
         }
     },[dispatch, meetingData, settersMembers, mode]);
 
@@ -167,17 +173,19 @@ export default function MeetingProvider ({children}) {
     }, [client, handleUserJoin, handleUserPublished, handleUserUnPublished, handleUserLeft]);
 
     useLayoutEffect(() => {
-        const uid = settersMembers.getObjectIndexById(user?.id);
-        if(options && !joined && CHANNEL && (uid > -1)) 
-            client.join(options.APP_ID, CHANNEL, options.TOKEN, uid + 1)
+        const uid = settersMembers.getObjectIndexById(user?.id) + 1;
+        const isDirectCall = meetingData?.target?.type !== 'room';
+        if(options && !joined && CHANNEL && uid && isDirectCall) 
+            client.join(options.APP_ID, CHANNEL, options.TOKEN, uid)
             .then(() => { dispatch(setData({data: {joined: true}})) });
-    }, [options, joined, client, user, CHANNEL, dispatch, settersMembers]);
+    }, [options, joined, client, user, CHANNEL, dispatch, settersMembers, meetingData]);
 
     return (
         <MeetingDataContext.Provider 
             value={[getters, setters]}
         >
           {children}
+          
         </MeetingDataContext.Provider>
     )
 }

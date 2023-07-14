@@ -11,8 +11,16 @@ export default function VideoCam () {
             position="relative"
             display="flex"
             alignItems="end"
-            width={450}
-            height={(450 * 9) / 16}
+            width={{
+                lg: 600,
+                md: 450,
+                xs: '100%'
+            }}
+            height={{
+                lg: 600 * 9 / 16,
+                md: 450 * 9 / 16,
+                xs: window.innerWidth * 9 / 16
+            }}
             borderRadius={1}
             sx={{
                 backdropFilter: theme => `blur(${theme.customOptions.blur})`,

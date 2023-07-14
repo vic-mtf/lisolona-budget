@@ -5,7 +5,6 @@ import Home from "./home/Home";
 import { drawerWidth } from "../navigation/Navigation";
 import React, { useMemo } from "react";
 import ActionWrapper from "./action/ActionWrapper";
-import Teleconference from "./teleconference/Teleconference";
 import ActionsWrapper from "./action/ActionsWrapper";
 import SocketIOProvider from "../../utils/SocketIOProvider";
 
@@ -28,7 +27,6 @@ export default function Main () {
             }}
         >
             <ChatWrapper/>
-            <Teleconference/>
             <ActionWrapper/>
             <ActionsWrapper/>
         </MuiBox>

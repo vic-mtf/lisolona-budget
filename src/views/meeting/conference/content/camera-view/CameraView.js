@@ -21,7 +21,7 @@ export default function CameraView ({mode}) {
         if(camera.active) {
             videoRef.current.srcObject = videoStreamRef.current
         }
-    },[camera])
+    },[camera, videoStreamRef])
 
     return (
         <MuiBox

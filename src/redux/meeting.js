@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import mergeObjects from "../utils/mergeObject";
 
 const initialState = {
-    mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join',
+    mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join' || 'prepare',
     options: null,
     me: null,
     id: null,
@@ -13,10 +13,12 @@ const initialState = {
     micro: {
         allowed: false,
         active: false,
+        published: false,
     },
     camera: {
         allowed: false,
         active: false,
+        published: false,
     },
     video: {
         input : {
@@ -47,6 +49,7 @@ const initialState = {
     screenSharing: {
         allowed: false,
         active: false,
+        published: false,
     },
 };
 // location
@@ -102,6 +105,8 @@ const meeting = createSlice({
                     state[key] = mergeObjects(data[key], state[key])
                 else state[key] = data[key];
             });
+            if(state.mode === 'on')
+                state.startedAt = Date.now();
         }
     }
 });

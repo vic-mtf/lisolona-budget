@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTeleconference } from "../../../../redux/teleconference";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import mssAudio  from '../../../../assets/Eventually-Sms.mp3';
 import getData from '../../../../utils/getData';
@@ -29,16 +28,16 @@ export default function ActionWrapper () {
             const {type, meetingId, options, date} = details;
             if(type === 'current-meeting') {
                 const  room = chatGroups?.find(({_id}) => _id === meetingId);
-                if(room) dispatch(addTeleconference({
-                        key: 'currentCalls',
-                        data: [{
-                            id: meetingId,
-                            name: room.name,
-                            date,
-                            options,
-                            from,
-                        }]
-                }));
+                // if(room) dispatch(addTeleconference({
+                //         key: 'currentCalls',
+                //         data: [{
+                //             id: meetingId,
+                //             name: room.name,
+                //             date,
+                //             options,
+                //             from,
+                //         }]
+                // }));
             }
         };
         const toggleStatus = ({status, who}) => {

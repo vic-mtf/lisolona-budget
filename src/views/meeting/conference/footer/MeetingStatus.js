@@ -5,8 +5,10 @@ import {
 } from '@mui/material';
 import Typography from '../../../../components/Typography';
 import { useMeetingData } from '../../../../utils/MeetingProvider';
-import { useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import store from '../../../../redux/store';
+import { useSelector } from "react-redux";
+import formatDuration from '../../../../utils/formatDuration';
 
 export default function MeetingStatus () {
     
@@ -26,17 +28,33 @@ export default function MeetingStatus () {
                     }
                 }}
             >
-                <Typography >00:00</Typography>
-                <Divider orientation="vertical"  flexItem variant="middle" />
-                <Typography >{store.getState().meeting.id}</Typography>
+                <Typography color="text.secondary">
+                    <Timer/>
+                </Typography>
+                <Divider orientation="vertical" sx={{borderWidth: 1}} flexItem />
+                <Typography color="text.secondary">{store.getState().meeting.id}</Typography>
             </MuiBox>
         </Stack>
     )
 }
 
 const Name = () => {
-    const [{meetingData, participants}] = useMeetingData();
+    const [
+        { meetingData },
+        { settersMembers }
+    ] = useMeetingData();
     const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
+    const user = useSelector(store => store.meeting.me);
+
+    const participants = useMemo(() => (
+        settersMembers.getTableSubsetByFilter(({id}) => id !== user?.id)
+        .map(({identity:target}) => ({
+            id: target?._id,
+            name: `${target?.fname} ${target?.lname || ''} ${target?.mname || ''}`,
+            email: target?.email,
+            avatarSrc: target?.imageUrl,
+        }))
+    ), [settersMembers, user?.id]);
 
     return (
         <Typography
@@ -51,7 +69,22 @@ const Name = () => {
     )
 }
 
-function formatNames(namesList) {
+const Timer = () => {
+    const [time, setTime] = useState(0);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(formatDuration(store.getState().meeting.startedAt));
+        }, 1000);
+    
+        return () => {
+          clearInterval(interval);
+        };
+      }, []);
+    
+    return time;
+};
+
+export function formatNames(namesList) {
     if (namesList.length === 1) {
         return namesList[0];
     } else if (namesList.length === 2) {

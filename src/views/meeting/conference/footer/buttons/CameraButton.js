@@ -1,7 +1,7 @@
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
+import { Alert, Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
@@ -9,29 +9,89 @@ import getPermission from '../../../../../utils/getPermission';
 import { setCameraData } from '../../../../../redux/meeting';
 import { useData } from '../../../../../utils/DataProvider';
 import IconButton from '../../../../../components/IconButton';
+import { toggleStreamActivation } from '../../../../home/checking/FooterButtons';
+import store from '../../../../../redux/store';
+import { useMeetingData } from '../../../../../utils/MeetingProvider';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import { useSnackbar } from 'notistack';
 
-export default function CameraButton ({getVideoStream}) {
+export default function CameraButton () {
     const camera = useSelector(store => store.meeting.camera);
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const [loading, setLoading] = useState(false);
     const [permission, setPermission] = useState(null);
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef, client}] = useData();
+    const [{localTrackRef}] = useMeetingData();
     const dispatch = useDispatch();
 
     const handleDispatchAllowed = useCallback(allowed => {
         dispatch(setCameraData({data: {allowed}}));
     },[dispatch]);
 
-    const handlerToggleCamera = useCallback(() => {
-        // if(permission?.state !== 'denied') {
-        //     const stream = videoStreamRef.current;
-        //     if(camera.allowed) {
-        //         if(stream) toggleStreamActivation(stream, 'video');
-        //         else  getVideoStream()
-        //         dispatch(setCameraData({data: {active: !camera?.active}}));
-        //     } else getVideoStream();
-        // } else {
-        //     //message video ici
-        // }
-    }, [videoStreamRef, camera, permission, dispatch, getVideoStream]);
+    const getVideoStream = useCallback(() => {
+        setLoading(true);
+        const videoDevice = store.getState().meeting.video.input;
+        navigator.mediaDevices.getUserMedia({
+            video: videoDevice.deviceId ? videoDevice : {
+                width: {ideal: window.innerWidth},
+                height: {ideal: window.innerHeight}
+            },
+        }).then(async stream => {
+            videoStreamRef.current = stream;
+            if(/*Si l'écran n'est pas partagé !*/ true) {
+                const [mediaStreamTrack] = stream.getVideoTracks();
+                localTrackRef.current.videoTrack = AgoraRTC.createCustomVideoTrack({mediaStreamTrack});
+                await client.publish([localTrackRef.current.videoTrack]);
+                dispatch(setCameraData({data: {active: true, published: true}}));
+            }  else {
+                dispatch(setCameraData({data: {active: true}}));
+            }
+            setLoading(false);
+        }).catch((e) => {
+            setLoading(false);
+            const message = e.toString().toLowerCase();
+            if('notreadableerror: could not start video source' === message) {
+                enqueueSnackbar({
+                    message: `Caméra occupée par une autre application.`,
+                    content: (key, message) => (
+                        <Alert onClose={() => closeSnackbar(key)} severity="error">
+                          {message}
+                        </Alert>
+                      ),
+                    style: {
+                        background: 'none',
+                        boxShadow: 0,
+                        padding: 0,
+                        margin: 0,
+                    }
+                })
+            }
+        });
+    }, [dispatch, videoStreamRef, localTrackRef, client, closeSnackbar, enqueueSnackbar]);
+
+    const handlerToggleCamera = useCallback(async () => {
+        if(permission?.state !== 'denied') {
+            const stream = videoStreamRef.current;
+            if(stream) {
+                setLoading(true);
+                toggleStreamActivation(stream, 'video');
+                const state = !camera.active;
+                if(/*Si l'écran n'est pas partagé !*/ true) {
+                    if(camera.published && camera.active) 
+                        await client.unpublish([localTrackRef.current.videoTrack]);
+                    if(!camera.published && !camera.active) {
+                        const [mediaStreamTrack] = stream.getVideoTracks();
+                        localTrackRef.current.videoTrack = AgoraRTC.createCustomVideoTrack({mediaStreamTrack})
+                        await client.publish([localTrackRef.current.videoTrack]);
+                    }
+                }
+                dispatch(setCameraData({data: {active: state, published: state}}));
+                setLoading(false);
+            } else getVideoStream();
+        } else {
+            //message video ici
+        }
+    }, [videoStreamRef, camera, permission, dispatch, getVideoStream, client, localTrackRef]);
     
     useLayoutEffect(() => {
         if(!permission)
@@ -87,7 +147,7 @@ export default function CameraButton ({getVideoStream}) {
                     size="small"
                     onClick={handlerToggleCamera}
                     color={camera?.active ? "primary" : "inherit"}
-                    disabled={permission?.state === "denied"}
+                    disabled={permission?.state === "denied" || loading}
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,
@@ -99,7 +159,7 @@ export default function CameraButton ({getVideoStream}) {
                     <VideocamOffOutlinedIcon fontSize="small"/>}
                 </Fab>
             </Badge>
-            <IconButton>
+            <IconButton disabled>
                 <ExpandMoreIcon/>
             </IconButton>
         </Stack>

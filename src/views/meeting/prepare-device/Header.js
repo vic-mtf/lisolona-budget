@@ -1,15 +1,12 @@
-import CustomAvatarGroup from '../../../components/CustomAvatarGroup';
 import React, { useMemo } from "react";
 import Avatar from "../../../components/Avatar";
 import { useMeetingData } from '../../../utils/MeetingProvider';
 import { generateColorsFromId } from '../../../utils/genColorById';
 import { AvatarGroup, useTheme } from '@mui/material';
-import Typography from '../../../components/Typography';
 
 export default function Header () {
     const [{meetingData}] = useMeetingData();
     const target = useMemo(() => meetingData?.target || null, [meetingData?.target])
-    
     const theme = useTheme();
     const { background, text } = generateColorsFromId(target?.id, theme.palette.mode);
 
@@ -51,12 +48,6 @@ export default function Header () {
                     sx={{...avatarSx}}
                 />
             </AvatarGroup>
-            <Typography
-                variant="h6"
-                fontWeight="bold"
-            >
-                {target?.name}
-            </Typography>
         </React.Fragment>
     );
 }

@@ -1,6 +1,6 @@
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
-import { Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
+import { Alert, Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
@@ -9,30 +9,81 @@ import { setMicroData } from '../../../../../redux/meeting';
 import { useData } from '../../../../../utils/DataProvider';
 import IconButton from '../../../../../components/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useSnackbar } from 'notistack';
+import store from '../../../../../redux/store';
+import { useMeetingData } from '../../../../../utils/MeetingProvider';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import { toggleStreamActivation } from '../../../../home/checking/FooterButtons';
 // import { toggleStreamActivation } from './FooterButtons';
 
-export default function MicroButton ({getAudioStream}) {
+export default function MicroButton () {
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const micro = useSelector(store => store.meeting.micro);
     const [permission, setPermission] = useState(null);
-    const [{audioStreamRef}] = useData();
+    const [{localTrackRef}] = useMeetingData();
+    const [{audioStreamRef, client}] = useData();
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     
     const handleDispatchAllowed = useCallback(allowed => {
         dispatch(setMicroData({data: {allowed}}));
     },[dispatch]);
 
-    const handlerTogleMicro = useCallback(() => {
-        // if(permission?.state !== 'denied') {
-        //     const stream = audioStreamRef.current;
-        //     if(micro.allowed) {
-        //         if(stream) toggleStreamActivation(stream, 'audio');
-        //         else  getAudioStream()
-        //         dispatch(setMicroData({data: {active: !micro?.active}}));
-        //     } else getAudioStream()
-        // } else {
-        //     //message audio ici
-        // }
-    }, [audioStreamRef, micro, permission, dispatch, getAudioStream]);
+    const getAudioStream = useCallback(() => {
+        setLoading(true);
+        const audioDevice = store.getState().meeting.audio.input;
+        navigator.mediaDevices.getUserMedia({
+            audio: audioDevice.deviceId ? audioDevice : true,
+        }).then(async stream => {
+            audioStreamRef.current = stream;
+            const [mediaStreamTrack] = stream.getAudioTracks();
+            localTrackRef.current.audioTrack = AgoraRTC.createCustomAudioTrack({mediaStreamTrack});
+            await client.publish([localTrackRef.current.audioTrack]);
+            dispatch(setMicroData({data: {active: true, published: true}}));
+            setLoading(false);
+        }).catch((e) => {
+            setLoading(false);
+            const message = e.toString().toLowerCase();
+            if('notreadableerror: could not start audio source' === message) {
+                enqueueSnackbar({
+                    message: `Micro occupé par une autre application.`,
+                    content: (key, message) => (
+                        <Alert onClose={() => closeSnackbar(key)} severity="error">
+                          {message}
+                        </Alert>
+                      ),
+                    style: {
+                        background: 'none',
+                        boxShadow: 0,
+                        padding: 0,
+                        margin: 0,
+                    }
+                })
+            }
+        });
+    }, [dispatch, audioStreamRef, localTrackRef, client, closeSnackbar, enqueueSnackbar]);
+
+    const handlerTogleMicro = useCallback(async () => {
+        if(permission?.state !== 'denied') {
+            const stream = audioStreamRef.current;
+            if(stream) {
+                setLoading(true);
+                toggleStreamActivation(stream, 'audio');
+                const state = !micro.active;
+                if(micro.published && micro.active) 
+                    await client.unpublish([localTrackRef.current.audioTrack]);
+                if(!micro.published && !micro.active) {
+                    const [mediaStreamTrack] = stream.getAudioTracks();
+                    localTrackRef.current.audioTrack = AgoraRTC.createCustomAudioTrack({mediaStreamTrack})
+                    await client.publish([localTrackRef.current.audioTrack]);
+                }
+                dispatch(setMicroData({data: {active: state, published: state}}));
+                setLoading(false);
+            } else getAudioStream();
+        } else {
+            //message audio ici
+        }
+    }, [audioStreamRef, micro, permission, dispatch, getAudioStream, client, localTrackRef]);
 
 
     useLayoutEffect(() => {
@@ -89,7 +140,7 @@ export default function MicroButton ({getAudioStream}) {
                     size="small"
                     onClick={handlerTogleMicro}
                     color={micro?.active ? "primary" : "inherit"}
-                    disabled={permission?.state === "denied"}
+                    disabled={permission?.state === "denied" || loading}
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,
@@ -104,7 +155,9 @@ export default function MicroButton ({getAudioStream}) {
                     />}
                 </Fab>
             </Badge>
-            <IconButton>
+            <IconButton
+                disabled
+            >
                 <ExpandMoreIcon/>
             </IconButton>
         </Stack>

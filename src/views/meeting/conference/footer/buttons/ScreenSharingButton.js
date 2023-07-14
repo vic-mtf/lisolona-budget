@@ -92,6 +92,7 @@ export default function ScreenSharingButton ({getVideoStream}) {
                     // onClick={handlerToggleCamera}
                     color={screen?.active ? "primary" : "inherit"}
                     //disabled={permission?.state === "denied"}
+                    disabled
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,
@@ -103,7 +104,9 @@ export default function ScreenSharingButton ({getVideoStream}) {
                     <ScreenShareOutlinedIcon fontSize="small"/>}
                 </Fab>
             </Badge>
-            <IconButton>
+            <IconButton
+                disabled
+            >
                 <ExpandMoreIcon/>
             </IconButton>
         </Stack>

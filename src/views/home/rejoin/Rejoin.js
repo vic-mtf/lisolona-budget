@@ -7,6 +7,7 @@ import {
   import Typography from '../../../components/Typography';
   import CheckingCode from '../checking/CheckingCode';
 import openSignin from '../../../utils/openSignin';
+
 export default function Rejoin () {
     const handleOpenSignin = event => {
       event?.preventDefault();

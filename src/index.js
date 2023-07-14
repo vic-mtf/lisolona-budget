@@ -8,7 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import ConfigAppWrapper from './utils/ConfigAppWrapper';
 import SocketIOProvider from './utils/SocketIOProvider';
 import { SnackbarProvider } from 'notistack';
-import DataProivder from './utils/DataProvider';
+import DataProvider from './utils/DataProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -18,9 +18,9 @@ root.render(
         <SocketIOProvider>
           <ConfigAppWrapper>
               <SnackbarProvider>
-                <DataProivder>
+                <DataProvider>
                   <App/>
-                </DataProivder>
+                </DataProvider>
               </SnackbarProvider>
           </ConfigAppWrapper>
         </SocketIOProvider>

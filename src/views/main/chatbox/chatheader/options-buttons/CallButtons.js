@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import React, { useCallback, useMemo } from 'react';
 
 export default function CallButtons  ({target}) {
-    const mode = useSelector(store => store.teleconference?.mode);
+const mode = useSelector(store => store.meeting?.mode);
     const disabled = useMemo(() => mode !==  'none', [mode]);
    
     const handleCallContact = useCallback(mediaType => () => {

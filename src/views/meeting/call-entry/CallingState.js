@@ -12,16 +12,6 @@ import useDisconnect from './answers/useDisconnect';
 import { useSocket } from '../../../utils/SocketIOProvider';
 import useJoin from './answers/useJoin';
 
-// import useAudio from '../../../utils/useAudio';
-// import waiting_src from '../../../assets/mixkit-on-hold-ringtone.wav';
-// import reject_src from '../../../assets/answering-machine.wav';
-// import calling_src from '../../../assets/Halloween-Cradles.mp3';
-// import ringing_src from '../../../assets/ring-ton-outgoing-call.wav';
-// import and_src from '../../../assets/end-call.wav';
-// import busy_src from '../../../assets/busyphone.mp3';
-// import hanup_src from '../../../assets/calldisconnect.mp3';
-// useTheme().palette.mode
-
 
 export default function CallingState ({callState, setCallState}) {
     const [{meetingData}] = useMeetingData();

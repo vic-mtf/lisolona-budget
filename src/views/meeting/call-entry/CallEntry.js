@@ -57,6 +57,9 @@ export default function CallEntry () {
             settersMembers.addObjects(members.map(
                 member => ({...member, id: member.identity._id,})
             ));
+            console.log('members =================> : ', members.map(
+                member => ({...member, id: member.identity._id,})
+            ))
         }).catch(() => {
             
         });

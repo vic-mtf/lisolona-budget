@@ -21,6 +21,7 @@ const MicroOff = () => {
                     py: .5,
                     width: 25,
                     height: 25,
+                    color: 'text.primary'
                 }}
             >
                 <MicOffOutlinedIcon/>

@@ -54,8 +54,8 @@ export default function AudioOutputButtonOptions () {
 
     useLayoutEffect(() => {
         const devices = devicesRef.current;
-        navigator.mediaDevices.enumerateDevices()
-        .then(_devices => {
+        navigator?.mediaDevices?.enumerateDevices()
+        ?.then(_devices => {
             const audioOutputs = [];
             _devices.filter(device => device.kind === 'audiooutput')
             .forEach(device => {

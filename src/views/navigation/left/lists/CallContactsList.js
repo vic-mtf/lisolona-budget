@@ -1,17 +1,15 @@
 import React from 'react';
 import { 
-    Divider, 
     List, 
 } from '@mui/material';
 import useScrollEnd from '../../../../utils/useScrollEnd';
 import Box from '../../../../components/Box';
 import useShadow from './useShadow';
-import timeHumanReadable from '../../../../utils/timeHumanReadable';
+// import timeHumanReadable from '../../../../utils/timeHumanReadable';
 import scrollBarSx from '../../../../utils/scrollBarSx';
 import { useSelector } from 'react-redux';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
-import CurrentCallContactItem from '../items/CurrentCallContactItem';
 
 
 export default function CallContactsList ({search, navigation}) {
@@ -53,17 +51,17 @@ export default function CallContactsList ({search, navigation}) {
                     }
                 />
                 {
-                currentCalls?.map((contact, index) => (
-                    <React.Fragment key={contact.id}>
-                        <CurrentCallContactItem
-                            {...contact}
-                            date={timeHumanReadable(contact?.createdAt)}
-                        />
-                        {index !== allCalls.length - 1 && 
-                        <Divider variant="inset" component="li" />
-                        }
-                    </React.Fragment>
-                ))
+                // currentCalls?.map((contact, index) => (
+                //     <React.Fragment key={contact.id}>
+                //         <CurrentCallContactItem
+                //             {...contact}
+                //             date={timeHumanReadable(contact?.createdAt)}
+                //         />
+                //         {index !== allCalls.length - 1 && 
+                //         <Divider variant="inset" component="li" />
+                //         }
+                //     </React.Fragment>
+                // ))
             } 
             {
                 // calls.map((contact, index) => (

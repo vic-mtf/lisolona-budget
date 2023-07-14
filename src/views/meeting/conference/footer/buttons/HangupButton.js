@@ -1,18 +1,29 @@
-import { Fab, Stack, ThemeProvider, createTheme, useTheme } from "@mui/material";
+import { Fab, ThemeProvider, createTheme, useTheme } from "@mui/material";
 import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
 import useAudio from  "../../../../../utils/useAudio";
 import disconnect_src from "../../../../../assets/calldisconnect.mp3";
 import { useData } from  "../../../../../utils/DataProvider";
 import closeMediaStream from  "../../../../../utils/closeMediaStream";
 import { useMeetingData } from  "../../../../../utils/MeetingProvider";
-import { setCameraData } from "../../../../../redux/meeting";
-import { useDispatch } from "react-redux";
+import { setCameraData, setMicroData } from "../../../../../redux/meeting";
+import { useDispatch, useSelector } from "react-redux";
+import { useMemo } from "react";
+import { useSocket } from "../../../../../utils/SocketIOProvider";
+import clearTimer from "../../../../../utils/clearTimer";
 
-export default function HangupButton ({setCallState}) {
+export default function HangupButton () {
     const theme = useTheme();
     const disconnectAudio = useAudio(disconnect_src);
-    // const [{videoStreamRef, audioStreamRef, client}] = useData();
-    // const [{ringRef}] = useMeetingData();
+    const [{videoStreamRef, audioStreamRef, client}] = useData();
+    const id = useSelector(store => store.meeting.id);
+    const [
+        {meetingData, timerRef}, 
+        {setOpenEndMessageType}
+    ] = useMeetingData();
+    const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
+    const origin = useMemo(() => meetingData?.origin || null, [meetingData?.origin]);
+    const socket = useSocket();
+    const [{ringRef}] = useMeetingData();
     const dispatch = useDispatch()
 
     return (
@@ -32,24 +43,31 @@ export default function HangupButton ({setCallState}) {
             <Fab
                 size="small"
                 color="primary"
-                // onClick={async () => {
-                //     disconnectAudio.audio.play();
-                //     ringRef.current?.clearAudio();
-                //     if(videoStreamRef.current)
-                //         await closeMediaStream(videoStreamRef.current);
-                //     if(audioStreamRef.current)
-                //         await closeMediaStream(audioStreamRef.current);
-                //     await client.leave();
-                //     dispatch(setCameraData({data: {active: false}}));
-                //     setCallState('hangup');
-                //     setTimeout(() => {
-                //         if(window.opener) window.close();
-                //     }, 1000);
-                // }}
+                onClick={async () => {
+                    clearTimer(timerRef.current);
+                    ringRef.current?.clearAudio();
+                    socket.emit('hang-up',{
+                        target: target.id,
+                        id: origin?._id || id,
+                        type: target.type,
+                    });
+                    if(videoStreamRef.current)
+                        await closeMediaStream(videoStreamRef.current);
+                    if(audioStreamRef.current)
+                        await closeMediaStream(audioStreamRef.current);
+                    setOpenEndMessageType(true);
+                    await client.leave();
+                    disconnectAudio.audio.play();
+                    dispatch(setCameraData({data: {active: false}}));
+                    dispatch(setMicroData({data: {active: false}}));
+                    setTimeout(() => {
+                        if(window.opener) window.close();
+                    }, 2000);
+                    
+                }}
                 sx={{
                     borderRadius: 1,
                     boxShadow: 0,
-                    boxShadow: 'none',
                 }}
             >
                 <CallEndOutlinedIcon fontSize="small" />

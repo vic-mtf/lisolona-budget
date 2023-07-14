@@ -6,45 +6,48 @@ import SIgninPage from '../views/signin/SigninPage';
 import HomePage from "../views/home/HomePage";
 import Meeting from "../views/meeting/Meeting";
 
-const url = process.env.PUBLIC_URL.trim();
+const basename = process.env.PUBLIC_URL.trim();
 
 const protectedRoutes = (getters, setters) => [
     {
-        element: getters?.isStarted?.current ? <Cover getters={getters} setters={setters}/> : <LiosoNaBudget/>,
-        path:  `${url}/*`,
+        element: getters?.isStarted?.current ? 
+        <Cover getters={getters} setters={setters}/> : <LiosoNaBudget/>,
+        path:  '/*'
     },
 ];
 const unprotectedRouter = (getters, setters) => [
     {
         element: <Navigate to="/home"/>,
-        path: `${url}/*`,
+        path: '/*',
     },
     {
         element: <HomePage/>,
-        path:  `${url}/home/*`,
+        path:  '/home/*',
     },
     {
         element: <SIgninPage/>,
-        path:  `${url}/account/signin`,
+        path:  '/account/signin/*',
     },
 ];
 
-const bublicsRoutes = () => [
+const publicsRoutes = () => [
     {
         element: <AppTest/>,
         path: '/test',
     },
     {
         element: <Meeting/> ,
-        path: `${url}/meeting/*`,
+        path: '/meeting/*',
     }
 ];
 
 const router = (getters, setters) => createBrowserRouter([
-    ...bublicsRoutes(getters, setters),
+    ...publicsRoutes(getters, setters),
     ...getters.connected ? 
     protectedRoutes(getters, setters) : 
     unprotectedRouter(getters, setters)
-]);
+],{
+    basename,
+});
 
 export default router;
