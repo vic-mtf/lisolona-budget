@@ -1,6 +1,6 @@
 import LoadingItem from "../items/LoadingItem";
 
-export default function LoadingList ({loading, lengthItem = 8}) {
+export default function LoadingList ({loading, lengthItem = 4}) {
     return (
         loading &&
          (() => {

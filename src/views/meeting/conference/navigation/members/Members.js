@@ -66,8 +66,7 @@ export default function Members () {
             <div>
                 <MemberItem
                     {...member}
-                    // search={search}
-                    // onClick={() => handleClickContact(contact)}
+                    type={member.key}
                 />
                 {isDivisible && 
                 <Divider variant="inset" component="div" />}

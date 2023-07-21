@@ -17,7 +17,7 @@ export default function LoadingItem () {
                     <Skeleton 
                         variant="rounded" 
                         sx={{
-                            borderRadius: .25,
+                            borderRadius: 1,
                             width: 40,
                             height: 40,
                         }}
@@ -31,13 +31,13 @@ export default function LoadingItem () {
                             justifyContent="center"
                         >
                             <CustomSkeleton 
-                                sx={{borderRadius: .25}} 
+                                sx={{borderRadius: 1}} 
                                 variant="rectangular" 
                                 height={20} 
                                 width="100%"
                             />
                             <CustomSkeleton 
-                                sx={{borderRadius: .25,}} 
+                                sx={{borderRadius: 1,}} 
                                 variant="rectangular" 
                                 height={10} 
                                 width="70%"

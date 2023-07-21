@@ -6,7 +6,10 @@ const initialState = {
     display: 'auto', //|| 'grid' || 'list',
     nav: null, //|| 'participant' || 'message' || 'option',
     cameraView: 'float', // || 'float' || 'content',
+    handRaised: false,
+
 };
+
 // location
 const conference = createSlice({
     name: 'conference',

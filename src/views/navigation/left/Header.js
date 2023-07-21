@@ -82,7 +82,7 @@ export default function Header({ onChangeNavigation, navigation, onChangeSearch 
                 <BottomNavigation
                     showLabels
                     value={navigation}
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', my: 1 }}
                     onChange={onChangeNavigation}
                 >
                     {

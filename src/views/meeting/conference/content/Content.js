@@ -35,12 +35,7 @@ export default function Content () {
                     alignItems: 'center',
                 }}
             >
-            <BorderAnimate
-                visible={false}
-            />
-                <GridDataDisplay
-                    data={data}
-                />
+                <RaiseHandWrapper/>
                 {participants.length === 0 &&
                 <Typography
                     variant="h5"
@@ -59,5 +54,14 @@ export default function Content () {
             </Box>
             <ActionsWrapper/>
         </>
+    );
+}
+
+const RaiseHandWrapper = () => {
+    const handRaised = useSelector(store => store.conference.handRaised);
+    return (
+        <BorderAnimate
+            visible={handRaised}
+        />
     );
 }

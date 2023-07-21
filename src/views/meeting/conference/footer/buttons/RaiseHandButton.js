@@ -1,9 +1,18 @@
 import BackHandOutlinedIcon from '@mui/icons-material/BackHandOutlined';
 import IconButton from '../../../../../components/IconButton';
 import { Stack } from '@mui/material';
-import Typography from '../../../../../components/Typography';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback } from 'react';
+import { setConferenceData } from '../../../../../redux/conference';
 
-export default function RaiseHandButton ({getVideoStream}) {
+export default function RaiseHandButton () {
+    const handRaised = useSelector(store => store.conference.handRaised);
+    const dispatch = useDispatch();
+
+    const handleRaiseHand = useCallback(() => {
+        const state = !handRaised;
+        dispatch(setConferenceData({ data: { handRaised: state}}));
+    },[handRaised, dispatch]);
 
     return (
         <Stack
@@ -17,7 +26,8 @@ export default function RaiseHandButton ({getVideoStream}) {
                 <IconButton
                     size="small"
                     color="primary"
-                    disabled
+                    onClick={handleRaiseHand}
+                    selected={handRaised}
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,
