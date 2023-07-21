@@ -9,6 +9,7 @@ import Header from '../../prepare-device/Header';
 import { formatNames } from '../footer/MeetingStatus';
 import formatDuration from '../../../../utils/formatDuration';
 import { useSelector } from 'react-redux';
+import getFullName from '../../../../utils/getFullName';
 
 export default function EndMeeting({ open, type }) {
     const [{ meetingData }, { settersMembers }] = useMeetingData();
@@ -19,7 +20,7 @@ export default function EndMeeting({ open, type }) {
         settersMembers.getTableSubsetByFilter(({id}) => id !== user?.id)
         .map(({identity:target}) => ({
             id: target?._id,
-            name: `${target?.fname} ${target?.lname || ''} ${target?.mname || ''}`,
+            name: getFullName(target),
             email: target?.email,
             avatarSrc: target?.imageUrl,
         }))

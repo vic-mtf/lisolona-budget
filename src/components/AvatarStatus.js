@@ -10,7 +10,7 @@ import getShort from "../utils/getShort";
 import { useSocket } from "../utils/SocketIOProvider";
 import { useSelector } from "react-redux";
 
-function AvatarStatus ({type, name, avatarSrc, id}) {
+function AvatarStatus ({type, name, avatarSrc, id, invisible}) {
     const status = useSelector(store => store.status[id]);
     const isEmittedRef = useRef(true);
     const socket = useSocket();
@@ -25,14 +25,14 @@ function AvatarStatus ({type, name, avatarSrc, id}) {
     }), [background, text]);
 
     useEffect(() => {
-        if(!status) {
+        if(!status && !invisible) {
             isEmittedRef.current = true;
             if(type === 'direct' && isEmittedRef.current) {
                 socket.emit('status', {who: id});
                 isEmittedRef.current = false;
             }
         }
-    }, [type, socket, id, status]);
+    }, [type, socket, id, status, invisible]);
 
     return (
         <ListItemAvatar>
@@ -42,6 +42,7 @@ function AvatarStatus ({type, name, avatarSrc, id}) {
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 variant="dot"
                 online={status === 'online'}
+                invisible={invisible}
             >
                 <AvatarFadeLoading
                     src={avatarSrc}
@@ -51,6 +52,9 @@ function AvatarStatus ({type, name, avatarSrc, id}) {
                     sx={{
                         ...avatarSx,
                         textTransform: 'capitalize',
+                        ...invisible ? {
+                            border: 'none',
+                        } : {}
                     }}
                 />
             </CustomBadge>}

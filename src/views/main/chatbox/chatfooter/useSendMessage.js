@@ -19,14 +19,14 @@ export default function useSendMessage ({handleChange, editorState, target, file
         handleChange(editorStateEmpty(editorState));
         const id = (Date.now() + 1).toString(16) + target.id;
         if(files?.length) {
-           const {remonteData, localData} = processData(files, {
+           const {remoteData, localData} = processData(files, {
                 target, 
                 date: new Date()
             });
             localData?.forEach((message, index) => {
                 db.messages.add(message).then(
                     () => {
-                        const data = remonteData[index];
+                        const data = remoteData[index];
                         sendFile({
                             data,
                             downloadsRef,

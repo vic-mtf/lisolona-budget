@@ -7,6 +7,7 @@ import Menu from '../../../../../components/Menu';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import options from './options';
 import { useSelector } from 'react-redux';
+import getFullName from '../../../../../utils/getFullName';
 
 export default function MoreOption ({theme}) {
     const anchorElRef = useRef();
@@ -22,7 +23,7 @@ export default function MoreOption ({theme}) {
                     role,
                     id: user?._id,
                     origin: user,
-                    name: `${user?.fname || ''} ${ user?.lname || ''} ${user?.mname || ''}`.trim(),
+                    name: getFullName(user),
                 })
             )?.filter(name => name),
         };

@@ -20,18 +20,20 @@ export default function AudioTrackView ({avatarSrc, id, audioTrack}) {
         fontSize: 40,
     }), [background, text]);
 
-    useLayoutEffect(() => {
-        if(avatarSrc || id) {
-            const getBackground = avatarSrc ? 
-            generateBackgroundFromImage : generateBackgroundFromId;
-            const key = avatarSrc ? 'url' : 'id';
-            const value = avatarSrc || id;
-            getBackground({[key]: value}).then(img => {
-                rootRef.current.style.background = `url(${img})`;
-                rootRef.current.style.backgroundSize = 'cover';
-            })
-        }
-    },[avatarSrc, id]);
+    // useLayoutEffect(() => {
+    //     if(avatarSrc || id) {
+    //         const getBackground = avatarSrc ? 
+    //         generateBackgroundFromImage : generateBackgroundFromId;
+    //         const key = avatarSrc ? 'url' : 'id';
+    //         const value = avatarSrc || id;
+    //         getBackground({[key]: value}).then(img => {
+    //             if(rootRef?.current) {
+    //                 rootRef.current.style.background = `url(${img})`;
+    //                 rootRef.current.style.backgroundSize = 'cover';
+    //             }
+    //         })
+    //     }
+    // },[avatarSrc, id]);
 
     return (
         <MuiBox
@@ -66,7 +68,7 @@ export default function AudioTrackView ({avatarSrc, id, audioTrack}) {
                 size={100}
                 maxSize={150}
                 radius={5}
-                color={avatarSx.color}
+                color={avatarSx.bgcolor}
             />
                 <MuiBox
                     sx={{

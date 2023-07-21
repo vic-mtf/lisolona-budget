@@ -4,6 +4,7 @@ const initialState = {
     target: null,
     notifications: null,
     calls: null,
+    dialog: null,
 };
 
 const data = createSlice({

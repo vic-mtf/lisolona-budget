@@ -10,6 +10,7 @@ export default function DataProvider({children}) {
     const voicesRef = useRef([]);
     const videosRef = useRef([]);
     const audioStreamRef = useRef(null);
+    const screenStreamRef = useRef(null);
     const videoStreamRef = useRef(null);
     const secretCodeRef = useRef((Date.now() * 100).toString(16));
     const client = useMemo(() => 
@@ -26,6 +27,7 @@ export default function DataProvider({children}) {
             videosRef,
             audioStreamRef,
             videoStreamRef,
+            screenStreamRef,
             secretCodeRef,
             client,
         },

@@ -9,11 +9,14 @@ import { useEffect } from "react";
 export default function InputCode ({size, length, values, onChange, onComplete, type}) {
     const [codes, setCodes] = useState(values.slice(0, length));
     const rootRef = useRef();
+    const changingRef = useRef(true);
     const handleChange = useCallback(({event, index}) => {
         const value = event.target.value?.trim()?.charAt(0);
         onChange(event, {index, value});
         const inputs = rootRef.current.querySelectorAll('input');
         const nextInput = inputs[index + 1];
+        if(index < length)
+            changingRef.current = true;
         if(verifyType(type, value) || value === '') {
             if(value) {
                 event.target?.blur();
@@ -21,7 +24,7 @@ export default function InputCode ({size, length, values, onChange, onComplete, 
                 setCodes(codes => [...codes, value]);
             }
         }
-    }, [type, onChange]);
+    }, [type, onChange, length]);
 
     const handleDelete = useCallback(({event, notControlled}) => {
         const inputs = rootRef.current.querySelectorAll('input');
@@ -34,8 +37,11 @@ export default function InputCode ({size, length, values, onChange, onComplete, 
     }, [codes]);
 
     useEffect(() => {
-        if(codes.length === length)
+        if(codes.length === length && changingRef.current) {
             onComplete(codes);
+            changingRef.current = false;
+        }
+            
     }, [codes, length, onComplete])
 
     const inputs = useMemo(() => new Array(length).fill('_').map((_,index, __) => {

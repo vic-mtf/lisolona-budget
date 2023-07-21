@@ -28,7 +28,7 @@ export default function useTableRef(initialTable=[]) {
       if (index !== -1) {
         const updatedTable = [...table.current];
         const currentObject = updatedTable[index];
-        updatedTable[index] = mergeObjects(updatedObject, currentObject);
+        updatedTable[index] = mergeObjects(currentObject, updatedObject);
         setTable(updatedTable);
       } else {
         addObject(updatedObject);
@@ -188,7 +188,7 @@ export default function useTableRef(initialTable=[]) {
           const updatedObject = { ...table.current[objectIndex], [field]: value };
           const updatedTable = [...table.current];
           const object = updatedTable[objectIndex];
-          updatedTable[objectIndex] = mergeObjects(updatedObject, object);
+          updatedTable[objectIndex] = mergeObjects(object, updatedObject);
           setTable(updatedTable);
         }
       }
@@ -238,9 +238,11 @@ export default function useTableRef(initialTable=[]) {
         }
       }
       
-      function addObjects(newObjects) {
+      function addObjects(newObjects=[]) {
         // Ajouter plusieurs objets au tableau
-        setTable([...table.current, ...newObjects]);
+        newObjects.forEach(object => {
+          updateObject(object)
+        });
       }
       
       function deleteObjectsByField(field, value) {

@@ -29,7 +29,6 @@ export default function FooterButtons ({videoRef}) {
         }).then(stream => {
             videoStreamRef.current = stream;
             videoRef.current.srcObject = stream;
-            console.log(videoRef);
             dispatch(setCameraData({data: {active: true}}));
         }).catch(() => {});
     }, [dispatch, videoStreamRef, videoRef]);

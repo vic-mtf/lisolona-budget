@@ -1,5 +1,5 @@
 export default function processData(array, object) {
-  const remonteData = array.map(obj => {
+  const remoteData = array.map(obj => {
     let fileType = obj.File.type.startsWith('video/') ? 'media' :
       obj.File.type.startsWith('image/') ? 'media' :
       obj.File.type.startsWith('audio/') ? 'media' : 'doc';
@@ -38,5 +38,5 @@ export default function processData(array, object) {
     };
   });
 
-  return {remonteData, localData};
+  return {remoteData, localData};
 }

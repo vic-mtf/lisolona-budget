@@ -1,14 +1,17 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSocket } from "../../../../utils/SocketIOProvider";
-import mssAudio  from '../../../../assets/Eventually-Sms.mp3';
+import signal_audio  from '../../../../assets/Eventually-Sms.mp3';
 import getData from '../../../../utils/getData';
 import { setStatus } from "../../../../redux/status";
+import useAudio from "../../../../utils/useAudio";
+import JoinMeetingByCode from "./JoinMeetingByCode";
 
 export default function ActionWrapper () {
     const targetId = useSelector(store => store.data?.targetId);
     const chatGroups = useSelector(store => store.data.chatGroups);
     const user = useSelector(store => store.user);
+    const signalAudio = useAudio(signal_audio);
     const savedChatIdRef = useRef(targetId);
     const socket = useSocket();
     const dispatch = useDispatch();
@@ -19,9 +22,7 @@ export default function ActionWrapper () {
         };
         const handleSignaling = ({invitations}) => {
             if(invitations?.length) {
-                const audio = new Audio();
-                audio.src = mssAudio;
-                audio.autoplay = true;
+                signalAudio.audio.play();
             }
         };
         const handleSignalCurrentMeeting = ({from, details}) => {
@@ -76,5 +77,9 @@ export default function ActionWrapper () {
         }
     },[targetId]);
 
-    return null;
+    return (
+        <>
+            <JoinMeetingByCode/>
+        </>
+    )
 }

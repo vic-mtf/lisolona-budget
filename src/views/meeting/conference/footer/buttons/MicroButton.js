@@ -1,6 +1,6 @@
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
-import { Alert, Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
+import { Alert, Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
@@ -14,7 +14,6 @@ import store from '../../../../../redux/store';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import { toggleStreamActivation } from '../../../../home/checking/FooterButtons';
-// import { toggleStreamActivation } from './FooterButtons';
 
 export default function MicroButton () {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -66,16 +65,18 @@ export default function MicroButton () {
     const handlerTogleMicro = useCallback(async () => {
         if(permission?.state !== 'denied') {
             const stream = audioStreamRef.current;
-            if(stream) {
+            if(stream && micro.allowed) {
                 setLoading(true);
                 toggleStreamActivation(stream, 'audio');
                 const state = !micro.active;
-                if(micro.published && micro.active) 
-                    await client.unpublish([localTrackRef.current.audioTrack]);
+                const audioTrack = localTrackRef.current.audioTrack;
+                if(micro.published && micro.active && audioTrack) 
+                    await client.unpublish([audioTrack]);
                 if(!micro.published && !micro.active) {
                     const [mediaStreamTrack] = stream.getAudioTracks();
-                    localTrackRef.current.audioTrack = AgoraRTC.createCustomAudioTrack({mediaStreamTrack})
-                    await client.publish([localTrackRef.current.audioTrack]);
+                    const audioTrack = AgoraRTC.createCustomAudioTrack({mediaStreamTrack});
+                    localTrackRef.current.audioTrack = audioTrack;
+                    await client.publish([audioTrack]);
                 }
                 dispatch(setMicroData({data: {active: state, published: state}}));
                 setLoading(false);
@@ -107,54 +108,56 @@ export default function MicroButton () {
     return (
         <Stack
             sx={{
-                border: theme => `1px solid ${theme.palette.divider}`,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                p: .2,
             }}
-            borderRadius={1}
             spacing={.1}
             direction="row"
         >
-            <Badge
-                badgeContent={
-                    <PriorityHighRoundedIcon
-                        fontSize="small"
-                        sx={{
-                            bgcolor: 'error.main', 
-                            color: 'white',
-                            borderRadius: 25,
-                        }}
-                    />
-                }
-                invisible={micro.allowed || !permission}
-                overlap="circular"
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-            > 
-                <Fab
-                    variant="circular"
-                    size="small"
-                    onClick={handlerTogleMicro}
-                    color={micro?.active ? "primary" : "inherit"}
-                    disabled={permission?.state === "denied" || loading}
-                    sx={{
-                        zIndex: 0,
-                        borderRadius: 1,
-                        boxShadow: 0,
+            <Tooltip
+                title={`${micro.active ? 'Desactiver' : 'Activer'} le micro`}
+                arrow
+            >
+                <Badge
+                    badgeContent={
+                        <PriorityHighRoundedIcon
+                            fontSize="small"
+                            sx={{
+                                bgcolor: 'error.main', 
+                                color: 'white',
+                                borderRadius: 25,
+                            }}
+                        />
+                    }
+                    invisible={micro.allowed || !permission}
+                    overlap="circular"
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
                     }}
-                >
-                    {micro?.active ? 
-                    <MicNoneOutlinedIcon
-                        fontSize="small"
-                    /> : <MicOffOutlinedIcon
-                        fontSize="small"
-                    />}
-                </Fab>
-            </Badge>
+                > 
+                    <Fab
+                        variant="circular"
+                        size="small"
+                        onClick={handlerTogleMicro}
+                        color={micro?.active ? "primary" : "inherit"}
+                        disabled={permission?.state === "denied" || loading}
+                        sx={{
+                            zIndex: 0,
+                            borderRadius: 1,
+                            boxShadow: 0,
+                        }}
+                    >
+                        {micro?.active ? 
+                        <MicNoneOutlinedIcon
+                            fontSize="small"
+                        /> : <MicOffOutlinedIcon
+                            fontSize="small"
+                        />}
+                    </Fab>
+                </Badge>
+            </Tooltip>
             <IconButton
                 disabled
             >

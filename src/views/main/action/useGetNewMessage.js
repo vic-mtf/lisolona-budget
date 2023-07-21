@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useSocket } from "../../../utils/SocketIOProvider";
 import answerRingtone from "../../../utils/answerRingtone";
 import db from "../../../database/db";
+import getFullName from "../../../utils/getFullName";
 
 export default function useGetNewMessage () {
     const userId = useSelector(store => store.user.id);
@@ -16,10 +17,10 @@ export default function useGetNewMessage () {
             const message = messages[messages.length - 1];
             const id = message.clientId || message._id;
             const sender = message.sender;
-            const name = `${sender?.fname || ''} ${sender?.lname || ''} ${sender?.mname || ''}`.trim();
+            const name = getFullName(sender);
             const isMine = sender?._id === userId;
             const localMessage = {
-                remonteId: message?._id,
+                remoteId: message?._id,
                 id,
                 type: message.type,
                 subType: message?.subtype?.toLowerCase(),
@@ -38,14 +39,14 @@ export default function useGetNewMessage () {
             db?.messages.get(id).then(async data => {
                 if(data) {
                     const localTime = (new Date (data.updatedAt)).getTime();
-                    const remonteTime = (new Date (message.updatedAt)).getTime();
-                    if(localTime !== remonteTime || data.sended !== message.sended) {
+                    const remoteTime = (new Date (message.updatedAt)).getTime();
+                    if(localTime !== remoteTime || data.sended !== message.sended) {
                         db?.messages.update(id, {
                             origin: message,
                             updatedAt: message.updatedAt,
                             name,
                             avatarSrc: sender?.imageUrl,
-                            remonteId: message?._id,
+                            remoteId: message?._id,
                             sended: true,
                         });
                     }
@@ -60,8 +61,8 @@ export default function useGetNewMessage () {
             db?.discussions.get(localMessage.targetId).then(data => {
                 if(data) {
                     const localTime = (new Date (data.lastNotice.updatedAt)).getTime();
-                    const remonteTime = (new Date (message.updatedAt)).getTime();
-                    if(isNaN(localTime) ||  localTime < remonteTime) {
+                    const remoteTime = (new Date (message.updatedAt)).getTime();
+                    if(isNaN(localTime) ||  localTime < remoteTime) {
                         db?.discussions.update(localMessage.targetId, {
                             updatedAt: new Date (message.updatedAt),
                             lastNotice: message,

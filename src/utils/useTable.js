@@ -18,7 +18,7 @@ export default function useTable(initialTable=[]) {
       if (index !== -1) {
         const updatedTable = [...table];
         const currentObject = updatedTable[index];
-        updatedTable[index] = mergeObjects(updatedObject, currentObject);
+        updatedTable[index] = mergeObjects(currentObject, updatedObject);
         setTable(updatedTable);
       } else {
         addObject(updatedObject);
@@ -178,7 +178,7 @@ export default function useTable(initialTable=[]) {
           const updatedObject = { ...table[objectIndex], [field]: value };
           const updatedTable = [...table];
           const object = updatedTable[objectIndex];
-          updatedTable[objectIndex] = mergeObjects(updatedObject, object);
+          updatedTable[objectIndex] = mergeObjects(object, updatedObject);
           setTable(updatedTable);
         }
       }

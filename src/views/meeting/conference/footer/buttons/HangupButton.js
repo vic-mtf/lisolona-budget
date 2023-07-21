@@ -1,4 +1,4 @@
-import { Fab, ThemeProvider, createTheme, useTheme } from "@mui/material";
+import { Fab, ThemeProvider, Tooltip, createTheme, useTheme } from "@mui/material";
 import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
 import useAudio from  "../../../../../utils/useAudio";
 import disconnect_src from "../../../../../assets/calldisconnect.mp3";
@@ -27,51 +27,54 @@ export default function HangupButton () {
     const dispatch = useDispatch()
 
     return (
-        <ThemeProvider
-            theme={createTheme({
-                palette: {
-                    ...theme.palette,
-                    primary: {
-                        ...theme.palette.primary,
-                        main: '#f50057',
-                        dark: '#ab003c',
-                        light: '#f73378'
+       
+            <ThemeProvider
+                theme={createTheme({
+                    palette: {
+                        ...theme.palette,
+                        primary: {
+                            ...theme.palette.primary,
+                            main: '#f50057',
+                            dark: '#ab003c',
+                            light: '#f73378'
+                        }
                     }
-                }
-            })}
-        >
-            <Fab
-                size="small"
-                color="primary"
-                onClick={async () => {
-                    clearTimer(timerRef.current);
-                    ringRef.current?.clearAudio();
-                    socket.emit('hang-up',{
-                        target: target.id,
-                        id: origin?._id || id,
-                        type: target.type,
-                    });
-                    if(videoStreamRef.current)
-                        await closeMediaStream(videoStreamRef.current);
-                    if(audioStreamRef.current)
-                        await closeMediaStream(audioStreamRef.current);
-                    setOpenEndMessageType(true);
-                    await client.leave();
-                    disconnectAudio.audio.play();
-                    dispatch(setCameraData({data: {active: false}}));
-                    dispatch(setMicroData({data: {active: false}}));
-                    setTimeout(() => {
-                        if(window.opener) window.close();
-                    }, 2000);
-                    
-                }}
-                sx={{
-                    borderRadius: 1,
-                    boxShadow: 0,
-                }}
-            >
-                <CallEndOutlinedIcon fontSize="small" />
-            </Fab>
-        </ThemeProvider>
+                })}
+            > <Tooltip title="Raccrocher" arrow>
+                <Fab
+                    size="small"
+                    color="primary"
+                    onClick={async () => {
+                        clearTimer(timerRef.current);
+                        ringRef.current?.clearAudio();
+                        socket.emit('hang-up',{
+                            target: target.id,
+                            id: origin?._id || id,
+                            type: target.type,
+                        });
+                        if(videoStreamRef.current)
+                            await closeMediaStream(videoStreamRef.current);
+                        if(audioStreamRef.current)
+                            await closeMediaStream(audioStreamRef.current);
+                        setOpenEndMessageType(true);
+                        await client.leave();
+                        disconnectAudio.audio.play();
+                        dispatch(setCameraData({data: {active: false}}));
+                        dispatch(setMicroData({data: {active: false}}));
+                        setTimeout(() => {
+                            if(window.opener) window.close();
+                        }, 2000);
+                        
+                    }}
+                    sx={{
+                        borderRadius: 1,
+                        boxShadow: 0,
+                    }}
+                >
+                    <CallEndOutlinedIcon fontSize="small" />
+                </Fab>
+                </Tooltip>
+            </ThemeProvider>
+        
     );
 }

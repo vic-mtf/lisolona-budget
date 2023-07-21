@@ -1,8 +1,10 @@
-import { Drawer, Toolbar } from "@mui/material";
+import { Drawer } from "@mui/material";
 import { drawerWidth } from "../conference";
+import { useSelector } from "react-redux";
+import Members from "./members/Members";
 
 export default function Navigation ({open}) {
-    
+    const nav = useSelector(store => store.conference.nav);
     return (
         <Drawer
             variant="persistent"
@@ -18,8 +20,7 @@ export default function Navigation ({open}) {
             },
             }}
         >
-            
-            <Toolbar />
+            {/participant/.test(nav) && <Members />}
         </Drawer>
     )
 }

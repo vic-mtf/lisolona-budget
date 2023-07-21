@@ -3,11 +3,12 @@ import InputBase from '@mui/material/InputBase';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useState } from 'react';
 
-export default function SearchBar ({onChangeSearch}) {
+export default function SearchBar ({onChangeSearch, onChange:hdChange, value:dfValue}) {
   const [value, setValue] = useState('');
   const onChange = event => {
     setValue(event.target.value);
-    onChangeSearch(event)
+    if(typeof onChangeSearch === 'function')
+      onChangeSearch(event)
   };
 
   return (
@@ -20,8 +21,8 @@ export default function SearchBar ({onChangeSearch}) {
             sx={{fontSize: 15}}
             inputProps={{ 
               'aria-label': 'search',
-              onChange,
-              value,
+              onChange: hdChange || onChange,
+              value: dfValue || value,
             }}
           />
         </Search>

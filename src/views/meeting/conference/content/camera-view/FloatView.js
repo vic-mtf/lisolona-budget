@@ -42,7 +42,7 @@ const FloatView = styled(({ref, ...props}) => {
   })(({theme}) => ({
     height: 180,
     width: 180 * 16 / 9,
-    boxShadow: theme.shadows[1],
+    boxShadow: theme.shadows[2],
     borderRadius: theme.spacing(1, 1, 1, 1),
     top: '5px',
     right: '5px',

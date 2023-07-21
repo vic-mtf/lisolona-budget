@@ -1,4 +1,4 @@
-import { Toolbar, Box as MuiBox, styled } from "@mui/material";
+import { Toolbar, Box as MuiBox, styled, Stack } from "@mui/material";
 import MeetingStatus from "./MeetingStatus";
 import CameraButton from "./buttons/CameraButton";
 import MicroButton from "./buttons/MicroButton";
@@ -24,9 +24,21 @@ export default function Footer () {
             <Container
                 justifyContent="center"
                 gap={2}
-            >
-                <CameraButton/>
-                <MicroButton/>
+            >  <Stack
+                    sx={{
+                        border: theme => `1px solid ${theme.palette.divider}`,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        p: .2,
+                    }}
+                    borderRadius={1}
+                    spacing={2}
+                    direction="row"
+                >
+                    <CameraButton/>
+                    <MicroButton/>
+                </Stack>
                 <ScreenSharingButton/>
                 <HangupButton/>
             </Container>

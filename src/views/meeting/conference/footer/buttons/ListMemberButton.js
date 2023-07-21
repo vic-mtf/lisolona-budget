@@ -1,13 +1,13 @@
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import IconButton from '../../../../../components/IconButton';
-import { Badge, Stack } from '@mui/material';
+import { Badge, Stack, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
-import { setData } from '../../../../../redux/conference';
+import { setConferenceData } from '../../../../../redux/conference';
 
-export default function ListMemberButton ({getVideoStream}) {
+export default function ListMemberButton () {
     const nav = useSelector(store => store.conference.nav);
-    const selected = useMemo(() => nav === 'participant', [nav]);
+    const selected = useMemo(() => /participant-open/.test(nav), [nav]);
     const dispatch = useDispatch();
 
     return (
@@ -19,19 +19,19 @@ export default function ListMemberButton ({getVideoStream}) {
             }}
             spacing={.1}
         >
+            <Tooltip title="Participants" arrow>
                 <IconButton
                     size="small"
                     color="primary"
                     selected={selected}
-                    disabled
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,
                         boxShadow: 'none',
                     }}
                     onClick={() => dispatch(
-                        setData({
-                             data :{ nav: selected ? null : 'participant' }
+                        setConferenceData({
+                             data :{ nav: selected ? 'participant-close' : 'participant-open' }
                         })
                     )}
                 >
@@ -47,6 +47,7 @@ export default function ListMemberButton ({getVideoStream}) {
                         <GroupsOutlinedIcon/>
                     </Badge>
                 </IconButton>
+                </Tooltip>
         </Stack>
     );
 }

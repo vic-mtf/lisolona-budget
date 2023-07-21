@@ -23,13 +23,12 @@ export default function AnswerButton () {
     const dispatch = useDispatch();
 
     const handleUserJoin = useCallback(async () => {
-        
         if(mode === 'incoming') {
             ringRef.current?.clearAudio();
             clearTimer(timerRef.current);
             socket.emit('join', { id });
             dispatch(setData({
-                data : { mode: joined ? 'on' : 'join' }
+                data : { mode: joined ? 'on' : 'join', startedAt: Date.now() }
             }));
             const streams = [];
             if(microActive && audioStreamRef.current) {

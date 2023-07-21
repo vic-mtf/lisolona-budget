@@ -28,18 +28,19 @@ import { useDispatch } from "react-redux";
 // type = incoming | outgoing | missed
 // format = audio | video
 
-export default function CurrentCallContactItem (props) {
-    const {
-        avatarSrc, 
-        name, 
-        date, 
-        type, 
-        format, 
-        id,
-    } = props;
+export default function CurrentCallContactItem ({
+    avatarSrc, 
+    name, 
+    date, 
+    type, 
+    format, 
+    id,
+}) {
+  
     const [contextMenu, setContextMenu] = React.useState(null);
     const {iconCallType, color } = useCallParams(type, format);
     const dispatch  = useDispatch();
+
     const calls = (
         <Typography 
         component="span" 
@@ -60,26 +61,6 @@ export default function CurrentCallContactItem (props) {
     const handleClick =  event => {
         event.preventDefault();
         const root = document.getElementById('root');
-        const name = '_join-current-meeting';
-        const { options, date, from } = props;
-        const customEvent = new CustomEvent(name, {
-            detail: {name, ...props}
-        });
-        // dispatch(addTeleconference({
-        //     key: 'data',
-        //     data: {
-        //         mode: 'join',
-        //         meetingId: id,
-        //         privileged: true,
-        //         date,
-        //         videoMirrorMode: 'grid',
-        //         from,
-        //         response: 'join',
-        //         type: 'room',
-        //         audio: true,
-        //     }
-        // }));
-        root.dispatchEvent(customEvent);
     };
 
     return (

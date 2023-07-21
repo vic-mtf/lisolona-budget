@@ -1,6 +1,5 @@
 import { 
     ListItemButton, 
-    ListItemAvatar, 
     ListItemText,
     Menu,
     ListItem,
@@ -8,18 +7,22 @@ import {
     Stack,
     Tooltip,
 } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import IconButton from "../../../../components/IconButton";
-import CustomBadge from "../../../../components/CustomBadge";
 import highlightWord from "../../../../utils/highlightWord";
 import { useDispatch, useSelector } from "react-redux";
 import AvatarStatus from "../../../../components/AvatarStatus";
+import openNewWindow from "../../../../utils/openNewWindow";
+import { encrypt } from "../../../../utils/crypt";
+import { setData } from "../../../../redux/meeting";
+import { useData } from "../../../../utils/DataProvider";
+import { useSocket } from "../../../../utils/SocketIOProvider";
 
-export default function ContactItem (props) {
+function ContactItem (props) {
     const {
         avatarSrc, 
+        avatarBuffer,
         name, 
         email, 
         onClick,
@@ -28,10 +31,13 @@ export default function ContactItem (props) {
         id,
         search,
     } = props;
-    const mode = useSelector(store => store?.metting?.mode);
-    const disabled = useMemo(() => mode !== 'none');
+    const mode = useSelector(store => store?.meeting?.mode);
+    const disabled = useMemo(() => mode !== 'none', [mode]);
     const [contextMenu, setContextMenu] = useState(null);
     const [showSecondaryAction, setShowSecondaryAction] = useState(false);
+    const socket = useSocket();
+    const [{secretCodeRef}] = useData();
+    const dispatch = useDispatch();
 
     const handleContextMenu = event => {
         event.preventDefault();
@@ -41,21 +47,29 @@ export default function ContactItem (props) {
             contextMenu ? {mouseX, mouseY} : null,
         );
     };
-    const handleCallContact = mediaType => () => {
-        const root = document.getElementById('root');
-        const name = '_call-contact';
-        const detail = {
-            target: {
-                avatarSrc: props.avatarSrc, 
-                id: props.id,
-                name: props.name,
-                type: 'direct'
-            },
-            mediaType,
-        };
-        const customEvent = new CustomEvent(name,{detail})
-        root.dispatchEvent(customEvent);
-    };
+    const target = useMemo(() => ({
+        avatarSrc: avatarBuffer || avatarSrc, 
+        id,
+        name: props.name,
+        type: 'direct'
+    }), [avatarBuffer, avatarSrc, props.name, id]);
+
+    const handleCallContact = useCallback(() =>  {
+        const mode = 'outgoing';
+        const wd = openNewWindow({
+            url: '/meeting/',
+        });
+        wd.geidMeetingData = encrypt({
+            target,
+            mode,
+            secretCode: secretCodeRef.current,
+            defaultCallingState: 'before',
+        });
+        if(wd) {
+            dispatch(setData({ data: {mode}}));
+            wd.openerSocket = socket;
+        }
+    }, [dispatch, secretCodeRef, target, socket]);
 
     return (
         <React.Fragment>
@@ -63,23 +77,6 @@ export default function ContactItem (props) {
                 disablePadding
                 secondaryAction={ action ||
                     <Stack direction="row" spacing={1}>   
-                        {/* <Zoom in={showSecondaryAction}>  
-                            <div>   
-                                <Tooltip 
-                                    title={disabled ? "Un appel en cours..." : "Lancer un appel vidéo"} 
-                                    arrow
-                                >   
-                                    <div>  
-                                        <IconButton
-                                            onClick={handleCallContact('video')}
-                                            disabled={disabled}
-                                        >
-                                            <VideocamOutlinedIcon fontSize="small"/>
-                                        </IconButton>
-                                    </div>  
-                                </Tooltip>   
-                            </div>   
-                        </Zoom>  */}
                         <Zoom in={showSecondaryAction}>
                             <div>   
                                 <Tooltip title={disabled ? "Un appel en cours..." : "Lancer un appel"} 
@@ -87,7 +84,7 @@ export default function ContactItem (props) {
                                 >   
                                     <div>    
                                         <IconButton
-                                            onClick={handleCallContact('audio')}
+                                            onClick={handleCallContact}
                                             disabled={disabled}
                                         >
                                             <LocalPhoneOutlinedIcon fontSize="small"/>
@@ -108,7 +105,7 @@ export default function ContactItem (props) {
                     onClick={onClick}
                 >
                  <AvatarStatus
-                    avatarSrc={avatarSrc}
+                    avatarSrc={avatarBuffer || avatarSrc}
                     name={name}
                     id={id}
                  />   
@@ -156,3 +153,5 @@ export default function ContactItem (props) {
         </React.Fragment>
     )
 }
+
+export default React.memo(ContactItem);

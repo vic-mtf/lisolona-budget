@@ -10,7 +10,7 @@ export default function EmptyContentMessage ({title, description, show}) {
                 justifyContent="center"
                 alignItems="center"
                 component="li"
-                height="100%"
+                flex={1}
                 width="100%"
                 color="text.secondary"
                 spacing={1}

@@ -2,7 +2,7 @@ import { useLayoutEffect } from "react";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import { useData } from "../../../../utils/DataProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCameraData, setData, setMicroData } from "../../../../redux/meeting";
+import { setData } from "../../../../redux/meeting";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
 import clearTimer from "../../../../utils/clearTimer";
 ;
@@ -33,12 +33,15 @@ export default function useJoin(callState, setCallState) {
                     streams.push(localAudioTrack);
                 if(camera.active && videoStreamRef.current && !camera.published && localVideoTrack)
                     streams.push(localVideoTrack);
-                if(streams.length && joined)
+                if(streams.length && joined) {
                     await client.publish(streams);
-                if(localAudioTrack)
-                    dispatch(setMicroData({data: { published: true }}));
-                if(localVideoTrack)
-                    dispatch(setCameraData({data: { published: true }}));
+                    dispatch(setData({
+                        data: {
+                            micro: { published: Boolean(localAudioTrack) },
+                            camera: { published: Boolean(localVideoTrack) }
+                        }
+                    }))
+                }
             }
         };
         socket.on('join', handleUserJoin);

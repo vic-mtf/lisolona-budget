@@ -7,50 +7,35 @@ import ChatContactItem from '../items/DiscussionItem'
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
-import { addData } from '../../../../redux/data';
-import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
-//import Lists from './Lists';
+import { addData } from '../../../../redux/data'
 import { useLiveQuery } from 'dexie-react-hooks';
-import LoadingItem from '../items/LoadingItem';
 import Button from '../../../../components/Button';
 import db from '../../../../database/db';
-import { FixedSizeList as List } from "react-window";
-import CustomList from './CustomList';
+import CustomListItems from '../../../../components/CustomListItems';
+import filterByKeyword from '../../../../utils/filterByKeyword';
+import SearchBar from '../SearchBar';
+import IconButton from '../../../../components/IconButton';
+import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 
-export default function DiscussionList ({search, navigation}) {
+export default function DiscussionList ({navigation}) {
+    const [search, setSearch] = useState('');
     const discussions = useLiveQuery(() => 
        db?.discussions.orderBy('updatedAt')
-       .filter(({name}) =>
-            new RegExp(
-                search.trim().split(/\s/).join('|'),
-                'ig'
-            ).test(name)
-        ).reverse()
+       .filter(data => filterByKeyword(data, search)).reverse()
         .toArray()
     ,[search]);
 
-    const length = useMemo(() => discussions?.length, [discussions]);
-    
     return (navigation === 0 &&
         <React.Fragment>
             <Toolbar variant="dense">
-                
-                <Button
-                    children="Démarrer une discussion" 
-                    variant="outlined"
-                    color="inherit"
-                    sx={{mx: 'auto'}}
-                    startIcon={<AddCommentOutlinedIcon/>}
-                    onClick={() => {
-                        const name = '_auto_open_create_group';
-                        const customEvent = new CustomEvent(name, {
-                            detail: {name, mode: 'contact'}
-                        });
-                        document
-                        .getElementById('root')
-                        .dispatchEvent(customEvent);
-                    }}
+                <SearchBar
+                   // onChangeSearch={onChangeSearch}
+                   value={search}
+                   onChange={event => setSearch(event.target.value)}
                 />
+                <IconButton>
+                    <FilterListOutlinedIcon fontSize="small" />
+                </IconButton>
             </Toolbar>
             <ListItems
                 discussions={discussions}
@@ -63,26 +48,24 @@ export default function DiscussionList ({search, navigation}) {
 const  ListItems = ({discussions, search}) => {
     const dispatch = useDispatch();
     const id = useSelector(store => store.data.target?.id);
-
-    const handleClickDicussion = useCallback(data => event => {
+    const handleClickDiscussion = useCallback(data => event => {
         event?.preventDefault();
         dispatch(addData({key: 'target', data}));
     }, [dispatch]);
 
-    const rowRenderer = ({ index, style }) => {
-        const contact = discussions[index];
+    const customItem = useCallback((index, contact) => {
         return (
-          <div style={style}>
+          <div>
              <ChatContactItem 
                 {...contact}
                 selected={id === contact.id}
-                onClick={handleClickDicussion({
+                onClick={handleClickDiscussion({
                     id: contact?.id,
                     name: contact?.name,
                     members: contact?.members,
                     lastNotice: contact?.lastNotice,
                     createdBy: contact?.createdBy,
-                    avatarSrc: contact?.avatarSrc,
+                    avatarSrc: contact?.avatarBuffer || contact?.avatarSrc,
                     type: contact?.type,
                 })}
                 search={search}
@@ -92,9 +75,8 @@ const  ListItems = ({discussions, search}) => {
             }
           </div>
         );
-    };
+    }, [discussions, handleClickDiscussion, id, search]);
 
-    
     return (
         <React.Fragment> 
             <LoadingList loading={discussions === undefined}/>
@@ -104,10 +86,10 @@ const  ListItems = ({discussions, search}) => {
                 description={`Commencer une nouvelle discuction avec un contact.`}
             />
             
-            {discussions?.length &&
-            <CustomList
-                rowRenderer={rowRenderer}
-                itemCount={discussions.length}
+            {Boolean(discussions?.length) &&
+            <CustomListItems
+                data={discussions}
+                itemContent={customItem}
             />
             } 
         </React.Fragment>

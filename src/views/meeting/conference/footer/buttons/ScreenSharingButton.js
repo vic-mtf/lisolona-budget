@@ -1,71 +1,71 @@
 import StopScreenShareOutlinedIcon from '@mui/icons-material/StopScreenShareOutlined';
 import ScreenShareOutlinedIcon from '@mui/icons-material/ScreenShareOutlined';
-import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
-import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
+import { Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import getPermission from '../../../../../utils/getPermission';
-import { setCameraData } from '../../../../../redux/meeting';
+import { setCameraData, setScreenSharingData } from '../../../../../redux/meeting';
 import { useData } from '../../../../../utils/DataProvider';
-import IconButton from '../../../../../components/IconButton';
+import { useMeetingData } from '../../../../../utils/MeetingProvider';
+import store from '../../../../../redux/store';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import closeMediaStream from '../../../../../utils/closeMediaStream';
 
-export default function ScreenSharingButton ({getVideoStream}) {
-
+export default function ScreenSharingButton () {
     const screen = useSelector(store => store.meeting.screenSharing);
-    // const [permission, setPermission] = useState(null);
-    // const [{videoStreamRef}] = useData();
-    // const dispatch = useDispatch();
+    const   [{videoStreamRef, screenStreamRef, client}] = useData();
+    const [{localTrackRef}] = useMeetingData();
+    const [loading, setLoading] = useState();
+    const dispatch = useDispatch();
 
-    // const handleDispatchAllowed = useCallback(allowed => {
-    //     dispatch(setCameraData({data: {allowed}}));
-    // },[dispatch]);
-
-    // const handlerToggleCamera = useCallback(() => {
-        // if(permission?.state !== 'denied') {
-        //     const stream = videoStreamRef.current;
-        //     if(camera.allowed) {
-        //         if(stream) toggleStreamActivation(stream, 'video');
-        //         else  getVideoStream()
-        //         dispatch(setCameraData({data: {active: !camera?.active}}));
-        //     } else getVideoStream();
-        // } else {
-        //     //message video ici
-        // }
-    // }, [videoStreamRef, camera, permission, dispatch, getVideoStream]);
-    
-    // useLayoutEffect(() => {
-        // if(!permission)
-        //     getPermission('camera')
-        //     .then((permission) => {
-        //         setPermission(permission);
-        //         handleDispatchAllowed(permission.state === 'granted');
-        //     });
-        // const handleChangeState = event => {
-        //     const permission = event.target;
-        //     setPermission(permission);
-        //     handleDispatchAllowed(permission.state === 'granted');
-        // };
-        // permission?.addEventListener('change', handleChangeState);
-        // return () => {
-        //     permission?.removeEventListener('change', handleChangeState);
-        // };
-    // }, [permission, handleDispatchAllowed]);
+    const handleToggleScreenSharing = async event => {
+        const {videoTrack, audioTrack} = localTrackRef.current;
+        const cameraPublished = store.getState().meeting.camera.published;
+        const optionsDisplay = store.getState().meeting.screen.output;
+        setLoading(true);
+        if(screen.active) {
+            if(cameraPublished) {
+                const stream = videoStreamRef.current
+                const [mediaStreamTrack] = stream.getVideoTracks();
+                const videoTrack = localTrackRef.current.videoTrack;
+                await videoTrack.replaceTrack(mediaStreamTrack);
+            } else {
+                const videoTrack = localTrackRef.current.videoTrack;
+                await client.unpublish([videoTrack]);
+            }
+            await closeMediaStream(screenStreamRef.current);
+            dispatch(
+                setScreenSharingData({ data: {
+                active: false,
+                published: false,
+            }}));
+        } else {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia(optionsDisplay);
+                screenStreamRef.current = stream;
+                const [mediaStreamTrack] = stream.getVideoTracks();
+                const localVideoScreenTrack = AgoraRTC.createCustomVideoTrack({mediaStreamTrack});
+                if(cameraPublished && videoTrack) 
+                    await videoTrack.replaceTrack(mediaStreamTrack);
+                else {
+                    localTrackRef.current.videoTrack = localVideoScreenTrack;
+                    await client.publish([localVideoScreenTrack]);
+                }
+                dispatch(setScreenSharingData({ data: {
+                    active: true,
+                    published: true,
+                }}))
+            } catch(e) {
+                console.log('screen error: ', e)
+            }
+        }
+        setLoading(false);
+    };
 
     return (
-        <Stack
-            sx={{
-                border: theme => `1px solid ${theme.palette.divider}`,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                p: .2,
-            }}
-            borderRadius={1}
-            spacing={.1}
-            direction="row"
+        <Tooltip
+            title={`${screen.active ? 'Arreter le partage' : 'Partage'} d'écran`}
+            arrow
         >
             <Badge
                 badgeContent={
@@ -79,7 +79,6 @@ export default function ScreenSharingButton ({getVideoStream}) {
                     
                     />
                 }
-                //invisible={screen.allowed || !permission}
                 invisible
                 overlap="circular"
                 anchorOrigin={{
@@ -89,10 +88,9 @@ export default function ScreenSharingButton ({getVideoStream}) {
             > 
                 <Fab
                     size="small"
-                    // onClick={handlerToggleCamera}
+                    onClick={handleToggleScreenSharing}
                     color={screen?.active ? "primary" : "inherit"}
-                    //disabled={permission?.state === "denied"}
-                    disabled
+                    disabled={loading}
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,
@@ -104,11 +102,6 @@ export default function ScreenSharingButton ({getVideoStream}) {
                     <ScreenShareOutlinedIcon fontSize="small"/>}
                 </Fab>
             </Badge>
-            <IconButton
-                disabled
-            >
-                <ExpandMoreIcon/>
-            </IconButton>
-        </Stack>
+        </Tooltip>
     );
 }

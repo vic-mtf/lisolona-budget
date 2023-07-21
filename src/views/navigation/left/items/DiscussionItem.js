@@ -14,6 +14,7 @@ import Notice from "./Notice";
 
 function DiscussionItem ({
     avatarSrc, 
+    avatarBuffer,
     name, 
     lastNotice, 
     updatedAt,
@@ -48,7 +49,7 @@ function DiscussionItem ({
                 >
                 <AvatarStatus
                     id={otherProps.id}
-                    avatarSrc={avatarSrc}
+                    avatarSrc={avatarBuffer || avatarSrc}
                     type={type}
                     name={name}
                 />

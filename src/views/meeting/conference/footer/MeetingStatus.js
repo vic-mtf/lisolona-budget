@@ -5,13 +5,13 @@ import {
 } from '@mui/material';
 import Typography from '../../../../components/Typography';
 import { useMeetingData } from '../../../../utils/MeetingProvider';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import store from '../../../../redux/store';
 import { useSelector } from "react-redux";
 import formatDuration from '../../../../utils/formatDuration';
+import getFullName from '../../../../utils/getFullName';
 
 export default function MeetingStatus () {
-    
     return (
         <Stack
             //spacing={}
@@ -28,11 +28,11 @@ export default function MeetingStatus () {
                     }
                 }}
             >
-                <Typography color="text.secondary">
+                <Typography color="text.secondary" width={35}>
                     <Timer/>
                 </Typography>
                 <Divider orientation="vertical" sx={{borderWidth: 1}} flexItem />
-                <Typography color="text.secondary">{store.getState().meeting.id}</Typography>
+                <Typography color="text.secondary">{store.getState().meeting.meetingId}</Typography>
             </MuiBox>
         </Stack>
     )
@@ -50,7 +50,7 @@ const Name = () => {
         settersMembers.getTableSubsetByFilter(({id}) => id !== user?.id)
         .map(({identity:target}) => ({
             id: target?._id,
-            name: `${target?.fname} ${target?.lname || ''} ${target?.mname || ''}`,
+            name: getFullName(target),
             email: target?.email,
             avatarSrc: target?.imageUrl,
         }))
@@ -70,7 +70,7 @@ const Name = () => {
 }
 
 const Timer = () => {
-    const [time, setTime] = useState(0);
+    const [time, setTime] = useState(formatDuration(Date.now()));
     useEffect(() => {
         const interval = setInterval(() => {
             setTime(formatDuration(store.getState().meeting.startedAt));

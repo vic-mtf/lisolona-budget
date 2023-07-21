@@ -27,11 +27,12 @@ export default function CameraView ({mode}) {
         <MuiBox
             component={mode === 'float' ? FloatView : 'div'}
         >
-            <video
+           {camera.active && 
+           <video
                 autoPlay
                 muted
                 ref={videoRef}
-            />
+            />}
             <Client
                 avatarSrc={user.image}
                 id={user.id}
@@ -39,6 +40,7 @@ export default function CameraView ({mode}) {
                 videoTrack={null}
                 name="Vous"
                 externalVideo={camera.active}
+                reverseScreen
             />
         </MuiBox>
     );

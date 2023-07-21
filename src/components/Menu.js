@@ -21,11 +21,19 @@ const Menu = styled((props) => (
         border: `1px solid ${theme.palette.divider}`,
         backdropFilter: `blur(${theme.customOptions.blur})`,
         overflow: 'auto',
-    }
+    },
 }));
 
 Menu.defaultProps = {
-    MenuListProps: { dense: true }
+    MenuListProps: { dense: true },
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'right',
+    },
+    transformOrigin: {
+      vertical: 'top',
+      horizontal: 'left',
+    }
 }
 export default Menu
 

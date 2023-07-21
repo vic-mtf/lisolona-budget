@@ -65,7 +65,7 @@ const sortMessage = _messages => {
 const messageOptions = ({message, messages, index}) => {
     const hideAvatar = messages[index + 1]?.isMine === message?.isMine;
     const joinBox = messages[index - 1]?.isMine === message?.isMine;
-    const key = messages.remonteId || (Date.now() + index + 1).toString(16);
+    const key = messages.remoteId || (Date.now() + index + 1).toString(16);
     const date =  (new Date (message?.createdAt));
     const time = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
     return {...message, time, hideAvatar, joinBox, key};

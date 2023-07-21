@@ -7,7 +7,7 @@ export default async function sendVoice ({chunksRef, target, downloadsRef}) {
         File: new Blob([...chunksRef?.current], {type: 'audio/wav'}),
         id: Date.now().toString(16),
     }];
-    const { localData, remonteData } = processData(
+    const { localData, remoteData } = processData(
         data, {
             target,
             date: new Date(),
@@ -15,7 +15,7 @@ export default async function sendVoice ({chunksRef, target, downloadsRef}) {
     );
     sendFile({
         data: {
-            ...remonteData[0],
+            ...remoteData[0],
             fileType: 'voice'
         }, 
         downloadsRef,

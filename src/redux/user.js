@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage/session";
+import getBase64Image from "../utils/getBase64Image";
 
 const user = createSlice({
     name: 'user',
@@ -12,7 +13,12 @@ const user = createSlice({
         changeValues (state, actions) {
             const { token } = actions.payload;
             Object.keys(actions.payload).forEach(key => {
-                state[key] = actions.payload[key]
+                state[key] = actions.payload[key];
+                if(key === 'avatarSrc') {
+                    getBase64Image().then(url => {
+                        state.avatarSrc = url;
+                    })
+                }
             });
             if(token)
                 state.connected = true;

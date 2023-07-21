@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useData } from "../../../utils/DataProvider";
 import useAxios from "../../../utils/useAxios";
 import store from "../../../redux/store";
+import getFullName from "../../../utils/getFullName";
 
 export default function useDirectCall () {
     const socket = useSocket();
@@ -24,10 +25,9 @@ export default function useDirectCall () {
             const id = event?.where?._id;
             const url = '/api/chat/room/call/' + id;
             const type = event.where.type;
-            console.log(event?.where);
             const target = {
                 id: user._id,
-                name: `${user?.fname} ${user?.lname} ${user?.mname || ''}`,
+                name: getFullName(user),
                 type: 'direct',
                 avatarSrc: user.imageUrl
             };

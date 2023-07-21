@@ -8,6 +8,7 @@ import Typography from '../../../../components/Typography';
 import { useSelector } from 'react-redux';
 import timeHumanReadable from '../../../../utils/timeHumanReadable';
 import UserStatus from './UserStatus';
+import getFullName from '../../../../utils/getFullName';
 
 export default function AvatarStatus ({target}) {
     const userId = useSelector(store => store.user.id);
@@ -17,7 +18,7 @@ export default function AvatarStatus ({target}) {
             role,
             id: user?._id,
             origin: user,
-            name: `${user?.fname || ''} ${ user?.lname || ''} ${user?.mname || ''}`.trim(),
+            name: getFullName(user),
         })
     )?.filter(({id}) => userId !== id), [target?.members]);
 

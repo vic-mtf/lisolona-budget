@@ -15,11 +15,11 @@ const conference = createSlice({
         currentCalls: null,
     },
     reducers: {
-        setData(state, actions) {
+        setConferenceData(state, actions) {
             const { data } = actions?.payload || {};
             if(data) Object.keys(data)?.forEach(key => {
                 if(typeof state[key] === 'object')
-                    state[key] = mergeObjects(data[key], state[key])
+                    state[key] = mergeObjects(state[key], data[key])
                 else state[key] = data[key];
             });
         }
@@ -27,6 +27,6 @@ const conference = createSlice({
 });
 
 export const { 
-    setData
+    setConferenceData
 } = conference.actions;
 export default conference.reducer;

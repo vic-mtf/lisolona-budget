@@ -15,10 +15,11 @@ import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import IconButton from '../../../../../components/IconButton';
 import LoadingList from '../LoadingList';
 import EmptyContentMessage from '../EmptyContentMessage';
-import useShadow from '../useShadow';
+import useShadow from '../../../../../utils/useShadow';
 import ContactItem from '../../items/ContactItem';
 import db from '../../../../../database/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { escapeRegExp } from 'lodash';
 
 export default function ContactsList ({
     mode, 
@@ -27,9 +28,7 @@ export default function ContactsList ({
     onClose,
     search,
 }) {
-    const filterByKey = useCallback(key =>  new RegExp(
-        search?.trim().split(/\s/).join('|'),
-            'ig'
+    const filterByKey = useCallback(key =>  new RegExp(escapeRegExp(search?.trim().split(/\s/).join('|')),'ig'
         ).test(key),
     [search]);
     const contacts = useLiveQuery(() => 

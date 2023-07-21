@@ -52,7 +52,7 @@ export default function Footer () {
             createdAt,
             location,
             participants: members,
-            _id: id
+            _id: meetingId
         } = data;
         settersMembers.addObjects(members.map(
             member => ({...member, id: member.identity._id,})
@@ -68,7 +68,7 @@ export default function Footer () {
                         location, 
                         mode: 'on',
                         joined: true,
-                        id,
+                        meetingId,
                     }}));
                     if(videoStreamRef.current) {
                         const [mediaStreamTrack] = videoStreamRef.current.getVideoTracks();

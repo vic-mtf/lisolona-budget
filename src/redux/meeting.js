@@ -5,7 +5,7 @@ const initialState = {
     mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join' || 'prepare',
     options: null,
     me: null,
-    id: null,
+    meetingId: null,
     location: null,
     createdAt: null,
     startedAt: null,
@@ -21,19 +21,27 @@ const initialState = {
         published: false,
     },
     video: {
-        input : {
+        input: {
             deviceId: null,
             label: null,
             width: {
                 ideal: window?.opener?.innerWidth,
-            } ,
-            height:{
+            },
+            height: {
                 ideal: window?.opener?.innerHeight,
             },
         },
         output: {
             deviceId: null,
             label: null,
+        }
+    },
+    screen: {
+        output: {
+            cursor: 'always',
+            displaySurface: 'monitor',
+            logicalSurface: true,
+            surfaceSwitching: 'include'
         }
     },
     audio: {
@@ -62,7 +70,7 @@ const meeting = createSlice({
     reducers: {
         setAudioDevice(state, actions) {
             const { data, type } = actions?.payload || {};
-            if(data && type)
+            if (data && type)
                 state.audio = {
                     ...state.audio,
                     [type]: {
@@ -73,7 +81,7 @@ const meeting = createSlice({
         },
         setVideoDevice(state, actions) {
             const { data, type } = actions?.payload || {};
-            if(data && type)
+            if (data && type)
                 state.video = {
                     ...state.video,
                     [type]: {
@@ -84,38 +92,48 @@ const meeting = createSlice({
         },
         setMicroData(state, actions) {
             const { data } = actions?.payload || {};
-            if(data)
+            if (data)
                 state.micro = {
                     ...state.micro,
-                   ...data,
+                    ...data,
                 };
         },
         setCameraData(state, actions) {
             const { data } = actions?.payload || {};
-            if(data)
+            if (data)
                 state.camera = {
                     ...state.camera,
-                   ...data,
+                    ...data,
+                };
+        },
+        setScreenSharingData(state, actions) {
+            const { data } = actions?.payload || {};
+            if (data)
+                state.screenSharing = {
+                    ...state.screenSharing,
+                    ...data,
                 };
         },
         setData(state, actions) {
             const { data } = actions?.payload || {};
-            if(data) Object.keys(data)?.forEach(key => {
-                if(typeof state[key] === 'object')
+            if (data) Object.keys(data)?.forEach(key => {
+                if (key === 'id') data.id = data[key]?.toString();
+                if (typeof state[key] === 'object')
                     state[key] = mergeObjects(data[key], state[key])
                 else state[key] = data[key];
             });
-            if(state.mode === 'on')
+            if (state.mode === 'on')
                 state.startedAt = Date.now();
         }
     }
 });
 
-export const { 
-    setAudioDevice, 
+export const {
+    setAudioDevice,
     setVideoDevice,
     setMicroData,
     setCameraData,
+    setScreenSharingData,
     setData
 } = meeting.actions;
 export default meeting.reducer;

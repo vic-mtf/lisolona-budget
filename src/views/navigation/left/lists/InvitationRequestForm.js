@@ -116,9 +116,11 @@ export default function InvitationRequestForm () {
                                 component="div"
                                 paragraph
                             >
-                                Pour entrer en relation avec un contact, 
-                                envoyez-lui une invitation par courrier électronique 
-                                et assurez-vous qu'il est reconnu par la plat-form GEID.
+                               Pour initier une connexion avec un contact, 
+                               il est conseillé d'envoyer une invitation par courrier électronique. 
+                               Afin de garantir que la connexion soit établie sur la plateforme GEID, 
+                               il est important de s'assurer que le contact dispose d'un compte 
+                               reconnu par cette plateforme.
                             </DialogContentText>
                             <MuiBox>
                             <InputControler
@@ -137,14 +139,17 @@ export default function InvitationRequestForm () {
                             {severity === 'warning' &&
                             <Alert severity="warning">
                                 {status === 404 &&
-                                `GEID ne reconnaît pas ${emailRef.current} 
-                                car cet utilisateur n'existe pas, veuillez indiquer l'adresse 
-                                d'un utilisateur existant.`}
+                                `Nous avons détecté que l'adresse e-mail "${emailRef.current}" n'est 
+                                pas reconnue par GEID, car l'utilisateur correspondant n'a 
+                                pas été trouvé sur la plateforme. Pour continuer, 
+                                nous vous invitons à saisir l'adresse e-mail d'un 
+                                utilisateur existant sur GEID.`}
                                 {status === 409 &&
-                                `GEID ne peut pas soumettre votre invitation 
-                                car il y a une demande en attente ou déjà acceptée, 
-                                veuillez attendre la réponse de ${emailRef.current} à votre invitation 
-                                s'il n'apparaît dans la liste de contacts.`}
+                                `Il n'est pas possible d'envoyer votre invitation via GEID, 
+                                car il existe déjà une demande en attente ou une demande a déjà été acceptée. 
+                                Si vous ne voyez pas l'adresse e-mail "${emailRef.current}" dans votre liste 
+                                de contacts, veuillez patienter 
+                                jusqu'à ce que vous receviez une réponse à votre invitation.`}
                             </Alert>}
                             {severity === 'error' &&
                             <Alert severity="error">

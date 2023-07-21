@@ -7,8 +7,9 @@ export default function VideoTrackView ({videoTrack}) {
     const videoRef = useRef();
 
     useLayoutEffect(() => {
-        videoTrack.play(videoRef.current);
-    });
+        if(videoTrack?.play && videoRef.current)
+            videoTrack?.play(videoRef.current);
+    }, [videoTrack]);
 
     return (
         <MuiBox

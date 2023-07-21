@@ -5,8 +5,6 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
     const recRef = useRef();
     const requestAnimationFrameRef = useRef();
 
-    console.log(color);
-
     useEffect(() => {
       let bufferLength;
       let dataArray;
@@ -26,15 +24,15 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
           volume = dataArray.reduce((acc, val) => acc + val, 0) / bufferLength;
           volume /= 255;
         }
-        if(audioTrack) volume = audioTrack?.getVolumeLevel()
+        if(audioTrack?.getVolumeLevel) volume = audioTrack?.getVolumeLevel()
         const rectSize = getValue(maxSize, size, volume);
         const rectCoord = ( maxSize - rectSize ) / 2;
         rect.setAttribute("width", rectSize);
         rect.setAttribute("height", rectSize);
         rect.setAttribute("x", rectCoord);
         rect.setAttribute("y", rectCoord);
-        rect.setAttribute('fill', hslStringToRgba(color, 1 - volume));
-        //rect.setAttribute('stroke', hslStringToRgba(color, volume));
+        //rect.setAttribute('fill', color);
+        rect.setAttribute('stroke', color);
         if(volume)
             rect.style.transition = 'all  .2s'
       }
@@ -56,12 +54,14 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
           alignItems: 'center',
           height: maxSize,
           width: maxSize,
+         // opacity: .5,
         }}
       >
         <rect 
           rx={radius}
           ref={recRef}
           strokeWidth={2}
+          fill="transparent"
         />
       </svg>
     );

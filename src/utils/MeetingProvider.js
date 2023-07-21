@@ -6,7 +6,9 @@ import { decrypt } from "./crypt";
 import { useDispatch, useSelector } from "react-redux";
 import { setData } from "../redux/meeting";
 import useTableRef from "./useTableRef";
-
+import store from "../redux/store";
+import getBase64Image from "./getBase64Image";
+import getFullName from "./getFullName";
 
 export default function MeetingProvider ({children}) {
     const [{client}] = useData();
@@ -36,19 +38,22 @@ export default function MeetingProvider ({children}) {
         const index = uid - 1;
         const target = membersRef.current[index]?.identity;
         const find = settersParticipants.getObjectById(target?._id);
-        console.log(meetingData.mode, find, index, target);
+        const data = {
+            uid,
+            id: target?._id,
+            name: getFullName(target),
+            email: target?.email,
+            avatarSrc: target?.imageUrl,
+        };
         if(target && !find) {
-            settersParticipants.updateObject({
-                uid,
-                id: target?._id,
-                name: `${target?.fname} ${target?.lname || ''} ${target?.mname || ''}`,
-                email: target?.email,
-                avatarSrc: target?.imageUrl,
-            })
+            settersParticipants.updateObject(data)
         }
         if(!target && !find)
             settersFictitiousMembers.updateObject({id: uid, uid});
-    },[membersRef, settersFictitiousMembers, settersParticipants, meetingData]);
+        getBase64Image(target?.imageUrl).then(url => {
+            data.avatarSrc = url;
+        })
+    },[membersRef, settersFictitiousMembers, settersParticipants]);
 
     const handleUserLeft = useCallback(user => {
         const { uid } = user;
@@ -179,6 +184,27 @@ export default function MeetingProvider ({children}) {
             client.join(options.APP_ID, CHANNEL, options.TOKEN, uid)
             .then(() => { dispatch(setData({data: {joined: true}})) });
     }, [options, joined, client, user, CHANNEL, dispatch, settersMembers, meetingData]);
+
+    useLayoutEffect(() => {
+        const {audioTrack, videoTrack} = localTrackRef.current;
+        const micro = store.getState().meeting.micro;
+        const camera = store.getState().meeting.camera;
+        const streams = [];
+        if(camera.active)
+            streams.push(videoTrack);
+        if(micro.active)
+            streams.push(audioTrack);        
+        if(mode === 'join' && joined && streams.length) {
+            client.publish(streams).then(() => {
+                const data = { 
+                    mode: 'on', 
+                    micro: { published: micro.active},
+                    camera: { published: camera.active}
+                }
+                dispatch(setData({data}))
+            })
+        }
+    }, [mode, joined, client, dispatch]);
 
     return (
         <MeetingDataContext.Provider 

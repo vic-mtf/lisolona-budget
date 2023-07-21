@@ -11,7 +11,6 @@ import { addData } from "../../../../redux/data";
 import ShortcutAvatar from "./ShortcutAvatar";
 import { useLiveQuery } from "dexie-react-hooks";
 import ContactListForm from "../lists/contact-list-form/ContactListForm";
-import { useData } from "../../../../utils/DataProvider";
 import db from "../../../../database/db";
 
 export default function ShortcutOptions () {

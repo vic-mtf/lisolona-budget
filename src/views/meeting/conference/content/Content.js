@@ -43,7 +43,7 @@ export default function Content () {
                 />
                 {participants.length === 0 &&
                 <Typography
-                    variant="h4"
+                    variant="h5"
                     position="absolute"
                     width="100%"
                     height="100%"

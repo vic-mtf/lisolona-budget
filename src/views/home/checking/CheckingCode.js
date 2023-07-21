@@ -30,7 +30,6 @@ export default function CheckingCode ({setOptions, message}) {
                 values={values}
                 onComplete={(code) => {
                     setCode(code.join(''));
-                    console.log(code);
                 }}
               />
               <Backdrop

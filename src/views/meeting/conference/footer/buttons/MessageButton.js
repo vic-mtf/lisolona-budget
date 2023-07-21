@@ -3,11 +3,11 @@ import IconButton from '../../../../../components/IconButton';
 import { Badge, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
-import { setData } from '../../../../../redux/conference';
+import { setConferenceData } from '../../../../../redux/conference';
 
 export default function MessageButton ({getVideoStream}) {
     const nav = useSelector(store => store.conference.nav);
-    const selected = useMemo(() => nav === 'message', [nav]);
+    const selected = useMemo(() => /message-open/.test(nav), [nav]);
     const dispatch = useDispatch();
 
     return (
@@ -25,8 +25,8 @@ export default function MessageButton ({getVideoStream}) {
                     selected={selected}
                     disabled
                     onClick={() => dispatch(
-                        setData({
-                             data :{ nav: selected ? null : 'message' }
+                        setConferenceData({
+                             data :{ nav: selected ? 'message-close' : 'message-open' }
                         })
                     )}
                     sx={{

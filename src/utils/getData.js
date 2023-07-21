@@ -1,5 +1,7 @@
 import { chain } from "lodash";
 import db from "../database/db";
+import getBase64Image from "./getBase64Image";
+import getFullName from "./getFullName";
 
 export default async function getData ({chats, contacts: cts, inivitation, userId}, callback) {
     const discussions = [];
@@ -15,7 +17,7 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
     const updateContacts = [];
 
     chats?.forEach(discussion => {
-        const remonteMessages = 
+        const remoteMessages = 
         [...discussion.messages].sort((a, b) =>
             (new Date (a.createdAt)).getTime() - 
             (new Date (b.createdAt)).getTime()
@@ -24,11 +26,9 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
         const target = members?.find(({_id: user}) => user._id !== userId)?._id;
         const type = discussion.type;
         const targetId = type === "direct" ? target?._id : discussion?._id;
-        const name = type === "direct" ? 
-        `${target?.fname || ''} ${target?.lname || ''} ${target?.mname || ''}`.trim() :
-        discussion?.name;
+        const name = type === "direct" ? getFullName(target) : discussion?.name;
         const avatarSrc = type === 'direct' ? target?.imageUrl : discussion.imageUrl;
-        const lastNotice = remonteMessages[remonteMessages.length - 1];
+        const lastNotice = remoteMessages[remoteMessages.length - 1];
         const localDiscussion = {
             id: targetId, 
             name, 
@@ -43,12 +43,12 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
             origin: discussion,
         };
         discussions.push(localDiscussion);
-        remonteMessages.forEach((message) =>  {
+        remoteMessages.forEach((message) =>  {
             const id = message.clientId || message._id;
             const sender = message.sender;
-            const name = `${sender?.fname || ''} ${sender?.lname || ''} ${sender?.mname || ''}`.trim();
+            const name = getFullName(sender);
             const localMessages = {
-                remonteId: message?._id,
+                remoteId: message?._id,
                 id,
                 type: message.type,
                 targetId,
@@ -68,8 +68,9 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
         });
         
     });
+
     cts?.forEach(contact => {
-        const name = `${contact.fname || ''} ${contact.lname || ''} ${contact.mname || ''}`.trim();
+        const name = getFullName(contact);
         const localContact = {
             id: contact?._id,
             name,
@@ -92,32 +93,40 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
     const promiseDiscussions = new Promise((resolve, reject) => {
         db?.discussions.bulkGet(discussionsIds).then(async data => {
             data.forEach((discussion, index) => {
-                const remonteDiscussion = discussions[index];
+                const remoteDiscussion = discussions[index];
                 if(discussion) {
                     const localTime = (new Date (discussion.updatedAt)).getTime();
-                    const remonteTime = (new Date (remonteDiscussion.updatedAt)).getTime();
-                    if(isNaN(localTime) ||  localTime < remonteTime)
+                    const remoteTime = (new Date (remoteDiscussion.updatedAt)).getTime();
+                    if(isNaN(localTime) ||  localTime < remoteTime)
                         updateDiscussions.push({
                             key: discussion.id,
                             changes: {
-                                name: remonteDiscussion.name, 
-                                members: remonteDiscussion.members,
-                                lastNotice: remonteDiscussion.lastNotice,
-                                avatarSrc: remonteDiscussion.avatarSrc,
-                                updatedAt: new Date(remonteDiscussion?.updatedAt),
-                                lastNoticeType: remonteDiscussion?.lastNoticeType,
-                                discription: remonteDiscussion?.discription,
-                                origin: remonteDiscussion.origin,
+                                name: remoteDiscussion.name, 
+                                members: remoteDiscussion.members,
+                                lastNotice: remoteDiscussion.lastNotice,
+                                avatarSrc: remoteDiscussion.avatarSrc,
+                                updatedAt: new Date(remoteDiscussion?.updatedAt),
+                                lastNoticeType: remoteDiscussion?.lastNoticeType,
+                                description: remoteDiscussion?.description,
+                                origin: remoteDiscussion.origin,
                             }
                         })
                 }
-                else newDiscussions.push(remonteDiscussion);
+                else newDiscussions.push(remoteDiscussion);
             });
             try {
-                if(newDiscussions.length)
+                if(newDiscussions.length) 
                     await db?.discussions.bulkAdd(filterObjects(newDiscussions));
                 if(updateDiscussions.length)
                     await db?.discussions.bulkUpdate(filterObjects(updateDiscussions));
+                [...newDiscussions, ...updateDiscussions].forEach((data) => {
+                    const avatarSrc = data?.avatarSrc || data?.changes?.avatarSrc;
+                    const id = data?.id || data?.key;
+                    if(avatarSrc && id)
+                        getBase64Image(avatarSrc).then(avatarBuffer => {
+                            db?.discussions.update(id, {avatarBuffer});
+                        })
+                });   
                 resolve('update');
             } catch (e) { reject(e); }
         });
@@ -126,59 +135,79 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
     const promiseMessages = new Promise((resolve, reject) => {
         db?.messages.bulkGet(messagesIds).then(async data => {
             data.forEach((message, index) => {
-                const remonteMessage = messages[index];
+                const remoteMessage = messages[index];
                 if(message) {
                     const localTime = (new Date (message.updatedAt)).getTime();
-                    const remonteTime = (new Date (remonteMessage.updatedAt)).getTime();
-                    if(localTime !== remonteTime)
+                    const remoteTime = (new Date (remoteMessage.updatedAt)).getTime();
+                    if(localTime !== remoteTime)
                         updateMessages.push({
                             key: message.id,
                             changes: {
-                                content: remonteMessage?.content,
-                                avatarSrc: remonteMessage?.imageUrl,
-                                status: remonteMessage?.status,
+                                content: remoteMessage?.content,
+                                avatarSrc: remoteMessage?.imageUrl,
+                                status: remoteMessage?.status,
                                 sended: true,
-                                updatedAt: remonteMessage.updatedAt || remonteMessage?.createdAt,
-                                origin: remonteMessage.origin,
+                                updatedAt: remoteMessage.updatedAt || remoteMessage?.createdAt,
+                                origin: remoteMessage.origin,
                             }
                         });
                 }
-                else newMessages.push(remonteMessage);
+                else newMessages.push(remoteMessage);
             });
-            console.log(newMessages);
             try {
                 if(newMessages.length)
                     await db?.messages.bulkAdd(filterObjects(newMessages));
                 if(updateMessages.length)
                     await db?.messages.bulkUpdate(filterObjects(updateMessages));
+                [...newMessages, ...updateMessages].forEach((data) => {
+                    const avatarSrc = data?.avatarSrc || data?.changes?.avatarSrc;
+                    const id = data?.id || data?.key;
+                    const isMine = data?.isMine;
+                   
+                    if(avatarSrc && !isMine && id)
+                        getBase64Image(avatarSrc).then(avatarBuffer => {
+                            db?.messages.update(id, {avatarBuffer});
+                        })
+                });    
                 resolve('update');
             } catch (e) { reject(e); }
         });
     });
+
     const promiseContacts = new Promise((resolve, reject) => {
         db?.contacts.bulkGet(contactsIds).then(async data => {
             data.forEach((contact, index) => {
-                const remonteContact = contacts[index];
+                const remoteContact = contacts[index];
                 if(contact) {
                     const localTime = (new Date (contact.updatedAt)).getTime();
-                    const remonteTime = (new Date (contact.updatedAt)).getTime();
-                    if(localTime !== remonteTime)
+                    const remoteTime = (new Date (contact.updatedAt)).getTime();
+                    if(localTime !== remoteTime)
                         updateContacts.push({
-                            key: remonteContact.id,
-                            changes: { ...remonteContact}
+                            key: remoteContact.id,
+                            changes: { ...remoteContact}
                         })
                 }
-                else newContacts.push(remonteContact);
+                else newContacts.push(remoteContact);
             });
             try {
                 if(newContacts.length)
                     await db?.contacts.bulkAdd(filterObjects(newContacts));
                 if(updateContacts.length)
                     await db?.contacts.bulkUpdate(filterObjects(updateContacts));
+                [...newContacts, ...updateContacts].forEach((data) => {
+                    const avatarSrc = data?.avatarSrc || data?.changes?.avatarSrc;
+                    const id = data?.id || data?.key;
+
+                    if(avatarSrc && id)
+                        getBase64Image(avatarSrc).then(avatarBuffer => {
+                            db?.contacts.update(id, {avatarBuffer});
+                        })
+                });   
                 resolve('update');
             } catch (e) { reject(e); }
         });
     })
+    
     Promise.all([promiseDiscussions, promiseMessages, promiseContacts]).then(() => {
         if(typeof callback === 'function') callback();
     });

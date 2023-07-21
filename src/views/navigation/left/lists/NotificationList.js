@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Divider, List, ListSubheader,  Toolbar } from '@mui/material';
 import useScrollEnd from '../../../../utils/useScrollEnd';
 import Box from '../../../../components/Box';
 import Button from '../../../../components/Button';
 import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
-import useShadow from './useShadow';
+import useShadow from '../../../../utils/useShadow';
 import IconButton from '../../../../components/IconButton';
 import Typography from '../../../../components/Typography';
 import InviteContactItem from '../items/InviteContactItem';
@@ -50,6 +50,7 @@ export default function NotificationList ({search, navigation}) {
                     transition: "box-shadow 0.2s",
                 }}
             >
+                {Boolean(notifications?.length) && 
                 <List
                     dense
                     {...scrollProps}
@@ -62,22 +63,6 @@ export default function NotificationList ({search, navigation}) {
                         ...scrollBarSx,
                     }}
                 > 
-                    <LoadingList 
-                        loading={notifications === null} 
-                        lengthItem={9}
-                    />
-                    <EmptyContentMessage
-                        title="Aucune nouvelle notification"
-                        show={union(
-                            ...(notifications || [])?.map(
-                                ({children}) => [...children]
-                            ))?.length === 0
-                        }
-                        description={`
-                            Les alertes apparaissent pour vous informer 
-                            d'une nouvelle activité.`
-                        }
-                    />
                 {!currentList ? 
                     <MultiList 
                         list={notifications}
@@ -89,8 +74,23 @@ export default function NotificationList ({search, navigation}) {
                         Item={items[currentList?.indexItem]}
                     />
                 }
-                </List>
-                
+                </List>}
+                <LoadingList 
+                    loading={notifications === null} 
+                    lengthItem={9}
+                />
+                <EmptyContentMessage
+                    title="Aucune nouvelle notification"
+                    show={union(
+                        ...(notifications || [])?.map(
+                            ({children}) => [...children]
+                        ))?.length === 0
+                    }
+                    description={`
+                        Les alertes apparaissent pour vous informer 
+                        d'une nouvelle activité.`
+                    }
+                />
             </Box>
         </React.Fragment>
     );
@@ -143,94 +143,3 @@ const MonoList = ({children, Item}) => (
             </React.Fragment>
         )
 }))
-
-// const contacts = [
-//     {
-//         name: 'Victor mongolo',
-//         email: 'Phalphie1@gmail.com',
-//         avatarSrc: '/',
-//         _id: 'hxdgshdjghhs2454',
-//     },
-//     {
-//         name: 'Obed Ngolo',
-//         email: 'obedngolo@gmail.com',
-//         avatarSrc: '/',
-//         _id: 'fdfjhdfvhhs2454',
-//     },
-//     {
-//         name: 'Naomi kingale',
-//         email: 'naomikingale@outlook.com',
-//         avatarSrc: '/',
-//         _id: 'fdfjhdfvhhsdfjbf544',
-//     },
-//     {
-//         name: 'Filia Mula',
-//         email: 'filiamula@outlook.fr',
-//         avatarSrc: '/',
-//         _id: 'fsdbshdvhsdfj545444',
-//     },
-//     {
-//         name: 'Daniel Mputu',
-//         email: 'danielm45@yahoo.fr',
-//         avatarSrc: '/',
-//         _id: 'fdsjhdgfhgsdvhhsdfjbf565894',
-//     },
-//     {
-//         name: 'Eliel Maboso',
-//         email: 'elielmaboso34@gmail.com',
-//         avatarSrc: '/',
-//         _id: 'wxbvcbfsdysgevhhsd45544',
-//     },
-//     {
-//         name: 'Victor mongolo tanzey fataki',
-//         email: 'tanzeyfataki@outlook.fr',
-//         avatarSrc: '/',
-//         _id: 'hxdgdhwvdshdjghhs2454',
-//     },
-//     {
-//         name: 'Thoma mukendi',
-//         email: 'thomamukendiyahoo.com',
-//         avatarSrc: '/',
-//         _id: 'fdfjdjfbjdffvhhs2454',
-//     },
-//     {
-//         name: 'Aline kizanga',
-//         email: 'alinekizanga53@gmail.com',
-//         avatarSrc: '/',
-//         _id: 'fdfjhdfjhvsdsdfjbf544',
-//     },
-//     {
-//         name: 'Fifi Kasongo',
-//         email: 'fifi@Kasongo.com',
-//         avatarSrc: '/',
-//         _id: 'fsdbshjfhbhfdfj545444',
-//     },
-//     {
-//         name: 'Rosie Masita',
-//         email: 'rosie@yahoo.fr',
-//         avatarSrc: '/',
-//         _id: 'fdsjhddfddvhhsdfjbf565894',
-//     },
-//     {
-//         name: 'George Ngambale',
-//         email: `phalphe15@gmail.com`,
-//         avatarSrc: '/',
-//         _id: 'wxbvcbfsdydffvhhsd45544',
-//     },
-
-// ];
-
-// const notifications = [
-//     {
-//         label: 'Invitations',
-//         children: contacts,
-//         _id: '_invite',
-//         Item: InviteContactItem,
-//     },
-//     {
-//         label: 'Annonces',
-//         children: [],
-//         _id: '_notice',
-//         Item: RelatedContactItem,
-//     },
-// ];

@@ -13,6 +13,7 @@ import clearTimer from "../../../utils/clearTimer";
 import { useTheme } from "@mui/material";
 import useAudio from '../../../utils/useAudio';
 import signal_src from "../../../assets/Samsung-Wing-SMS.mp3";
+import getFullName from "../../../utils/getFullName";
 
 export default function useRoomCall () {
     const socket = useSocket();
@@ -64,7 +65,7 @@ export default function useRoomCall () {
             const type = event.where.type;
             const target = {
                 id: user._id,
-                name: `${user?.fname} ${user?.lname} ${user?.mname || ''}`,
+                name: getFullName(user),
                 type: 'direct',
                 avatarSrc: user.imageUrl
             };

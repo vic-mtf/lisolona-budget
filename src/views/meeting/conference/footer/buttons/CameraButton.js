@@ -1,7 +1,7 @@
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Alert, Badge, Fab, Box as MuiBox, Stack } from '@mui/material';
+import { Alert, Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
@@ -38,14 +38,13 @@ export default function CameraButton () {
             },
         }).then(async stream => {
             videoStreamRef.current = stream;
-            if(/*Si l'écran n'est pas partagé !*/ true) {
+            const screenPublished = store.getState().meeting.screenSharing.published;
+            if(!screenPublished) {
                 const [mediaStreamTrack] = stream.getVideoTracks();
                 localTrackRef.current.videoTrack = AgoraRTC.createCustomVideoTrack({mediaStreamTrack});
                 await client.publish([localTrackRef.current.videoTrack]);
-                dispatch(setCameraData({data: {active: true, published: true}}));
-            }  else {
-                dispatch(setCameraData({data: {active: true}}));
-            }
+            } 
+            dispatch(setCameraData({data: {active: true,  published: true}}));
             setLoading(false);
         }).catch((e) => {
             setLoading(false);
@@ -76,7 +75,8 @@ export default function CameraButton () {
                 setLoading(true);
                 toggleStreamActivation(stream, 'video');
                 const state = !camera.active;
-                if(/*Si l'écran n'est pas partagé !*/ true) {
+                const screenPublished = store.getState().meeting.screenSharing.published;
+                if(!screenPublished) {
                     if(camera.published && camera.active) 
                         await client.unpublish([localTrackRef.current.videoTrack]);
                     if(!camera.published && !camera.active) {
@@ -114,16 +114,17 @@ export default function CameraButton () {
     return (
         <Stack
             sx={{
-                border: theme => `1px solid ${theme.palette.divider}`,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                p: .2,
             }}
-            borderRadius={1}
             spacing={.1}
             direction="row"
         >
+            <Tooltip
+                title={`${camera.active ? 'Desactiver' : 'Activer'} la caméra`}
+                arrow
+            >
             <Badge
                 badgeContent={
                     <PriorityHighRoundedIcon
@@ -159,6 +160,7 @@ export default function CameraButton () {
                     <VideocamOffOutlinedIcon fontSize="small"/>}
                 </Fab>
             </Badge>
+            </Tooltip>
             <IconButton disabled>
                 <ExpandMoreIcon/>
             </IconButton>

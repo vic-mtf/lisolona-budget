@@ -48,18 +48,15 @@ export default function CallEntry () {
                 createdAt,
                 location,
                 participants: members,
-                _id: id
+                _id: meetingId
             } = data;
 
             dispatch(setData({data: {
-                options, createdAt, location, id
+                options, createdAt, location, meetingId
             }}));
             settersMembers.addObjects(members.map(
                 member => ({...member, id: member.identity._id,})
             ));
-            console.log('members =================> : ', members.map(
-                member => ({...member, id: member.identity._id,})
-            ))
         }).catch(() => {
             
         });
@@ -73,8 +70,10 @@ export default function CallEntry () {
             const key = avatarSrc ? 'url' : 'id';
             const value = avatarSrc || id;
             getBackground({[key]: value}).then(img => {
-                rootRef.current.style.background = `url(${img})`;
-                rootRef.current.style.backgroundSize = 'cover';
+                if(rootRef?.current) {
+                    rootRef.current.style.background = `url(${img})`;
+                    rootRef.current.style.backgroundSize = 'cover';
+                }
             })
         }
     },[target]);

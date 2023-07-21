@@ -5,9 +5,10 @@ export default function useScroll () {
     const [showShadow, setShowShadow] = useState(false);
 
     const onScroll = useCallback(event => {
-        if(event?.scrollOffset && !showShadow)
+        const showing = Boolean(event.target.scrollTop);
+        if(showing && !showShadow)
             setShowShadow(true);
-        if(!event?.scrollOffset && showShadow)
+        if(!showing && showShadow)
             setShowShadow(false);
     },[showShadow]);
     

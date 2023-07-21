@@ -15,7 +15,7 @@ export const drawerWidth = 400;
 export default function Conference() {
     const [{openEndMessageType}] = useMeetingData();
     const nav = useSelector(store => store.conference.nav);
-    const open = useMemo(() => Boolean(nav), [nav]);
+    const open = useMemo(() => /-open/.test(nav), [nav]);
 
   return (
     <>

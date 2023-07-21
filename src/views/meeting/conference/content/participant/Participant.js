@@ -50,7 +50,7 @@ export default function Participant ({uid, name, id, avatarSrc}) {
     );
 }
 
-export const Client = ({name, avatarSrc, id, audioTrack, videoTrack, rootRef, externalVideo}) => (
+export const Client = ({name, avatarSrc, id, audioTrack, videoTrack, rootRef, externalVideo, reverseScreen}) => (
     <MuiBox
             ref={rootRef}
             sx={{
@@ -70,7 +70,7 @@ export const Client = ({name, avatarSrc, id, audioTrack, videoTrack, rootRef, ex
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    transform: 'scale(-1, 1)',
+                    transform: reverseScreen ?  'scale(-1, 1)' : 'scale(1, 1)',
                     objectPosition: 'center',
                 }
             }}
