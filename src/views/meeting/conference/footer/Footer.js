@@ -7,6 +7,7 @@ import HangupButton from "./buttons/HangupButton";
 import RaiseHandButton from "./buttons/RaiseHandButton";
 import MemberButton from "./buttons/ListMemberButton";
 import MessageButton from "./buttons/MessageButton";
+import AdminOptionsButton from "./buttons/AdminOptionsButton";
 
 export default function Footer () {
 
@@ -49,6 +50,7 @@ export default function Footer () {
                 <RaiseHandButton/>
                 <MemberButton/>
                 <MessageButton/>
+                <AdminOptionsButton/>
             </Container>
         </Toolbar>
     );

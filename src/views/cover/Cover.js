@@ -10,8 +10,8 @@ import {
 import Typography from "../../components/Typography";
 import 'animate.css/source/attention_seekers/swing.css';
 import _logo_geid from '../../assets/geid_logo_blue_without_title.webp';
-import { useCallback, useLayoutEffect, useMemo } from "react";
-import useAxios from "../../utils/useAxios";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import useAxios, { axiosBase } from "../../utils/useAxios";
 import { useSelector } from "react-redux";
 import getData from "../../utils/getData";
 import db, { clearDatabase } from "../../database/db";
@@ -68,7 +68,8 @@ export default function Cover ({getters, setters}) {
           if(!startApp) setters.setStartApp(true);
         }
     });
-
+    useGetCalls();
+    
     return (
         <Box
             sx={{
@@ -157,3 +158,20 @@ export default function Cover ({getters, setters}) {
         </Box>
     )
 }
+
+const useGetCalls = () => {
+    const token = useSelector(store => store.user.token);
+    const loadingRef = useRef(true);
+    useEffect(() => {
+        if(token && loadingRef.current) {
+            loadingRef.current = false;
+            axiosBase.get('/api/chat/room/call/', {
+                    headers: {Authorization: `Bearer ${token}`}
+            }).then(({data: meetings}) => {
+                getData({meetings})
+            }).catch(err => {
+            });
+        }
+    }, [token]);
+    
+};

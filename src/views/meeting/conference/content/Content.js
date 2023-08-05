@@ -9,21 +9,30 @@ import CameraView from './camera-view/CameraView';
 import { useSelector } from 'react-redux';
 import ActionsWrapper from '../actions/ActionsWrapper';
 import Typography from '../../../../components/Typography';
+import useGetClients from '../actions/useGetClients';
 
 export default function Content () {
-    const [{participants}] = useMeetingData();
+    const [{contentRootRef}] = useMeetingData();
     const cameraView = useSelector(store => store.conference.cameraView);
-    const data = useMemo((() => [
-        cameraView === 'content' && <CameraView mode={cameraView}/>,
-        ...participants.map(
-            participant => (
-                <Participant
-                    {...participant}
-                    key={participant.id}
-                />
+    const members = useGetClients();
+    const participants = useMemo(() => members.filter(({active}) => active), [members]);
+    
+    const data = useMemo(() => {
+        const data = [];
+        if(cameraView === 'content')
+            data.push(<CameraView mode={cameraView}/>);
+        return data.concat(
+            participants.map(
+                participant => (
+                    <Participant
+                        {...participant}
+                        key={participant.id}
+                    />
+                )
             )
-        )
-    ].filter(e => e)), [cameraView, participants]);
+        );
+      }, [cameraView, participants]);
+
     
     return (
         <>
@@ -34,7 +43,11 @@ export default function Content () {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
+                ref={contentRootRef}
             >
+                <GridDataDisplay
+                    data={data}
+                />
                 <RaiseHandWrapper/>
                 {participants.length === 0 &&
                 <Typography

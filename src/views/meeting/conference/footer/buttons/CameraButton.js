@@ -13,11 +13,12 @@ import { toggleStreamActivation } from '../../../../home/checking/FooterButtons'
 import store from '../../../../../redux/store';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import AgoraRTC from 'agora-rtc-sdk-ng';
-import { useSnackbar } from 'notistack';
+import useCustomSnackbar from '../../../../../components/useCustomSnackbar';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 export default function CameraButton () {
     const camera = useSelector(store => store.meeting.camera);
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const { enqueueCustomSnackbar, closeCustomSnackbar} = useCustomSnackbar();
     const [loading, setLoading] = useState(false);
     const [permission, setPermission] = useState(null);
     const [{videoStreamRef, client}] = useData();
@@ -50,23 +51,24 @@ export default function CameraButton () {
             setLoading(false);
             const message = e.toString().toLowerCase();
             if('notreadableerror: could not start video source' === message) {
-                enqueueSnackbar({
+                let key;
+                enqueueCustomSnackbar({
                     message: `Caméra occupée par une autre application.`,
-                    content: (key, message) => (
-                        <Alert onClose={() => closeSnackbar(key)} severity="error">
-                          {message}
-                        </Alert>
-                      ),
-                    style: {
-                        background: 'none',
-                        boxShadow: 0,
-                        padding: 0,
-                        margin: 0,
-                    }
+                    severity: 'error',
+                    getKey: _key => key = _key,
+                    action: (
+                        <IconButton
+                            onClick={() => {
+                                closeCustomSnackbar(key);
+                            }}
+                        >
+                            <CloseOutlinedIcon/>
+                        </IconButton>
+                    )
                 })
             }
         });
-    }, [dispatch, videoStreamRef, localTrackRef, client, closeSnackbar, enqueueSnackbar]);
+    }, [dispatch, videoStreamRef, localTrackRef, client, closeCustomSnackbar, enqueueCustomSnackbar]);
 
     const handlerToggleCamera = useCallback(async () => {
         if(permission?.state !== 'denied') {

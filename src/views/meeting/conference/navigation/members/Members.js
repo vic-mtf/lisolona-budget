@@ -5,29 +5,31 @@ import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import CustomListItemsGroup from '../../../../../components/CustomListItemsGroup';
 import { Divider, ListSubheader, Zoom } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Typography from '../../../../../components/Typography';
 import { escapeRegExp } from 'lodash';
+import useGetClients from '../../actions/useGetClients';
 
 export default function Members () {
-    const [{membersRef, participants: mb}] = useMeetingData();
-    const user = useSelector((store => store.meeting.me));
-    const participants = useMemo(() => [user, ...mb], [user, mb]);
+    const members =  useGetClients(true);
     const [keyword, setKeyword] = useState('');
 
-    const [activeParticipants, participantsOutsideMeeting] = useMemo(() => 
-        findObjects(
-            participants, 
-            filterObjectsByKeyword(membersRef.current, keyword)
-        ), 
-        [membersRef, participants, keyword]
+    const participants = useMemo(() => 
+        filterObjectsByKeyword(members, keyword),
+        [members, keyword]
     );
+
+    const [actives, outsides] = useMemo(() => {
+        const actives = participants.filter(({active}) => active);
+        const outsides = participants.filter(({active}) => !active);
+        return [actives, outsides];
+    }, [participants])
+
     const {titles, counts} = useMemo(() => {
-        const data = getTitlesAndCounts([], activeParticipants, participantsOutsideMeeting);
+        const data = getTitlesAndCounts([], actives, outsides);
         const titles = data.map(({title}) => title);
         const counts = data.map(({count}) => count);
         return {titles, counts};
-    }, [activeParticipants, participantsOutsideMeeting]);
+    }, [actives, outsides]);
 
     const groupContent = useCallback(index => {
         return (
@@ -51,17 +53,12 @@ export default function Members () {
         </ListSubheader>
         )
     }, [titles, counts]);
-
-    const participantsMeeting = useMemo(() => 
-        [activeParticipants, participantsOutsideMeeting].flat(),
-        [activeParticipants, participantsOutsideMeeting]
-    );
+    const participantsMeeting = useMemo(() => [actives, outsides].flat(), [actives, outsides]);
 
     const itemContent = useCallback ((index) => {
         const member = participantsMeeting[index];
         const next = participantsMeeting[index + 1];
-        const isDivisible = Boolean(next) && member?.key === next?.key
-        
+        const isDivisible = Boolean(next) && member?.active === next?.active;
         return (
             <div>
                 <MemberItem
@@ -88,7 +85,7 @@ export default function Members () {
             (
                 <Zoom in>
                     <Typography
-                        variant="h6"
+                        variant="body1"
                         display="flex"
                         flex={1}
                         color="text.secondary"
@@ -110,17 +107,6 @@ export default function Members () {
             )}
         </Box>
     );
-}
-
-function findObjects(objectsToSearch, objects) {
-    const foundObjects = [];
-    const notFoundObjects = [];
-    objects.forEach(criteria => {
-      const foundObject = objectsToSearch?.find(obj => obj.id === criteria.id);
-      if (foundObject) foundObjects.push({...criteria, key: 'found'});
-      else notFoundObjects.push({...criteria, key: 'notfound'});
-    });
-    return [foundObjects, notFoundObjects];
 }
 
 function getTitlesAndCounts(unknownObjects, foundObjects, notFoundObjects, findId) {
@@ -149,7 +135,7 @@ function getTitlesAndCounts(unknownObjects, foundObjects, notFoundObjects, findI
 function filterObjectsByKeyword(objects, keyword) {
     const regex = new RegExp(escapeRegExp(keyword), 'i');
     return objects.filter(obj => {
-      const {fname, mname, lname, email} = obj.identity;
+      const {fname, mname, lname, email} = obj || {};
       return regex.test(fname) || regex.test(mname) || regex.test(lname) || regex.test(email);
     });
   }

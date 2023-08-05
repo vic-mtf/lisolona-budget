@@ -12,8 +12,9 @@ export default function DataProvider({children}) {
     const audioStreamRef = useRef(null);
     const screenStreamRef = useRef(null);
     const videoStreamRef = useRef(null);
+    const mediaStreamRef = useRef(null);
     const secretCodeRef = useRef((Date.now() * 100).toString(16));
-    const client = useMemo(() => 
+    const client = useMemo(() =>
         AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
     , []);
 
@@ -28,8 +29,15 @@ export default function DataProvider({children}) {
             audioStreamRef,
             videoStreamRef,
             screenStreamRef,
+            mediaStreamRef,
             secretCodeRef,
             client,
+            streams: [
+                audioStreamRef,
+                videoStreamRef,
+                screenStreamRef,
+                mediaStreamRef
+            ],
         },
         {
             pushMessages, 

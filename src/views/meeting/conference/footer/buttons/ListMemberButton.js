@@ -4,11 +4,16 @@ import { Badge, Stack, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { setConferenceData } from '../../../../../redux/conference';
+import useGetClients from '../../actions/useGetClients';
 
 export default function ListMemberButton () {
     const nav = useSelector(store => store.conference.nav);
     const selected = useMemo(() => /participant-open/.test(nav), [nav]);
     const dispatch = useDispatch();
+    const participants = useGetClients();
+    const badgeContent = useMemo(() => 
+        participants.map(a => a.active ? 1 : 0).reduce((a, p) => a + p, 1)
+    , [participants]);
 
     return (
         <Stack
@@ -41,7 +46,7 @@ export default function ListMemberButton () {
                                 border: theme => `1px solid ${theme.palette.background.paper}`,
                               },
                         }}
-                        badgeContent={0} 
+                        badgeContent={badgeContent} 
                         color="primary"
                     >
                         <GroupsOutlinedIcon/>

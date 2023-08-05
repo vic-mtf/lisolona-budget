@@ -1,16 +1,24 @@
-import { Tooltip, Zoom } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import Typography from "../../../../../components/Typography";
 import AnimatedWavingHand from "../../../../../components/WavingHand";
 import IconButton from "../../../../../components/IconButton";
+import { useMemo } from "react";
+import store from "../../../../../redux/store";
+import { useSelector } from "react-redux";
+import CustomZoom from '../../../../../components/CustomZoom';
 
-export default function RaiseHandView ({show, title}) {
+export default function RaiseHandView ({show, title, id}) {
+    const handRaised = useSelector(store => store.conference.handRaised);
+    const isLocalMicro = useMemo(() => store.getState().meeting.me?.id === id, [id]);
+    const showHand = useMemo(() => isLocalMicro ? handRaised : show, [handRaised, show, isLocalMicro]);
+
     return (
-        <Zoom in={show}>
+        <CustomZoom show={showHand}>
             <Typography>
                 <CustomTooltip 
                     arrow 
                     title={title}
-                    show={show}
+                    show={showHand}
                 >
                     <IconButton
                         //selected
@@ -22,7 +30,7 @@ export default function RaiseHandView ({show, title}) {
                     </IconButton>
                 </CustomTooltip>
             </Typography>
-        </Zoom>
+        </CustomZoom>
     );
 }
 

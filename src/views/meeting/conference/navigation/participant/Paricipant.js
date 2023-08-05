@@ -7,11 +7,10 @@ import ViewAudioTrack from "./ViewAudioTrack";
 import ViewVideoTrack from "./ViewVideoTrack";
 
 export default function Paricipant ({uid, id, name, email, avatarSrc}) {
-    const [, 
-        {
-            settersRemoteAudioTracks,
-            settersRemoteVideoTracks
-        }] = useMeetingData();
+    const [,{
+        settersRemoteAudioTracks,
+        settersRemoteVideoTracks
+    }] = useMeetingData();
     const [audioTrack, setAudioTrack] = useState(
         settersRemoteAudioTracks.getObjectValueById(id, 'audioTrack')
     );

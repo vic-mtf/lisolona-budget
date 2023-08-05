@@ -1,137 +1,68 @@
-import React, { createContext, useState, useContext, useLayoutEffect, useRef, useCallback } from "react";
+import React, { createContext, useState, useContext, useRef, useCallback, useLayoutEffect } from "react";
 import { useData } from "./DataProvider";
-import { useEffect } from "react";
-import useTable from "./useTable";
 import { decrypt } from "./crypt";
-import { useDispatch, useSelector } from "react-redux";
-import { setData } from "../redux/meeting";
-import useTableRef from "./useTableRef";
-import store from "../redux/store";
-import getBase64Image from "./getBase64Image";
-import getFullName from "./getFullName";
+import useMediaTracks from "./useMediaTracks";
+import { useDispatch } from "react-redux";
+import store from '../redux/store';
+import { updateParticipantState } from "../redux/conference";
 
 export default function MeetingProvider ({children}) {
     const [{client}] = useData();
-    const joined = useSelector(store => store.meeting.joined);
-    const options = useSelector(store => store.meeting.options);
-    const CHANNEL = useSelector(store => store.meeting.location);
-    const mode = useSelector(store => store.meeting.mode);
-    const user = useSelector(store => store.meeting.me);
-    const [meetingData, setMeetingData] = useState(data);
-    const [membersRef, settersMembers] = useTableRef();
-    const [remoteTracks, settersRemoteTracks] = useTableRef();
-    const [fictitiousMembers, settersFictitiousMembers] = useTableRef();
-    const [participants, settersParticipants] = useTable();
+    const contentRootRef = useRef();
+    const [meetingData, setMeetingData] = useState(openerData);
     const [openEndMessageType, setOpenEndMessageType] = useState(null);
-    const isChangeModeRef = useRef(true);
+    const [remoteVideoTracks, settersRemoteVideoTracks] = useMediaTracks({type: 'video'});
+    const [remoteAudioTracks, settersRemoteAudioTracks] = useMediaTracks({type: 'audio'});
+    const dispatch = useDispatch();
     const ringRef = useRef(null);
     const timerRef = useRef(null);
-    const localTrackRef = useRef({
-        videoTrack: null,
-        audioTrack: null
-    });
-
-    const dispatch = useDispatch();
-
-    const handleUserJoin = useCallback(user => {
-        const { uid } = user;
-        const index = uid - 1;
-        const target = membersRef.current[index]?.identity;
-        const find = settersParticipants.getObjectById(target?._id);
-        const data = {
-            uid,
-            id: target?._id,
-            name: getFullName(target),
-            email: target?.email,
-            avatarSrc: target?.imageUrl,
-        };
-        if(target && !find) {
-            settersParticipants.updateObject(data)
+    const localTrackRef = useRef({videoTrack: null, audioTrack: null});
+    const handleUserToggleJoin = useCallback(joined => ({uid}) => {
+        const id = getUserIdByUid(uid);
+        if(id) {
+            const data = {
+                ids: [id],
+                uid,
+                key: 'state',
+                state: {inRoom: joined}
+           }
+            dispatch(updateParticipantState({data}));
         }
-        if(!target && !find)
-            settersFictitiousMembers.updateObject({id: uid, uid});
-        getBase64Image(target?.imageUrl).then(url => {
-            data.avatarSrc = url;
-        })
-    },[membersRef, settersFictitiousMembers, settersParticipants]);
+    }, [dispatch]);
 
-    const handleUserLeft = useCallback(user => {
-        const { uid } = user;
-        const [target] = settersParticipants.getTableSubsetByFilter(
-            participant => participant.uid === uid
-        );
-        if(target) { 
-            settersParticipants.deleteObject(target.id);
-            //settersMembers.deleteObject(target.id);
-            //messages
-        }
-        else {
-            //settersFictitiousMembers.deleteObject(uid);
-            //messages
-        }
-        settersRemoteTracks.deleteObject(uid);
-    }, [
-        //settersFictitiousMembers, 
-        settersParticipants,
-        settersRemoteTracks
-    ]);
-
-    const handleUserPublished = useCallback(async (user, mediaType) => {
+    const handleUserTogglePublished = useCallback((published) => async (user, mediaType) => {
         const uid = user.uid;
-        handleUserJoin(user);
-        await client.subscribe(user, mediaType);
-        const key = mediaType + 'Track';
-        const value = user[key];
-        const data = { uid, [key]: value, id: uid };
-        settersRemoteTracks.updateObject(data);
-        if(mediaType === 'audio')
-            value.play();
-        const root = document.getElementById("root");
-        const name = '__state-track-change';
-        const customEvent = new CustomEvent(name, {
-            name,
-            detail: {
-                user: data,
-                trackType: key
+        const id = getUserIdByUid(uid);
+        const setters = ({
+            audio: settersRemoteAudioTracks,
+            video: settersRemoteVideoTracks
+        })[mediaType];
+        if(id) {
+            let track = null;
+            if(published) {
+                await client.subscribe(user, mediaType);
+                if(mediaType === 'audio') user.audioTrack.play();
+                track = user[mediaType + 'Track'];
             }
-        });
-        root.dispatchEvent(customEvent);
-    },[settersRemoteTracks, client, handleUserJoin]);
-
-    const handleUserUnPublished = useCallback((user, mediaType) => {
-        const uid = user.uid;
-        const key = mediaType + 'Track';
-        const data = { uid, [key]: null, id: uid };
-        settersRemoteTracks.updateObject(data);
-        const root = document.getElementById("root");
-        const name = '__state-track-change';
-        const customEvent = new CustomEvent(name, {
-            name,
-            detail: {
-                user: data,
-                trackType: key
-            }
-        });
-        root.dispatchEvent(customEvent);
-    }, [settersRemoteTracks]);
+            setters.toggleTrack({id, uid, track});
+        }
+    },[settersRemoteAudioTracks, settersRemoteVideoTracks, client]);
 
     const getters = {
         localTrackRef,
-        remoteTracks,
-        fictitiousMembers,
         openEndMessageType,
-        membersRef,
-        participants,
-        meetingData,
+        remoteVideoTracks,
+        remoteAudioTracks,
+        contentRootRef,
+        ...(meetingData ? {meetingData, ...meetingData}: {}),
         ringRef,
-        timerRef
+        timerRef,
     };
     
     const setters = {
-        settersMembers,
-        settersParticipants,
-        settersRemoteTracks,
         setOpenEndMessageType,
+        settersRemoteVideoTracks,
+        settersRemoteAudioTracks,
         setMeetingData (newData) {
             if(newData) setMeetingData(
                 data => ({...data, ...newData})
@@ -141,94 +72,49 @@ export default function MeetingProvider ({children}) {
     };
 
     useLayoutEffect(() => {
-        if(meetingData && mode === 'none' && isChangeModeRef.current) {
-            isChangeModeRef.current = false;
-            const { mode, origin } = meetingData;
-            const { 
-                callDetails: options,
-                createdAt,
-                location,
-                participants: members,
-                _id: id
-            } = origin || {};
-            const data = origin ? { id, options, createdAt, location } : {};
-            dispatch(setData({ data: {mode, ...data}}));
-            if(members) {
-                settersMembers.addObjects(
-                    members.map(
-                        member => ({...member, id: member.identity._id,})
-                    )
-                );
-            }
-        }
-    },[dispatch, meetingData, settersMembers, mode]);
-
-
-    useEffect(() => {
-        client.on('user-joined', handleUserJoin);
-        client.on('user-published', handleUserPublished);
-        client.on('user-unpublished', handleUserUnPublished);
-        client.on('user-left', handleUserLeft);
+        const onUserPublished = handleUserTogglePublished(true);
+        const onUserUnpublished = handleUserTogglePublished(false);
+        const onUserJoined = handleUserToggleJoin(true);
+        const onUserLeft = handleUserToggleJoin(false);
+        client.on('user-joined', onUserJoined);
+        client.on('user-published', onUserPublished);
+        client.on('user-unpublished', onUserUnpublished);
+        client.on('user-left', onUserLeft);
         return () => {
-            client.off('user-joined', handleUserJoin);
-            client.off('user-published', handleUserPublished);
-            client.off('user-unpublished', handleUserUnPublished);
-            client.off('user-left', handleUserLeft);
+            client.off('user-published', onUserPublished);
+            client.off('user-unpublished', onUserUnpublished);
+            client.off('user-joined',onUserJoined);
+            client.off('user-left', onUserLeft);
         }
-    }, [client, handleUserJoin, handleUserPublished, handleUserUnPublished, handleUserLeft]);
-
-    useLayoutEffect(() => {
-        const uid = settersMembers.getObjectIndexById(user?.id) + 1;
-        const isDirectCall = meetingData?.target?.type !== 'room';
-        if(options && !joined && CHANNEL && uid && isDirectCall) 
-            client.join(options.APP_ID, CHANNEL, options.TOKEN, uid)
-            .then(() => { dispatch(setData({data: {joined: true}})) });
-    }, [options, joined, client, user, CHANNEL, dispatch, settersMembers, meetingData]);
-
-    useLayoutEffect(() => {
-        const {audioTrack, videoTrack} = localTrackRef.current;
-        const micro = store.getState().meeting.micro;
-        const camera = store.getState().meeting.camera;
-        const streams = [];
-        if(camera.active)
-            streams.push(videoTrack);
-        if(micro.active)
-            streams.push(audioTrack);        
-        if(mode === 'join' && joined && streams.length) {
-            client.publish(streams).then(() => {
-                const data = { 
-                    mode: 'on', 
-                    micro: { published: micro.active},
-                    camera: { published: camera.active}
-                }
-                dispatch(setData({data}))
-            })
-        }
-    }, [mode, joined, client, dispatch]);
+    }, [client, handleUserTogglePublished, handleUserToggleJoin]);
 
     return (
-        <MeetingDataContext.Provider 
-            value={[getters, setters]}
-        >
-          {children}
-          
-        </MeetingDataContext.Provider>
+        <MeetingDataContext.Provider value={[getters, setters]}
+        >{children}</MeetingDataContext.Provider>
     )
 }
 
-const MeetingDataContext  = createContext();
-export const useMeetingData = () => useContext(MeetingDataContext);
+export const getUserIdByUid = uid => {
+    const user = store.getState().conference.participants.find(participant => participant.uid === uid);
+    return user ? user.id : null;
+}
 
-const data = window.geidMeetingData ? decrypt(window.geidMeetingData) : null;
+export const findUser = id => {
+    const user = store.getState().conference.participants.find(participant => participant.id === id);
+    return user ? user : null;
+}
+
+
+export const openerData = window.geidMeetingData ? decrypt(window.geidMeetingData) : null;
+const MeetingDataContext  = createContext(openerData);
+export const useMeetingData = () => useContext(MeetingDataContext);
+export const bcName = `_geid_call_window_${openerData?.secretCode}`;
 
 if(window.opener && window.location.pathname.indexOf('meeting') !== - 1) {
-    if(!data)
-        window.close();
-    else {
-        const channel = new BroadcastChannel(`_geid_call_window_${data.secretCode}`);
+    if(openerData) {
+        const channel = new BroadcastChannel(bcName);
         window.addEventListener('beforeunload', () => {
            channel.postMessage({type: 'mode', mode: 'none'});
         });
-    }
+    } else window.close()
 }
-

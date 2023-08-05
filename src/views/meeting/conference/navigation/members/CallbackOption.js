@@ -1,9 +1,11 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { Stack, Tooltip, Zoom } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 import IconButton from '../../../../../components/IconButton';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LoadingIndicator from './LoadingIndicator';
 import { useSocket } from '../../../../../utils/SocketIOProvider';
+import CustomZoom from '../../../../../components/CustomZoom';
+import store from '../../../../../redux/store';
 
 
 export default function CallbackOption({rootRef, id}) {
@@ -13,19 +15,28 @@ export default function CallbackOption({rootRef, id}) {
     const timerRef = useRef();
 
     const handleRinging = useCallback((event) => {
-        const member = event?.who;
-        window.setTimeout(timerRef.current);
-        if(member._id === id) {
-            if(!ringing) setRinging(true);
-            timerRef.current = setTimeout(() => {
-                setRinging(false);
-            }, 1500);
+        if(event.where._id === store.getState().meeting.meetingId) {
+            const member = event?.who;
+            window.setTimeout(timerRef.current);
+            if(member._id === id) {
+                if(!ringing) setRinging(true);
+                timerRef.current = setTimeout(() => {
+                    setRinging(false);
+                }, 2000);
+            }
         }
+       
     }, [id, ringing]);
 
     const handleCallback = useCallback((event) => {
-        socket.emit('call');
-        handleRinging({who: {_id: id}});
+        const meetingId = store.getState().meeting.meetingId;
+        socket.emit('call', {
+            id: meetingId,
+            type: 'room',
+            who: [id],
+
+        });
+        handleRinging({who: {_id: id}, where: {_id: meetingId}});
     }, [socket, handleRinging, id]);
 
     useLayoutEffect(() => {
@@ -36,24 +47,25 @@ export default function CallbackOption({rootRef, id}) {
     }, [socket, handleRinging]);
 
     useLayoutEffect(() => {
+        const root = rootRef?.current;
         const onMouseEnter = () => {
             if(!show) setShow(true);
         }
         const onMouseLeave = () => {
             if(show) setShow(false);
         }
-        rootRef?.current?.addEventListener('mouseenter', onMouseEnter);
-        rootRef?.current?.addEventListener('mouseleave', onMouseLeave);
+        root?.addEventListener('mouseenter', onMouseEnter);
+        root?.addEventListener('mouseleave', onMouseLeave);
         return () => {
             socket.off('ringing', handleRinging);
-            rootRef?.current?.removeEventListener('mouseenter', onMouseEnter);
-            rootRef?.current?.removeEventListener('mouseleave', onMouseLeave);
+            root?.removeEventListener('mouseenter', onMouseEnter);
+            root?.removeEventListener('mouseleave', onMouseLeave);
         }
     }, [socket, handleRinging, rootRef, show]);
 
     return (
         <Stack>   
-            <Zoom in={show || ringing}>
+            <CustomZoom show={show || ringing}>
                 <div>   
                     <Tooltip title={ringing ? "Appel en cours..." : "Rappeler"} 
                         arrow
@@ -73,7 +85,7 @@ export default function CallbackOption({rootRef, id}) {
                         </div>  
                     </Tooltip> 
                 </div>   
-            </Zoom>
+            </CustomZoom>
         </Stack>
     );
 }

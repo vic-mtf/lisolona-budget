@@ -10,7 +10,7 @@ import Footer from './footer/Footer';
 import EndMeeting from './actions/EndMeeting';
 import { useMeetingData } from '../../../utils/MeetingProvider';
 
-export const drawerWidth = 400;
+export const drawerWidth = 350;
 
 export default function Conference() {
     const [{openEndMessageType}] = useMeetingData();

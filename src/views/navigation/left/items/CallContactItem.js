@@ -22,24 +22,26 @@ import IconButton from "../../../../components/IconButton";
 import Typography from "../../../../components/Typography";
 import CustomBadge from "../../../../components/CustomBadge";
 import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
+import AvatarStatus from "../../../../components/AvatarStatus";
+import timeHumanReadable from "../../../../utils/timeHumanReadable";
 
 // type = incoming | outgoing | missed
 // format = audio | video
 
-export default function CallContactItem ({
-    avatarSrc, 
-    name, 
-    date, 
-    type, 
-    format, 
-    callsInfos
-}) {
+export default function CallContactItem ({call}) {
+    const {
+        avatarSrc, 
+        name, 
+        date, 
+        type, 
+        id, 
+        count, 
+        createdAt, 
+        format, 
+        callsInfos,
+        avatarsSrc,
+    } = call;
     const [contextMenu, setContextMenu] = React.useState(null);
-    const { iconFormat, iconCallType, color } = useCallParams(type, format);
-
-    const calls = (
-        <Typography component="span" variant="caption" color="text.primary">({parseInt(Math.random() * 10)})</Typography>
-        )
 
     const handleContextMenu = event => {
         event.preventDefault();
@@ -54,16 +56,19 @@ export default function CallContactItem ({
         <React.Fragment>
             <ListItem
                 disablePadding
-                secondaryAction={
-                    <Tooltip 
-                        title={`Relancer l'appel ${format === "video" ? 'vidéo' : ''}`.trim()} 
-                        arrow
-                    >     
-                        <IconButton>
-                            {iconFormat}
-                        </IconButton>
-                    </Tooltip>   
-                }
+                // secondaryAction={
+                //     <Tooltip 
+                //         title="Relancer l'appel"
+                //         arrow
+                //     >   <div>  
+                //             <IconButton
+                //                 disabled
+                //             >
+                //                 <LocalPhoneOutlinedIcon fontSize="small"/>
+                //             </IconButton>
+                //         </div>
+                //     </Tooltip>   
+                // }
             >
                 <ListItemButton 
                     sx={{overflow: 'hidden'}}
@@ -71,44 +76,45 @@ export default function CallContactItem ({
                 >
                 <ListItemAvatar>
                 
-                    <CustomBadge
-                        overlap="circular"
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        variant="dot"
-                        online={Math.random() > .5}
-                    >
-                        <Avatar
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
-                            alt={name}
-                        />
-                    </CustomBadge>
-
+                    <AvatarStatus
+                        avatarSrc={avatarSrc}
+                        avatarsSrc={avatarsSrc}
+                        invisible
+                        id={id}
+                        name={name}
+                        type={type}
+                    />
                 </ListItemAvatar>
                 <ListItemText
                     primary={name}
                     secondary={
                         <Stack 
-                            spacing={2} 
+                            spacing={1} 
                             direction="row" 
                             display="flex" 
                             alignItems="center"
                         >
-                          <Typography color={color}>{iconCallType} {calls}</Typography>
-                          <Typography variant="caption" color="text.secondary" >{capStr(date)}</Typography>  
+                            <Typography variant="caption">({count})</Typography>
+                            <Typography variant="caption" color="text.secondary" >
+                                {capStr(timeHumanReadable(createdAt, true, {
+                                    showDetail: true
+                                }))}
+                            </Typography>  
                         </Stack>
                     }
                     primaryTypographyProps={{
                         component: 'div', 
                         noWrap: true,
                         title: name,
-                        color: 'text.primary'
+                        color: 'text.primary',
+                        //variant: 'caption',
                     }}
                     secondaryTypographyProps={{
                         component: "div",
                         noWrap: true,
                         title: date, 
-                        color,
+                        color: "text.secondary",
+                        variant: 'caption',
                     }}
                 />
                 </ListItemButton>
@@ -137,30 +143,26 @@ export default function CallContactItem ({
                     vertical: 'bottom',
                     horizontal: 'center',
                 }}
-                // transformOrigin={{
-                //     vertical: 'top',
-                //     horizontal: 'letf',
-                // }}
             ></Menu>
         </React.Fragment>
     )
 }
 
-const useCallParams = (type="missed", format="video") => {
-    const isMissed = type === 'missed';
-    const theme = useTheme();
+// const useCallParams = (type="missed", format="video") => {
+//     const isMissed = type === 'missed';
+//     const theme = useTheme();
 
-    return ({
-        color: theme.palette[isMissed ? 'error' : 'success']?.main,
-        iconFormat: format === 'audio' ? 
-            <LocalPhoneOutlinedIcon fontSize="small"/>:
-            <VideocamOutlinedIcon fontSize="small"/>
-        ,
-        iconCallType: isMissed ? (<PhoneMissedOutlinedIcon fontSize="inherit"/> ) :
-         (
-            type === 'incoming' ? 
-            <PhoneCallbackOutlinedIcon fontSize="inherit"/> :
-            <CallMadeOutlinedIcon fontSize="inherit"/>
-        )
-    });
-}
+//     return ({
+//         color: theme.palette[isMissed ? 'error' : 'success']?.main,
+//         iconFormat: format === 'audio' ? 
+//             <LocalPhoneOutlinedIcon fontSize="small"/>:
+//             <VideocamOutlinedIcon fontSize="small"/>
+//         ,
+//         iconCallType: isMissed ? (<PhoneMissedOutlinedIcon fontSize="inherit"/> ) :
+//          (
+//             type === 'incoming' ? 
+//             <PhoneCallbackOutlinedIcon fontSize="inherit"/> :
+//             <CallMadeOutlinedIcon fontSize="inherit"/>
+//         )
+//     });
+// }

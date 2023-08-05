@@ -1,11 +1,12 @@
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import { Tooltip, Zoom } from "@mui/material";
+import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
+import { Tooltip } from "@mui/material";
 import Typography from "../../../../../components/Typography";
 import IconButton from "../../../../../components/IconButton";
+import CustomZoom from '../../../../../components/CustomZoom';
 
 export default function AdminView ({show, title}) {
     return (
-        <Zoom in={show}>
+        <CustomZoom show={show}>
             <Typography>
                 <CustomTooltip 
                     arrow 
@@ -18,11 +19,11 @@ export default function AdminView ({show, title}) {
                         disableRipple
                         disableTouchRipple
                     >
-                        <AdminPanelSettingsOutlinedIcon/>
+                        <WorkspacePremiumOutlinedIcon/>
                     </IconButton>
                 </CustomTooltip>
             </Typography>
-        </Zoom>
+        </CustomZoom>
     );
 }
 

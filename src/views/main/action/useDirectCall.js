@@ -8,19 +8,22 @@ import { useData } from "../../../utils/DataProvider";
 import useAxios from "../../../utils/useAxios";
 import store from "../../../redux/store";
 import getFullName from "../../../utils/getFullName";
+import song_src from '../../../assets/Halloween-Cradles.mp3';
+import useAudio from "../../../utils/useAudio";
 
 export default function useDirectCall () {
     const socket = useSocket();
-    const mode = useSelector(store => store.meeting.mode);
     const [{secretCodeRef}] = useData();
     const token = useSelector(store => store.user.token);
     const [,refetch] = useAxios({
         headers: {Authorization: `Bearer ${token}`},
     }, {manual: true});
     const dispatch = useDispatch();
-    
+    const songAudio  = useAudio(song_src);
+
     useLayoutEffect(() => {
         const handleCall = event => {
+            const mode = store.getState().meeting.mode;
             const user = event.who;
             const id = event?.where?._id;
             const url = '/api/chat/room/call/' + id;
@@ -34,7 +37,7 @@ export default function useDirectCall () {
 
             if(mode === 'none') {
                 if(type === 'direct') {
-                    refetch({url}).then(({data: origin}) => {
+                    refetch({url}).then(async ({data: origin}) => {
                         const subWindow = openNewWindow({
                             url: '/meeting',
                         });
@@ -44,10 +47,11 @@ export default function useDirectCall () {
                                 target,
                                 secretCode: secretCodeRef.current,
                                 defaultCallingState: 'incoming',
-                                origin
+                                origin,
                             });
                             dispatch(setData({data: {mode: 'incoming'}}));
                             subWindow.openerSocket = socket;
+                            subWindow.openerSongAudio = songAudio;
                         }
                     })
                 } 
@@ -75,5 +79,5 @@ export default function useDirectCall () {
         return () => {
             socket?.off('call', handleCall);
         };
-    },[socket, secretCodeRef, dispatch, mode, refetch]);
+    },[socket, secretCodeRef, dispatch, refetch, songAudio]);
 }

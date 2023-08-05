@@ -1,5 +1,5 @@
 import { VirtuosoGrid } from 'react-virtuoso'
-import { styled, Box as  MuiBox, Avatar, Skeleton, Backdrop} from '@mui/material';
+import { styled, Box as  MuiBox, Avatar, Skeleton, Backdrop, useTheme} from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, animate, AnimatePresence } from 'framer-motion';
 
@@ -106,12 +106,15 @@ const ItemContainer = styled(({len, rootHeight, ...otherProps}) => {
       }}
     />
   );
-})(() => ({
+})(({theme}) => ({
     display: 'flex',
     flex: 'none',
     alignContent: 'stretch',
     boxSizing: 'border-box',
     position: 'relative',
+    borderRadius: theme.spacing(.3, .3, .3, .33),
+    overflow: 'hidden',
+    boxShadow: theme.shadows[1],
 }));
 
 const ListContainer = styled(MuiBox)(() => ({

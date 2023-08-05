@@ -1,42 +1,17 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { useData } from "../../../utils/DataProvider";
+import { useEffect } from "react";
 import { Toolbar } from "@mui/material";
 import MicroButton from "./MicroButton";
 import CameraButton from "./CameraButton";
-import { useDispatch } from "react-redux";
-import { setCameraData, setMicroData } from "../../../redux/meeting";
 import store from '../../../redux/store';
 
-export default function FooterButtons ({videoRef}) {
+export default function FooterButtons ({videoRef, handleGetMediaStream}) {
 
-    const [{audioStreamRef, videoStreamRef}] = useData();
-    const dispatch = useDispatch();
-
-    const getAudioStream = useCallback(() => {
-        const audioDevice = store.getState().meeting.audio.input;
-        navigator.mediaDevices.getUserMedia({
-            audio: audioDevice.deviceId ? audioDevice : true,
-        }).then(stream => {
-            audioStreamRef.current = stream;
-            dispatch(setMicroData({data: {active: true}}));
-        }).catch(() => {});
-    }, [audioStreamRef, dispatch]);
-
-    const getVideoStream = useCallback(() => {
-        const videoDevice = store.getState().meeting.video.input;
-        navigator.mediaDevices.getUserMedia({
-            video: videoDevice.deviceId ? videoDevice : true,
-        }).then(stream => {
-            videoStreamRef.current = stream;
-            videoRef.current.srcObject = stream;
-            dispatch(setCameraData({data: {active: true}}));
-        }).catch(() => {});
-    }, [dispatch, videoStreamRef, videoRef]);
 
     useEffect(() => {
-        getAudioStream();
-        getVideoStream();
-    }, [getVideoStream, getAudioStream]);
+        const {camera, micro } = store.getState().meeting;
+        if(!camera.active && !micro.active && typeof handleGetMediaStream === 'function') 
+        handleGetMediaStream();
+    }, [handleGetMediaStream]);
 
     return (
         <Toolbar
@@ -49,11 +24,11 @@ export default function FooterButtons ({videoRef}) {
             variant="dense"
         >
             <MicroButton
-                getAudioStream={getAudioStream}
+                getAudioStream={() => handleGetMediaStream('audio')}
             />
             <CameraButton
                 videoRef={videoRef}
-                getVideoStream={getVideoStream}
+                getVideoStream={() => handleGetMediaStream('video')}
             />
         </Toolbar>
     );

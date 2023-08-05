@@ -1,7 +1,5 @@
 import { Avatar, Box as MuiBox } from "@mui/material";
-import { useLayoutEffect, useRef } from "react";
-import generateBackgroundFromImage from "../../../../../utils/generateBackgroundFromImage";
-import generateBackgroundFromId from "../../../../../utils/generateBackgroundFromId";
+import { useRef } from "react";
 import { AudioVisualizer } from "./AudioVisualizer";
 import { useTheme } from "@emotion/react";
 import { generateColorsFromId } from "../../../../../utils/genColorById";
@@ -19,21 +17,6 @@ export default function AudioTrackView ({avatarSrc, id, audioTrack}) {
         fontWeight: 'bold',
         fontSize: 40,
     }), [background, text]);
-
-    // useLayoutEffect(() => {
-    //     if(avatarSrc || id) {
-    //         const getBackground = avatarSrc ? 
-    //         generateBackgroundFromImage : generateBackgroundFromId;
-    //         const key = avatarSrc ? 'url' : 'id';
-    //         const value = avatarSrc || id;
-    //         getBackground({[key]: value}).then(img => {
-    //             if(rootRef?.current) {
-    //                 rootRef.current.style.background = `url(${img})`;
-    //                 rootRef.current.style.backgroundSize = 'cover';
-    //             }
-    //         })
-    //     }
-    // },[avatarSrc, id]);
 
     return (
         <MuiBox
@@ -63,13 +46,14 @@ export default function AudioTrackView ({avatarSrc, id, audioTrack}) {
                     backdropFilter: theme => `blur(${theme.customOptions.blur})`
                 }}
             >
-            <AudioVisualizer
-                audioTrack={audioTrack}
-                size={100}
-                maxSize={150}
-                radius={5}
-                color={avatarSx.bgcolor}
-            />
+                {audioTrack &&
+                <AudioVisualizer
+                    audioTrack={audioTrack}
+                    size={50}
+                    maxSize={110}
+                    radius={5}
+                    color={avatarSx.bgcolor}
+                />}
                 <MuiBox
                     sx={{
                         position: 'absolute',
@@ -83,8 +67,8 @@ export default function AudioTrackView ({avatarSrc, id, audioTrack}) {
                         variant="rounded"
                         sx={{
                             ...avatarSx,
-                            height: 97.5,
-                            width: 97.5,
+                            height: 75,
+                            width: 75,
                         }}
                     />
                 </MuiBox>

@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import mergeObjects from "../utils/mergeObject";
 
 const initialState = {
     target: null,
     notifications: null,
     calls: null,
     dialog: null,
+    activeCall: false
 };
 
 const data = createSlice({
@@ -15,7 +17,7 @@ const data = createSlice({
             const { key, data } = actions.payload;
             if(key === 'data')
                 Object.keys(data).forEach(_key => {
-                        state[_key] = data[_key]
+                    state[_key] = data[_key]
                 });
             else state[key] = data;
             const target = (key === 'target' && data) || data?.target;
@@ -28,6 +30,17 @@ const data = createSlice({
                 )?.messages;
                 state.messages = messages || [];
             }
+        },
+        setData(state, actions) {
+            const { data } = actions?.payload || {};
+            if (data) Object.keys(data)?.forEach(key => {
+                if (key === 'id') data.id = data[key]?.toString();
+                if (typeof state[key] === 'object')
+                    state[key] = mergeObjects(state[key], data[key])
+                else state[key] = data[key];
+            });
+            if (state.mode === 'on')
+                state.startedAt = Date.now();
         },
         addNotification(state, actions) {
             const { data } = actions.payload;
@@ -52,5 +65,6 @@ const data = createSlice({
 export const { 
         addData, 
         addNotification, 
+        setData,
      } = data.actions;
 export default data.reducer;

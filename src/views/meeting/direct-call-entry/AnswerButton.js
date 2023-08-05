@@ -26,19 +26,20 @@ export default function AnswerButton () {
         if(mode === 'incoming') {
             ringRef.current?.clearAudio();
             clearTimer(timerRef.current);
+            console.log(id);
             socket.emit('join', { id });
             dispatch(setData({
                 data : { mode: joined ? 'on' : 'join', startedAt: Date.now() }
             }));
             const streams = [];
-            if(microActive && audioStreamRef.current) {
+            if(microActive) {
                 const audioTracks = audioStreamRef.current.getAudioTracks();
                 const [mediaStreamTrack] = audioTracks;
                 const localAudioTrack = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack })
                 localTrackRef.current.audioTrack =  localAudioTrack;
                 streams.push(localAudioTrack);
             }
-            if(cameraActive && videoStreamRef.current) {
+            if(cameraActive) {
                 const videoTracks = videoStreamRef.current.getVideoTracks();
                 const [mediaStreamTrack] = videoTracks;
                 const localVideoTrack = AgoraRTC.createCustomVideoTrack({ mediaStreamTrack })

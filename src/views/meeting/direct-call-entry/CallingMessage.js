@@ -25,7 +25,7 @@ const messages = {
     incoming: 'Appel entrant...',
     hangup: `Fin d'appel`,
     reject: 'Rejeter',
-    unanswer: 'Pas de reponse',
+    unanswered: 'Pas de reponse',
     busy: 'En communication...',
     network: `Impossible de poursuivre l'appel, problème de réseau`,
     disconnect: 'Hors ligne',

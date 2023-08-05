@@ -6,83 +6,54 @@ import  {
     DialogActions,
     TextField,
     Box as MuiBox,
-    Alert,
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import Button from '../../../../components/Button';
-import InputControler from '../../../../components/InputControler';
-import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import InputController from '../../../../components/InputController';
 import { LoadingButton } from '@mui/lab';
 import useAxios from '../../../../utils/useAxios';
 import { useSelector } from 'react-redux';
 
-export default function InvitationRequestForm () {
-    const [{
-        open,
-        severity,
-        status,
-        externalError
-    }, setValues] = useState({});
-   
+export default function InvitationRequestForm ({open, onClose}) {
+    const [externalError, setExternalError] = useState(false);
     const token = useSelector(store => store?.user?.token);
-    const [{loading}, refresh] = useAxios({
+    const [{loading}, refetch] = useAxios({
         method: 'post',
         url: '/api/chat/invite',
         headers: {'Authorization': `Bearer ${token}`}
     }, {manual: true});
     const emailRef = useRef();
-    
-    const handleClose = event => {
-        event.preventDefault();
-        setValues({});
-    };
 
-    const handleSubmit = event => {
+    const handleSubmit = async event => {
         event.preventDefault();
+        const alertData = {
+            severity: 'success',
+            messages: null,
+        }
         if(emailRef.current && externalError) 
-            setValues(values => ({
-                ...values, 
-                externalError: false
-            }));
+           setExternalError(false);
         if(!emailRef.current && !externalError)
-            setValues(values => ({
-                ...values, 
-                externalError: true
-            }));
+            setExternalError(true);
         if(emailRef.current)
-            refresh({
-                data: {
-                    targetMail: emailRef.current,
-                    object: 'connexion'
-                },
-            }).then(() => {
-                setValues(values => ({...values, severity: 'success'}));
-            }).catch(({response: {status}}) => {
-                if(status === 404 || status === 409)
-                    setValues(values => ({
-                        ...values, 
-                        severity: 'warning', 
-                        status
-                    }));
-                else 
-                    setValues(values => ({
-                        ...values, 
-                        severity: 'error', 
-                        status
-                    }));
+         try {
+            await refetch({
+                data: {targetMail: emailRef.current, object: 'connexion'},
             });
+            alertData.messages = `
+            L'invitation est envoyée avec succès, ${emailRef.current} sera avisé 
+            de la demande de confirmation d'être en contact avec vous.`;
+            alertData.severity = 'success';
+        } catch (e) {
+            const status = e?.response?.status;
+            if(status === 404 || status === 409) {
+                alertData.messages = ``
+            }
+            else ;//error;
+
+        }
     };
 
     return (
-        <React.Fragment>
-            <Button
-                children="Inviter un contact" 
-                variant="outlined"
-                color="inherit"
-                sx={{mx: 'auto'}}
-                startIcon={<PersonAddAlt1OutlinedIcon/>}
-                onClick={() => setValues(values => ({...values, open: true}))}
-            />
             <Dialog 
                 open={Boolean(open)}
                 BackdropProps={{
@@ -102,15 +73,6 @@ export default function InvitationRequestForm () {
                     Inviter un contact
                 </DialogTitle>
                     <DialogContent>
-                        {severity === 'success' ?
-                        (
-                        <Alert>
-                            L'invitation est envoyée avec succès, {emailRef.current} sera avisé 
-                            de la demande de confirmation d'être en contact avec vous.
-                        </Alert>
-                        ) :
-                        (
-                        <React.Fragment>
                             <DialogContentText
                                 variant="body2"
                                 component="div"
@@ -123,7 +85,7 @@ export default function InvitationRequestForm () {
                                reconnu par cette plateforme.
                             </DialogContentText>
                             <MuiBox>
-                            <InputControler
+                            <InputController
                                 type="email"
                                 valueRef={emailRef}
                                 margin="dense"
@@ -134,62 +96,42 @@ export default function InvitationRequestForm () {
                                 <TextField
                                     label="Adresse électronique"
                                 />
-                            </InputControler>
+                            </InputController>
                             </MuiBox>
-                            {severity === 'warning' &&
-                            <Alert severity="warning">
-                                {status === 404 &&
-                                `Nous avons détecté que l'adresse e-mail "${emailRef.current}" n'est 
-                                pas reconnue par GEID, car l'utilisateur correspondant n'a 
-                                pas été trouvé sur la plateforme. Pour continuer, 
-                                nous vous invitons à saisir l'adresse e-mail d'un 
-                                utilisateur existant sur GEID.`}
-                                {status === 409 &&
-                                `Il n'est pas possible d'envoyer votre invitation via GEID, 
-                                car il existe déjà une demande en attente ou une demande a déjà été acceptée. 
-                                Si vous ne voyez pas l'adresse e-mail "${emailRef.current}" dans votre liste 
-                                de contacts, veuillez patienter 
-                                jusqu'à ce que vous receviez une réponse à votre invitation.`}
-                            </Alert>}
-                            {severity === 'error' &&
-                            <Alert severity="error">
-                                Impossibilité de soumettre cette invitation en raison d'un problème 
-                                résultant d'une mauvaise tentation ou d'une manipulation inappropriée.
-                            </Alert>}
-                        </React.Fragment>
-                        )}
                     </DialogContent>
                     <DialogActions>
-                        {severity !== 'success' ?
-                            (
-                                <React.Fragment>
-                                    <Button
-                                        onClick={handleClose}
-                                        color="primary"
-                                    >
-                                    Annuler
-                                    </Button>
-                                    <LoadingButton
-                                        color="primary"
-                                        variant="outlined"
-                                        type="submit"
-                                        size="small"
-                                        sx={{textTransform: 'none'}}
-                                        loading={loading}
-                                    >
-                                        Soumettre l'invitation
-                                    </LoadingButton>
-                                </React.Fragment>
-                            ) :
-                            (
-                                <Button
-                                    onClick={handleClose}
-                                    variant="outlined"
-                                >D'accord</Button>
-                            )
-                        }
+                        <Button
+                            //onClick={handleClose}
+                            color="primary"
+                        > Annuler </Button>
+                        <LoadingButton
+                            color="primary"
+                            variant="outlined"
+                            type="submit"
+                            size="small"
+                            sx={{textTransform: 'none'}}
+                            loading={loading} > Soumettre l'invitation
+                        </LoadingButton>
                     </DialogActions>
             </Dialog>
-        </React.Fragment>
     )
 }
+
+const getMessages = (email) => ({
+    success: `
+    L'invitation est envoyée avec succès, "${email}" sera avisé 
+    de la demande de confirmation d'être en contact avec vous.`,
+    warning404: `
+    Il n'est pas possible d'envoyer votre invitation via GEID, 
+    car il existe déjà une demande en attente ou une demande a déjà été acceptée. 
+    Si vous ne voyez pas l'adresse e-mail "${email}" dans votre liste 
+    de contacts, veuillez patienter,
+    jusqu'à ce que vous receviez une réponse à votre invitation.`,
+    warning409: `Il n'est pas possible d'envoyer votre invitation via GEID, 
+    car il existe déjà une demande en attente ou une demande a déjà été acceptée. 
+    Si vous ne voyez pas l'adresse e-mail "${email}" dans votre liste 
+    de contacts, veuillez patienter 
+    jusqu'à ce que vous receviez une réponse à votre invitation.`,
+    error: `Impossibilité de soumettre cette invitation en raison d'un problème 
+    résultant d'une mauvaise tentation ou d'une manipulation inappropriée.`
+})

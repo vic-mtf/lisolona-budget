@@ -87,7 +87,7 @@ export default function VoiceNoteEqualizer () {
                         >Annuler</Button>
                         {permission?.state === 'prompt' &&
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             onClick={handleAudioStream}
                         >Autoriser</Button>}
                     </DialogActions>

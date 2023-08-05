@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import mergeObjects from "./mergeObject";
+import mergeObjects, { deepMerge } from "./mergeObject";
 
 const useStateRef = (init) => {
     const tableRef = useRef(init);
@@ -13,28 +13,31 @@ const useStateRef = (init) => {
 
 export default function useTableRef(initialTable=[]) {
     const [table, setTable] = useStateRef(initialTable);
-  
     function addObject(newObject) {
       setTable([...table.current, newObject]);
     }
-  
     function deleteObject(id) {
       setTable(table.current.filter(object => object.id !== id));
     }
   
     function updateObject(updatedObject) {
-      const index = table.current.findIndex(object => object.id === updatedObject.id);
-  
-      if (index !== -1) {
-        const updatedTable = [...table.current];
-        const currentObject = updatedTable[index];
-        updatedTable[index] = mergeObjects(currentObject, updatedObject);
-        setTable(updatedTable);
-      } else {
-        addObject(updatedObject);
+      if(updatedObject?.id || updatedObject?.id === 0) {
+        const data = table.current;
+        const index = data.findIndex(object => object.id === updatedObject.id);
+        if (index !== -1) {
+          const updatedTable = [...data];
+          const currentObject = updatedTable[index];
+          updatedTable[index] = deepMerge(currentObject, updatedObject);
+          setTable(updatedTable);
+        } else {
+          addObject(updatedObject);
+        }
       }
     }
-  
+
+    function updateObjects(updatedObjects=[]) {
+      updatedObjects.forEach(update => updateObject(update));
+    }
     function getTableSize() {
         // Renvoyer le nombre d'objets dans le tableau
         return table.current.length;
@@ -332,6 +335,7 @@ export default function useTableRef(initialTable=[]) {
         deleteObjectFields,
         deleteObjectField,
         updateObject,
+        updateObjects,
         getObjectValueByIndex,
         getObjectValueById,
         getObjectFieldNames,

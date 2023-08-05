@@ -2,44 +2,25 @@ import {
     ListItemButton, 
     ListItemAvatar, 
     ListItemText,
-    // Menu,
     ListItem,
-    // Zoom,
     Stack,
-    // Tooltip,
     useTheme
 } from "@mui/material";
 import React from "react";
-// import Avatar from "../../../../components/Avatar";
-// import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-// import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
-// import PhoneMissedOutlinedIcon from '@mui/icons-material/PhoneMissedOutlined';
-// import MissedVideoCallOutlinedIcon from '@mui/icons-material/MissedVideoCallOutlined';
-// import PhoneCallbackOutlinedIcon from '@mui/icons-material/PhoneCallbackOutlined';
-// import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined';
 import capStr from '../../../../utils/capStr';
-// import IconButton from "../../../../components/IconButton";
 import Typography from "../../../../components/Typography";
 import CustomBadge from "../../../../components/CustomBadge";
-// import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
-import AvatarStatus from "./AvatarStatus";
+import AvatarStatus from "../../../../components/AvatarStatus";
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
-import { useDispatch } from "react-redux";
-// type = incoming | outgoing | missed
-// format = audio | video
+import { useDispatch, useSelector } from "react-redux";
+import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
 
-export default function CurrentCallContactItem ({
-    avatarSrc, 
-    name, 
-    date, 
-    type, 
-    format, 
-    id,
-}) {
-  
+export default function CurrentCallContactItem ({call}) {
+    const {avatarSrc, name, date, type, format, origin, id, avatarsSrc} = call;
     const [contextMenu, setContextMenu] = React.useState(null);
     const {iconCallType, color } = useCallParams(type, format);
-    const dispatch  = useDispatch();
+    const mode = useSelector(store => store.meeting.mode);
+    const handleJoinMeeting = useHandleJoinMeeting();
 
     const calls = (
         <Typography 
@@ -60,7 +41,8 @@ export default function CurrentCallContactItem ({
 
     const handleClick =  event => {
         event.preventDefault();
-        const root = document.getElementById('root');
+        const data = {id, name, avatarSrc, type};
+        handleJoinMeeting({data, origin});
     };
 
     return (
@@ -72,6 +54,7 @@ export default function CurrentCallContactItem ({
                     sx={{overflow: 'hidden'}}
                     onContextMenu={handleContextMenu}
                     onClick={handleClick}
+                    disabled={mode !== 'none'}
                 >
                 <ListItemAvatar>
                     <CustomBadge
@@ -82,11 +65,13 @@ export default function CurrentCallContactItem ({
                         active
                     >
                         <AvatarStatus
-                            type="room"
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
+                            type={type}
+                            avatarSrc={avatarSrc}
+                            avatarsSrc={avatarsSrc}
                             alt={name}
+                            name={name}
                             id={id}
+                            invisible
                         />
                     </CustomBadge>
                 </ListItemAvatar>
@@ -100,9 +85,9 @@ export default function CurrentCallContactItem ({
                             alignItems="center"
                         >
                           <Typography color={color}>{calls} {iconCallType}</Typography>
-                          <Typography variant="caption" color="text.secondary" >
+                          {/* <Typography variant="caption" color="text.secondary" >
                             Depuis {capStr(date)}
-                          </Typography>  
+                          </Typography>   */}
                         </Stack>
                     }
                     primaryTypographyProps={{

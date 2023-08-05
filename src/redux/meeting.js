@@ -1,15 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import mergeObjects from "../utils/mergeObject";
+import { openerData } from "../utils/MeetingProvider";
+
+//mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join' || 'prepare',
+const options = openerData?.origin?.callDetails || null
 
 const initialState = {
-    mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join' || 'prepare',
-    options: null,
+    mode: openerData?.mode || 'none',
+    options,
     me: null,
-    meetingId: null,
-    location: null,
-    createdAt: null,
+    meetingId:  openerData?.origin?._id || null,
+    location: openerData?.origin?.location || null,
+    createdAt: openerData?.origin?.createdAt || null,
     startedAt: null,
-    joined: false,
+    joined: window.openerAgoraClientJoined || false,
     micro: {
         allowed: false,
         active: false,
@@ -117,9 +121,8 @@ const meeting = createSlice({
         setData(state, actions) {
             const { data } = actions?.payload || {};
             if (data) Object.keys(data)?.forEach(key => {
-                if (key === 'id') data.id = data[key]?.toString();
                 if (typeof state[key] === 'object')
-                    state[key] = mergeObjects(data[key], state[key])
+                    state[key] = mergeObjects(state[key], data[key])
                 else state[key] = data[key];
             });
             if (state.mode === 'on')

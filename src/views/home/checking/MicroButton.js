@@ -1,5 +1,5 @@
-import MicRoundedIcon from '@mui/icons-material/MicRounded';
-import MicOffRoundedIcon from '@mui/icons-material/MicOffRounded';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
+import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
 import { Badge, Fab, Box as MuiBox } from '@mui/material';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -83,9 +83,9 @@ export default function MicroButton ({getAudioStream}) {
                 }}
             >
                 {micro?.active ? 
-                <MicRoundedIcon
+                <MicNoneOutlinedIcon
                     fontSize="small"
-                /> : <MicOffRoundedIcon
+                /> : <MicOffOutlinedIcon
                     fontSize="small"
                 />}
             </Fab>

@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import FloatView from './FloatView';
 import { useSelector } from 'react-redux';
-import { Client } from '../participant/Participant';
+import Client from '../participant/Client';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import { useLayoutEffect } from 'react';
 import { useData } from '../../../../../utils/DataProvider';
@@ -18,9 +18,8 @@ export default function CameraView ({mode}) {
     const videoRef = useRef();
 
     useLayoutEffect(() => {
-        if(camera.active) {
+        if(camera.active) 
             videoRef.current.srcObject = videoStreamRef.current
-        }
     },[camera, videoStreamRef])
 
     return (
@@ -37,9 +36,8 @@ export default function CameraView ({mode}) {
                 avatarSrc={user.image}
                 id={user.id}
                 audioTrack={micro.active && localTrackRef.current.audioTrack}
-                videoTrack={null}
+                showVideo={camera.active}
                 name="Vous"
-                externalVideo={camera.active}
                 reverseScreen
             />
         </MuiBox>

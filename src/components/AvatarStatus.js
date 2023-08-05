@@ -10,7 +10,8 @@ import getShort from "../utils/getShort";
 import { useSocket } from "../utils/SocketIOProvider";
 import { useSelector } from "react-redux";
 
-function AvatarStatus ({type, name, avatarSrc, id, invisible}) {
+function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, avatarsSrc}) {
+    const images = Array.isArray(avatarsSrc) ? avatarsSrc : [];
     const status = useSelector(store => store.status[id]);
     const isEmittedRef = useRef(true);
     const socket = useSocket();
@@ -18,11 +19,12 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible}) {
     const { background, text } = generateColorsFromId(id, theme.palette.mode);
     
     const avatarSx = useMemo(() => ({
+        ...sx,
         color: text,
         bgcolor: background,
         fontWeight: 'bold',
         fontSize: 15,
-    }), [background, text]);
+    }), [background, text, sx]);
 
     useEffect(() => {
         if(!status && !invisible) {
@@ -75,13 +77,13 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible}) {
                     (
                     <CustomAvatarGroup>
                         <Avatar
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
+                            src={images[0]}
+                            srcSet={images[0]}
                             sx={{...avatarSx}}
                         />
                         <Avatar
-                            src={avatarSrc}
-                            srcSet={avatarSrc}
+                            src={images[1]}
+                            srcSet={images[1]}
                             alt={name}
                             sx={{...avatarSx}}
                         />
@@ -94,7 +96,8 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible}) {
 }
 
 AvatarStatus.defaultProps = {
-    type: 'direct'
+    type: 'direct',
+    sx: {},
 }
 
 const AvatarFadeLoading = React.memo(({...props}) => {

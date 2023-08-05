@@ -5,26 +5,17 @@ import { generateColorsFromId } from "../../../../utils/genColorById";
 import { useMemo } from 'react';
 import { useMeetingData } from '../../../../utils/MeetingProvider';
 import getShort from '../../../../utils/getShort';
-import Header from '../../prepare-device/Header';
+import Header from '../../room-call-entry/Header';
 import { formatNames } from '../footer/MeetingStatus';
 import formatDuration from '../../../../utils/formatDuration';
 import { useSelector } from 'react-redux';
-import getFullName from '../../../../utils/getFullName';
+import useGetClients from './useGetClients';
 
 export default function EndMeeting({ open, type }) {
-    const [{ meetingData }, { settersMembers }] = useMeetingData();
-    const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
-    const user = useSelector(store => store.meeting.me);
+    const [{ target, }] = useMeetingData();
+    const userId = useSelector(store => store.meeting?.me?.id);
     const startedAt = useSelector(store => store.meeting.startedAt);
-    const participants = useMemo(() => (
-        settersMembers.getTableSubsetByFilter(({id}) => id !== user?.id)
-        .map(({identity:target}) => ({
-            id: target?._id,
-            name: getFullName(target),
-            email: target?.email,
-            avatarSrc: target?.imageUrl,
-        }))
-    ), [settersMembers, user?.id]);
+    const participants = useGetClients()
     
     const message = {
         end: `Fin de ${target.type === 'direct' ? "l'appel" : "la reunion"}`,
@@ -65,7 +56,7 @@ export default function EndMeeting({ open, type }) {
                 <MuiBox
                     sx={{
                         position: 'relative',
-                        m: 5,
+                        m: 2,
                     }}
                 >
                     {target.type === 'direct' ?

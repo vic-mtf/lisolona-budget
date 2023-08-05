@@ -10,6 +10,7 @@ const CustomBadge = styled(Badge,
       shouldForwardProp: (prop) => prop !== 'online' && prop !== 'active'
   })(({ theme, online, active }) => ({
   '& .MuiBadge-badge': {
+      zIndex: 0,
       backgroundColor: online ? greenColor : greyColor,
       color: online ? greenColor : greyColor,
       boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
@@ -21,7 +22,7 @@ const CustomBadge = styled(Badge,
         height: '100%',
         borderRadius: '50%',
         animation: active ? 'ripple 1.2s infinite ease-in-out' : 'none',
-        border: '1px solid currentColor',
+        border: '2px solid currentColor',
         content: '""',
       },
     },

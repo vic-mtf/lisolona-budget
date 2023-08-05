@@ -145,7 +145,7 @@ const ButtonActions = ({id: _id}) => {
     return (
         <Stack spacing={1} direction="row" mt={1}>
             <LoadingButton 
-                variant="contained" 
+                variant="outlined" 
                 children="Accepter" 
                 fullWidth
                 size="small"

@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import Avatar from '../../../../../components/Avatar';
-import InputControler from '../../../../../components/InputControler';
+import InputController from '../../../../../components/InputController';
 import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
 import Typography from '../../../../../components/Typography';
 
@@ -56,7 +56,7 @@ export default function GroupForm ({
                         </Typography>
                     </MuiBox>
                     <MuiBox>
-                        <InputControler 
+                        <InputController 
                             fullWidth
                             defaultValue={groupTitleRef?.current}
                             trim={false}
@@ -66,10 +66,10 @@ export default function GroupForm ({
                             <TextField
                                 label="Nom"
                             /> 
-                        </InputControler>
+                        </InputController>
                     </MuiBox>
                     <MuiBox>
-                        <InputControler 
+                        <InputController 
                             fullWidth
                             trim={false}
                             defaultValue={descriptionRef?.current}
@@ -81,7 +81,7 @@ export default function GroupForm ({
                                 label="Description"
                                 multiline
                             /> 
-                        </InputControler>
+                        </InputController>
                     </MuiBox>
                 </Stack>
             </Stack>

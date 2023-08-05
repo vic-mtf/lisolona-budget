@@ -1,10 +1,10 @@
 import StopScreenShareOutlinedIcon from '@mui/icons-material/StopScreenShareOutlined';
 import ScreenShareOutlinedIcon from '@mui/icons-material/ScreenShareOutlined';
-import { Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { Badge, Fab,Tooltip } from '@mui/material';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import { setCameraData, setScreenSharingData } from '../../../../../redux/meeting';
+import { setScreenSharingData } from '../../../../../redux/meeting';
 import { useData } from '../../../../../utils/DataProvider';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import store from '../../../../../redux/store';

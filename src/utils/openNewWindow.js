@@ -1,16 +1,17 @@
-const width = window.innerWidth * .65;
-const height = window.innerHeight * .85;
+const width = window.innerWidth * 10;
+const height = window.innerHeight * 10;
 const left = (window.innerWidth - width) / 2;
 const top = (window.innerHeight - height) / 2;
 
 const _args = {
-    url: '',
-    // width,
-    // height,
-    // top,
-    // left,
-    // target: '_blank',
+    //url: '',
+    width,
+    height,
+    top,
+    left,
+    target: '_blank',
     popup: 'yes',
+    fullscreen: 'yes',
     location: 'no',
     menubar: 'no',
     status: 'no'

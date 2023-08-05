@@ -83,7 +83,7 @@ function HomePage() {
               width: '100%',
             }}
           >
-            <Button variant="contained" color="primary" sx={{ width: '100%' }}>
+            <Button variant="outlined" color="primary" sx={{ width: '100%' }}>
               Connexion
             </Button>
           </Box>

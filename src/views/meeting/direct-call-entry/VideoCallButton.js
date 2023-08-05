@@ -1,9 +1,8 @@
-import { Fab, Stack, createTheme } from "@mui/material";
+import { Fab, Stack } from "@mui/material";
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import Typography from "../../../components/Typography";
 
 export default function VideoCallButton ({handleCall}) {
-
     return (
         <Stack
             display="flex"

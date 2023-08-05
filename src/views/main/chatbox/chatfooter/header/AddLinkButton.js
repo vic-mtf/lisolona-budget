@@ -8,7 +8,7 @@ import {
     TextField,
     ToggleButton,
 } from '@mui/material';
-import InputControler from '../../../../../components/InputControler';
+import InputController from '../../../../../components/InputController';
 import CustomToggleButtonGroup from '../../../../../components/CustomToggleButtonGroup';
 import AddLinkOutlinedIcon from '@mui/icons-material/AddLinkOutlined';
 import Button from '../../../../../components/Button';
@@ -38,7 +38,7 @@ export default function AddLinkButton () {
             <CustomToggleButtonGroup
                 size="small"
                 aria-label="add-link"
-                variant="contained" 
+                variant="outlined" 
                 onMouseDown={event => event.preventDefault()}
             >
                 <ToggleButton 
@@ -80,7 +80,7 @@ export default function AddLinkButton () {
                                 component="form"
                                 elevation={5}
                             >
-                                <InputControler
+                                <InputController
                                     valueRef={textRef}
                                     margin="dense"
                                     fullWidth
@@ -92,8 +92,8 @@ export default function AddLinkButton () {
                                         label="Text"
                                         onClick={setFocus}
                                     />
-                                </InputControler>
-                                <InputControler
+                                </InputController>
+                                <InputController
                                     valueRef={urlRef}
                                     type="url"
                                     margin="dense"
@@ -106,7 +106,7 @@ export default function AddLinkButton () {
                                         onClick={setFocus}
                                         placeholder='https://example.com'
                                     />
-                                </InputControler>
+                                </InputController>
                                 <DialogActions>
                                     <Button
                                         children="Annuler"

@@ -5,11 +5,10 @@ import {
 } from '@mui/material';
 import Typography from '../../../../components/Typography';
 import { useMeetingData } from '../../../../utils/MeetingProvider';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import store from '../../../../redux/store';
-import { useSelector } from "react-redux";
 import formatDuration from '../../../../utils/formatDuration';
-import getFullName from '../../../../utils/getFullName';
+import useGetClients from '../actions/useGetClients';
 
 export default function MeetingStatus () {
     return (
@@ -39,23 +38,8 @@ export default function MeetingStatus () {
 }
 
 const Name = () => {
-    const [
-        { meetingData },
-        { settersMembers }
-    ] = useMeetingData();
-    const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
-    const user = useSelector(store => store.meeting.me);
-
-    const participants = useMemo(() => (
-        settersMembers.getTableSubsetByFilter(({id}) => id !== user?.id)
-        .map(({identity:target}) => ({
-            id: target?._id,
-            name: getFullName(target),
-            email: target?.email,
-            avatarSrc: target?.imageUrl,
-        }))
-    ), [settersMembers, user?.id]);
-
+    const [{ target }] = useMeetingData();
+    const participants = useGetClients();
     return (
         <Typography
             variant="body1"
@@ -84,14 +68,26 @@ const Timer = () => {
     return time;
 };
 
-export function formatNames(namesList) {
-    if (namesList.length === 1) {
-        return namesList[0];
-    } else if (namesList.length === 2) {
-        return `${namesList[0]} et ${namesList[1]}`;
+export function formatNames(names, includeRemainingCount = false) {
+    if (names.length === 0) {
+      return "";
+    } else if (names.length === 1) {
+      return names[0];
+    } else if (names.length === 2) {
+      return names[0] + " et " + names[1];
+    } else if (names.length === 3) {
+        return names[0] + ', ' + names[1] + " et " + names[2];
     } else {
-        const otherNamesCount = namesList.length - 2;
-        const otherNames = namesList.slice(2).join(", ");
-        return `${namesList[0]}, ${namesList[1]} et ${otherNamesCount} autres (${otherNames})`;
+      let remainingCount = names.length - 2;
+      let remainingString = "";
+      if (includeRemainingCount) {
+        remainingString += "(";
+      }
+      remainingString += names.slice(2, names.length).join(", ");
+      if (includeRemainingCount) {
+        remainingString += ")";
+      }
+      return names[0] + ", " + names[1] + " et " + remainingCount + " autres " + remainingString;
     }
-    }
+}
+  

@@ -44,7 +44,7 @@ export default function BorderAnimate ({duration, visible}) {
                     ${theme.palette.primary.main} 0.15turn, 
                     ${theme.palette.primary.main + '0a'} 0.25turn) 30`,
                     animation: `borderRotate ${duration}ms  linear infinite forwards`,
-                    '& :nth-child(2)': {
+                    '& :nth-of-type(2)': {
                         borderImage: `radial-gradient(ellipse at var(--gradX) var(--gradY), ${theme.palette.primary.main}, ${theme.palette.primary.main} 10%, ${theme.palette.primary.main + '0a'} 40%) 30`,
                         animation: `borderRadial ${duration}ms  linear infinite forwards`,
                     },

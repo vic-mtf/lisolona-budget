@@ -5,7 +5,7 @@ import {
     Box as MuiBox,
     Link,
 } from '@mui/material';
-import InputControler from '../../../components/InputControler';
+import InputController from '../../../components/InputController';
 import Typography from '../../../components/Typography';
 import { useSelector } from 'react-redux';
 import Button from '../../../components/Button';
@@ -27,13 +27,13 @@ export default function CheckingUser () {
                 vous pouvez vous <Link>connecter</Link> en utilisant vos identifiants habituels
             </Typography>
             <MuiBox> 
-                <InputControler fullWidth>
+                <InputController fullWidth>
                     <TextField
                         placeholder='ex: Viael Mongolo Tanzey'
                         label="Votre nom complet"
                         disabled
                     />
-                </InputControler>
+                </InputController>
             </MuiBox>
         </Stack>
     );

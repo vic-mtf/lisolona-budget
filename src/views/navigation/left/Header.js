@@ -7,7 +7,7 @@ import {
     Toolbar,
     Tooltip
 } from "@mui/material";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
@@ -20,12 +20,15 @@ import MoreOption from "./shortcut/MoreOption";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import ActionWrapper from "./actions/ActionWrapper";
+import CustomBadge from "../../../components/CustomBadge";
+import store from "../../../redux/store";
+import { isBoolean } from "lodash";
+import { setData } from "../../../redux/data";
 
 export default function Header({ onChangeNavigation, navigation, onChangeSearch }) {
     const [anchor, setAnchor] = useState(null);
     const anchorEl = useRef();
     const notificationsNumber = useSelector(store => store?.data?.notifications?.length);
-
     const navigationOptions = useMemo(() => [
         {
             label: 'Conversations',
@@ -35,7 +38,8 @@ export default function Header({ onChangeNavigation, navigation, onChangeSearch 
         {
             label: 'Appels',
             icon: <CallOutlinedIcon />,
-            nbr: 0
+            nbr: 0,
+            activeKey: 'activeCall'
         },
         {
             label: 'Contacts',
@@ -89,9 +93,13 @@ export default function Header({ onChangeNavigation, navigation, onChangeSearch 
                         navigationOptions.map((nav, index) => (
                             <BottomNavigationAction
                                 label={
-                                    <Label active={navigation === index}>
-                                        {nav.label}
-                                    </Label>
+                                    <LabelSignalActive
+                                        activeKey={nav.activeKey}
+                                    >
+                                        <Label active={navigation === index}>
+                                            {nav.label}
+                                        </Label>
+                                    </LabelSignalActive>
                                 }
                                 icon={
                                     <StyledBadge
@@ -133,3 +141,30 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
         padding: '0 4px',
     },
 }));
+
+const LabelSignalActive = ({children, activeKey}) => {
+    const [active, setActive] = useState();
+
+    useEffect(() => {
+        if(activeKey)  {
+            const unsubscribe = store.subscribe(() => {
+                const state = store.getState().data[activeKey];
+                    if(isBoolean(state) && state !== active)
+                        setActive(state);
+            });
+            return () => {
+                unsubscribe()
+            }
+        }
+    }, [activeKey, active]);
+
+    return (
+        <CustomBadge
+            variant={active ? 'dot' : undefined}
+            online={active}
+            active={active}
+        >
+            {children}
+        </CustomBadge>
+    )
+}

@@ -4,8 +4,9 @@ import { useData } from "../utils/DataProvider";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import React from 'react';
 import { AudioVisualizer } from "./VoiceTest";
-const APP_ID = "9862b79e43aa45c9aaa10097085988b0";
-const TOKEN = "007eJxTYFDeecd7cnX59Ne1L9zjT7imCd863lq+wsng5xU+w47aKC8FBksLM6Mkc8tUE+PERBPTZMvExERDAwNLcwMLU0sLiySDrmOLUhoCGRmWmwszMjJAIIjPxpCTWZyfk8/AAACmgyAK";
+import { isObjectLiteral } from "../utils/mergeObject";
+const APP_ID = "f14267324368439786f69fe23fe6e5a5";
+const TOKEN = "007eJxTYNCXf+T9h1X4rCZzXlaXP1fOxn6Ole9XdPxm7Aj9WmUuc06BIc3QxMjM3NjIxNjMwsTY0tzCLM3MMi3VyDgt1SzVNNH0wfUjKQ2BjAx3znOyMDJAIIjPxpCTWZyfk8/AAAD+Ux9f";
 const CHANNEL = 'lisolo';
 
 export default function AgoraTest () {
@@ -79,7 +80,7 @@ export default function AgoraTest () {
 
     useEffect(() => {
  
-      const onUserPiblished =  async (user, mediaType) => {
+      const onUserPublished =  async (user, mediaType) => {
         const stream = await client.subscribe(user, mediaType);
         const userId = user.uid;
         setParticipants(participants => {
@@ -104,7 +105,7 @@ export default function AgoraTest () {
         });
       }
 
-      const onUserUnPiblished = async (user, mediaType) => {
+      const onUserUnPublished = async (user, mediaType) => {
         await client.subscribe(user, mediaType);
         // console.log(user, mediaType);
         const userId = user.uid;
@@ -117,29 +118,37 @@ export default function AgoraTest () {
           return members;
         });
       };
-
+      const onUserPublishLits = (user, media) => {
+        console.log('exception: ', user, media);
+      }
       client.on('user-mute-audio', (user) => {
-        console.log(user.uid);
+        console.log('user-mute-audio: ', user.uid);
       }
       );
       client.on('user-unmute-audio', (user) => {
-        console.log(user.uid);
+        console.log('user-unmute-audio: ',user.uid);
       });
-      client.on('user-published', onUserPiblished);
-      client.on('user-unpublished', onUserUnPiblished);
+
+      client.on('user-published', onUserPublished);
+      client.on('user-unpublished', onUserUnPublished);
+      client.on('user-published', onUserPublished);
+      client.on('exception', onUserPublishLits);
 
      return () => {
-      client.off('user-published', onUserPiblished);
-      client.off('user-unpublished', onUserUnPiblished);
+      client.off('user-published', onUserPublished);
+      client.off('user-unpublished', onUserUnPublished);
+      client.off('exception', onUserPublishLits);
      }
     },[client]);
 
-    useEffect(() => {
-      console.log(participants);
-    },[participants])
 
    return (
-    <div>
+    <div
+      style={{
+        height: '100vh',
+        overflow: 'auto'
+      }}
+    >
        <div>
         <div>me:</div>
         <video 
@@ -204,32 +213,22 @@ export default function AgoraTest () {
 
 const Participant = ({id, audioStream, videoStream, audioTrack, videoTrack}) => {
   const videoRef = useRef();
-  const [{client}] = useData();
   useEffect(() => {
-    // videoTrack?.play(videoRef.current);
-    const stream = audioTrack?._originMediaStreamTrack
-    console.log(audioTrack?._originMediaStreamTrack)
-    if(stream) {
-      stream.onmute = (event) => {
-        console.log(event.target.muted)
-      }
-      stream.onunmute = (event) => {
-        console.log(event.target.muted)
-      }
-    }
- 
+    videoTrack?.play(videoRef.current);
+    console.log('isObjectLiteral:', isObjectLiteral(videoTrack));
+    console.log('isObjectLiteral:', isObjectLiteral(audioTrack));
   },[videoTrack, audioTrack]);
  
 
   return (
     <div>
-        {/* {videoTrack &&
+        {videoTrack &&
         <video 
           ref={videoRef}
           muted
           autoPlay
-        />} */}
-      {audioTrack && 
+        />}
+      {/* {audioTrack && 
       <div style={{height: 500, width: 500, background: 'white' }}>
         <AudioVisualizer
           // analyser={analyser}
@@ -237,7 +236,7 @@ const Participant = ({id, audioStream, videoStream, audioTrack, videoTrack}) => 
           maxSize={500}
           size={300}
         />
-      </div>}
+      </div>} */}
     </div>
   )
 }

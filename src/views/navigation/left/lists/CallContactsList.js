@@ -1,88 +1,45 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { 
+    Divider,
+    ListSubheader,
     MenuItem,
     Toolbar, 
 } from '@mui/material';
-
-import { useDispatch, useSelector } from 'react-redux';
 import db from '../../../../database/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Button from '../../../../components/Button';
 import AddIcCallOutlinedIcon from '@mui/icons-material/AddIcCallOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
-import HistoryToggleOffRoundedIcon from '@mui/icons-material/HistoryToggleOffRounded';
-import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
-import Groups3OutlinedIcon from '@mui/icons-material/Groups3Outlined';
-import CastRoundedIcon from '@mui/icons-material/CastRounded';
-import { useSocket } from '../../../../utils/SocketIOProvider';
-import { useData } from '../../../../utils/DataProvider';
 import Menu from '../../../../components/Menu';
-import { addData } from '../../../../redux/data';
 import { escapeRegExp } from 'lodash';
+import LoadingList from './LoadingList';
+import EmptyContentMessage from './EmptyContentMessage';
+import CustomListItemsGroup from '../../../../components/CustomListItemsGroup';
+import { callsItems, menuItemsCall, sortMeetings } from './contactsListOptions';
+import store from '../../../../redux/store';
+import { setData } from '../../../../redux/data';
 
-export default function CallContactsList ({search, navigation}) {
-    const mode = useSelector(store => store.meeting?.mode);
-    const socket = useSocket();
-    const dispatch = useDispatch();
-    const disabled = useMemo(() => mode !==  'none', [mode]);
-    const [{secretCodeRef}] = useData();
+export default function CallContactsList ({navigation}) {
+    const [search, setSearch] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
     const anchorElRef = useRef();
 
-    // const handleOpenMeeting = mode => {
-    //     const wd = openNewWindow({
-    //         url: '/meeting/',
-    //     });
-    //     wd.geidMeetingData = encrypt({
-    //         target,
-    //         mode,
-    //         secretCode: secretCodeRef.current,
-    //         defaultCallingState: 'before',
-    //     });
-    //     if(wd) {
-    //         dispatch(setData({ data: {mode}}));
-    //         wd.openerSocket = socket;
-    //     }
-    // }
-
     const calls = useLiveQuery(() => 
-    db?.discussions.filter(({name}) =>
-         new RegExp(escapeRegExp (search.trim().split(/\s/).join('|')), 'ig').test(name)
-     )
-     .toArray()
- ,[search]);
+        db?.calls.orderBy('createdAt').filter(({name}) =>
+            new RegExp(escapeRegExp (search.trim().split(/\s/).join('|')), 'ig').test(name)
+        ).toArray()
+    ,[search]);
 
-    const menuItems = [
-    {
-        Icon: MeetingRoomOutlinedIcon,
-        label: 'Rejoindre une reunion en cours',
-        onClick() {
-            dispatch(addData({
-                key: 'dialog',
-                data: 'join-meeting-by-code'
-            }))
-        }
-    },
-    {
-        Icon: Groups3OutlinedIcon,
-        label: 'Démarrer une réunion instantanée',
-        onClick () {
-            // setAnchorEl(null);
-            // handleOpenMeeting('prepare');
-        }
-    },
-    {
-        Icon: HistoryToggleOffRoundedIcon,
-        label: 'Planifier une réunion',
-        disabled: true,
-    },
-    {
-        Icon: CastRoundedIcon,
-        label: 'Diffusion vidéo en direct',
-        disabled: true,
-    }
-    ];
-    
+    useEffect(() => {
+        store.dispatch(setData({
+            data: {
+                activeCall: Boolean(
+                    calls?.find(call => call?.status === 1)
+                )
+            }
+        }))
+    },[calls]);
+
     return (navigation === 1 &&
         <React.Fragment>
             <Toolbar variant="dense">
@@ -99,10 +56,10 @@ export default function CallContactsList ({search, navigation}) {
                     }}
                 />
             </Toolbar>
-            {/* <ListItems
-                discussions={discussions}
+            <ListItems
+                calls={calls}
                 search={search}
-            />   */}
+            />  
             <Menu
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
@@ -117,7 +74,7 @@ export default function CallContactsList ({search, navigation}) {
                     }
                 }}
             >
-                {menuItems.map(({label, Icon, disabled, onClick}, key) => (
+                {menuItemsCall.map(({label, Icon, disabled, onClick}, key) => (
                     <MenuItem
                         key={key}
                         disabled={disabled}
@@ -130,6 +87,73 @@ export default function CallContactsList ({search, navigation}) {
                     </MenuItem>
                 )) }
             </Menu>
+        </React.Fragment>
+    );
+}
+
+const ListItems  = ({calls:cl, search}) => {
+    const meetingsGroups = useMemo(() => sortMeetings(cl), [cl]);
+    const calls = useMemo(() => 
+        meetingsGroups.map(({data}) => data).flat(),
+        [meetingsGroups]
+    );
+
+    const itemContent = useCallback ((index) => {
+        const call = calls[index];
+        const next = calls[index + 1];
+        const isDivisible = Boolean(next) && next?.title ===  call?.title;
+        const CallItem = callsItems[call?.key];
+       
+        return (
+            <div>
+                {Boolean(CallItem) &&
+                <CallItem 
+                    call={call}
+                    search={search}
+                />}
+                {isDivisible && <Divider variant="inset" component="div" />}
+            </div>
+        );
+
+    }, [search, calls]);
+
+    const groupContent = useCallback(index => {
+        return (
+            <ListSubheader
+                sx={{
+                    fontWeight: 'bold',
+                    height: 50,
+                    top: 0,
+                    position: 'sticky',
+                    zIndex: theme => theme.zIndex.drawer,
+                    background: theme => `linear-gradient(transparent 0%, ${theme.palette.background.paper} 100%)`,
+                    backdropFilter: theme => `blur(${theme.customOptions.blur})`,
+                }}
+            >
+            {meetingsGroups[index]?.title}
+        </ListSubheader>
+        )
+    }, [meetingsGroups]);
+
+    const groupCounts = useMemo(() => meetingsGroups.map(({count}) => count), [meetingsGroups]);
+    return (
+        <React.Fragment>
+            <LoadingList loading={calls === undefined} />
+            <EmptyContentMessage
+                title="Aucun appel trouvé"
+                show={calls?.length === 0}
+                description={`
+                Commencez à passer des appels pour voir 
+                votre historique d'appel ou des réunions s'afficher ici`
+                }
+            />
+                {Boolean(calls?.length) &&
+                 <CustomListItemsGroup
+                    itemContent={itemContent}
+                    groupCounts={groupCounts}
+                    groupContent={groupContent}
+                 />
+                }
         </React.Fragment>
     );
 }

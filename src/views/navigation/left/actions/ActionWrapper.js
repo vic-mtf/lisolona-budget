@@ -6,6 +6,7 @@ import getData from '../../../../utils/getData';
 import { setStatus } from "../../../../redux/status";
 import useAudio from "../../../../utils/useAudio";
 import JoinMeetingByCode from "./JoinMeetingByCode";
+import db from "../../../../database/db";
 
 export default function ActionWrapper () {
     const targetId = useSelector(store => store.data?.targetId);
@@ -25,45 +26,32 @@ export default function ActionWrapper () {
                 signalAudio.audio.play();
             }
         };
-        const handleSignalCurrentMeeting = ({from, details}) => {
-            const {type, meetingId, options, date} = details;
-            if(type === 'current-meeting') {
-                const  room = chatGroups?.find(({_id}) => _id === meetingId);
-                // if(room) dispatch(addTeleconference({
-                //         key: 'currentCalls',
-                //         data: [{
-                //             id: meetingId,
-                //             name: room.name,
-                //             date,
-                //             options,
-                //             from,
-                //         }]
-                // }));
-            }
-        };
         const toggleStatus = ({status, who}) => {
             dispatch(setStatus({id: who, status}));
         };
         const getCallHistory = ({callHistory}) => {
            
         };
+        const callStatusChange = async ({_id, status}) => {
+            console.log('current:::: ', await db?.calls?.get(_id));
+            console.log('update:::: ', await db?.calls?.update(_id, {status}));
+        };
         const onGetContact = ({contacts}) => getData({contacts});
         socket?.on('chats', handelGetChat);
         socket?.on('invitations', handleSignaling);
-        socket?.on('signal', handleSignalCurrentMeeting);
         socket?.on('status', toggleStatus);
         socket?.on('contacts', onGetContact);
         socket?.on('call-history', getCallHistory);
-
+        socket?.on('call-status', callStatusChange);
         return () => {
             socket?.off('chats', handelGetChat);
             socket?.off('invitations', handleSignaling);
-            socket?.off('signal', handleSignalCurrentMeeting);
             socket?.off('status', toggleStatus);
             socket?.off('contacts', onGetContact);
+            socket?.off('call-status', callStatusChange);
             socket?.off('call-history', getCallHistory);
         };
-    }, [socket, dispatch, user, chatGroups]);
+    }, [socket, dispatch, user, chatGroups, signalAudio]);
 
     useEffect(() => {
         if(targetId !== savedChatIdRef.current) {

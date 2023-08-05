@@ -1,15 +1,13 @@
-import { Stack, Box as MuiBox } from "@mui/material";
+import { Stack } from "@mui/material";
 import VideoCam from "./VideoCam";
 import Header from "./Header";
 import FooterOptions from "../../home/checking/FooterOptions";
 import Footer from "./Footer";
 import Typography from "../../../components/Typography";
 import { useMeetingData } from "../../../utils/MeetingProvider";
-import { useMemo } from "react";
 
-export default function PrepareDevice () {
-    const [{meetingData}] = useMeetingData();
-    const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
+export default function RoomCallEntry () {
+    const [{target}] = useMeetingData();
 
     return (
         <Stack
@@ -30,6 +28,7 @@ export default function PrepareDevice () {
             >{target.name}</Typography>
             <Typography
                 maxWidth={600}
+                align="center"
             >
                 Pour une expérience de vidéoconférence fluide, 
                 veuillez vérifier vos paramètres de caméra et de 

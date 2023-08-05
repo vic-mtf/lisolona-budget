@@ -15,29 +15,23 @@ import busy_src from '../../../../assets/busyphone.mp3';
 export default function useRinging(callState, setCallState) {
     const socket = useSocket();
     const [{client}] = useData();
-
     const ringingTimerOutgoing = useRef();
-
     const ringingAudio = useAudio(ringing_src);
     const endCallAudio = useAudio(end_call_src);
     const rejectAudio = useAudio(reject_src);
     const busyAudio =  useAudio(busy_src);
     const mode = useSelector(store => store.meeting.mode);
-    const [{ringRef, meetingData}] = useMeetingData();
-    const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
-    const origin = useMemo(() => meetingData?.origin || null, [meetingData?.origin]);
-
-    const dispatch = useDispatch();
+    const [{ringRef, target, origin}] = useMeetingData();
 
     useLayoutEffect(() => {
 
-        const handleUnAnswer = async () => {
+        const handleUnanswered = async () => {
             window.clearTimeout(ringingTimerOutgoing.current);
             ringRef.current?.clearAudio();
-            setCallState('unanswer');
+            setCallState('unanswered');
             endCallAudio.audio.play();
             await client.leave();
-            dispatch(setCameraData({data: {active: false}}));
+            store.dispatch(setCameraData({data: {active: false}}));
             setTimeout(() => {
                 if(window.opener) window.close();
             }, 1000);
@@ -45,7 +39,7 @@ export default function useRinging(callState, setCallState) {
 
         const handleRingingBusy = event => {
             window.clearTimeout(ringingTimerOutgoing.current);
-            ringingTimerOutgoing.current = window.setTimeout(handleUnAnswer, 1500);
+            ringingTimerOutgoing.current = window.setTimeout(handleUnanswered, 1500);
             if(callState !== 'busy') {
                 setCallState('busy');
                 ringRef.current?.clearAudio();
@@ -76,7 +70,6 @@ export default function useRinging(callState, setCallState) {
         mode,
         target,
         origin,
-        dispatch,
         client
     ]);
 

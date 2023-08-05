@@ -6,23 +6,18 @@ import { useData } from "../../../utils/DataProvider";
 import closeMediaStream from "../../../utils/closeMediaStream";
 import { useMeetingData } from "../../../utils/MeetingProvider";
 import { setCameraData } from "../../../redux/meeting";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Typography from "../../../components/Typography";
 import { useSocket } from "../../../utils/SocketIOProvider";
-import { useMemo } from "react";
 import clearTimer from "../../../utils/clearTimer";
+import store from "../../../redux/store";
 
 export default function HangupButton ({setCallState}) {
     const theme = useTheme();
     const disconnectAudio = useAudio(disconnect_src);
-    const [{videoStreamRef, audioStreamRef, client}] = useData();
-    const id = useSelector(store => store.meeting.id);
-    const [{meetingData, timerRef}] = useMeetingData();
-    const target = useMemo(() => meetingData?.target || null, [meetingData?.target]);
-    const origin = useMemo(() => meetingData?.origin || null, [meetingData?.origin]);
-
+    const [{streams, client}] = useData();
+    const [{timerRef, target, origin, ringRef}] = useMeetingData();
     const socket = useSocket();
-    const [{ringRef}] = useMeetingData();
     const dispatch = useDispatch()
 
     return (
@@ -53,16 +48,15 @@ export default function HangupButton ({setCallState}) {
                         clearTimer(timerRef.current);
                         disconnectAudio.audio.play();
                         ringRef.current?.clearAudio();
-                        socket.emit('hang-up',{
+                        const id = origin?._id || store.getState().meeting.meetingId;
+                        socket.emit('hang-up', {
                             target: target.id,
-                            id: origin?._id || id,
-                            type: target.type,
+                            id,
+                            type: 'direct',
                         });
-                        if(videoStreamRef.current)
-                            await closeMediaStream(videoStreamRef.current);
-                        if(audioStreamRef.current)
-                            await closeMediaStream(audioStreamRef.current);
-                        await client.leave();
+                        streams.forEach(async stream => await closeMediaStream(stream.current));
+                        if(store.getState().meeting.joined)
+                            await client.leave();
                         dispatch(setCameraData({data: {active: false}}));
                         setCallState('hangup');
                         setTimeout(() => {

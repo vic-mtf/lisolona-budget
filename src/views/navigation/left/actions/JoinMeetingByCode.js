@@ -16,15 +16,18 @@ import { addData } from '../../../../redux/data';
 import InputCode from "../../../../components/InputCode";
 import useAxios from '../../../../utils/useAxios';
 import Button from '../../../../components/Button';
-import { useSnackbar } from 'notistack';
-
+import useCustomSnackbar from '../../../../components/useCustomSnackbar';
+import IconButton from '../../../../components/IconButton';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import useHandleJoinMeeting from '../../../main/action/useHandleJoinMeeting';
 const _DIALOG_NAME = 'join-meeting-by-code';
 
 export default function JoinMeetingByCode () {
     const dialog = useSelector(store => store.data.dialog);
     const open = useMemo(() => dialog === _DIALOG_NAME);
     const token = useSelector(store => store.user.token);
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const handleJoinMeeting = useHandleJoinMeeting();
+    const {enqueueCustomSnackbar, closeCustomSnackbar} = useCustomSnackbar();
     const [{loading}, refetch, cancel] = useAxios({
         headers: {Authorization: `Bearer ${token}`}
     }, {manual: true});
@@ -33,10 +36,11 @@ export default function JoinMeetingByCode () {
         dispatch(addData({key: 'dialog', data: null}));
         if(loading) cancel();
     };
+
     return (
         <Dialog 
             open={open} 
-            onClose={null} 
+            onClose={onClose} 
             aria-labelledby={_DIALOG_NAME}
             BackdropProps={{
                 sx: {
@@ -67,13 +71,11 @@ export default function JoinMeetingByCode () {
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-                Pour rejoindre votre réunion en cours, 
-                veuillez entrer le code unique de 9 caractères 
-                fourni par l'hôte de la réunion dans le champ ci-dessous. 
-                Ce code est nécessaire pour accéder à la réunion en cours, 
-                veuillez donc vous assurer que vous l'avez correctement saisi.
-                Si vous avez des difficultés à trouver ou à entrer le code de la réunion, 
-                veuillez contacter l'hôte de la réunion pour obtenir de l'aide.
+                Pour accéder à la réunion en cours, saisissez le code unique de 9 caractères 
+                fourni par l'hôte dans le champ ci-dessous. Veuillez vérifier 
+                l'exactitude du code, car il est indispensable pour participer à la réunion. 
+                Si vous rencontrez des difficultés pour trouver ou saisir le code, 
+                veuillez contacter l'hôte de la réunion pour obtenir de l'assistance.
             </DialogContentText>
             <MuiBox
                 justifyContent="center"
@@ -86,7 +88,17 @@ export default function JoinMeetingByCode () {
                     onComplete={async (code) => {
                         const id = code.join('');
                         try {
-                            const data = await refetch({url: '/api/chat/room/call/' + id})
+                            const result = await refetch({url: '/api/chat/room/call/' + id});
+                            handleJoinMeeting({
+                                data: {
+                                    id: result?.data?.room?.id,
+                                    name: result?.data?.room?.name,
+                                    avatarSrc: result?.data?.room?.avatarSrc,
+                                    type: 'room',
+                                },
+                                origin: result.data,
+                            });
+                            onClose();
                         } catch (e) {
                             const alertData = {
                                 message: null,
@@ -94,6 +106,7 @@ export default function JoinMeetingByCode () {
                                 title: null,
                                 severity: "error",
                             }
+
                             if(e?.code === 'ERR_NETWORK') {
                                 alertData.message = (
                                     <>
@@ -109,28 +122,22 @@ export default function JoinMeetingByCode () {
                                 alertData.message = `Désolé, code invalide. Veuillez vérifier et réessayer.`;
                             }
                            
-                            if(alertData.message) 
-                                enqueueSnackbar({
+                            if(alertData.message) {
+                                let key;
+                                enqueueCustomSnackbar({
                                     message: alertData.message,
-                                    content: (key, message) => (
-                                        <Alert 
-                                            onClose={() => closeSnackbar(key)} 
-                                            severity={alertData.severity}
-                                            icon={alertData.icon}
-                                            sx={{
-                                                maxWidth: 400,
-                                            }}
+                                    severity: alertData.severity,
+                                    getKey: (_key) => key = _key,
+                                    icon: alertData.icon,
+                                    action: (
+                                        <IconButton
+                                            onClick={() => closeCustomSnackbar(key)}
                                         >
-                                            {message}
-                                        </Alert>
-                                    ),
-                                    style: {
-                                        background: 'none',
-                                        boxShadow: 0,
-                                        padding: 0,
-                                        margin: 0,
-                                    }
+                                            <CloseOutlinedIcon/>
+                                        </IconButton>
+                                    )
                                 })
+                            }
                         }
                     }}
                 />
@@ -149,9 +156,7 @@ export default function JoinMeetingByCode () {
             <Button
                 onClick={onClose}
                 color="primary"
-
-                >
-                Annuler
+            > Annuler
             </Button>
           </DialogActions>
         </Dialog>

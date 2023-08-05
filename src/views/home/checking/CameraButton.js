@@ -1,5 +1,5 @@
-import VideocamRoundedIcon from '@mui/icons-material/VideocamRounded';
-import VideocamOffRoundedIcon from '@mui/icons-material/VideocamOffRounded';
+import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import { Badge, Fab, Box as MuiBox } from '@mui/material';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -82,8 +82,8 @@ export default function CameraButton ({getVideoStream}) {
                 }}
             >
                 {camera?.active ? 
-                <VideocamRoundedIcon fontSize="small"/> : 
-                <VideocamOffRoundedIcon fontSize="small"/>}
+                <VideocamOutlinedIcon fontSize="small"/> : 
+                <VideocamOffOutlinedIcon fontSize="small"/>}
             </Fab>
         </Badge>
     );

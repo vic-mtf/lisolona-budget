@@ -1,11 +1,15 @@
-import { Stack, Box as MuiBox, Paper } from "@mui/material";
+import { Box as MuiBox } from "@mui/material";
 import AvatarProfile from "./AvatarProfile";
 import FooterButtons from "../../home/checking/FooterButtons";
 import { useRef } from "react";
+import useGetMediaStream from "../actions/useGetMediaStream";
+import useVideoStreamState from "../actions/useVideoStreamState";
 
 export default function VideoCam () {
     const videoRef = useRef();
-
+    const handleGetMediaStream = useGetMediaStream();
+    useVideoStreamState(videoRef);
+    
     return (
         <MuiBox
             position="relative"
@@ -14,11 +18,13 @@ export default function VideoCam () {
             width={{
                 lg: 600,
                 md: 450,
+                sm: 400,
                 xs: '100%'
             }}
             height={{
                 lg: 600 * 9 / 16,
                 md: 450 * 9 / 16,
+                sm: 400 * 9 / 16,
                 xs: window.innerWidth * 9 / 16
             }}
             borderRadius={1}
@@ -56,9 +62,9 @@ export default function VideoCam () {
                 autoPlay
                 muted
             />
-                <AvatarProfile/>
+            <AvatarProfile/>
             <FooterButtons
-                videoRef={videoRef}
+                handleGetMediaStream={handleGetMediaStream}
             />
         </MuiBox>
     )

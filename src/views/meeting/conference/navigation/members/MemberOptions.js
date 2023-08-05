@@ -1,80 +1,87 @@
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Stack, Tooltip, Zoom } from '@mui/material';
-import { useSocket } from '../../../../../utils/SocketIOProvider';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { ListItemIcon, ListItemText, MenuItem, Stack } from '@mui/material';
+import Menu from '../../../../../components/Menu';
 import MicroOption from './MicroOption';
-import PinOption from './PinOption';
 import RaiseHandView from './RaiseHandView';
+import MoreOptions from './MoreOptions';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
-import AdminView from './AdminView';
-import { useData } from '../../../../../utils/DataProvider';
 
+const PushPinOutlined = (props) => {
+    return (<PushPinOutlinedIcon {...props} sx={{ transform: 'rotate(45deg)' }}/>);
+};
 
-export default function MemberOptions({rootRef, id, state, name}) {
-    const socket = useSocket();
-    const [{client}] = useData();
-    const [{membersRef}, {settersRemoteTracks, settersMembers}] = useMeetingData();
-    const uid = useMemo(() => settersMembers.getObjectIndexById(id)  + 1, [id, settersMembers]);
-    //const [isLoading, setIsLoading] = useState(false);
-    //const [screenShared, setScreenShared] = useState(state?.screenShared);
-    const [isOrganizer, setIsOrganizer] = useState(state?.isOrganizer);
-    const [handRaised, setHandRaised] = useState(state?.handRaised);
-    const [microActive, setMicroActive] = useState(
-      Boolean(settersRemoteTracks.getObjectById(uid)?.audioTrack)
+const UnpinOutlined = (props) => {
+  return (
+    <PushPinOutlined {...props}>
+      <rect x="5" y="11" width="14" height="2" />
+    </PushPinOutlined>
+  );
+}
+
+export default function MemberOptions({rootRef, id, name, state}) {
+    const [,{settersRemoteAudioTracks}] = useMeetingData();
+    const audioTrack = useMemo(() => 
+        settersRemoteAudioTracks.getTrackById(id), 
+        [settersRemoteAudioTracks, id]
     );
-    
-    const handleUserPublished = useCallback(state => (user, mediaType) => {
-        if(mediaType === 'audio' && user.uid === uid) 
-            setMicroActive(state);
-    },[uid]);
+    const anchorElRef = useRef();
+    const [anchorEl, setAnchorEl] = useState();
 
-      /* 
-      state : {
-        handRaised
-        isInRoom
-        isOrganizer
-        screenShared
-    }  
-    dentity : {
-        email
-        fname
-        grade
-        {grade, role}
-        imageUrl
-        lname
-        mname
-        _id   
-    }
-    auth: {shareScreen: false}
-    */
+    const handleClose = useCallback(() => {
+        setAnchorEl(null)
+    },[]);
 
-    useLayoutEffect(() => {
-        client.on('user-published', handleUserPublished(true));
-        client.on('user-unpublished', handleUserPublished(false));
-        return () => {
-            client.off('user-published', handleUserPublished(true));
-            client.off('user-unpublished', handleUserPublished(false));
-        }
-    }, [handleUserPublished, client]);
+    const options = [
+        {
+            label: 'Epingler' || 'Détacher',
+            icon : <PushPinOutlined/> || <UnpinOutlined/>
+        },
+    ];
 
     return (
-        <Stack
-            spacing={1}
-            direction="row"
-        >
-            {/* <AdminView
-                show={isOrganizer}
-                title="Modérateur de la réunion"
-            /> */}
-            <RaiseHandView
-                title={`${name} a levé la main`}
-                show={handRaised}
-            />
-            {/* <PinOption
-                rootRef={rootRef}
-            /> */}
-            <MicroOption
-                active={microActive}
-            />
-        </Stack>
+        <>
+            <Stack
+                spacing={1}
+                direction="row"
+            >
+                <RaiseHandView
+                    title={`${name} a levé la main`}
+                    show={state?.handRaised}
+                    id={id}
+                />
+                <MicroOption
+                    active={Boolean(audioTrack)}
+                    id={id}
+                />
+                <MoreOptions
+                    buttonRef={anchorElRef}
+                    onClick={() => {
+                        setAnchorEl(anchorElRef.current);
+                    }}
+                />
+            </Stack>
+            <Menu
+                anchorEl={anchorEl} 
+                keepMounted 
+                open={Boolean(anchorEl)} 
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+            >
+                {options.map(({label, icon, onClick, disabled}) => (
+                    <MenuItem key={label} onClick={onClick} disabled={disabled}>
+                        {!!icon && <ListItemIcon>
+                            {icon}
+                        </ListItemIcon>}
+                        <ListItemText
+                            primary={label}
+                        />
+                    </MenuItem>
+                ))}
+            </Menu>
+        </>
     );
 }

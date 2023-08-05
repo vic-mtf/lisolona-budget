@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useMemo, useState } from 'react';
 import capStr from '../utils/capStr';
 import validateFields from '../utils/validateFields';
 
-export default function InputControler ({
+export default function InputController ({
     children, 
     regExp,
     emptyErrorMessage,
@@ -69,7 +69,7 @@ export default function InputControler ({
     )
 }
 
-InputControler.defaultProps = {
+InputController.defaultProps = {
     size: 'small',
     trim: true,
     regExp: /./,

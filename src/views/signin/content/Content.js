@@ -181,7 +181,7 @@ export default function Content ({loading, refresh}) {
                 </Box>
                 <Box flex={1} >
                     {(defaultEmail === null || !!defaultEmail ) &&
-                    <Button type="submit" variant="contained">
+                    <Button type="submit" variant="outlined">
                       {defaultEmail ?  'Connexion' : 'Suivant'}
                     </Button>} 
                 </Box>
