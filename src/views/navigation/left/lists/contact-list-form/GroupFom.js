@@ -3,9 +3,7 @@ import {
     Stack, 
     TextField,
     Box as MuiBox,
-    Slide
 } from '@mui/material';
-import Button from '@mui/material/Button';
 import Avatar from '../../../../../components/Avatar';
 import InputController from '../../../../../components/InputController';
 import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';

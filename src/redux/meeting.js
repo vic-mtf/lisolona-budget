@@ -13,7 +13,7 @@ const initialState = {
     location: openerData?.origin?.location || null,
     createdAt: openerData?.origin?.createdAt || null,
     startedAt: null,
-    joined: window.openerAgoraClientJoined || false,
+    joined: false,
     micro: {
         allowed: false,
         active: false,

@@ -4,7 +4,8 @@ import { decrypt } from "./crypt";
 import useMediaTracks from "./useMediaTracks";
 import { useDispatch } from "react-redux";
 import store from '../redux/store';
-import { updateParticipantState } from "../redux/conference";
+import { addParticipants, updateParticipantState } from "../redux/conference";
+import { setData } from "../redux/meeting";
 
 export default function MeetingProvider ({children}) {
     const [{client}] = useData();
@@ -88,6 +89,38 @@ export default function MeetingProvider ({children}) {
         }
     }, [client, handleUserTogglePublished, handleUserToggleJoin]);
 
+    useLayoutEffect(() => {
+        if(openerData?.origin) {
+            
+            const {
+                createdAt, 
+                location, 
+                _id: meetingId, 
+                target, 
+                participants, 
+                callDetails: options
+            } = openerData?.origin;
+            store.dispatch(addParticipants({
+                participants:  participants.map(
+                    participant => ({
+                        ...participant, 
+                        id: participant?.identity._id,
+                        state: participant?.identity._id === target?.id ? {
+                            ...participant.state,
+                            inRoom: true,
+                        }: participant.state,
+                    })
+                )
+            }));
+            store.dispatch(
+                setData({
+                    data: {options, createdAt, location, meetingId,}
+                })
+            );
+
+        }
+    },[])
+
     return (
         <MeetingDataContext.Provider value={[getters, setters]}
         >{children}</MeetingDataContext.Provider>
@@ -97,12 +130,17 @@ export default function MeetingProvider ({children}) {
 export const getUserIdByUid = uid => {
     const user = store.getState().conference.participants.find(participant => participant.uid === uid);
     return user ? user.id : null;
-}
+};
+
+export const getUserUidById = id => {
+    const user = store.getState().conference.participants.find(participant => participant.id === id);
+    return user ? user.uid : null;
+};
 
 export const findUser = id => {
     const user = store.getState().conference.participants.find(participant => participant.id === id);
     return user ? user : null;
-}
+};
 
 
 export const openerData = window.geidMeetingData ? decrypt(window.geidMeetingData) : null;

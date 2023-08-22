@@ -1,11 +1,4 @@
-import { 
-    CardActionArea,
-    CardContent, 
-    CardMedia, 
-    Grid, 
-    Menu,
-    Stack
-} from '@mui/material';
+import { CardContent, Menu } from '@mui/material';
 
 export default function MoreOption ({anchorEl, onClose}) {
     return (

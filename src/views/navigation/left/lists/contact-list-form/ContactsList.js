@@ -6,10 +6,9 @@ import  {
     Box as MuiBox,
 } from '@mui/material';
 import React, { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addData } from '../../../../../redux/data';
 import useScrollEnd from '../../../../../utils/useScrollEnd';
-import scrollBarSx from '../../../../../utils/scrollBarSx';
 import SearchBar from '../../SearchBar';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import IconButton from '../../../../../components/IconButton';
@@ -68,7 +67,9 @@ export default function ContactsList ({
             <React.Fragment>
                 <Toolbar variant="dense" disableGutters>
                     <SearchBar/>
-                    <IconButton>
+                    <IconButton
+                        disabled
+                    >
                         <FilterListOutlinedIcon fontSize="small"/>
                     </IconButton>
                 </Toolbar>
@@ -86,7 +87,6 @@ export default function ContactsList ({
                             overflow: 'auto',
                             height: 276,
                             width: 'auto',
-                            ...scrollBarSx,
                         }}
                     >
                         {contacts?.map((contact, index, contacts) => (

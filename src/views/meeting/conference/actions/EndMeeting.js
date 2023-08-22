@@ -62,20 +62,16 @@ export default function EndMeeting({ open, type }) {
                     {target.type === 'direct' ?
                         (
                             <AvatarGroup>
-                                {
-                                    participants.map((participant) => (
+                                {participants.map((participant) => (
                                         <AvatarProfile
                                             {...participant}
                                             key={participant.id}
                                         />
-                                    ))
-                                }
+                                ))}
                             </AvatarGroup>
                         )
                         :
-                        (
-                            <Header />
-                        )
+                        ( <Header /> )
                     }
                 </MuiBox>
                 <Typography

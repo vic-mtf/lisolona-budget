@@ -27,8 +27,10 @@ export default function ShortcutOptions () {
     return (
         <React.Fragment>
           <ContactListForm/>
-          <Toolbar variant="dense" disableGutters sx={{display: 'flex', justifyContent: 'center', mb:2}}>
-            
+            <Toolbar 
+                variant="dense" 
+                disableGutters sx={{display: 'flex', justifyContent: 'center', mb:2}}
+            >
                 <AvatarProfile/>
           </Toolbar>
             <Stack

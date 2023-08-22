@@ -1,16 +1,13 @@
 import { Box as MuiBox } from "@mui/material";
 import { useSelector } from "react-redux";
-import ChatBox from "./chatbox/ChatBox";
+import ChatBox from "./chat-box/ChatBox";
 import Home from "./home/Home";
 import { drawerWidth } from "../navigation/Navigation";
 import React, { useMemo } from "react";
 import ActionWrapper from "./action/ActionWrapper";
 import ActionsWrapper from "./action/ActionsWrapper";
-import SocketIOProvider from "../../utils/SocketIOProvider";
 
 export default function Main () {
-    const token = useSelector(store => store.meeting.me?.token);
-
     return (
         <MuiBox 
             component="main" 

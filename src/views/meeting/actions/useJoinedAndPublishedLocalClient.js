@@ -23,7 +23,6 @@ export default function useJoinedAndPublishedLocalClient () {
                     data.camera = {published};
                 }
                 if(tracks.length) await client.publish(tracks);
-                console.log(tracks);
             } catch (e) {}
         return data;
     };

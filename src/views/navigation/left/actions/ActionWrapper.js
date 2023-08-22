@@ -33,8 +33,8 @@ export default function ActionWrapper () {
            
         };
         const callStatusChange = async ({_id, status}) => {
-            console.log('current:::: ', await db?.calls?.get(_id));
-            console.log('update:::: ', await db?.calls?.update(_id, {status}));
+            if(await db?.calls?.get(_id))
+                await db?.calls?.update(_id, {status});
         };
         const onGetContact = ({contacts}) => getData({contacts});
         socket?.on('chats', handelGetChat);

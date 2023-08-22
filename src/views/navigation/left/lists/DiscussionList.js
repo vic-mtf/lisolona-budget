@@ -1,21 +1,21 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { 
     Divider, 
     Toolbar
 } from '@mui/material';
 import ChatContactItem from '../items/DiscussionItem'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
 import { addData } from '../../../../redux/data'
 import { useLiveQuery } from 'dexie-react-hooks';
-import Button from '../../../../components/Button';
 import db from '../../../../database/db';
 import CustomListItems from '../../../../components/CustomListItems';
 import filterByKeyword from '../../../../utils/filterByKeyword';
 import SearchBar from '../SearchBar';
 import IconButton from '../../../../components/IconButton';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
+import store from '../../../../redux/store';
 
 export default function DiscussionList ({navigation}) {
     const [search, setSearch] = useState('');
@@ -33,7 +33,9 @@ export default function DiscussionList ({navigation}) {
                    value={search}
                    onChange={event => setSearch(event.target.value)}
                 />
-                <IconButton>
+                <IconButton
+                    disabled
+                >
                     <FilterListOutlinedIcon fontSize="small" />
                 </IconButton>
             </Toolbar>
@@ -46,12 +48,11 @@ export default function DiscussionList ({navigation}) {
 }
 
 const  ListItems = ({discussions, search}) => {
-    const dispatch = useDispatch();
     const id = useSelector(store => store.data.target?.id);
     const handleClickDiscussion = useCallback(data => event => {
         event?.preventDefault();
-        dispatch(addData({key: 'target', data}));
-    }, [dispatch]);
+        store.dispatch(addData({ key: 'target', data }));
+    }, []);
 
     const customItem = useCallback((index, contact) => {
         return (

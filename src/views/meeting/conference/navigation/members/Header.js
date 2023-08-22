@@ -21,7 +21,9 @@ export default function Header ({setKeyword, keyword}) {
                         setKeyword(event.target.value);
                     }}
                 />
-                <IconButton>
+                <IconButton
+                    disabled
+                >
                     <FilterListOutlinedIcon fontSize="small" />
                 </IconButton>
             </Toolbar>

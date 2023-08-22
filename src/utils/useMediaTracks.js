@@ -17,7 +17,6 @@ export default function useMediaTracks ({type = '', tracks = []}) {
     const deleteTrackById = useCallback(id => {
         const index = mediaTracks.tracks.findIndex(track => track.id === id);
         if(~index) {
-            console.log('deleteTrackById')
             const tracks = mediaTracks.tracks.filter(track => track.id !== id);
             setMediaTracks(({type}) => ({type, tracks}))
         }

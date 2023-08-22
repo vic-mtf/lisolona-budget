@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Divider, List, ListSubheader, MenuItem, Toolbar } from '@mui/material';
+import { Divider, ListSubheader, MenuItem, Toolbar } from '@mui/material';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import { useDispatch } from 'react-redux';
 import LoadingList from './LoadingList';
@@ -23,97 +23,98 @@ import Menu from '../../../../components/Menu';
 export default function ContactList ({navigation}) {
     const [search, setSearch] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
+    const [dialog, setDialog] = useState(null);
     const anchorElRef = useRef();
     const contacts = useLiveQuery(() => 
        db?.contacts.toArray()
     ,[]);
+
     const menuItems = [
         {
             Icon: PersonAddAlt1OutlinedIcon,
             label: 'Inviter un contact',
             onClick() {
-                
+                setDialog('invitation');
             }
         },
         {
             Icon: GroupAddOutlinedIcon,
             label: 'Créer nouveau Lisanga',
+            disabled: true,
             onClick () {
                 // setAnchorEl(null);
                 // handleOpenMeeting('prepare');
+                //<InvitationRequestForm/>
             }
         },
         ];
-    return ( navigation === 2 &&
-        <React.Fragment>
-            {/* <Toolbar variant="dense">
-                <InvitationRequestForm/>
-            </Toolbar> */}
-            <Toolbar variant="dense">
-                <Button
-                    children="Démarrer une discussion" 
-                    variant="outlined"
-                    color="inherit"
-                    ref={anchorElRef}
-                    sx={{mx: 'auto'}}
-                    startIcon={<AddCommentOutlinedIcon/>}
-                    endIcon={<ExpandMoreOutlinedIcon/>}
-                    onClick={() => {
-                        setAnchorEl(anchorElRef.current);
-                    }}
-                    // onClick={() => {
-                    //     const name = '_auto_open_create_group';
-                    //     const customEvent = new CustomEvent(name, {
-                    //         detail: {name, mode: 'contact'}
-                    //     });
-                    //     document
-                    //     .getElementById('root')
-                    //     .dispatchEvent(customEvent);
-                    // }}
-                />
-            </Toolbar>
-            <Toolbar variant="dense">
-                <SearchBar
-                    // onChangeSearch={onChangeSearch}
-                    value={search}
-                    onChange={event => setSearch(event.target.value)}
-                />
-                <IconButton>
-                    <FilterListOutlinedIcon fontSize="small" />
-                </IconButton>
-            </Toolbar>
-            <ListItems
-                search={search}
-                contacts={contacts}
+    return ( 
+        <>
+            <InvitationRequestForm
+                open={dialog === 'invitation'}
+                onClose={() => setDialog(null)}
             />
-             <Menu
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={() => setAnchorEl(null)}
-                sx={{
-                    '& .MuiMenuItem-root': {
-                        '& .MuiSvgIcon-root': {
-                        fontSize: 18,
-                        color: theme => theme.palette.text.secondary,
-                        marginRight: theme => theme.spacing(1.5),
-                        },
-                    }
-                }}
-            >
-                {menuItems.map(({label, Icon, disabled, onClick}, key) => (
-                    <MenuItem
-                        key={key}
-                        disabled={disabled}
-                        onClick={event => {
-                            setAnchorEl(null);
-                            onClick(event);
+            {navigation === 2 &&
+            <React.Fragment>
+                <Toolbar variant="dense">
+                    <Button
+                        children="Démarrer une discussion" 
+                        variant="outlined"
+                        color="inherit"
+                        ref={anchorElRef}
+                        sx={{mx: 'auto'}}
+                        startIcon={<AddCommentOutlinedIcon/>}
+                        endIcon={<ExpandMoreOutlinedIcon/>}
+                        onClick={() => {
+                            setAnchorEl(anchorElRef.current);
                         }}
-                    > 
-                    {<Icon fontSize="small"/>} {label}
-                    </MenuItem>
-                )) }
-            </Menu>
-        </React.Fragment>
+                    />
+                </Toolbar>
+                <Toolbar variant="dense">
+                    <SearchBar
+                        // onChangeSearch={onChangeSearch}
+                        value={search}
+                        onChange={event => setSearch(event.target.value)}
+                    />
+                    <IconButton
+                        disabled
+                    >
+                        <FilterListOutlinedIcon fontSize="small" />
+                    </IconButton>
+                </Toolbar>
+                <ListItems
+                    search={search}
+                    contacts={contacts}
+                />
+                <Menu
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                    sx={{
+                        '& .MuiMenuItem-root': {
+                            '& .MuiSvgIcon-root': {
+                            fontSize: 18,
+                            color: theme => theme.palette.text.secondary,
+                            marginRight: theme => theme.spacing(1.5),
+                            },
+                        }
+                    }}
+                >
+                    {menuItems.map(({label, Icon, disabled, onClick}, key) => (
+                        <MenuItem
+                            key={key}
+                            disabled={disabled}
+                            onClick={event => {
+                                setAnchorEl(null);
+                                onClick(event);
+                            }}
+                        > 
+                        {<Icon fontSize="small"/>} {label}
+                        </MenuItem>
+                    )) }
+                </Menu>
+            </React.Fragment>}
+        </>
     );
 }
 

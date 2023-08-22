@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Box as MuiBox } from "@mui/material";
 import Avatar from "../../../components/Avatar";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { generateColorsFromId } from "../../../utils/genColorById";
 import { useTheme } from "@mui/material";
 import getShort from "../../../utils/getShort";
@@ -9,7 +9,7 @@ import getFullName from "../../../utils/getFullName";
 
 export default function AvatarProfile () {
     const user = useSelector(store => store.meeting.me);
-    const cameraActive = useSelector(store => store.meeting.camera.active);
+    const camera = useSelector(store => store.meeting.camera);
     const theme = useTheme();
     const { background, text } = generateColorsFromId(user?.id, theme.palette.mode);
 
@@ -20,7 +20,7 @@ export default function AvatarProfile () {
         fontSize: 40,
     }), [background, text]); 
 
-    return (!cameraActive &&
+    return (!camera?.active &&
         <MuiBox 
             className="avatar-profile" 
         >

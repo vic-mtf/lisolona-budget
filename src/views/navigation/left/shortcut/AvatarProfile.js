@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import Avatar from "../../../../components/Avatar";
 import CustomBadge from "../../../../components/CustomBadge";
 import useOnLine from "../../../../utils/useOnLine";
+import getFullName from "../../../../utils/getFullName";
+import getShort from "../../../../utils/getShort";
 
 export default function AvatarProfile () {
-    const { name, avatarSrc } = useSelector(store => {
-        const { lastname, firsname, image: avatarSrc } = store.user;
-        const name = `${lastname || ''} ${firsname || ''}`.trim();
-        return ({name, avatarSrc});
-    })
-    const isOnLine = useOnLine();
+    const user = useSelector(store => store.user)
+    const isOnLine = useOnLine()
+    const name = useMemo(() => getFullName(user), [user]);
     
     return (
         <React.Fragment>
@@ -21,10 +20,9 @@ export default function AvatarProfile () {
                 online={isOnLine}
             >  
                 <Avatar 
-                    alt={name} 
-                    src={avatarSrc} 
-                    srcSet={avatarSrc}
-                    children={name?.charAt(0)}
+                    src={user.image} 
+                    srcSet={user.image}
+                    children={getShort(name)}
                 />
             </CustomBadge>
         </React.Fragment>

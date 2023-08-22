@@ -9,18 +9,15 @@ import IconButton from '../../../../components/IconButton';
 import Typography from '../../../../components/Typography';
 import InviteContactItem from '../items/InviteContactItem';
 import timeHumanReadable from '../../../../utils/timeHumanReadable';
-import scrollBarSx from '../../../../utils/scrollBarSx';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
 import {  useSelector } from 'react-redux';
-import { useSocket } from '../../../../utils/SocketIOProvider';
 import { union } from 'lodash';
 
 export default function NotificationList ({search, navigation}) {
     const [atEnd, scrollProps] = useScrollEnd();
     const [currentList, setCurrentList] = useState(null);
     const shadow = useShadow();
-    const socket = useSocket();
     const notifications = useSelector(store => store?.data?.notifications);
     const items = [
         InviteContactItem,
@@ -60,7 +57,6 @@ export default function NotificationList ({search, navigation}) {
                         height: "100%",
                         width: 'auto',
                         '& ul': { padding: 0 },
-                        ...scrollBarSx,
                     }}
                 > 
                 {!currentList ? 

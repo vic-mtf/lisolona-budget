@@ -1,12 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import mergeObjects from "../utils/mergeObject";
+import modifyObject from "../utils/modifyObject";
 
 const initialState = {
     target: null,
     notifications: null,
     calls: null,
     dialog: null,
-    activeCall: false
+    activeCall: false,
+    chatBox: {
+        footer: {
+            toolbar: true,
+            emojiBar: false
+        }
+    },
 };
 
 const data = createSlice({
@@ -34,13 +41,19 @@ const data = createSlice({
         setData(state, actions) {
             const { data } = actions?.payload || {};
             if (data) Object.keys(data)?.forEach(key => {
-                if (key === 'id') data.id = data[key]?.toString();
                 if (typeof state[key] === 'object')
                     state[key] = mergeObjects(state[key], data[key])
                 else state[key] = data[key];
             });
             if (state.mode === 'on')
                 state.startedAt = Date.now();
+        },
+        modifyData(state, actions) {
+            const cloneState = {...state};
+            modifyObject(cloneState, actions.payload);
+            Object.keys(state).forEach(key => {
+                state[key] = cloneState[key];
+            })
         },
         addNotification(state, actions) {
             const { data } = actions.payload;
@@ -66,5 +79,6 @@ export const {
         addData, 
         addNotification, 
         setData,
+        modifyData,
      } = data.actions;
 export default data.reducer;

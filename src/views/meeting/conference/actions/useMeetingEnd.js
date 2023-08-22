@@ -43,7 +43,7 @@ export default function useMeetingEnd() {
                 ringRef.current?.clearAudio();
                 disconnectSong.audio.play();
                 setOpenEndMessageType(true);
-                if (tracks.length) await client.unpublished(tracks);
+                if (tracks.length) await client.unpublish(tracks);
                 streams.forEach(async stream => await closeMediaStream(stream.current));
                 await client.leave();
                 socket.emit('hang-up', {

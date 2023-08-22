@@ -1,5 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
-pdfjsLib.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/scripts/pdf.worker.min.js`;
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default function getPdfPageInfos(pdf) {
   const isFile = pdf instanceof File;

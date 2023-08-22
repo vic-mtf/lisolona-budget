@@ -114,6 +114,7 @@ export const menuItemsCall = [
     {
         Icon: Groups3OutlinedIcon,
         label: 'Démarrer une réunion instantanée',
+        disabled: true,
         onClick() {
             // setAnchorEl(null);
             // handleOpenMeeting('prepare');

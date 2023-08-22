@@ -27,6 +27,7 @@ export default function AdminOptionsButton () {
                     size="small"
                     color="primary"
                     selected={selected}
+                    disabled
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,

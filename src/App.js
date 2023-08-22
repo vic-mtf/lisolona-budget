@@ -6,6 +6,7 @@ import router from "./router/router";
 import {decrypt} from "./utils/crypt";
 import { changeValues } from "./redux/user";
 import { setData } from "./redux/meeting";
+import scrollBarSx from "./utils/scrollBarSx";
 
 const channel = new BroadcastChannel('_geid_signin_connection_channel');
 
@@ -35,7 +36,14 @@ function App() {
 }, [connected, dispatch, user]);
 
   return (
-    <BoxGradient overflow="hidden">
+    <BoxGradient 
+      overflow="hidden"
+      sx={{
+        '& *': {
+          ...scrollBarSx,
+        }
+      }}
+    >
         <RouterProvider 
           router={router({
             connected,

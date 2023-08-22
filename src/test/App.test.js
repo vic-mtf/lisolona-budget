@@ -1,8 +1,21 @@
-import * as React from 'react';
-import AgoraTest from './AgoraTest';
+import React from 'react';
+import WritingArea from './writing-area/WritingArea';
 
 export default function AppTest() {
+ 
   return (
-    <AgoraTest/>
+    <div
+      style={{
+        height: '100%',
+        display: 'flex',
+        alignItems: 'end'
+      }}
+    >
+      <div>
+        <WritingArea/>
+      </div>
+    </div>
   )
 }
+
+
