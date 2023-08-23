@@ -18,8 +18,7 @@ const Link = ({ entityKey, contentState, children }) => {
 
 const EMOJI = ({ entityKey, contentState, children }) => {
   let data = contentState.getEntity(entityKey).getData();
-  const url = window.encodeURI(`${process.env.PUBLIC_URL}/${data.src}`); 
-  console.log(children);
+  const url = window.encodeURI(`${process.env.PUBLIC_URL}/${data.src}`);
   return (
     <MuiBox
       component="span"
@@ -29,14 +28,11 @@ const EMOJI = ({ entityKey, contentState, children }) => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundImage: `url(${url})`,
+        caretColor: theme => theme.palette.text.primary,
         p: 0,
         m: 0,
         '& > span': {
-          opacity: 0,
           color: 'transparent',
-        },
-        '&:after': {
-          content: `""`
         },
       }}
     >

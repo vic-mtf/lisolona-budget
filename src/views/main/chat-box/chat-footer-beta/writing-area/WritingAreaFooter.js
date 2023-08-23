@@ -1,13 +1,10 @@
 import React from 'react';
 import "@draft-js-plugins/text-alignment/lib/plugin.css";
 import { WritingAreaToolbar } from './WritingArea';
-import { Paper, ToggleButtonGroup as TBG, ToggleButton, alpha, styled, Box as MuiBox, Fab } from '@mui/material';
-import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import { Paper, ToggleButtonGroup as TBG, alpha, styled, Box as MuiBox, Fab } from '@mui/material';
 import KeyboardVoiceOutlinedIcon from '@mui/icons-material/KeyboardVoiceOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import CallToActionOutlinedIcon from '@mui/icons-material/CallToActionOutlined';
 import IconButton from '../../../../../components/IconButton';
-import { countText, getTextFromEditorState } from './countText';
 import ToggleToolbarButton from './buttons/ToggleToolbarButton';
 import ToggleEmojiBarButton from './buttons/ToggleEmojiBarButton';
 
@@ -49,60 +46,60 @@ ToggleButtonGroup.defaultProps = {
     onMouseUp: event => event.preventDefault()
 }
 
-const  WritingAreaFooter = ({editor, hasFocusRef, onFocus, }) => {
-    const [editorState, setEditorState] = editor;
-    const disabled = !hasFocusRef?.current;
+const  WritingAreaFooter = ({editor, hasFocusRef, isEmpty}) => {
    
     return (
-    <WritingAreaToolbar>
-    {
-        () => (
-            <MuiBox
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    p: .5,
-                }}
-                onMouseDown={event => event.preventDefault()}
-                onMouseUp={event => event.preventDefault()}
-            >
+        <WritingAreaToolbar>
+        {
+            () => (
                 <MuiBox
                     sx={{
-                        flexGrow: 1,
-                        gap: .5,
                         display: 'flex',
                         flexDirection: 'row',
                         alignItems: 'center',
-                        //justifyContent: 'center',
+                        justifyContent: 'center',
+                        p: .5,
                     }}
+                    onMouseDown={event => event.preventDefault()}
+                    onMouseUp={event => event.preventDefault()}
                 >
-                    <IconButton
-                        value=""
-                        size="small"
+                    <MuiBox
+                        sx={{
+                            flexGrow: 1,
+                            gap: .5,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            //justifyContent: 'center',
+                        }}
                     >
-                        <KeyboardVoiceOutlinedIcon fontSize="small"/>
-                    </IconButton>
-                    <ToggleToolbarButton/>
-                    <ToggleEmojiBarButton/>
+                        <IconButton
+                            value=""
+                            size="small"
+                        >
+                            <KeyboardVoiceOutlinedIcon fontSize="small"/>
+                        </IconButton>
+                        <ToggleToolbarButton/>
+                        <ToggleEmojiBarButton/>
+                    </MuiBox>
+                    <Fab
+                        size="small"
+                        variant="circular"
+                        color="primary"
+                        sx={{
+                            borderRadius: 1,
+                        }}
+                        disabled={isEmpty}
+                    >
+                        <SendOutlinedIcon fontSize="small" />
+                    </Fab>
                 </MuiBox>
-                <Fab
-                    size="small"
-                    variant="circular"
-                    color="primary"
-                    sx={{
-                        borderRadius: 1,
-                    }}
-                    disabled={!getTextFromEditorState(editorState).trim()}
-                >
-                    <SendOutlinedIcon fontSize="small" />
-                </Fab>
-            </MuiBox>
-        )
-    }
-    </WritingAreaToolbar>
+            )
+        }
+        </WritingAreaToolbar>
     );
 }
 
 export default WritingAreaFooter;
+
+// !getTextFromEditorState(editorState).trim()

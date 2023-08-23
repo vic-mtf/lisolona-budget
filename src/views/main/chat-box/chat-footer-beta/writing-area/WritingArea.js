@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Divider, Box as MuiBox, Paper, Stack, alpha, useTheme } from '@mui/material';
 import createStaticToolbarPlugin from '@draft-js-plugins/static-toolbar';
 import createTextAlignmentPlugin from '@draft-js-plugins/text-alignment';
@@ -18,6 +18,9 @@ import customStyleMap from './buttons/customStyleMap';
 import blockRendererFn from './buttons/blockRendererFn';
 import addCustomEntity from './buttons/addCustomEntity';
 import addEmoji from './buttons/addEmoji';
+import { getTextFromEditorState } from './countText';
+
+const DIV = document.createElement('div');
 
 export const textAlignmentPlugin = createTextAlignmentPlugin();
 const staticToolbarPlugin = createStaticToolbarPlugin();
@@ -25,24 +28,12 @@ export const { Toolbar: WritingAreaToolbar } = staticToolbarPlugin;
 const plugins = [staticToolbarPlugin, textAlignmentPlugin];
 
 export default function WritingArea ({onSubmit}) {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const onChange = event => setEditorState(EditorState.set(event, { decorator }));
+  const [focus, setFocus] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(true);
   const editorRef = useRef();
   const hasFocusRef = useRef(false);
-  const onFocus = () => editorRef.current.focus();
   const rootRef = useRef();
-  const theme = useTheme();
-
-  useEffect(() => {
-    const codeBlock = rootRef.current.querySelectorAll('._code-block');
-    codeBlock.forEach(codeBlock => {
-      codeBlock.style.borderRadius = '5px';
-      codeBlock.style.padding = '5px';
-      codeBlock.style.backgroundColor = alpha(theme.palette.common[
-        theme.palette.mode === 'light' ? 'black' : 'white'
-      ], 0.04)
-    });
-  }, [editorState, theme]);
+  const onFocus = () => editorRef.current.focus();
 
   return (
     <>
@@ -51,7 +42,7 @@ export default function WritingArea ({onSubmit}) {
         onMouseDown={onFocus}
         ref={rootRef}
         component={Paper}
-        elevation={hasFocusRef.current ? 2: 0}
+        elevation={focus ? 2: 0}
         sx={{
           width: '100%',
           boxSizing: 'border-box',
@@ -81,6 +72,7 @@ export default function WritingArea ({onSubmit}) {
             overflow: 'auto',
             overflowX: 'hidden',
             maxHeight: 150,
+            fontSize: theme => theme.typography.body1.fontSize,
         }
         }}
       >
@@ -88,32 +80,28 @@ export default function WritingArea ({onSubmit}) {
         <EmojiWrapper>
           <EmojiPicker
             onSelect={(data) =>  {
-              setEditorState(addEmoji(editorState, data))
+              const name = '_select-emoji';
+              const customEvent = new CustomEvent(name, {
+                detail: {name, data}
+              });
+              DIV.dispatchEvent(customEvent);
             }}
           />
         </EmojiWrapper>
-        <WritingAreaHeader
-          editorState={editorState}
-          setEditorState={setEditorState}
+        <EditorText
+          rootRef={rootRef}
+          editorRef={editorRef}
           hasFocusRef={hasFocusRef}
-          onFocus={onFocus}
-        />
-        <Editor
-          editorState={editorState}
-          onFocus={() => hasFocusRef.current = true}
-          onBlur={() => hasFocusRef.current = false}
-          blockStyleFn={blockStyleFn}
-          blockRendererFn={blockRendererFn}
-          customStyleMap={customStyleMap({theme})}
-          onChange={onChange}
-          plugins={plugins}
-          ref={editorRef}
-
+          setFocus={setFocus}
+          setIsEmpty={setIsEmpty}
+          isEmpty={isEmpty}
+          focus={focus}
         />
         <WritingAreaFooter
           hasFocusRef={hasFocusRef}
           onFocus={onFocus} 
-          editor={[editorState, setEditorState]}
+          isEmpty={isEmpty}
+          setIsEmpty={setIsEmpty}
         />
       </Stack>
     </>
@@ -142,13 +130,64 @@ function blockStyleFn(contentBlock) {
   }
 }
 
-function myBlockRenderer(contentBlock) {
-  const type = contentBlock.getType();
-  console.log(type);
-  // if (type === 'MY_CUSTOM_TYPE') {
-  //   return {
-  //     component: MyCustomComponent,
-  //     editable: false,
-  //   };
-  // }
-}
+const EditorText = ({hasFocusRef, editorRef, rootRef, setFocus, focus, setIsEmpty, isEmpty}) => {
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const onChange = event => setEditorState(EditorState.set(event, { decorator }));
+  const onFocus = () => editorRef.current.focus();
+  const theme = useTheme();
+
+  useEffect(() => {
+    const codeBlock = rootRef.current.querySelectorAll('._code-block');
+    codeBlock.forEach(codeBlock => {
+      codeBlock.style.borderRadius = '5px';
+      codeBlock.style.padding = '5px';
+      codeBlock.style.backgroundColor = alpha(theme.palette.common[
+        theme.palette.mode === 'light' ? 'black' : 'white'
+      ], 0.04)
+    });
+  }, [editorState, theme, rootRef]);
+
+  useEffect(() => {
+    const onSelectEmoji = event => {
+      setEditorState(addEmoji(editorState, event.detail.data));
+    };
+    const name = '_select-emoji';
+    DIV.addEventListener(name, onSelectEmoji);
+    return () => {
+      DIV.removeEventListener(name, onSelectEmoji);
+    };
+  }, [editorState]);
+
+  useLayoutEffect(() => {
+    if(hasFocusRef.current && !focus) setFocus(true);
+    if(!hasFocusRef.current && focus) setFocus(false);
+  }, [hasFocusRef, focus, setFocus]);
+
+  useLayoutEffect(() => {
+    const isText = getTextFromEditorState(editorState).trim()
+    if(isText && isEmpty) setIsEmpty(false);
+    if(!isText && !isEmpty) setIsEmpty(true);
+  }, [editorState, isEmpty, setIsEmpty]);
+
+  return (
+    <>
+      <WritingAreaHeader
+        editorState={editorState}
+        setEditorState={setEditorState}
+        hasFocusRef={hasFocusRef}
+        onFocus={onFocus}
+      />
+      <Editor
+        editorState={editorState}
+        onFocus={() => hasFocusRef.current = true}
+        onBlur={() => hasFocusRef.current = false}
+        blockStyleFn={blockStyleFn}
+        blockRendererFn={blockRendererFn}
+        customStyleMap={customStyleMap({theme})}
+        onChange={onChange}
+        plugins={plugins}
+        ref={editorRef}
+      />
+    </>
+  );
+};
