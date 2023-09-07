@@ -11,7 +11,7 @@ const _args = {
     left,
     target: '_blank',
     popup: 'yes',
-    fullscreen: 'yes',
+    //fullscreen: 'yes',
     location: 'no',
     menubar: 'no',
     status: 'no'

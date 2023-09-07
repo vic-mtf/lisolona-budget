@@ -11,7 +11,8 @@ const initialState = {
     chatBox: {
         footer: {
             toolbar: true,
-            emojiBar: false
+            emojiBar: false,
+            files: [],
         }
     },
 };

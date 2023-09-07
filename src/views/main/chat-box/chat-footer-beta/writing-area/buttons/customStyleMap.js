@@ -4,7 +4,7 @@ export default function customStyleMap ({theme}) {
     return {
         SUPERSCRIPT: {
             fontSize: '0.6em',
-            verticalAlign: 'super'
+            verticalAlign: 'super',
         },
         SUBSCRIPT: {
             fontSize: '0.6em',

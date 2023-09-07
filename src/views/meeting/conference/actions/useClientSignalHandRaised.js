@@ -73,6 +73,7 @@ export default function useClientSignalHandRaised() {
                 })
             } else onClose();
         };
+        
         const handleSignal = async event => {
             if(store.getState().meeting.meetingId === event?.where?._id) {
                 const state = event?.what?.state?.handRaised;

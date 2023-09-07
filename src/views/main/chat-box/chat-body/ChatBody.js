@@ -6,7 +6,7 @@ import MessagesContent from './messages-content/MessagesContent';
 //import store from '../../../../redux/store';
 // import ChatContainer from './messages/ChatContainer';
 
-export default function ChatBody ({target}) {
+export default function ChatBody ({target, media=true}) {
     const id = useMemo(() => target?.id, [target?.id]);
 
     return ( 
@@ -14,13 +14,12 @@ export default function ChatBody ({target}) {
             overflow="hidden"
             display="flex"
             position="relative"
-            sx={{
-                zIndex: theme => theme.zIndex.drawer,
-            }}
+            sx={{zIndex: theme => theme.zIndex.drawer}}
             flex={1}
             key={id}
+            width="100%"
         >
-            <MessagesContent target={target}/>  
+            <MessagesContent target={target} media={media}/>  
             {/* <ChatContainer
                 target={target}
             /> */}

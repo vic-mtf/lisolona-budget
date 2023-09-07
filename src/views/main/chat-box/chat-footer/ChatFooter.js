@@ -13,10 +13,10 @@ import decorators from "./content/editor-custom-style/decorators";
 
 
 
-export default function ChatFooter ({target}) {
+export default function ChatFooter ({target, media=true, toolbar}) {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorators));
     const [disabledHeader, setDisabledHeader] = useState(false);
-    const [showToolbar, setShowToolbar] = useState(true);
+    const [showToolbar, setShowToolbar] = useState(toolbar);
     const textFieldRef = useRef();
     const [recording, setRecording] = useState(false);
     const [files, setFiles] = useState([]);
@@ -71,7 +71,7 @@ export default function ChatFooter ({target}) {
                 zIndex: theme => theme.zIndex.appBar,
             }}
         >
-            {Boolean(files.length) && <FilesThumbView/>}
+            {Boolean(files.length) && media && <FilesThumbView/>}
             <Paper
                 sx={{
                     display: 'flex',
@@ -84,10 +84,11 @@ export default function ChatFooter ({target}) {
             >
                 <MessageEditor/>
                 <ToolbarFooter
-                    toggleShowToolbar={(event, value) => setShowToolbar(value)}
+                    toggleShowToolbar={() => setShowToolbar(value => !value)}
+                    media={media}
                 />
             </Paper>
-            {recording && <VoiceNoteEqualizer/>}
+            {recording && media && <VoiceNoteEqualizer/>}
         </MuiBox>
     </FooterProvider>
   );

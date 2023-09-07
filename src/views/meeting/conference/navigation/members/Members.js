@@ -3,7 +3,7 @@ import Header from "./Header";
 import MemberItem from './MemberItem';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import CustomListItemsGroup from '../../../../../components/CustomListItemsGroup';
-import { Divider, ListSubheader, Zoom } from '@mui/material';
+import { Divider, Fade, ListSubheader, Zoom } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import Typography from '../../../../../components/Typography';
 import { escapeRegExp } from 'lodash';
@@ -72,40 +72,42 @@ export default function Members () {
     }, [participantsMeeting]);
 
     return (
-        <Box
-           sx={{
-            bgcolor: 'background.default',
-           }} 
-        >
-            <Header
-                keyword={keyword}
-                setKeyword={setKeyword}
-            />
-            {participantsMeeting?.length === 0 ?
-            (
-                <Zoom in>
-                    <Typography
-                        variant="body1"
-                        display="flex"
-                        flex={1}
-                        color="text.secondary"
-                        justifyContent="center"
-                        alignItems="center"
-                        align="center"
-                    >
-                        Désolé, nous n'avons trouvé aucun participant 
-                        correspondant à votre recherche. 
-                    </Typography>
-                </Zoom>
-            ): 
-            (
-                <CustomListItemsGroup
-                    groupContent={groupContent}
-                    groupCounts={counts}
-                    itemContent={itemContent}
+        <Fade in>
+            <Box
+            sx={{
+                bgcolor: 'background.default',
+            }} 
+            >
+                <Header
+                    keyword={keyword}
+                    setKeyword={setKeyword}
                 />
-            )}
-        </Box>
+                {participantsMeeting?.length === 0 ?
+                (
+                    <Zoom in>
+                        <Typography
+                            variant="body1"
+                            display="flex"
+                            flex={1}
+                            color="text.secondary"
+                            justifyContent="center"
+                            alignItems="center"
+                            align="center"
+                        >
+                            Désolé, nous n'avons trouvé aucun participant 
+                            correspondant à votre recherche. 
+                        </Typography>
+                    </Zoom>
+                ): 
+                (
+                    <CustomListItemsGroup
+                        groupContent={groupContent}
+                        groupCounts={counts}
+                        itemContent={itemContent}
+                    />
+                )}
+            </Box>
+        </Fade>
     );
 }
 

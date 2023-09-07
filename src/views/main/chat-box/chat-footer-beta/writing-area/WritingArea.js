@@ -3,10 +3,8 @@ import { Divider, Box as MuiBox, Paper, Stack, alpha, useTheme } from '@mui/mate
 import createStaticToolbarPlugin from '@draft-js-plugins/static-toolbar';
 import createTextAlignmentPlugin from '@draft-js-plugins/text-alignment';
 import "@draft-js-plugins/text-alignment/lib/plugin.css";
-import "@draft-js-plugins/emoji/lib/plugin.css";
 import Editor from '@draft-js-plugins/editor';
 import WritingAreaHeader from './WritingAreaHeader';
-import createEmojiPlugin from '@draft-js-plugins/emoji';
 import { EditorState } from 'draft-js';
 import "prismjs/themes/prism.css";
 import decorator from './buttons/decorator';
@@ -16,9 +14,9 @@ import Slide from './Slide';
 import { useSelector } from 'react-redux';
 import customStyleMap from './buttons/customStyleMap';
 import blockRendererFn from './buttons/blockRendererFn';
-import addCustomEntity from './buttons/addCustomEntity';
 import addEmoji from './buttons/addEmoji';
 import { getTextFromEditorState } from './countText';
+import FilesThumbView from '../files-thumb-view/FilesThumbView';
 
 const DIV = document.createElement('div');
 
@@ -28,36 +26,47 @@ export const { Toolbar: WritingAreaToolbar } = staticToolbarPlugin;
 const plugins = [staticToolbarPlugin, textAlignmentPlugin];
 
 export default function WritingArea ({onSubmit}) {
-  const [focus, setFocus] = useState(false);
+  const [hasFocus, setHasFocus] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
+  const filesRef = useRef([]);
   const editorRef = useRef();
-  const hasFocusRef = useRef(false);
   const rootRef = useRef();
-  const onFocus = () => editorRef.current.focus();
+  const onFocus = () => {
+    editorRef.current.focus();
+    setHasFocus(true);
+  }
+  const onBlur = () => {
+    setHasFocus(false);
+  };
 
   return (
-    <>
-      <Stack 
+    <Paper
+      elevation={hasFocus ? 2: 0}
+      component="div"
+      sx={{
+        display: 'flex',
+        height: '100%',
+        width: '100%',
+        border: theme => `1px solid ${theme.palette.divider}`,
+      }}
+    >
+      <MuiBox 
         onClick={onFocus} 
         onMouseDown={onFocus}
         ref={rootRef}
-        component={Paper}
-        elevation={focus ? 2: 0}
+        component="div"
         sx={{
+          "& *": {m: 0,p: 0, },
           width: '100%',
           boxSizing: 'border-box',
           overflow: 'hidden',
           cursor: 'text',
-          border: theme => `1px solid ${theme.palette.divider}`,
-          bgcolor: 'background.paper',
           color: 'text.primary',
           '& div.DraftEditor-root ': {
-            fontSize: theme => theme.typography.body1.fontSize,
             width: '100%',
             px: 1,
             pt: .5,
             pb: 0,
-            fontFamily: 'calibri',
             '& blockquote': {
               borderLeft: theme => `4px solid ${theme.palette.divider}`,
               pl: .5
@@ -76,8 +85,16 @@ export default function WritingArea ({onSubmit}) {
         }
         }}
       >
-        
-        <EmojiWrapper>
+         <SliderWrapper
+            path="data.chatBox.footer.files.length"
+          >
+          <FilesThumbView
+            filesRef={filesRef}
+          />
+        </SliderWrapper>
+        <SliderWrapper
+          path="data.chatBox.footer.emojiBar"
+        >
           <EmojiPicker
             onSelect={(data) =>  {
               const name = '_select-emoji';
@@ -87,29 +104,31 @@ export default function WritingArea ({onSubmit}) {
               DIV.dispatchEvent(customEvent);
             }}
           />
-        </EmojiWrapper>
+        </SliderWrapper>
         <EditorText
           rootRef={rootRef}
           editorRef={editorRef}
-          hasFocusRef={hasFocusRef}
-          setFocus={setFocus}
+          onFocus={onFocus}
           setIsEmpty={setIsEmpty}
           isEmpty={isEmpty}
-          focus={focus}
+          hasFocus={hasFocus}
+          onBlur={onBlur}
         />
         <WritingAreaFooter
-          hasFocusRef={hasFocusRef}
           onFocus={onFocus} 
           isEmpty={isEmpty}
           setIsEmpty={setIsEmpty}
+          filesRef={filesRef}
+          hasFocus={hasFocus}
         />
-      </Stack>
-    </>
+      </MuiBox>
+    </Paper>
   );
 }
 
-const EmojiWrapper = ({children}) => {
-  const open = useSelector(store => store.data.chatBox.footer.emojiBar);
+const SliderWrapper = ({children, path}) => {
+  const state = useSelector(store => getValue(store, path));
+  const open = Boolean(state);
   return (
     <>
       <Slide open={open}>
@@ -118,6 +137,16 @@ const EmojiWrapper = ({children}) => {
       {open && <Divider/>}
     </>
   )
+}
+
+function getValue(obj, path="") {
+  let parts = path.split('.');
+  let current = obj;
+  for (let part of parts) {
+      if (current[part] === undefined) return undefined;
+      current = current[part];
+  }
+  return current;
 }
 
 function blockStyleFn(contentBlock) {
@@ -130,10 +159,9 @@ function blockStyleFn(contentBlock) {
   }
 }
 
-const EditorText = ({hasFocusRef, editorRef, rootRef, setFocus, focus, setIsEmpty, isEmpty}) => {
+const EditorText = ({onFocus, onBlur, editorRef, rootRef, hasFocus, setIsEmpty, isEmpty}) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const onChange = event => setEditorState(EditorState.set(event, { decorator }));
-  const onFocus = () => editorRef.current.focus();
   const theme = useTheme();
 
   useEffect(() => {
@@ -159,11 +187,6 @@ const EditorText = ({hasFocusRef, editorRef, rootRef, setFocus, focus, setIsEmpt
   }, [editorState]);
 
   useLayoutEffect(() => {
-    if(hasFocusRef.current && !focus) setFocus(true);
-    if(!hasFocusRef.current && focus) setFocus(false);
-  }, [hasFocusRef, focus, setFocus]);
-
-  useLayoutEffect(() => {
     const isText = getTextFromEditorState(editorState).trim()
     if(isText && isEmpty) setIsEmpty(false);
     if(!isText && !isEmpty) setIsEmpty(true);
@@ -174,13 +197,13 @@ const EditorText = ({hasFocusRef, editorRef, rootRef, setFocus, focus, setIsEmpt
       <WritingAreaHeader
         editorState={editorState}
         setEditorState={setEditorState}
-        hasFocusRef={hasFocusRef}
+        hasFocus={hasFocus}
         onFocus={onFocus}
       />
       <Editor
         editorState={editorState}
-        onFocus={() => hasFocusRef.current = true}
-        onBlur={() => hasFocusRef.current = false}
+        onFocus={onFocus}
+        onBlur={onBlur}
         blockStyleFn={blockStyleFn}
         blockRendererFn={blockRendererFn}
         customStyleMap={customStyleMap({theme})}

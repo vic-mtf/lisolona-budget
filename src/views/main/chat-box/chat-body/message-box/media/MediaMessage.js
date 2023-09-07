@@ -1,10 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { } from "@mui/material";
 import AudioMessage from "./audio/AudioMessage";
 
 import VisualMessage from "./VisualMessage";
 import MediaReader from "./MediaReader";
-import getServerUri from "../../../../../../utils/getServerUri";
+// import Gallery from "../../../../gallery/Gallery";
 
 export default function MediaMessage ({data, type, bgcolor, borderRadius, target, isMine, sended}) {
     const [audio] = Array.isArray(data) ? data: [];
@@ -32,6 +31,7 @@ export default function MediaMessage ({data, type, bgcolor, borderRadius, target
                 onClose={handleCloseReader}
                 target={target}
             />
+            {/* <Gallery/> */}
         </React.Fragment>
     );
 }

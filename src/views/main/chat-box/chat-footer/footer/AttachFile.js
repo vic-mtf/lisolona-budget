@@ -1,18 +1,12 @@
 import  React, { useCallback } from 'react';
-import {
-    Tooltip
-} from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { uniqWith } from 'lodash';
 import getFile from '../../../../../utils/getFile';
 import IconButton from '../../../../../components/IconButton';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import fileExtensionBase from '../../../../../utils/fileExtensionBase';
 
-const docExts = [];
-fileExtensionBase.forEach(item => {
-  docExts.push(...item.exts);
-});
-const acceptExtension = docExts.map(ext => `.${ext}`).join(',')
+const acceptExtension = fileExtensionBase.map(({exts}) => exts).flat().map(ext => `.${ext}`).join(',')
 
 export default function AttachFile({setFiles}) {
 

@@ -17,7 +17,7 @@ import AttachFile from './AttachFile';
 import { useCallback } from 'react';
 import { useFooterContext } from '../ChatFooter';
 
-export default function ToolbarFooter () {
+export default function ToolbarFooter ({media, toggleShowToolbar}) {
     const theme = useTheme();
     const transitionDuration = {
         enter: theme.transitions.duration.enteringScreen,
@@ -25,7 +25,7 @@ export default function ToolbarFooter () {
     };
     const [
         {sendable, showToolbar}, 
-        {toggleShowToolbar, handleToggleRecording, handleSendMessage, setFiles}
+        {handleToggleRecording, handleSendMessage, setFiles}
     ] = useFooterContext();
 
     const handleSubmit = useCallback(index => [
@@ -70,9 +70,9 @@ export default function ToolbarFooter () {
                         />
                     </div>
                 </Tooltip>
-                <AttachFile
+                {media && <AttachFile
                     setFiles={setFiles}
-                />
+                />}
             </Stack>
             {fabs.map((fab, index) => (
                 <Zoom
@@ -98,10 +98,10 @@ export default function ToolbarFooter () {
                         color={fab.color}
                         title={fab.title}
                         size="small"
-                        disabled={fab.disabled}
+                        disabled={fab.disabled || (!media && fab.value(sendable, 1))}
                         onClick={handleSubmit(index)}
                     >
-                        {fab.icon}
+                        {media ? fab.icon : fabs[0].icon}
                     </Fab>
                 </Zoom>
             ))}

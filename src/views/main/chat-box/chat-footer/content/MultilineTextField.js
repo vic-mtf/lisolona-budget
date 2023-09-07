@@ -43,6 +43,7 @@ export default function MultilineTextField ({onBlur, onFocus, showPlaceHolder}) 
                         width: '100%',
                         '& div.DraftEditor-root ': {
                             fontSize: theme => theme.typography.body2.fontSize,
+                            fontFamily: theme => theme.typography.body2.fontFamily,
                             width: '100%',
                             zIndex: theme => theme.zIndex.drawer + 100,
                         },

@@ -15,11 +15,12 @@ import { unionBy } from "lodash";
 import getMessages from "../../../../../database/getMessages";
 
 
-function MessageContent ({rootRef: _rootRef, target}) {
+function MessageContent ({rootRef: _rootRef, target, media}) {
   const rootRef = useRef();
   const isScrollableRef = useRef(false);
   const userId = useSelector(store => store.user.id);
   const [{messagesRef}] = useData();
+
   const subMessages = useMemo(() => {
     const data = messagesRef?.current[target?.id] || {
       messages: [],
@@ -38,7 +39,7 @@ function MessageContent ({rootRef: _rootRef, target}) {
   );
   const [messageGrouping, setMessageGrouping] = useState([defaultMss]);
   const [newMessages, setNewMessages] = useState([]);
-  const messages = useMemo(() => messageGrouping.flat(), [messageGrouping]);
+  const messages = useMemo(() => messageGrouping.flat().filter(({type}) => media ? true : type === 'text'), [messageGrouping, media]);
 
   const onViewNewMessages = useCallback(() => {
     setMessageGrouping(messageGrouping => {
@@ -124,21 +125,21 @@ function MessageContent ({rootRef: _rootRef, target}) {
               flexDirection: 'column-reverse'
             }}
         > 
-        <ProgressiveScrollingContainer
-          onLoading={onloadMessages}
-          loadMore={total > messages.length}
-          messages={messages}
-          rootRef={rootRef}
-          target={target}
-          newMessages={newMessages}
-          setNewMessages={setNewMessages}
-          setMessageGrouping={setMessageGrouping}
-        >
-          <MessageGroupBoxByDate
-            messages={messages}
+          <ProgressiveScrollingContainer
+            onLoading={onloadMessages}
             loadMore={total > messages.length}
-          />
-        </ProgressiveScrollingContainer>
+            messages={messages}
+            rootRef={rootRef}
+            target={target}
+            newMessages={newMessages}
+            setNewMessages={setNewMessages}
+            setMessageGrouping={setMessageGrouping}
+          >
+            <MessageGroupBoxByDate
+              messages={messages}
+              loadMore={total > messages.length}
+            />
+          </ProgressiveScrollingContainer>
         </MuiBox>
       </Fade>
       <AutoScrollDown

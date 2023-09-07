@@ -70,7 +70,7 @@ const ProgressiveScrollingContainer = ({
         }}
         width="100%"
         ref={globalRootRef}
-        p={2}
+        // p={2}
         component="div"
         onScroll={event => {
           const scrollTop = event.target.scrollTop;
@@ -87,7 +87,9 @@ const ProgressiveScrollingContainer = ({
         }}
       >
           <MuiBox
-            width="100%"
+            // width="100%"
+            mx={1}
+            my={1}
             sx={{
               display: 'flex',
               flexDirection: 'column-reverse'

@@ -2,6 +2,11 @@
   font-family: Calibri;
   src: url('../assets/calibri_regular.ttf');
 }
+@font-face {
+  font-family: "noto emoji";
+  src: url('../assets/noto_emoji_regular.ttf');
+}
+
 html{
   background: #eee5;
 }

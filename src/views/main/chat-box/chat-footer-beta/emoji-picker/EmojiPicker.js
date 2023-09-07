@@ -35,38 +35,37 @@ export default function EmojiPicker ({onSelect})  {
     }, []);
 
     return (
-    <MuiBox
-        display="flex"
-        width="100%"
-    >
-        
-        <Paper
-            elevation={2}
-            sx={{
-                bgcolor: 'background.paper',
-                width: '100%',
-                borderRadius: 0,
-            }}
+        <MuiBox
+            display="flex"
+            width="100%"
         >
-            <Stack
-                divider={<Divider/>}
+            <Paper
+                elevation={2}
+                sx={{
+                    bgcolor: 'background.paper',
+                    width: '100%',
+                    borderRadius: 0,
+                }}
             >
-                <EmojiPickerHeader
-                    onChangeGroup={handleChangeGroup}
-                    selectedGroup={group}
-                    groupStyle={style}
-                    onChangeGroupStyle={handleChangeGroupStyle}
-                    color={color}
-                    onChangeColor={handleChangeColor}
-                />
-                <EmojiPickerContent
-                    onSelect={onSelect}
-                    data={data}
-                    key={group}
-                />
-            </Stack>
-        </Paper>
-    </MuiBox>
+                <Stack
+                    divider={<Divider/>}
+                >
+                    <EmojiPickerHeader
+                        onChangeGroup={handleChangeGroup}
+                        selectedGroup={group}
+                        groupStyle={style}
+                        onChangeGroupStyle={handleChangeGroupStyle}
+                        color={color}
+                        onChangeColor={handleChangeColor}
+                    />
+                    <EmojiPickerContent
+                        onSelect={onSelect}
+                        data={data}
+                        key={group}
+                    />
+                </Stack>
+            </Paper>
+        </MuiBox>
     )
 }
 

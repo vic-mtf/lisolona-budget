@@ -2,11 +2,12 @@ import React from 'react';
 import "@draft-js-plugins/text-alignment/lib/plugin.css";
 import { WritingAreaToolbar } from './WritingArea';
 import { Paper, ToggleButtonGroup as TBG, alpha, styled, Box as MuiBox, Fab } from '@mui/material';
-import KeyboardVoiceOutlinedIcon from '@mui/icons-material/KeyboardVoiceOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import IconButton from '../../../../../components/IconButton';
 import ToggleToolbarButton from './buttons/ToggleToolbarButton';
 import ToggleEmojiBarButton from './buttons/ToggleEmojiBarButton';
+import VoiceRecordButton from './buttons/VoiceRecordButton';
+import AddFilesButton from './buttons/AddFilesButton';
 
 export const ToggleButtonGroup = styled(TBG)(({ theme }) => ({
     '& .MuiToggleButtonGroup-grouped': {
@@ -46,7 +47,7 @@ ToggleButtonGroup.defaultProps = {
     onMouseUp: event => event.preventDefault()
 }
 
-const  WritingAreaFooter = ({editor, hasFocusRef, isEmpty}) => {
+const  WritingAreaFooter = ({editor, hasFocusRef, isEmpty, filesRef}) => {
    
     return (
         <WritingAreaToolbar>
@@ -73,14 +74,10 @@ const  WritingAreaFooter = ({editor, hasFocusRef, isEmpty}) => {
                             //justifyContent: 'center',
                         }}
                     >
-                        <IconButton
-                            value=""
-                            size="small"
-                        >
-                            <KeyboardVoiceOutlinedIcon fontSize="small"/>
-                        </IconButton>
+                        <VoiceRecordButton/>
                         <ToggleToolbarButton/>
                         <ToggleEmojiBarButton/>
+                        <AddFilesButton filesRef={filesRef}/>
                     </MuiBox>
                     <Fab
                         size="small"

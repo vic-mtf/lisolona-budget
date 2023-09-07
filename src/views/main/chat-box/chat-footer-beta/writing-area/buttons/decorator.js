@@ -23,17 +23,19 @@ const EMOJI = ({ entityKey, contentState, children }) => {
     <MuiBox
       component="span"
       sx={{
+        width:0,
+        height: 0,
         position: 'relative',
-        backgroundSize: '100% 100%',
+        backgroundSize: 'contain',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundImage: `url(${url})`,
+        color: 'transparent',
         caretColor: theme => theme.palette.text.primary,
+        fontFamily: "noto emoji",
+        filter: 'blur(.1px)',
         p: 0,
         m: 0,
-        '& > span': {
-          color: 'transparent',
-        },
       }}
     >
       <span>{children}</span>

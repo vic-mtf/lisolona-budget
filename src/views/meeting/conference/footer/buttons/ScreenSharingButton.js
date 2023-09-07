@@ -10,10 +10,13 @@ import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import store from '../../../../../redux/store';
 import AgoraRTC from 'agora-rtc-sdk-ng';
 import closeMediaStream from '../../../../../utils/closeMediaStream';
+import useClientState from '../../actions/useClientState';
 
 export default function ScreenSharingButton () {
     const screen = useSelector(store => store.meeting.screenSharing);
-    const   [{videoStreamRef, screenStreamRef, client}] = useData();
+    const id = useSelector(store => store.meeting.me.id);
+    const auth = useClientState({id, props: ['shareScreen'], key: 'auth'});
+    const [{videoStreamRef, screenStreamRef, client}] = useData();
     const [{localTrackRef}] = useMeetingData();
     const [loading, setLoading] = useState();
     const dispatch = useDispatch();
@@ -90,7 +93,7 @@ export default function ScreenSharingButton () {
                     size="small"
                     onClick={handleToggleScreenSharing}
                     color={screen?.active ? "primary" : "inherit"}
-                    disabled={loading}
+                    disabled={loading || !auth?.shareScreen}
                     sx={{
                         zIndex: 0,
                         borderRadius: 1,

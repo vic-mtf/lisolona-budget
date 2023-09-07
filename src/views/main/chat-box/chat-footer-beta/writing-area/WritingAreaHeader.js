@@ -9,6 +9,7 @@ import applyCallbackToSelectedText from './applyCallbackToSelectedText';
 import { countTextInCurrentLine } from './countText';
 import addLink from './buttons/addLink';
 import AddLinButton from './buttons/AddLinButton';
+import CustomToggleButtonGroup from '../../../../../components/CustomToggleButtonGroup';
 import Slide from './Slide';
 import { useSelector } from 'react-redux';
 
@@ -51,8 +52,8 @@ ToggleButtonGroup.defaultProps = {
     onMouseDown: event => event.preventDefault(),
     onMouseUp: event => event.preventDefault()
 }
-const  WritingAreaHeader = ({editorState, setEditorState, hasFocusRef, onFocus}) => {
-    const disabled = !hasFocusRef?.current;
+const  WritingAreaHeader = ({editorState, setEditorState, hasFocus, onFocus}) => {
+    const disabled = !hasFocus;
     const open = useSelector(store => store.data.chatBox.footer.toolbar);
     const inlineStylesValues =  useInlineStyles(editorState);
     const blockStylesValues = useBlockStyles(editorState);
