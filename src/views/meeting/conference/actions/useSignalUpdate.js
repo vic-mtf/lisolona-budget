@@ -14,7 +14,6 @@ export default function useSignalUpdate() {
                 const [key] = Object.keys(event.what);
                 const data = {ids,...event.what, key};
                 store.dispatch(updateParticipantState({data}));
-                console.log("::::::data: ", data);
             }
         }
         socket?.on('signal', handleSignal);

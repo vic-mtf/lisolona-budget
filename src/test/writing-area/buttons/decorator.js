@@ -19,8 +19,6 @@ const Link = ({ entityKey, contentState, children }) => {
 const findLinkEntities = (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges((character) => {
     const entityKey = character.getEntity();
-    console.log( entityKey !== null ?
-        contentState.getEntity(entityKey).getType(): null)
     return (
       entityKey !== null &&
       contentState.getEntity(entityKey).getType() === "LINK"

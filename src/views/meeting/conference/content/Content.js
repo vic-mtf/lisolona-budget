@@ -1,10 +1,10 @@
 
 import Box from '../../../../components/Box';
 import BorderAnimate from './BorderAnimate';
-import GridDataDisplay from './GridDataDisplay';
+import GridDataDisplay from './grid-system/GridDataDisplay';
 import { useMeetingData } from '../../../../utils/MeetingProvider'
 import Participant from './participant/Participant';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import CameraView from './camera-view/CameraView';
 import { useSelector } from 'react-redux';
 import ActionsWrapper from '../actions/ActionsWrapper';
@@ -16,7 +16,7 @@ export default function Content () {
     const cameraView = useSelector(store => store.conference.cameraView);
     const members = useGetClients();
     const participants = useMemo(() => members.filter(({active}) => active), [members]);
-    
+
     const data = useMemo(() => {
         const data = [];
         if(cameraView === 'content')
@@ -33,6 +33,19 @@ export default function Content () {
         );
       }, [cameraView, participants]);
 
+      
+    useEffect(() => {
+        const handleDblclick = () => {
+            if(document?.fullscreenElement) 
+            document?.exitFullscreen();
+        else  document.body.requestFullscreen();
+        };
+        document.addEventListener('dblclick', handleDblclick);
+        return () => {
+            document.removeEventListener('dblclick', handleDblclick);
+        };
+    }, [])
+      
     
     return (
         <>

@@ -238,7 +238,7 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
         try {
             if(newCalls.length)
                 await db?.calls.bulkAdd(filterByKey(newCalls));
-            if(updateCalls.length)
+            if(updateCalls.length) 
                 await db?.calls.bulkUpdate(filterByKey(updateCalls, 'key'));
             [...newCalls, ...updateCalls].forEach((data) => {
                 const avatarSrc = data?.avatarSrc || data?.changes?.avatarSrc;
@@ -285,10 +285,10 @@ function structureCallData ({meeting, userId, isUpdate = false}) {
             startedAt: meeting?.start,
             name,
         },
-        members: meeting?.participants,
+        members: meeting?.participants || meeting.members,
         avatarSrc,
         status: meeting?.status,
-        origin: meeting,
+        origin: meeting?.origin || meeting,
         updatedAt: new Date(meeting?.updatedAt),
     };
     Object.keys(data).forEach(key => {

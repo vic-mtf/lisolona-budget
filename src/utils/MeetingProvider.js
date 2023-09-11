@@ -25,7 +25,7 @@ export default function MeetingProvider ({children}) {
                 ids: [id],
                 uid,
                 key: 'state',
-                state: {inRoom: joined}
+                state: {isInRoom: joined}
            }
             dispatch(updateParticipantState({data}));
         }
@@ -91,7 +91,6 @@ export default function MeetingProvider ({children}) {
 
     useLayoutEffect(() => {
         if(openerData?.origin) {
-            
             const {
                 createdAt, 
                 location, 
@@ -100,18 +99,21 @@ export default function MeetingProvider ({children}) {
                 participants, 
                 callDetails: options
             } = openerData?.origin;
-            store.dispatch(addParticipants({
-                participants:  participants.map(
-                    participant => ({
-                        ...participant, 
-                        id: participant?.identity._id,
-                        state: participant?.identity._id === target?.id ? {
-                            ...participant.state,
-                            inRoom: true,
-                        }: participant.state,
-                    })
-                )
-            }));
+            const id = store.getState().user.id;
+            if(participants) {
+                store.dispatch(addParticipants({
+                    participants:  participants?.map(
+                        participant => ({
+                            ...participant, 
+                            id: participant?.identity._id,
+                            state: participant?.identity._id === id ? {
+                                ...participant.state,
+                                isInRoom: true,
+                            }: participant.state,
+                        })
+                    )
+                }));
+            }
             store.dispatch(
                 setData({
                     data: {options, createdAt, location, meetingId,}

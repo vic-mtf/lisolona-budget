@@ -76,7 +76,7 @@ export default function useRoomCall () {
 
             if(type === 'room') {
                 refetch({url}).then(({data: origin}) => {
-                    signalAudio.audio.play();
+                    signalAudio.audio?.play();
                     const data = {
                         id: origin?.room?._id,
                         name: origin?.room?.name,

@@ -8,7 +8,7 @@ import useClientState from "../../actions/useClientState";
 
 export default function MemberItem ({id, active, name, avatarSrc}) {
     const rootRef = useRef();
-    const state = useClientState({id, props: ['isAdmin'], key: 'state'});
+    const state = useClientState({id, props: [], key: 'state'});
  
     return (
         <ListItem

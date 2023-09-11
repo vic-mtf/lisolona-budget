@@ -9,9 +9,6 @@ import { useMeetingData } from "../../../../utils/MeetingProvider";
 export default function Navigation ({open}) {
     const nav = useSelector(store => store.conference.nav);
     const [{target}] = useMeetingData();
-
-    console.log('****** :',target);
-
     return (
         <Drawer
             variant="persistent"

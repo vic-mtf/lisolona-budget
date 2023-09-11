@@ -24,6 +24,7 @@ export default function useClientSignalHandRaised() {
         const handleShowAlert = ({id, state}) => {
             const getKey = key => setterClientsKey.updateObject({id, key});
             const client = findUser(id)?.identity;
+            console.log('::::::: =>', id, client);
             const name = getFullName(client);
             const avatarSrc = client?.imageUrl;
             const isMe = store.getState().meeting.me.id === id;
@@ -77,7 +78,7 @@ export default function useClientSignalHandRaised() {
         const handleSignal = async event => {
             if(store.getState().meeting.meetingId === event?.where?._id) {
                 const state = event?.what?.state?.handRaised;
-                const id = event?.who?._id;
+                const [id] = Array.isArray(event?.who) ? event?.who : [event?.who?._id];
                 const isHandRaiseAlert = isBoolean(state);
                 if(isHandRaiseAlert) 
                     handleShowAlert({state, id});

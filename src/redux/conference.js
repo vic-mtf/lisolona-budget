@@ -29,6 +29,12 @@ const conference = createSlice({
                 else state[key] = data[key];
             });
         },
+        togglePinId(state, actions) {
+            const { pinId } = actions?.payload || {};
+            if(state.pinId === pinId) 
+                state.pinId = null;
+            else state.pinId = pinId === undefined ? null : pinId;
+        },
         updateParticipantState(state, actions) {
             const { data } = actions?.payload || {};
             const key = data.key || 'state';
@@ -76,6 +82,7 @@ const conference = createSlice({
 export const { 
     setConferenceData,
     updateParticipantState,
-    addParticipants
+    addParticipants,
+    togglePinId,
 } = conference.actions;
 export default conference.reducer;

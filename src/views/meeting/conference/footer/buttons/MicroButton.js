@@ -1,23 +1,37 @@
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
 import { Alert, Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
-import { useCallback, useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import getPermission from '../../../../../utils/getPermission';
-import { setMicroData } from '../../../../../redux/meeting';
-import { useData } from '../../../../../utils/DataProvider';
 import IconButton from '../../../../../components/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import store from '../../../../../redux/store';
-import { useMeetingData } from '../../../../../utils/MeetingProvider';
-import AgoraRTC from 'agora-rtc-sdk-ng';
-import { toggleStreamActivation } from '../../../../home/checking/FooterButtons';
 import useMicroProps from './useMicroProps';
+import { useSocket } from '../../../../../utils/SocketIOProvider';
 
 export default function MicroButton () {
    const {permission, micro, handleToggleMicro, loading} = useMicroProps();
+   const socket = useSocket();
    
+   useEffect(() => {
+    const handleSignal = async event => {
+        const meeting = store.getState().meeting;
+        const micro = store.getState().meeting.micro;
+        if(meeting.meetingId === event?.where?._id) {
+            const users = Array.isArray(event?.who) ? event?.who : [event?.who];
+            const [id] =  users.map(user => typeof user === 'string' ? user : user?._id);
+            const [key] = Object.keys(event.what) || [];
+            const subKeys = key ? Object.keys(event.what[key]) : [];
+            if(meeting.me.id === id && micro.active && subKeys.includes('isMic')) {
+                handleToggleMicro();
+            }
+        }
+    }
+    socket.on('signal', handleSignal);
+    return () => {
+        socket.off('signal', handleSignal);
+    }
+   },[socket, handleToggleMicro]);
 
     return (
         <Stack

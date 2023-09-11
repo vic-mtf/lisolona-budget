@@ -159,7 +159,6 @@ function RowRadioButtonsGroup({onChange, value, data, formLabel}) {
 
 const getEmojiColors = COLORS => COLORS.map((id) => {
     const imageData = getEmojisData('People & Body', id, 'Flat').find(({metadata}) => metadata.unicode === "1f91a")
-    console.log(imageData);
     const label = (
         <img 
             src={imageData.src} 

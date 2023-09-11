@@ -67,7 +67,7 @@ export default function ScreenSharingButton () {
 
     return (
         <Tooltip
-            title={`${screen.active ? 'Arreter le partage' : 'Partage'} d'écran`}
+            title={message(auth?.shareScreen, screen.active)}
             arrow
         >
             <Badge
@@ -108,3 +108,7 @@ export default function ScreenSharingButton () {
         </Tooltip>
     );
 }
+
+const message = (allowed, active) => allowed ? 
+`${active ? 'Arreter le partage' : 'Partage'} d'écran`: 
+`Le modérateur ou le responsable de cette réunion n'a pas autorisé le partage d'écran.`

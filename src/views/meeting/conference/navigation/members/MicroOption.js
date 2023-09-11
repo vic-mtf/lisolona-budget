@@ -59,4 +59,4 @@ export default function MicroOption ({active, id}) {
 }
 
 const message = (active, isAdmin) => isAdmin ? 
-`${active ? 'Desactiver' : 'Activer'} le micro` : `Micron ${active ? 'Activé' : 'Desactivé'}`
+`${active ? 'Desactiver' : 'Activer'} le micro` : `Micro ${active ? 'Activé' : 'Desactivé'}`

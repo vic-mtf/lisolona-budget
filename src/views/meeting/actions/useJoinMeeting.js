@@ -25,6 +25,7 @@ export default function useJoinMeeting() {
             const uid = meetingData?.participants?.find(({identity: {_id}}) => _id === id)?.uid;
             const options = meetingData?.callDetails;
             const {createdAt, location, participants, _id: meetingId} = meetingData;
+            
             store.dispatch(addParticipants({
                 participants:  participants.map(
                     participant => ({
@@ -32,7 +33,7 @@ export default function useJoinMeeting() {
                         id: participant?.identity._id,
                         state: participant?.identity._id === id ? {
                             ...participant.state,
-                            inRoom: true,
+                            isInRoom: true,
                         }: participant.state,
                     })
                 )

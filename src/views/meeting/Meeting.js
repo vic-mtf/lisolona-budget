@@ -1,7 +1,7 @@
 import MeetingProvider from "../../utils/MeetingProvider";
 import { useSelector } from "react-redux";
 import ActionsWrapper from "./actions/ActionsWrapper";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import Conference from "./conference/conference";
 import DirectCallEntry from "./direct-call-entry/DirectCallEntry";
 import RoomCallEntry from "./room-call-entry/RoomCallEntry";

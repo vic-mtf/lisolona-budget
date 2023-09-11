@@ -14,7 +14,6 @@ export default function blockRendererFn(contentBlock) {
   }
 
 const EmojiWrapper = (props) => {
-  console.log('props:  ', props)
   return (
     <span>
       a

@@ -136,11 +136,13 @@ export default function GridDataDisplay ({data, pinIndex}) {
   useEffect(() => {
     let handleCalcRootSize;
     (handleCalcRootSize = () => {
+      if(rootRef.current) {
         const height = parseFloat( 
           window.getComputedStyle(rootRef.current).height
         );
         if(height !== rootHeight)
           setRootHeight(height);
+      }
     })();
     window.addEventListener('resize', handleCalcRootSize);
     return () => {

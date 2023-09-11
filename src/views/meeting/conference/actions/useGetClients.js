@@ -26,6 +26,6 @@ store.getState().conference.participants.map(({identity, uid, id, state}) => {
         name: getFullName(identity),
         avatarSrc : identity.imageUrl,
         ...identity,
-        active: state.inRoom,
+        active: state.isInRoom,
     };
 }).filter(({id}) => andSelf || (id !== store.getState().meeting.me?.id))

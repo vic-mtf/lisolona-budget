@@ -71,7 +71,7 @@ export default function AnswerButton () {
                         ids: [userId],
                         uid,
                         key: 'state',
-                        state: {inRoom: joined}
+                        state: {isInRoom: joined}
                 }}));
         }
     },[handlePublish, mode, socket, ringRef, timerRef]);

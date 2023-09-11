@@ -29,7 +29,6 @@ export default function AddFilesButton ({filesRef}) {
     }, [filesRef, dispatch]);
 
     const handleClickAction = useCallback((accept='video/*, image/*') => async () => {
-        console.log('Bonjour ...')
         const newFiles = await getFile({
           accept,
           multiple: true,
