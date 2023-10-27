@@ -15,14 +15,14 @@ export default function useGetNewMessage () {
             const contact = members?.find(({_id: user}) => user?._id !== userId)?._id;
             const targetId = type === 'room' ? _id : contact?._id;
             const message = messages[messages.length - 1];
-            const id = message.clientId || message._id;
-            const sender = message.sender;
-            const name = getFullName(sender);
+            const id = message?.clientId || message?._id;
+            const sender = message?.sender;
+            const name = getFullName(sender)
             const isMine = sender?._id === userId;
             const localMessage = {
                 remoteId: message?._id,
                 id,
-                type: message.type,
+                type: message?.type,
                 subType: message?.subtype?.toLowerCase(),
                 targetId,
                 content: message?.content,
@@ -33,37 +33,39 @@ export default function useGetNewMessage () {
                 origin: message,
                 sended: true,
                 timeout: 5000,
-                updatedAt: message.updatedAt || message?.createdAt,
+                updatedAt: message?.updatedAt || message?.createdAt,
                 name,
             };
-            db?.messages.get(id).then(async data => {
-                if(data) {
-                    const localTime = (new Date (data.updatedAt)).getTime();
-                    const remoteTime = (new Date (message.updatedAt)).getTime();
-                    if(localTime !== remoteTime || data.sended !== message.sended) {
-                        db?.messages.update(id, {
-                            origin: message,
-                            updatedAt: message.updatedAt,
-                            name,
-                            avatarSrc: sender?.imageUrl,
-                            remoteId: message?._id,
-                            sended: true,
-                        });
-                    }
-                } else {
-                    db?.messages.add(localMessage).then(() => {
-                        if(!isMine && document.visibilityState === 'hidden') {
-                            answerRingtone('receive');
+            if(message)
+                db?.messages.get(id).then(async data => {
+                    if(data) {
+                        const localTime = (new Date (data.updatedAt)).getTime();
+                        const remoteTime = (new Date (message.updatedAt)).getTime();
+                        if(localTime !== remoteTime || data.sended !== message.sended) {
+                            db?.messages.update(id, {
+                                origin: message,
+                                updatedAt: message?.updatedAt,
+                                name,
+                                avatarSrc: sender?.imageUrl,
+                                remoteId: message?._id,
+                                sended: true,
+                            });
                         }
-                    });
-                };
-            });
-            db?.discussions.get(localMessage.targetId).then(data => {
+                    } else {
+                        db?.messages.add(localMessage).then(() => {
+                            if(!isMine && document.visibilityState === 'hidden') {
+                                answerRingtone('receive');
+                            }
+                        });
+                    };
+                });
+            if(targetId)
+            db?.discussions.get(targetId).then(data => {
                 if(data) {
                     const localTime = (new Date (data.lastNotice.updatedAt)).getTime();
                     const remoteTime = (new Date (message.updatedAt)).getTime();
                     if(isNaN(localTime) ||  localTime < remoteTime) {
-                        db?.discussions.update(localMessage.targetId, {
+                        db?.discussions.update(targetId, {
                             updatedAt: new Date (message.updatedAt),
                             lastNotice: message,
                             origin: {messages, _id, type, members, ...otherPros},
@@ -71,16 +73,25 @@ export default function useGetNewMessage () {
                         })
                     }
                 } else db?.discussions.add({
-                    updatedAt: new Date (message.updatedAt),
-                    createdAt: new Date(message?.createdAt),
-                    lastNotice: message,
-                    id: message.targetId, 
-                    name, 
-                    members,
-                    avatarSrc: sender.imageUrl,
-                    type: 'direct',
-                    origin: {messages, _id, type, members, ...otherPros},
-                });
+                        id: targetId, 
+                        members,
+                        type,
+                        origin: {messages, _id, type, members, ...otherPros},
+                        ...type === 'direct' ? {
+                            lastNotice: message,
+                            updatedAt: new Date(otherPros?.updatedAt),
+                            createdAt: new Date(otherPros?.createdAt),
+                            avatarSrc: sender.imageUrl,
+                            name,
+                        } : {
+                            description: otherPros.description,
+                            updatedAt: new Date (otherPros?.updatedAt),
+                            createdAt: new Date(otherPros?.createdAt),
+                            createdBy: otherPros.createdBy,
+                            avatarSrc: otherPros.imageUrl,
+                            name: otherPros.name,
+                        }, 
+                    });
             }); 
         }
         socket?.on('direct-chat', getNewMessage);

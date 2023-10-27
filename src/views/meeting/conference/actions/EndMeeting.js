@@ -15,8 +15,10 @@ export default function EndMeeting({ open, type }) {
     const [{ target, }] = useMeetingData();
     const userId = useSelector(store => store.meeting?.me?.id);
     const startedAt = useSelector(store => store.meeting.startedAt);
-    const participants = useGetClients()
-    
+    const participants = useGetClients();
+
+    console.log(participants);
+
     const message = {
         end: `Fin de ${target.type === 'direct' ? "l'appel" : "la reunion"}`,
         quit: `Vous avez quitté cette reunion`

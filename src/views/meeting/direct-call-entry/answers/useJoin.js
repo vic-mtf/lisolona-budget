@@ -15,7 +15,9 @@ export default function useJoin(callState, setCallState) {
     useLayoutEffect(() => {
         const handleUserJoin = async ({who}) => {
             const userId = store.getState().user.id;
+
             if(findUser(who._id) && who._id !== userId) {
+                console.log(callState);
                 clearTimer(timerRef.current);
                 ringRef.current?.clearAudio();
                 if(callState === 'ringing') {
@@ -23,7 +25,8 @@ export default function useJoin(callState, setCallState) {
                     const localAudioTrack = localTrackRef.current.audioTrack;
                     const localVideoTrack = localTrackRef.current.videoTrack;
                     const {micro, camera, joined} = store.getState().meeting;
-                    const data = { mode: 'on'};
+                    
+                    const data = { mode: 'on', joined: true};
                     store.dispatch(setData({data}))
                     if(micro.active && !micro.published) {
                         tracks.push(localAudioTrack);
@@ -35,7 +38,7 @@ export default function useJoin(callState, setCallState) {
                     }
                     if(tracks.length && joined) {
                         await client.publish(tracks);
-                        store.dispatch(setData({data}))
+                        store.dispatch(setData({data}));
                     }
                         
                }

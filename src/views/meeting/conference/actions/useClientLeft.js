@@ -14,7 +14,7 @@ import getFullName from "../../../../utils/getFullName";
 import AnimatedWavingHand from "../../../../components/WavingHand";
 import { Stack } from "@mui/material";
 
-export default function useClientSignalHandRaised() {
+export default function useClientLeft() {
     const { enqueueCustomSnackbar, closeCustomSnackbar } = useCustomSnackbar();
     const socket = useSocket();
     const [, setterClientsKey] = useTableRef();
@@ -36,7 +36,7 @@ export default function useClientSignalHandRaised() {
                 signalSong.audio.play();
                 enqueueCustomSnackbar({
                     getKey,
-                    message: `${isMe ?  'Vous avez levé' : `${name} a levé`} la main.`,
+                    message: `${name} est parti.`,
                     icon: (
                         <AvatarStatus
                             invisible

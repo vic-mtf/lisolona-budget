@@ -156,5 +156,6 @@ if(window.opener && window.location.pathname.indexOf('meeting') !== - 1) {
         window.addEventListener('beforeunload', () => {
            channel.postMessage({type: 'mode', mode: 'none'});
         });
+        console.log('********************************:', openerData);
     } else window.close()
 }

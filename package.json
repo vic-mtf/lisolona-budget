@@ -60,7 +60,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "rm -r build.zip build;PUBLIC_URL=/apps/lisolonabudget react-scripts build;zip -r build.zip build && scp build.zip root@137.184.96.252:server/GEID_Valise/public/geid-platform/lisolonabudget",
+    "deploy": "rm -r build.zip build;PUBLIC_URL=/apps/lisolonabudget react-scripts build;zip -r build.zip build && scp build.zip root@143.198.110.104:server/GEID_Git/public/geid-platform/lisolonabudget",
     "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
     "electron": "electron ."
   },

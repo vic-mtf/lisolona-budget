@@ -27,7 +27,12 @@ export default async function getData ({chats, contacts: cts, inivitation, userI
             (new Date (b.createdAt)).getTime()
         );
         const members = discussion?.members;
+
+        if(members?.find(({_id: user}) => user === null))
+            console.log(members);
+
         const target = members?.find(({_id: user}) => user._id !== userId)?._id;
+        
         const type = discussion.type;
         const targetId = type === "direct" ? target?._id : discussion?._id;
         const name = type === "direct" ? getFullName(target) : discussion?.name;

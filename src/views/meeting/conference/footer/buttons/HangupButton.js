@@ -15,7 +15,7 @@ export default function HangupButton () {
     const theme = useTheme();
     const disconnectAudio = useAudio(disconnect_src);
     const [{videoStreamRef, audioStreamRef, client}] = useData();
-    const id = useSelector(store => store.meeting.id);
+    const id = useSelector(store => store.meeting.meetingId);
     const [
         {meetingData, timerRef}, 
         {setOpenEndMessageType}
@@ -24,7 +24,7 @@ export default function HangupButton () {
     const origin = useMemo(() => meetingData?.origin || null, [meetingData?.origin]);
     const socket = useSocket();
     const [{ringRef}] = useMeetingData();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     return (
        

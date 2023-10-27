@@ -77,9 +77,10 @@ export default function useRinging(callState, setCallState) {
         };
 
         const handleRingingOutgoing = event => {
-            const clientState = event?.data?.data?.state; 
-            const id = event.who._id
+            const clientState = event?.data?.state; 
+            const id = event.who._id;
             clearTimer(timerRef.current);
+            console.log('handleRingingOutgoing:', callState, event?.data);
             if(target.id === id) {
                 if(clientState === 'unanswered') handleUnanswered();
                 if(callState !== 'ringing' && clientState === 'ringing') {
