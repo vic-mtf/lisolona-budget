@@ -16,7 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
 
 export default function CurrentCallContactItem ({call}) {
-    const {avatarSrc, name, date, type, format, origin, id, avatarsSrc} = call;
+    const {avatarSrc, name, date, type, format, origin, id, avatarsSrc, location} = call;
+    console.log(call);
     const [contextMenu, setContextMenu] = React.useState(null);
     const {iconCallType, color } = useCallParams(type, format);
     const mode = useSelector(store => store.meeting.mode);
@@ -41,7 +42,7 @@ export default function CurrentCallContactItem ({call}) {
 
     const handleClick =  event => {
         event.preventDefault();
-        const data = {id, name, avatarSrc, type};
+        const data = {id: location, name, avatarSrc, type};
         handleJoinMeeting({data, origin});
     };
 
