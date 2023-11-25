@@ -3,6 +3,25 @@ import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage/session";
 import getBase64Image from "../utils/getBase64Image";
 
+const reducers = {};
+reducers.updateValues = (state, actions)  => {
+    Object.keys(actions.payload).forEach(key => {
+        state[key] = actions.payload[key];
+        if(key === 'avatarSrc') {
+            getBase64Image().then(url => {
+                state.avatarSrc = url;
+            })
+        }
+    });
+};
+
+reducers.changeValues = (state, actions) => {
+    const { token } = actions.payload;
+    reducers.updateValues(state, actions);
+    if(token)
+        state.connected = true;
+};
+
 const user = createSlice({
     name: 'user',
     initialState: {
@@ -10,19 +29,7 @@ const user = createSlice({
         //image: null,
     },
     reducers: {
-        changeValues (state, actions) {
-            const { token } = actions.payload;
-            Object.keys(actions.payload).forEach(key => {
-                state[key] = actions.payload[key];
-                if(key === 'avatarSrc') {
-                    getBase64Image().then(url => {
-                        state.avatarSrc = url;
-                    })
-                }
-            });
-            if(token)
-                state.connected = true;
-        },
+        ...reducers,
         updateValue(state, actions) {
             const {key, value} = actions.payload;
             state[key] = value;
@@ -33,7 +40,7 @@ const user = createSlice({
     }
 });
 
-export const { changeValues, disconnected, updateValue } = user.actions;
+export const { changeValues, disconnected, updateValue, updateValues } = user.actions;
 export default persistReducer({
     storage,
     key:'__ROOT_GEID_USER_CONFIG_APP'

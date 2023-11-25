@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import CustomSlider from "../../../../../components/CustomSlider";
 import Typography from "../../../../../components/Typography";
-import getFormatTime from "../../../../../utils/getFormatTime";
+import formatTime from "../../../../../utils/formatTime";
 
 export default function LineTime ({audio, chunksRef, timeoutRef}) {
     const [currentTime, setCurrentTime] = useState(timeoutRef.current);
@@ -53,7 +53,7 @@ export default function LineTime ({audio, chunksRef, timeoutRef}) {
                 fontWeight="bold"
                 color="text.secondary"
             >
-           {getFormatTime({currentTime})}
+           {formatTime({currentTime})}
             </Typography>
         </React.Fragment>
     )

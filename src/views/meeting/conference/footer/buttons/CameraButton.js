@@ -32,7 +32,7 @@ export default function CameraButton () {
     const getVideoStream = useCallback(() => {
         setLoading(true);
         const videoDevice = store.getState().meeting.video.input;
-        navigator.mediaDevices.getUserMedia({
+        navigator?.mediaDevices?.getUserMedia({
             video: videoDevice.deviceId ? videoDevice : {
                 width: {ideal: window.innerWidth},
                 height: {ideal: window.innerHeight}

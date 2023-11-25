@@ -12,6 +12,7 @@ import EmojiNatureOutlinedIcon from '@mui/icons-material/EmojiNatureOutlined';
 import SentimentVerySatisfiedOutlinedIcon from '@mui/icons-material/SentimentVerySatisfiedOutlined';
 import SportsKabaddiOutlinedIcon from '@mui/icons-material/SportsKabaddiOutlined';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
+import { useDefaultNumButtonSizeByRoot } from '../writing-area/HeaderAutoHideResize';
 
 
 export default function EmojiPicker ({onSelect})  {
@@ -19,6 +20,7 @@ export default function EmojiPicker ({onSelect})  {
     const [style, setStyle] = useState(STYLES[2].id);
     const [group, setGroup] = useState(GROUPS[2].id);
     const data = useMemo(() => getEmojisData(group, color, style), [group, style, color]);
+    const [nButton, headerRef] = useDefaultNumButtonSizeByRoot();
 
     const handleChangeGroup = useCallback((event, newValues) => {
         const [, value] = newValues;
@@ -30,8 +32,9 @@ export default function EmojiPicker ({onSelect})  {
         setColor(value);
     }, []);
 
-    const handleChangeGroupStyle = useCallback((event, newValue) => {
-        setStyle(newValue);
+    const handleChangeGroupStyle = useCallback((event, newValues) => {
+        const [, value] = newValues;
+        setStyle(value);
     }, []);
 
     return (
@@ -49,6 +52,7 @@ export default function EmojiPicker ({onSelect})  {
             >
                 <Stack
                     divider={<Divider/>}
+                    ref={headerRef}
                 >
                     <EmojiPickerHeader
                         onChangeGroup={handleChangeGroup}
@@ -57,6 +61,8 @@ export default function EmojiPicker ({onSelect})  {
                         onChangeGroupStyle={handleChangeGroupStyle}
                         color={color}
                         onChangeColor={handleChangeColor}
+                        defaultNButton={nButton}
+                        key={nButton ? 0 : 1}
                     />
                     <EmojiPickerContent
                         onSelect={onSelect}

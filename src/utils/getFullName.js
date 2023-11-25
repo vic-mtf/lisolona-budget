@@ -1,7 +1,10 @@
 export default function getFullName(obj) {
-    let fullName = obj?.fname?.trim() || obj?.firstname?.trim() || '';
-    if (obj?.mname || obj?.middlename) 
-      fullName += ' ' + (obj.mname?.trim() || obj?.middlename);
-    fullName += ' ' + (obj?.lname?.trim() || obj?.lasname || '');
-    return fullName.trim();
+  let lname = obj?.lname?.trim() || obj?.lastname?.trim() || obj?.lastName?.trim();
+  let fname = obj?.fname?.trim() || obj?.firstname?.trim() || obj?.firstName?.trim();
+  let mname = obj?.mname?.trim() || obj?.middlename?.trim() || obj?.middleName?.trim();
+  let name = obj?.name?.trim();
+
+  if (lname || fname || mname) 
+      return `${fname || ''} ${mname || ''} ${lname || ''}`.trim();
+  else return name || '';
 }

@@ -74,7 +74,7 @@ const MediaView = ({id}) => {
             />}
             {!videoTrack && 
             <AudioTrackView 
-                avatarSrc={user.identity.imageUrl}
+                avatarSrc={user?.identity?.imageUrl}
                 id={id}
                 audioTrack={audioTrack}
             />}

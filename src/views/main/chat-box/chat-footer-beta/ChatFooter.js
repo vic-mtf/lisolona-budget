@@ -2,7 +2,6 @@ import React, { createContext, useCallback, useContext, useLayoutEffect, useRef,
 import { 
     Box as MuiBox, Paper
 } from "@mui/material";
-
 import WritingArea from "./writing-area/WritingArea";
 import EmojiPicker from "./emoji-picker/EmojiPicker";
 
@@ -27,7 +26,10 @@ export default function ChatFooter ({target}) {
                 zIndex: theme => theme.zIndex.appBar,
             }}
         >
-            <WritingArea/>
+            <WritingArea
+                target={target}
+                onSubmit={editorState => console.log(editorState)}
+            />
         </MuiBox>
   );
 }

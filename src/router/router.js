@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppTest from "../test/App.test";
 import Cover from "../views/cover/Cover";
 import LiosoNaBudget from "../views/LiosoNaBudget";
-import SIgninPage from '../views/signin/SigninPage';
+import SignInPage from '../views/signin/SignInPage';
 import HomePage from "../views/home/HomePage";
 import Meeting from "../views/meeting/Meeting";
 
@@ -25,7 +25,7 @@ const unprotectedRouter = (getters, setters) => [
         path:  '/home/*',
     },
     {
-        element: <SIgninPage/>,
+        element: <SignInPage/>,
         path:  '/account/signin/*',
     },
 ];

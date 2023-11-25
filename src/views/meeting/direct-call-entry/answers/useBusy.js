@@ -2,15 +2,15 @@ import { useLayoutEffect, useRef } from "react";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import useAudio from "../../../../utils/useAudio";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
-import ringing_src from '../../../../assets/ring-ton-outgoing-call.wav';
-import end_call_src from '../../../../assets/end-call.wav';
-import reject_src from '../../../../assets/answering-machine.wav';
+import ringing_src from '../../../../assets/ring-ton-outgoing-call.aac';
+import end_call_src from '../../../../assets/end-call.aac';
+import reject_src from '../../../../assets/answering-machine.aac';
 import { useDispatch, useSelector } from "react-redux";
 import store from "../../../../redux/store";
 import { useMemo } from "react";
 import { useData } from "../../../../utils/DataProvider";
 import { setCameraData } from "../../../../redux/meeting";
-import busy_src from '../../../../assets/busyphone.mp3';
+import busy_src from '../../../../assets/busyphone.aac';
 
 export default function useRinging(callState, setCallState) {
     const socket = useSocket();

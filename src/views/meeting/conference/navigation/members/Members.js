@@ -72,11 +72,10 @@ export default function Members () {
     }, [participantsMeeting]);
 
     return (
-        <Fade in>
             <Box
-            sx={{
-                bgcolor: 'background.default',
-            }} 
+                sx={{
+                    bgcolor: 'background.default',
+                }} 
             >
                 <Header
                     keyword={keyword}
@@ -107,7 +106,6 @@ export default function Members () {
                     />
                 )}
             </Box>
-        </Fade>
     );
 }
 

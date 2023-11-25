@@ -1,6 +1,7 @@
 export default function getPermission(name = 'microphone') {
-    return navigator.permissions && 
-    navigator.permissions
+    const permissions = window?.navigator?.permissions;
+    if(!permissions) return null;
+    return permissions
     .query({name})
     .then((permission) => {
       return permission;

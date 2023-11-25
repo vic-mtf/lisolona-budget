@@ -8,6 +8,7 @@ import { setData } from "../../../redux/meeting";
 import getData from "../../../utils/getData";
 import useJoinedAndPublishedLocalClient from "./useJoinedAndPublishedLocalClient";
 import { addParticipants } from "../../../redux/conference";
+import { isPlainObject } from "lodash";
 
 export default function useCreateMeeting() {
     const token = useSelector(store => store.user.token);
@@ -29,7 +30,7 @@ export default function useCreateMeeting() {
         const result = await refetch({data});
         const meetingData = result?.data;
         let room = null;
-        if(typeof meetingData === 'object') {
+        if(isPlainObject(meetingData)) {
             if(target?.type === 'room') {
                 const roomData = await db.discussions.get(target?.id);
                 room = roomData.origin;

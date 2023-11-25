@@ -6,7 +6,7 @@ import "@draft-js-plugins/text-alignment/lib/plugin.css";
 import Editor from '@draft-js-plugins/editor';
 import WritingAreaHeader from './WritingAreaHeader';
 import { EditorState } from 'draft-js';
-import "prismjs/themes/prism.css";
+// // import "prismjs/themes/prism.css";
 import decorator from './buttons/decorator';
 import WritingAreaFooter from './WritingAreaFooter';
 

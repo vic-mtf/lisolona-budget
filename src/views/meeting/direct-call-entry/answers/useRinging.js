@@ -2,14 +2,14 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import useAudio from "../../../../utils/useAudio";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
-import ringing_src from '../../../../assets/ring-ton-outgoing-call.wav';
-import end_call_src from '../../../../assets/end-call.wav';
-import reject_src from '../../../../assets/answering-machine.wav';
+import ringing_src from '../../../../assets/ring-ton-outgoing-call.aac';
+import end_call_src from '../../../../assets/end-call.aac';
+import reject_src from '../../../../assets/answering-machine.aac';
 import { useSelector } from "react-redux";
 import store from "../../../../redux/store";
 import { useData } from "../../../../utils/DataProvider";
 import { setData } from "../../../../redux/meeting";
-import song_src from '../../../../assets/Halloween-Cradles.mp3';
+import song_src from '../../../../assets/Halloween-Cradles.aac';
 import clearTimer from "../../../../utils/clearTimer";
 
 export default function useRinging(callState, setCallState) {
@@ -80,7 +80,6 @@ export default function useRinging(callState, setCallState) {
             const clientState = event?.data?.state; 
             const id = event.who._id;
             clearTimer(timerRef.current);
-            console.log('handleRingingOutgoing:', callState, event?.data);
             if(target.id === id) {
                 if(clientState === 'unanswered') handleUnanswered();
                 if(callState !== 'ringing' && clientState === 'ringing') {

@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import IconButton from "../../../../../../components/IconButton";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseOutlinedIcon from '@mui/icons-material/PauseOutlined';
-import getFormatTime from "../../../../../../utils/getFormatTime";
+import formatTime from "../../../../../../utils/formatTime";
 import { useData } from "../../../../../../utils/DataProvider";
 
 export default function VoiceControls ({voiceData}) {
@@ -129,7 +129,7 @@ const AudioSlider = ({voiceData}) => {
                     />
                 </MuiBox>
             }
-            secondary={getFormatTime({currentTime: currentTime || duration})}
+            secondary={formatTime({currentTime: currentTime || duration})}
             primaryTypographyProps={{
                 variant: 'body2',
                 fontWeight: 'bold',

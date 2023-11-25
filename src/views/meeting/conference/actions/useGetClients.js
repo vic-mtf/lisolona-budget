@@ -19,13 +19,14 @@ export default function useGetClients (andSelf = false) {
 }
 
 const handleGetUserIdentity = (andSelf) =>
-store.getState().conference.participants.map(({identity, uid, id, state}) => {
+store.getState().conference.participants.map(({identity, uid, id, state, isGuest}) => {
     return {
         id, 
         uid,
         name: getFullName(identity),
-        avatarSrc : identity.imageUrl,
+        avatarSrc : identity?.imageUrl,
         ...identity,
-        active: state.isInRoom,
+        active: state?.isInRoom,
+        isGuest: Boolean(isGuest),
     };
 }).filter(({id}) => andSelf || (id !== store.getState().meeting.me?.id))

@@ -75,25 +75,39 @@ export default function InputCode ({size, length, values, onChange, onComplete, 
     }), [codes, length, size, handleChange, handleDelete]);
 
     return (
-        <Stack
-            direction="row"
-            spacing={.5}
-            ref={rootRef}
+        <MuiBox
+            display="flex"
+            gap={.5}
+            sx={{
+                flexDirection: {
+                    xs: length <= 6 ? 'rom' : 'column',
+                    md: 'row',
+                }
+            }}
         >
-            {inputs}
+            <Stack
+                direction="row"
+                spacing={.5}
+                ref={rootRef}
+                display="flex"
+                flex={1}
+
+            >
+                {inputs}
+            </Stack>
             <MuiBox
                 justifyContent="center"
                 alignItems="center"
                 display="flex"
             >
-                <IconButton
-                    onClick={(event) => handleDelete({event, notControlled: true})}
-                    onMouseDown={event => event.preventDefault()}
-                >
-                    <BackspaceOutlinedIcon/>
-                </IconButton>
-            </MuiBox>
-        </Stack>
+            <IconButton
+                onClick={(event) => handleDelete({event, notControlled: true})}
+                onMouseDown={event => event.preventDefault()}
+            >
+                <BackspaceOutlinedIcon/>
+            </IconButton>
+        </MuiBox>
+    </MuiBox>
     );
 }
 

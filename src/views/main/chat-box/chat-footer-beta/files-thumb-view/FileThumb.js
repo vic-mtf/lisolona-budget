@@ -10,22 +10,24 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DocThumb from './DocThumb';
 import humanReadableSize from '../../../../../utils/humanReadableSize';
 import Typography from '../../../../../components/Typography';
-import getFormatTime from '../../../../../utils/getFormatTime';
+import formatTime from '../../../../../utils/formatTime';
+import React from 'react';
 
 export default function FileThumb ({type, url, onRemoveFile, onOpen, file}) {
 
     return (
         <MuiBox
-            width={100}
-            height={100}
-            mx={.5}
+            overflow="visible"
         >
             <Card 
                 elevation={0}
                 sx={{
-                    overflow: 'clip',
+                    overflow: 'height',
                     background: 'none',
                     position: 'relative',
+                    height: 98,
+                    width: 98,
+
                 }}
             >
                 <CardActionArea
@@ -62,7 +64,7 @@ export default function FileThumb ({type, url, onRemoveFile, onOpen, file}) {
     );
 }
 
-const Thumb = ({type, url, file}) => {
+const Thumb = React.memo(({type, url, file}) => {
     switch(type) {
         case 'video':
             return <VideoThumb src={url} size={file.File.size}/>;
@@ -71,9 +73,9 @@ const Thumb = ({type, url, file}) => {
         default: 
             return <DocThumb src={url} name={file.File.name} type={file.File.type} size={file.File.size} />
     }
-}
+});
 
-export const FastDetail = ({size, duration}) => {
+export const FastDetail = React.memo(({size, duration}) => {
     return (
         <Typography
             variant="caption"
@@ -82,7 +84,7 @@ export const FastDetail = ({size, duration}) => {
             px={.5}
         >
         {Boolean(size) && humanReadableSize(size, 1024, 0)}
-        {typeof duration === 'number' ?  ' | ' + getFormatTime({currentTime: duration}) : ''}
+        {typeof duration === 'number' ?  ' | ' + formatTime({currentTime: duration}) : ''}
         </Typography>
     )
-};
+});

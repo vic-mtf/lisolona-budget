@@ -21,7 +21,7 @@ export default function useGetMediaStream() {
                 height: videoDevice.height,
             },
         } : {};
-        navigator.mediaDevices.getUserMedia({...audioConfig, ...videoConfig})
+        navigator?.mediaDevices?.getUserMedia({...audioConfig, ...videoConfig})
         .then(stream => {
             let [audioStreamTrack] = stream.getAudioTracks();
             let [videoStreamTrack] = stream.getVideoTracks();

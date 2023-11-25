@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import Typography from "../../../../../../../components/Typography";
-import getFormatTime from "../../../../../../../utils/getFormatTime";
+import formatTime from "../../../../../../../utils/formatTime";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import CustomCardMedia from "../CustomCardMedia";
 
@@ -55,7 +55,7 @@ export default function VideoMessage ({src, width, height, buffer}) {
                     component="span"
                     px={.5}
                 >
-                    {getFormatTime({currentTime: duration})}
+                    {formatTime({currentTime: duration})}
                 </Typography>
             </MuiBox>}
             <MuiBox

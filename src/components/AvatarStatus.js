@@ -9,8 +9,9 @@ import { generateColorsFromId } from "../utils/genColorById";
 import getShort from "../utils/getShort";
 import { useSocket } from "../utils/SocketIOProvider";
 import { useSelector } from "react-redux";
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
-function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, avatarsSrc}) {
+function AvatarStatus ({type="direct", name, avatarSrc, id, invisible, sx, avatarsSrc, size}) {
     const images = Array.isArray(avatarsSrc) ? avatarsSrc : [];
     const status = useSelector(store => store.status[id]);
     const isEmittedRef = useRef(true);
@@ -30,7 +31,7 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, avatarsSrc}) {
         if(!status && !invisible) {
             isEmittedRef.current = true;
             if(type === 'direct' && isEmittedRef.current) {
-                socket.emit('status', {who: id});
+                socket?.emit('status', {who: id});
                 isEmittedRef.current = false;
             }
         }
@@ -38,7 +39,6 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, avatarsSrc}) {
 
     return (
         <ListItemAvatar>
-            {type === 'direct'&&
             <CustomBadge 
                 overlap="circular"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -50,47 +50,30 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, avatarsSrc}) {
                     src={avatarSrc}
                     srcSet={avatarSrc}
                     alt={name}
-                    children={getShort(name)?.toUpperCase()}
+                    children={
+                        type === 'direct' ? (getShort(name)?.toUpperCase() || undefined) : 
+                        <GroupsOutlinedIcon
+                            fontSize="medium"
+                            sx={{
+                               ...size ? {
+                                    fontSize: size / (8/6)
+                                }: {}
+                            }}
+                        />
+                    }
                     sx={{
-                        ...avatarSx,
+                       ...avatarSx,
+                        ...size ? {
+                            height: size,
+                            width: size,
+                        } : {},
                         textTransform: 'capitalize',
                         ...invisible ? {
                             border: 'none',
                         } : {}
                     }}
                 />
-            </CustomBadge>}
-            {type === 'room'&& (
-                avatarSrc ? 
-                (
-                    <AvatarFadeLoading
-                        src={avatarSrc}
-                        srcSet={avatarSrc}
-                        alt={name}
-                        children={getShort(name)?.toUpperCase()}
-                        sx={{
-                            ...avatarSx,
-                            textTransform: 'capitalize',
-                        }}
-                    />
-                    ):
-                    (
-                    <CustomAvatarGroup>
-                        <Avatar
-                            src={images[0]}
-                            srcSet={images[0]}
-                            sx={{...avatarSx}}
-                        />
-                        <Avatar
-                            src={images[1]}
-                            srcSet={images[1]}
-                            alt={name}
-                            sx={{...avatarSx}}
-                        />
-                    </CustomAvatarGroup>
-                    )
-                )
-            }
+            </CustomBadge>
         </ListItemAvatar>
     )
 }

@@ -6,7 +6,6 @@ import store from '../../../redux/store';
 
 export default function FooterButtons ({videoRef, handleGetMediaStream}) {
 
-
     useEffect(() => {
         const {camera, micro } = store.getState().meeting;
         if(!camera.active && !micro.active && typeof handleGetMediaStream === 'function') 

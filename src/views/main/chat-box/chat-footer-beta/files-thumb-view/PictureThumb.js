@@ -11,8 +11,8 @@ export default function PictureThumb ({src: url, name, size}) {
             const {normal} = await resizeImage({
                 url, 
                 quality: .5, 
-                maxWidth: 100, 
-                maxHeight: 100,
+                maxWidth: 98, 
+                maxHeight: 98,
                 scale: 2.5,
                 imageSmoothingQuality: 'low',
             })
@@ -23,13 +23,13 @@ export default function PictureThumb ({src: url, name, size}) {
     return (
         <CardMedia
         sx={{
-            height: 100,
-            width: 100,
+            height: 98,
+            width: 98,
             position: 'relative',
             overflow: 'hidden',
         }}
-        height={100}
-        width={100}
+        height={98}
+        width={98}
         component="div"
     >
         <img
@@ -40,8 +40,8 @@ export default function PictureThumb ({src: url, name, size}) {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                width: '100%',
-                height: '100%',
+                width: '98%',
+                height: '98%',
                 objectFit: 'cover',
             }}
         />

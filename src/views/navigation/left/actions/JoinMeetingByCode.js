@@ -24,7 +24,7 @@ const _DIALOG_NAME = 'join-meeting-by-code';
 
 export default function JoinMeetingByCode () {
     const dialog = useSelector(store => store.data.dialog);
-    const open = useMemo(() => dialog === _DIALOG_NAME);
+    const open = useMemo(() => dialog === _DIALOG_NAME, [dialog]);
     const token = useSelector(store => store.user.token);
     const handleJoinMeeting = useHandleJoinMeeting();
     const {enqueueCustomSnackbar, closeCustomSnackbar} = useCustomSnackbar();
@@ -149,6 +149,7 @@ export default function JoinMeetingByCode () {
                     width: '100%',
                     background: theme => theme.palette.background.paper + 
                     theme.customOptions.opacity,
+                    zIndex: theme => theme.zIndex.drawer + 100
                 }}
             />
           </DialogContent>

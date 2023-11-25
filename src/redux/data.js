@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import mergeObjects from "../utils/mergeObject";
+import mergeDeep from "../utils/mergeDeep";
 import modifyObject from "../utils/modifyObject";
+import { isPlainObject } from "lodash";
 
 const initialState = {
     target: null,
@@ -12,6 +13,7 @@ const initialState = {
         footer: {
             toolbar: true,
             emojiBar: false,
+            recording: false,
             files: [],
         }
     },
@@ -42,8 +44,8 @@ const data = createSlice({
         setData(state, actions) {
             const { data } = actions?.payload || {};
             if (data) Object.keys(data)?.forEach(key => {
-                if (typeof state[key] === 'object')
-                    state[key] = mergeObjects(state[key], data[key])
+                if (isPlainObject(state[key]))
+                    state[key] = mergeDeep(state[key], data[key])
                 else state[key] = data[key];
             });
             if (state.mode === 'on')

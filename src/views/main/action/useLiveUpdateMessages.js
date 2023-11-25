@@ -3,23 +3,22 @@ import { useLayoutEffect } from "react";
 import { useData } from "../../../utils/DataProvider";
 import structureMessages from "../../../utils/structureMessages";
 import db from "../../../database/db";
+import { getTime } from "../../../utils/formatTime";
 
 export default function useLiveUpdateMessages() {
     const [,{pushMessages}] = useData();
     const data = useLiveQuery(() => db?.messages.orderBy('createdAt').toArray(), [db]);
+
     useLayoutEffect(() => {
-        const messages = data?.sort((a, b) => 
-            new Date(b?.createdAt) - new Date(a?.createdAt) 
-        );
         const group = {};
-        messages?.forEach(message => {
+        data?.forEach(message => {
             const id = message?.targetId;
             if(Array.isArray(group[id])) group[id].push(message);
             else group[id] = [message];
         });
         Object.keys(group).forEach(id => {
             const groupMessage = structureMessages(group[id]);
-            const messages = groupMessage;
+            const messages = groupMessage.sort((a, b) => getTime(a?.createdAt) - getTime(b?.createdAt));
             const total = groupMessage.length;
             pushMessages({id, messages, total});
         }); 

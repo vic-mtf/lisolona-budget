@@ -3,13 +3,12 @@ import Typography from "../../../../../components/Typography";
 import { useLayoutEffect, useMemo } from "react";
 import fileBaseExtension from "../../../../../utils/fileExtensionBase";
 import getFileExtension, {getName} from "../../../../../utils/getFileExtension";
-import getFormatTime from "../../../../../utils/getFormatTime";
+import formatTime from "../../../../../utils/formatTime";
 import { useState } from "react";
 import humanReadableSize from "../../../../../utils/humanReadableSize";
 import { FastDetail } from "./FileThumb";
 
 export default function DocThumb ({name, src, type, size}) {
-    console.log(type, name, src);
     const [duration, setDuration] = useState(null);
     const doc = useMemo(() =>
         fileBaseExtension.find(
@@ -30,8 +29,8 @@ export default function DocThumb ({name, src, type, size}) {
     return (
         <CardMedia
             sx={{
-                height: 100,
-                width: 100,
+                height: 98,
+                width: 98,
                 p: .5,
                 position: 'relative',
                 bgcolor: 'background.paper',
@@ -40,8 +39,8 @@ export default function DocThumb ({name, src, type, size}) {
             }}
             component="div"
             title={name}
-            height={100}
-            width={100}
+            height={98}
+            width={98}
         >
             <Stack 
                 //spacing={.25} 
@@ -63,7 +62,7 @@ export default function DocThumb ({name, src, type, size}) {
                 />
             </Stack>
             <Typography
-                width="100%"
+                width="98%"
                 noWrap
                  mt={.5}
                 textOverflow="ellipsis"

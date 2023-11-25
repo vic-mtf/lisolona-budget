@@ -12,8 +12,8 @@ export default function Title () {
         <Stack 
             spacing={1} 
             direction="row" 
-            width={500} 
-            my={1}
+            width="100%" 
+            mt={2}
             divider={
             <Divider 
                 flexItem 
@@ -24,16 +24,16 @@ export default function Title () {
                 }}
             />}
             display="flex"
-            justifyContent="center"
+            // justifyContent="center"
         >
             <CardMedia
                 component="img"
                 src={_logo_geid}
-                sx={{width: 120}}
+                sx={{width: 100}}
             />
             <Typography
                 noWrap
-                variant="h4"
+                variant="h5"
             >Lisolo Na Budget</Typography>
         </Stack>
     )

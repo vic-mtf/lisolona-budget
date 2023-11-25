@@ -6,9 +6,10 @@ import CallbackOption from "./CallbackOption";
 import store from "../../../../../redux/store";
 import useClientState from "../../actions/useClientState";
 
-export default function MemberItem ({id, active, name, avatarSrc}) {
+export default function MemberItem ({id, active, name, isGuest, avatarSrc}) {
     const rootRef = useRef();
     const state = useClientState({id, props: [], key: 'state'});
+    console.log(state);
  
     return (
         <ListItem
@@ -35,10 +36,11 @@ export default function MemberItem ({id, active, name, avatarSrc}) {
                         title: name,
                         variant: 'body2',
                     }}
-                    secondary={
-                        (state?.isAdmin ? 'Modérateur ' : '') +
-                        (store.getState().meeting.me.id === id ? `(Vous)`  : '')
-                    }
+                    secondary={getStatus({
+                        ...state,
+                        isGuest,
+                        isSelf: store.getState()?.meeting?.me?.id === id,
+                    })}
                     secondaryTypographyProps={{
                         variant: "caption",
                     }}
@@ -70,4 +72,14 @@ export default function MemberItem ({id, active, name, avatarSrc}) {
             </ListItemButton>
         </ListItem>
     )
+}
+
+function getStatus({isOrganizer, isSelf, isGuest}) {
+    if (isOrganizer) 
+        return isSelf ? "Moderateur (vous)" : "Moderateur";
+    else if (isGuest) 
+        return "Invité";
+    else if (isSelf)
+        return "Vous";
+    else return "Collaborateur";
 }

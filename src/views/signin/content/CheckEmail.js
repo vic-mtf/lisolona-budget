@@ -1,3 +1,6 @@
+
+
+
 import {
     TextField, 
     Box as MuiBox,
@@ -70,14 +73,14 @@ const Account = ({refresh}) => {
             data: {type: "token", token},
         }).then(({data}) => {
             if(data?.found) {
-                const customEnvent = new CustomEvent('_connected', {
+                const customEvent = new CustomEvent('_connected', {
                     detail: {
                         user: encrypt(user),
                         name: '_connected',
                     }
                 });
                 document.getElementById('root')
-                .dispatchEvent(customEnvent);
+                .dispatchEvent(customEvent);
             }
         }).catch((error) => {
             if(error?.response.data?.found === false) 

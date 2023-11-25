@@ -7,25 +7,27 @@ import getData from "../../../utils/getData";
 import useJoinedAndPublishedLocalClient from "./useJoinedAndPublishedLocalClient";
 import { useSocket } from "../../../utils/SocketIOProvider";
 import { addParticipants } from "../../../redux/conference";
+import { isPlainObject } from "lodash";
 
 export default function useJoinMeeting() {
     const token = useSelector(store => store.user.token);
     const [,refetch] = useAxios({
         headers: {Authorization: `Bearer ${token}`},
     }, {manual: true});
+    
     const handleUserJoined = useJoinedAndPublishedLocalClient();
     const socket = useSocket();
-    const handleJoinMeetingRequest = useCallback(async (meetingId) => {
+    const handleJoinMeetingRequest = useCallback(async (meetingId, client) => {
         const result = await refetch({
             url: '/api/chat/room/call/' + meetingId,
         });
         const meetingData = result?.data;
-        if(typeof meetingData === 'object') {
+        if(isPlainObject(meetingData)) {
             const id = store.getState().user?.id;
             const uid = meetingData?.participants?.find(({identity: {_id}}) => _id === id)?.uid;
             const options = meetingData?.callDetails;
             const {createdAt, location, participants, _id: meetingId} = meetingData;
-            
+
             store.dispatch(addParticipants({
                 participants:  participants.map(
                     participant => ({
@@ -38,22 +40,26 @@ export default function useJoinMeeting() {
                     })
                 )
             }));
-            getData({meetings: [meetingData]});
-            socket.emit('join', {id: meetingId});
+            
+            if(client !== 'guest') {
+                getData({meetings: [meetingData]});
+                socket.emit('join', {id: meetingId});
+            }
+            const data = {
+                data: {
+                    options, 
+                    createdAt, 
+                    location, 
+                    meetingId,
+                    ...(await handleUserJoined({
+                        ...options, 
+                        CHANEL: location, 
+                        uid
+                    })),
+                }
+            };
             store.dispatch(
-                setData({
-                    data: {
-                        options, 
-                        createdAt, 
-                        location, 
-                        meetingId,
-                        ...(await handleUserJoined({
-                            ...options, 
-                            CHANEL: location, 
-                            uid
-                        })),
-                    }
-                })
+                setData(data)
             );
         }
         return meetingData;

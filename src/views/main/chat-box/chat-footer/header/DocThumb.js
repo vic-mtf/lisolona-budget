@@ -3,7 +3,7 @@ import Typography from "../../../../../components/Typography";
 import { useLayoutEffect, useMemo } from "react";
 import fileBaseExtension from "../../../../../utils/fileExtensionBase";
 import getFileExtension, {getName} from "../../../../../utils/getFileExtension";
-import getFormatTime from "../../../../../utils/getFormatTime";
+import formatTime from "../../../../../utils/formatTime";
 import { useState } from "react";
 
 export default function DocThumb ({name, src, type}) {
@@ -105,7 +105,7 @@ export default function DocThumb ({name, src, type}) {
                     component="span"
                     px={.5}
                 >
-                    {getFormatTime({currentTime: duration})}
+                    {formatTime({currentTime: duration})}
                 </Typography>
             </MuiBox>}
         </CardMedia>

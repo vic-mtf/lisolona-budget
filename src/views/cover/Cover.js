@@ -46,8 +46,8 @@ export default function Cover ({getters, setters}) {
             await db.user.put({id: key, userId});
         try {
             const { data } = await refresh();
-            const { chats, contacts, invitation, callHistory } = data || {};
-            getData({chats, userId, contacts}, handelLauncher);
+            const { chats: discussions, contacts, invitations, callHistory } = data || {};
+            getData({ discussions, userId, contacts, meetings: []}, handelLauncher);
         } catch(error) { 
             handelLauncher(); 
         }

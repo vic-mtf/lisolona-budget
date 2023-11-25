@@ -27,9 +27,13 @@ export default function ContactsList ({
     onClose,
     search,
 }) {
-    const filterByKey = useCallback(key =>  new RegExp(escapeRegExp(search?.trim().split(/\s/).join('|')),'ig'
+    const filterByKey = useCallback(key => 
+        new RegExp(
+            escapeRegExp(search?.trim().split(/\s/).join('|')),
+            'ig',
         ).test(key),
     [search]);
+
     const contacts = useLiveQuery(() => 
        db?.contacts.orderBy('name')
        .filter(({name, email}) => 

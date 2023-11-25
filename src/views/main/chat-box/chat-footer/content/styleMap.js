@@ -1,6 +1,6 @@
 const styleMap = {
     'BLOCKQUOTE': {
-        background: 'red',
+        // background: 'red',
         fontSite: '100px'
     },
     // 'STRIKETHROUGH': {

@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import useAudio from "../../../../utils/useAudio";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
-import error_src from '../../../../assets/computer-error.wav';import { useDispatch } from "react-redux";
+import error_src from '../../../../assets/computer-error.aac';import { useDispatch } from "react-redux";
 import { setCameraData } from "../../../../redux/meeting";
 import { useData } from "../../../../utils/DataProvider";
 ;

@@ -5,8 +5,9 @@ export default function Header () {
     return (
         <Toolbar
             sx={{
-                height:'auto',
+                // height:'auto',
                 position:'relative',
+                width: '100%'
             }}
             variant="dense"
         >

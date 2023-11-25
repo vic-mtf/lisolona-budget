@@ -13,8 +13,8 @@ const ElasticPopper = ({ open, children, ...props}) => {
   }, [open]);
 
   const variants = {
-    open: { width: '100%', transition: { type: 'spring', stiffness: 100 } },
-    closed: { width: 0, transition: { type: 'spring', stiffness: 100 } },
+    open: { height: 240, transition: { type: 'spring', stiffness: 100 } },
+    closed: { height: 0, transition: { type: 'spring', stiffness: 100 } },
   };
 
   const handleAnimationComplete = () => {

@@ -1,54 +1,16 @@
 import React from 'react';
 import "@draft-js-plugins/text-alignment/lib/plugin.css";
 import { WritingAreaToolbar } from './WritingArea';
-import { Paper, ToggleButtonGroup as TBG, alpha, styled, Box as MuiBox, Fab } from '@mui/material';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import IconButton from '../../../../../components/IconButton';
+import { Box as MuiBox} from '@mui/material';
 import ToggleToolbarButton from './buttons/ToggleToolbarButton';
 import ToggleEmojiBarButton from './buttons/ToggleEmojiBarButton';
-import VoiceRecordButton from './buttons/VoiceRecordButton';
+import ToggleVoiceRecordAndTextMessageButton from './buttons/ToggleVoiceRecordAndTextMessageButton';
 import AddFilesButton from './buttons/AddFilesButton';
+import store from '../../../../../redux/store';
+import { modifyData } from '../../../../../redux/data';
+import { useSelector } from 'react-redux';
 
-export const ToggleButtonGroup = styled(TBG)(({ theme }) => ({
-    '& .MuiToggleButtonGroup-grouped': {
-        //margin: theme.spacing(0.5),
-        border: `.01px solid transparent`,
-        '&.Mui-disabled': { border: `.01px solid transparent`},
-        '&:not(:first-of-type)': {
-            borderRadius: theme.shape.borderRadius,
-        },
-        '&:first-of-type': {
-            borderRadius: theme.shape.borderRadius,
-        },
-    },
-}));
-
-export const CustomPaper = styled(props => (
-    <Paper
-        elevation={0}
-        {...props}
-    />)
-    )(({ theme }) => ({
-    display: 'flex',
-    background: alpha(
-        theme.palette.common[ 
-            theme.palette.mode === 'light' ? 
-            'black' : 'white'
-    ], 0.08
-    ),
-    flexWrap: 'wrap',
-}));
-
-
-
-ToggleButtonGroup.defaultProps = {
-    size: 'small',
-    onMouseDown: event => event.preventDefault(),
-    onMouseUp: event => event.preventDefault()
-}
-
-const  WritingAreaFooter = ({editor, hasFocusRef, isEmpty, filesRef}) => {
-   
+export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFocus, onSubmit, editorRef}) {
     return (
         <WritingAreaToolbar>
         {
@@ -65,38 +27,51 @@ const  WritingAreaFooter = ({editor, hasFocusRef, isEmpty, filesRef}) => {
                     onMouseUp={event => event.preventDefault()}
                 >
                     <MuiBox
-                        sx={{
-                            flexGrow: 1,
-                            gap: .5,
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            //justifyContent: 'center',
-                        }}
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                        flexGrow={1}
+                        gap={.5}
                     >
-                        <VoiceRecordButton/>
                         <ToggleToolbarButton/>
                         <ToggleEmojiBarButton/>
                         <AddFilesButton filesRef={filesRef}/>
                     </MuiBox>
-                    <Fab
-                        size="small"
-                        variant="circular"
-                        color="primary"
-                        sx={{
-                            borderRadius: 1,
-                        }}
-                        disabled={isEmpty}
+                    <MuiBox
+                        position="relative"
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        height={40}
+                        width={40}
                     >
-                        <SendOutlinedIcon fontSize="small" />
-                    </Fab>
+                        <SubmitButton
+                            onSubmit={onSubmit}
+                            isEmpty={isEmpty}
+                        />
+                    </MuiBox>
                 </MuiBox>
             )
         }
         </WritingAreaToolbar>
     );
-}
+});
 
-export default WritingAreaFooter;
+const SubmitButton = ({onSubmit, isEmpty}) => {
+    const isFiles = useSelector(store => store.data.chatBox.footer.files.length);
 
-// !getTextFromEditorState(editorState).trim()
+    return (
+        <ToggleVoiceRecordAndTextMessageButton
+            onRecord={() => {
+                store.dispatch(
+                    modifyData({
+                        data: true,
+                        key: 'chatBox.footer.recording',
+                    })
+                );
+            }}
+            onSend={onSubmit}
+            type={(isFiles || !isEmpty) ? 'text' :'voice'}
+        />
+    );
+};

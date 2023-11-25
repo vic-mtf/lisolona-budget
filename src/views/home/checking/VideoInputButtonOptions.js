@@ -35,7 +35,7 @@ export default function VideoInputButtonOptions () {
                     data: newDevice,
                 }));
                 closeMediaStream(videoStreamRef.current);
-                const stream = await navigator.mediaDevices.getUserMedia({audio: newDevice});
+                const stream = await navigator?.mediaDevices?.getUserMedia({audio: newDevice});
                 videoStreamRef.current = stream;
                 const [videoTrack] = stream?.getVideoTracks() || [];
                 if(videoTrack) videoTrack.enabled = camera.active;

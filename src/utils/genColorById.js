@@ -27,7 +27,7 @@ export default function getHueColorById (_id= '') {
 }
 
 export function generateColorsFromId(id, theme) {
-    const num = parseInt(id?.substr(-6), 16);
+    const num = parseInt(id?.toString()?.substr(-6), 16);
     let lightness;
     if (theme === 'light') {
       lightness = 70;

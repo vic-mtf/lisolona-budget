@@ -4,7 +4,7 @@ import {
 import { useMemo } from 'react';
 import MessagesContent from './messages-content/MessagesContent';
 //import store from '../../../../redux/store';
-// import ChatContainer from './messages/ChatContainer';
+import ChatContainer from './messages/ChatContainer';
 
 export default function ChatBody ({target, media=true}) {
     const id = useMemo(() => target?.id, [target?.id]);
@@ -20,9 +20,9 @@ export default function ChatBody ({target, media=true}) {
             width="100%"
         >
             <MessagesContent target={target} media={media}/>  
-            {/* <ChatContainer
+            <ChatContainer
                 target={target}
-            /> */}
+            />
         </MuiBox>
     )
 }

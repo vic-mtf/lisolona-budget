@@ -18,7 +18,7 @@ export function clearDatabase() {
 
 }
 
-async function checkTables() {
+export async function checkTables() {
     let dataBase = null;
     try {
       dataBase = await (new Dexie(dbConfig.name)).open();

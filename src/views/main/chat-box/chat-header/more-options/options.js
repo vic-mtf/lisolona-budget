@@ -5,7 +5,7 @@ import { addData } from '../../../../../redux/data';
 
 const options = (contact, callback) => [
     {
-        label: `Fermer la discution`,
+        label: `Fermer la discussion`,
         //icon: <DisabledByDefaultOutlinedIcon/>,
         onClick() {
             store.dispatch(addData({key: 'target', data: null}));

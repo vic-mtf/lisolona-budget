@@ -1,5 +1,5 @@
 import { useState } from "react";
-import mergeObjects from "./mergeObject";
+import mergeDeep from "./mergeDeep";
 
 export default function useTable(initialTable=[]) {
     const [table, setTable] = useState(initialTable);
@@ -18,7 +18,7 @@ export default function useTable(initialTable=[]) {
       if (index !== -1) {
         const updatedTable = [...table];
         const currentObject = updatedTable[index];
-        updatedTable[index] = mergeObjects(currentObject, updatedObject);
+        updatedTable[index] = mergeDeep(currentObject, updatedObject);
         setTable(updatedTable);
       } else {
         addObject(updatedObject);
@@ -178,7 +178,7 @@ export default function useTable(initialTable=[]) {
           const updatedObject = { ...table[objectIndex], [field]: value };
           const updatedTable = [...table];
           const object = updatedTable[objectIndex];
-          updatedTable[objectIndex] = mergeObjects(object, updatedObject);
+          updatedTable[objectIndex] = mergeDeep(object, updatedObject);
           setTable(updatedTable);
         }
       }

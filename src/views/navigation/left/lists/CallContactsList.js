@@ -93,8 +93,6 @@ export default function CallContactsList ({navigation}) {
 
 const ListItems  = ({calls:cl, search}) => {
     const meetingsGroups = useMemo(() => sortMeetings(cl), [cl]);
-
-    console.log(cl);
     
     const calls = useMemo(() => 
         meetingsGroups.map(({data}) => data).flat(),

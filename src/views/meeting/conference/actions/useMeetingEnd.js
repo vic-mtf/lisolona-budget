@@ -1,8 +1,8 @@
 import { useLayoutEffect } from "react";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
 import { useSocket } from "../../../../utils/SocketIOProvider";
-import disconnect_src from "../../../../assets/calldisconnect.mp3";
-import end_call_src from '../../../../assets/end-call.wav';
+import disconnect_src from "../../../../assets/calldisconnect.aac";
+import end_call_src from '../../../../assets/end-call.aac';
 import useAudio from "../../../../utils/useAudio";
 import { useData } from "../../../../utils/DataProvider";
 import closeMediaStream from "../../../../utils/closeMediaStream";

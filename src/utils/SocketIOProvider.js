@@ -13,7 +13,7 @@ const defaultOptions = {
 
 const openerSocket = window.openerSocket;
 
-export default function SocketIOProvider ({children, url, token, options}) {
+export default function SocketIOProvider ({children, url, token, options = defaultOptions}) {
     const defaultToken = useSelector(store => store?.user?.token);
     const dispatch = useDispatch();
     
@@ -23,11 +23,11 @@ export default function SocketIOProvider ({children, url, token, options}) {
         if(openerSocket) 
             return openerSocket
         else 
-            return tk ? io(`${baseURL}?token=${tk}`, options || defaultOptions) : null
+            return tk ? io(`${baseURL}?token=${tk}`, options) : null
     }, [token, url, defaultToken, options]);
 
     useEffect(() => {
-        const getInvitaions = ({invitations}) => {
+        const getInvitations = ({invitations}) => {
             const data = {
                 indexItem: 0,
                 label: 'Invitations',
@@ -48,9 +48,9 @@ export default function SocketIOProvider ({children, url, token, options}) {
             dispatch(addNotification({data}));
         };
         if(!openerSocket)
-            socket?.on('invitations', getInvitaions);
+            socket?.on('invitations', getInvitations);
         return () => {
-            socket?.off('invitations', getInvitaions);
+            socket?.off('invitations', getInvitations);
         }
     },[socket, token, dispatch]);
    

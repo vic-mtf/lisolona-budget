@@ -8,7 +8,7 @@ import { useData } from "../../../utils/DataProvider";
 import useAxios from "../../../utils/useAxios";
 import store from "../../../redux/store";
 import getFullName from "../../../utils/getFullName";
-import song_src from '../../../assets/Halloween-Cradles.mp3';
+import song_src from '../../../assets/Halloween-Cradles.aac';
 import useAudio from "../../../utils/useAudio";
 
 export default function useDirectCall () {
@@ -32,7 +32,7 @@ export default function useDirectCall () {
                 id: user._id,
                 name: getFullName(user),
                 type: 'direct',
-                avatarSrc: user.imageUrl
+                avatarSrc: user?.imageUrl
             };
 
             if(mode === 'none') {

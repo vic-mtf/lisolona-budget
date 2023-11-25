@@ -100,7 +100,7 @@ export default function MeetingProvider ({children}) {
                 callDetails: options
             } = openerData?.origin;
             const id = store.getState().user.id;
-            if(participants) {
+            if(participants?.length) {
                 store.dispatch(addParticipants({
                     participants:  participants?.map(
                         participant => ({
@@ -156,6 +156,5 @@ if(window.opener && window.location.pathname.indexOf('meeting') !== - 1) {
         window.addEventListener('beforeunload', () => {
            channel.postMessage({type: 'mode', mode: 'none'});
         });
-        console.log('********************************:', openerData);
     } else window.close()
 }

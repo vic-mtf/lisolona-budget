@@ -5,6 +5,7 @@ import Members from "./members/Members";
 import ChatBox from "./chat-box/ChatBox";
 import ActionWrapper from "../../../main/action/ActionWrapper";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
+import Details from "./details/Details";
 
 export default function Navigation ({open}) {
     const nav = useSelector(store => store.conference.nav);
@@ -26,6 +27,7 @@ export default function Navigation ({open}) {
         >
             {/participant/.test(nav) && <Members />}
             {/message/.test(nav) && <ChatBox />}
+            {/details/.test(nav) && <Details />}
             <Toolbar/>
             <ActionWrapper targetId={target.id}/>
         </Drawer>

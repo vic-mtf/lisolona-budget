@@ -33,8 +33,8 @@ export default function CameraView ({mode}) {
                 ref={videoRef}
             />}
             <Client
-                avatarSrc={user.image}
-                id={user.id}
+                avatarSrc={user?.image}
+                id={user?.id}
                 audioTrack={micro.active && localTrackRef.current.audioTrack}
                 showVideo={camera.active}
                 name="Vous"

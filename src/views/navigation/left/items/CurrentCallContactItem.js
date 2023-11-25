@@ -7,17 +7,15 @@ import {
     useTheme
 } from "@mui/material";
 import React from "react";
-import capStr from '../../../../utils/capStr';
 import Typography from "../../../../components/Typography";
 import CustomBadge from "../../../../components/CustomBadge";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
 
 export default function CurrentCallContactItem ({call}) {
     const {avatarSrc, name, date, type, format, origin, id, avatarsSrc, location} = call;
-    console.log(call);
     const [contextMenu, setContextMenu] = React.useState(null);
     const {iconCallType, color } = useCallParams(type, format);
     const mode = useSelector(store => store.meeting.mode);

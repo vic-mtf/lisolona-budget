@@ -21,8 +21,6 @@ export default function CallingState ({callState, setCallState}) {
     const { background, text } = generateColorsFromId(target?.id, theme.palette.mode);
     const mode = meetingData?.mode;
 
-    console.log(meetingData);
-
     const avatarSx = useMemo(() => ({
         color: text,
         bgcolor: background,

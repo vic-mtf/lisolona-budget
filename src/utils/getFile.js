@@ -1,9 +1,11 @@
+import { isPlainObject } from "lodash";
+
 const inputFile = document.createElement('input');
 inputFile.webkitdirectory = false;
 export default function getFile (props = inputFile) {
     return (
         new Promise ((resolve, reject) => {
-            if(typeof props === 'object' && props)
+            if(isPlainObject(props))
                 Object.keys(props).forEach(prop => {
                     inputFile[prop] = props[prop];
                 });

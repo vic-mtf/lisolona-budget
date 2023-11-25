@@ -15,9 +15,7 @@ export default function useJoin(callState, setCallState) {
     useLayoutEffect(() => {
         const handleUserJoin = async ({who}) => {
             const userId = store.getState().user.id;
-
             if(findUser(who._id) && who._id !== userId) {
-                console.log(callState);
                 clearTimer(timerRef.current);
                 ringRef.current?.clearAudio();
                 if(callState === 'ringing') {

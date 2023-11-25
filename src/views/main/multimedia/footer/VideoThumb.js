@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import Typography from "../../../../components/Typography";
-import getFormatTime from "../../../../utils/getFormatTime";
+import formatTime from "../../../../utils/formatTime";
 
 export default function VideoThumb({src, coverUrl}) {
     const [duration, setDuration] = useState(null);
@@ -58,7 +58,7 @@ export default function VideoThumb({src, coverUrl}) {
                     component="span"
                     px={.5}
                 >
-                    {getFormatTime({currentTime: duration})}
+                    {formatTime({currentTime: duration})}
                 </Typography>
             </MuiBox>}
         </CardMedia>

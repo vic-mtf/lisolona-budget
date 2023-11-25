@@ -38,7 +38,7 @@ export default function AudioInputButtonOptions () {
                     data: newDevice,
                 }));
                 closeMediaStream(audioStreamRef.current);
-                const stream = await navigator.mediaDevices.getUserMedia({audio: newDevice});
+                const stream = await navigator?.mediaDevices?.getUserMedia({audio: newDevice});
                 audioStreamRef.current = stream;
                 const [audioTrack] = stream?.getAudioTracks() || [];
                 if(audioTrack)

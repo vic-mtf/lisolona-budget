@@ -16,14 +16,14 @@ export default function Account ({user, refresh}) {
     const fullname = `${user.lastname} ${user.middlename} ${user.firstname}`;
     const navigateTo = useNavigate();
 
-    // const customEnvent = new CustomEvent('_connected', {
+    // const customEvent = new CustomEvent('_connected', {
     //     detail: {
     //         user: encrypt(user),
     //         name: '_connected',
     //     }
     // });
     // document.getElementById('root')
-    // .dispatchEvent(customEnvent);
+    // .dispatchEvent(customEvent);
 
     const handleCheckAccount = useCallback (() => {
         const { token, email } = user;
@@ -34,14 +34,14 @@ export default function Account ({user, refresh}) {
         }).then(({data}) => {
             const name = '_connected';
             if(data?.found) {
-                const customEnvent = new CustomEvent(name, {
+                const customEvent = new CustomEvent(name, {
                     detail: {
                         user: encrypt(user),
                         name,
                     }
                 });
                 document.getElementById('root')
-                .dispatchEvent(customEnvent);
+                .dispatchEvent(customEvent);
             }
         }).catch((error) => {
             if(error?.response.data?.found === false) 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSocket } from "../../../../utils/SocketIOProvider";
-import signal_audio  from '../../../../assets/Eventually-Sms.mp3';
+import signal_audio  from '../../../../assets/Eventually-Sms.aac';
 import getData from '../../../../utils/getData';
 import { setStatus } from "../../../../redux/status";
 import useAudio from "../../../../utils/useAudio";
@@ -18,8 +18,8 @@ export default function ActionWrapper () {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const handelGetChat = ({chats, ...otherPros}) => {
-            getData({chats});
+        const handelGetChat = ({chats: discussions, ...otherPros}) => {
+            getData({discussions});
         };
         const handleSignaling = ({invitations}) => {
             if(invitations?.length) {

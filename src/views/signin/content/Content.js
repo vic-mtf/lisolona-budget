@@ -88,14 +88,14 @@ export default function Content ({loading, refresh}) {
                             keyBy(readAuth, 'type')
                         ),
                     });
-                    const customEnvent = new CustomEvent('_connected', {
+                    const customEvent = new CustomEvent('_connected', {
                         detail: {
                             user,
                             name: '_connected',
                         }
                     });
                     document.getElementById('root')
-                    .dispatchEvent(customEnvent);
+                    .dispatchEvent(customEvent);
                     
                 })
                 .catch(error => {

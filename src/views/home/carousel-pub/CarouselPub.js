@@ -16,9 +16,21 @@ export default function CarouselPub () {
             draggable={false}
             display="flex"
             justifyContent="center"
+            width={{
+                width: '100%',
+                overflow: 'hidden',
+            }}
         >
             
-            <Carousel sx={{width: 500}} animation="fade" duration={800} interval={6000}>
+            <Carousel 
+                sx={{
+                    width: '100%', 
+                    maxWidth: 600,
+                }} 
+                animation="fade" 
+                duration={800} 
+                interval={6000}
+            >
                 {
                     pubs.map( (item, i) => <Item key={i} {...item} /> )
                 }
@@ -35,21 +47,38 @@ const Item = props => {
                justifyContent: 'center',
                flexDirection: 'column',
                alignItems: 'center',
-               background: 'none'
+               background: 'none',
+               height: '100%',
+               display: 'flex',
+               userSelect: 'none',
             }}
             elevation={0}
         >
             <CardMedia
                 sx={{
                     height: 300,
-                    width: 300,
-                    borderRadius: '50%'
+                    maxWidth: 300,
+                    borderRadius: 2,
+                    boxShadow: 5,
+                    borderRadius: 50,
+                    m: 2,
+                    "& > img": {
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none',
+                        MozUserSelect: 'none',
+                        overflow: 'hidden',
+                        cursor: 'none',
+                    },
+                    
                 }}
                 component="img"
+                draggable={false}
                 {...props}
             />
-            <CardContent>
-                <Typography>{props.desc}</Typography>
+            <CardContent sx={{maxWidth: 500, height: 100}}>
+                <Typography
+                    variant="body1"
+                >{props.desc}</Typography>
             </CardContent>
         </Card>
     )

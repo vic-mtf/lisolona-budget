@@ -1,7 +1,7 @@
 {
   "name": "geid-lisolonabudget-app",
   "version": "0.1.0",
-  "main": "public/electron.js",
+  "main": "public/main.js",
   "private": true,
   "dependencies": {
     "@draft-js-plugins/editor": "^4.1.4",
@@ -32,6 +32,7 @@
     "draft-js-prism-decorator": "^0.1.1",
     "draftjs-to-html": "^0.9.1",
     "emoji-picker-react": "^4.4.8",
+    "faker": "^5.1.0",
     "html-react-parser": "^3.0.9",
     "html-to-text": "^9.0.4",
     "interactjs": "^1.10.17",
@@ -49,10 +50,15 @@
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",
     "react-timer-hook": "^3.0.5",
+    "react-virtualized": "^9.22.5",
+    "react-virtualized-auto-sizer": "^1.0.20",
     "react-virtuoso": "^4.5.1",
+    "react-window": "^1.8.9",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.6.1",
     "tinycolor2": "^1.6.0",
+    "url": "^0.11.3",
+    "wavesurfer.js": "^7.4.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {

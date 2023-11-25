@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Divider, Paper, ToggleButtonGroup as TBG, ToggleButton, alpha, styled } from '@mui/material';
 import { GROUPS, COLORS, STYLES } from '../EmojiPicker';
 import SettingButton from './SettingButton';
+import HeaderAutoHideResize from '../../writing-area/HeaderAutoHideResize';
 
 export const ToggleButtonGroup = styled(TBG)(({ theme }) => ({
     '& .MuiToggleButtonGroup-grouped': {
@@ -43,28 +44,33 @@ ToggleButtonGroup.defaultProps = {
     onMouseUp: event => event.preventDefault()
 }
 
-const  EmojiPickerHeader = ({onChangeGroup, selectedGroup, color, groupStyle, onChangeGroupStyle, onChangeColor}) => {
-
-  return (
-    <CustomPaper>
-        <ToggleButtonGroup
-            value={[selectedGroup]}
-            onChange={onChangeGroup}
-        >
-            {
-                GROUPS.map(group => (
-                    <CustomToggleButton
-                        title={group.label}
-                        value={group.id}
-                        key={group.id}
-                    >
-                        {group.icon}
-                    </CustomToggleButton>
-                ))
-            }
-        </ToggleButtonGroup>
-        <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
-        <ToggleButtonGroup>
+const  EmojiPickerHeader = ({
+    onChangeGroup, 
+    selectedGroup, 
+    color, 
+    groupStyle, 
+    onChangeGroupStyle, 
+    onChangeColor,
+    defaultNButton
+}) => {
+  const toggleButtonGroups = [
+    {
+        value: [selectedGroup],
+        onChange: onChangeGroup,
+        onMouseDown: event => event.preventDefault(),
+        children: GROUPS.map(group => (
+            <CustomToggleButton
+                title={group.label}
+                value={group.id}
+                key={group.id}
+            >
+                {group.icon}
+            </CustomToggleButton>
+        )),
+    },
+    {
+        onMouseDown: event => event.preventDefault(),
+        children: [(
             <SettingButton
                 groupStyle={groupStyle}
                 onChangeGroupStyle={onChangeGroupStyle}
@@ -74,8 +80,15 @@ const  EmojiPickerHeader = ({onChangeGroup, selectedGroup, color, groupStyle, on
                 GROUPS={GROUPS}
                 onChangeColor={onChangeColor}
             />
-        </ToggleButtonGroup>
-    </CustomPaper>
+        )]
+    }
+  ];
+  return (
+    <HeaderAutoHideResize
+        toggleButtonGroups={toggleButtonGroups}
+        disabled={false}
+        defaultNButton={defaultNButton}
+    />
   );
 }
 

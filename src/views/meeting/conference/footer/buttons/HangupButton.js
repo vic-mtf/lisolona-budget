@@ -1,7 +1,7 @@
 import { Fab, ThemeProvider, Tooltip, createTheme, useTheme } from "@mui/material";
 import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
 import useAudio from  "../../../../../utils/useAudio";
-import disconnect_src from "../../../../../assets/calldisconnect.mp3";
+import disconnect_src from "../../../../../assets/calldisconnect.aac";
 import { useData } from  "../../../../../utils/DataProvider";
 import closeMediaStream from  "../../../../../utils/closeMediaStream";
 import { useMeetingData } from  "../../../../../utils/MeetingProvider";

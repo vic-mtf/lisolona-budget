@@ -43,7 +43,6 @@ export default function useMediaTracks ({type = '', tracks = []}) {
         }
         if(~index && !track) deleteTrackById(id);
         if(!~index && track) addTrack({id, uid, track});
-        console.log('toggle: ', id, uid, track);
     }, [addTrack, deleteTrackById, mediaTracks.tracks,]);
 
     const getTrackById = useCallback(id => {

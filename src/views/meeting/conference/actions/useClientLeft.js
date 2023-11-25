@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { findUser } from "../../../../utils/MeetingProvider";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import useAudio from "../../../../utils/useAudio";
-import signal_src from "../../../../assets/iPhone-Msg-Sent.mp3";
+import signal_src from "../../../../assets/iPhone-Msg-Sent.aac";
 import useCustomSnackbar from "../../../../components/useCustomSnackbar";
 import { isBoolean } from "lodash";
 import useTableRef from "../../../../utils/useTableRef";

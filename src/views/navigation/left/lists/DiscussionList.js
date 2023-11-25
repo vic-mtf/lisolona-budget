@@ -21,7 +21,7 @@ export default function DiscussionList ({navigation}) {
     const [search, setSearch] = useState('');
     const discussions = useLiveQuery(() => 
        db?.discussions.orderBy('updatedAt')
-       .filter(data => filterByKeyword(data, search)).reverse()
+        .filter(data => filterByKeyword(data, search)).reverse()
         .toArray()
     ,[search]);
 

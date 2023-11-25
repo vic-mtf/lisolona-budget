@@ -2,6 +2,7 @@ import { FormControl, FormHelperText } from '@mui/material';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import capStr from '../utils/capStr';
 import validateFields from '../utils/validateFields';
+import { isPlainObject } from 'lodash';
 
 export default function InputController ({
     children, 
@@ -45,7 +46,7 @@ export default function InputController ({
     };
     
     useLayoutEffect(() => {
-        if(typeof valueRef === 'object') 
+        if(isPlainObject(valueRef)) 
             valueRef.current = values.error ? null : values.value;
     });
 

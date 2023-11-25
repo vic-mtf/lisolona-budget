@@ -81,15 +81,15 @@ export default function useGetNewMessage () {
                             lastNotice: message,
                             updatedAt: new Date(otherPros?.updatedAt),
                             createdAt: new Date(otherPros?.createdAt),
-                            avatarSrc: sender.imageUrl,
+                            avatarSrc: sender?.imageUrl,
                             name,
                         } : {
                             description: otherPros.description,
                             updatedAt: new Date (otherPros?.updatedAt),
                             createdAt: new Date(otherPros?.createdAt),
-                            createdBy: otherPros.createdBy,
-                            avatarSrc: otherPros.imageUrl,
-                            name: otherPros.name,
+                            createdBy: otherPros?.createdBy,
+                            avatarSrc: otherPros?.imageUrl,
+                            name: otherPros?.name,
                         }, 
                     });
             }); 

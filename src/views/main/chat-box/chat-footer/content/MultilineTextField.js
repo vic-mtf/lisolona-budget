@@ -1,6 +1,6 @@
 import Editor from '@draft-js-plugins/editor';
 import 'draft-js/dist/Draft.css';
-import "prismjs/themes/prism.css";
+// import "prismjs/themes/prism.css";
 import { Box as MuiBox } from "@mui/material";
 import { Search } from "../../../../../components/SearchInput";
 import { useFooterContext } from "../ChatFooter";

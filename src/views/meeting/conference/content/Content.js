@@ -15,6 +15,7 @@ export default function Content () {
     const [{contentRootRef}] = useMeetingData();
     const cameraView = useSelector(store => store.conference.cameraView);
     const members = useGetClients();
+ 
     const participants = useMemo(() => members.filter(({active}) => active), [members]);
 
     const data = useMemo(() => {

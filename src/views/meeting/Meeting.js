@@ -5,17 +5,20 @@ import { useCallback, useEffect } from "react";
 import Conference from "./conference/conference";
 import DirectCallEntry from "./direct-call-entry/DirectCallEntry";
 import RoomCallEntry from "./room-call-entry/RoomCallEntry";
+import WaitingRoom from "./waiting-room/WaitingRoom";
+import store from "../../redux/store";
 
 export default function Meeting () {
     const mode = useSelector(store => store.meeting.mode);
     const meeting = useSelector(store => store.meeting);
     const show = useCallback((...states) => states.includes(mode), [mode]);
- 
+    console.log(store.getState().conference.participants);
     return (
         <MeetingProvider>
             {show('outgoing', 'incoming') && <DirectCallEntry/>}
             {show('prepare') && <RoomCallEntry/>}
             {show('join', 'on') && <Conference/>}
+            {show('guest') && <WaitingRoom/>}
             <ActionsWrapper/> 
         </MeetingProvider>
     )

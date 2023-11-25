@@ -14,6 +14,7 @@ import { uniqWith } from 'lodash';
 export default function AddFilesButton ({filesRef}) {
     const files = useSelector(store => store.data.chatBox.footer.files);
     const dispatch = useDispatch();
+
     const setFiles = useCallback((callback) => {
         if(filesRef && Object.keys(filesRef)[0] === 'current') {
             const files = filesRef.current;
@@ -21,7 +22,7 @@ export default function AddFilesButton ({filesRef}) {
             filesRef.current = newFiles;
              dispatch(
                 modifyData({
-                    data: newFiles.map(({id}) => id),
+                    data: newFiles.map(({id, url}) => ({id, url})),
                     key: 'chatBox.footer.files',
                 })
             )
@@ -38,6 +39,7 @@ export default function AddFilesButton ({filesRef}) {
             [...newFiles].map((file, index) => ({
               File: file, 
               id: (Date.now() + files.length + index).toString(16).toLowerCase(),
+              url: window.URL.createObjectURL(file).toString(),
             }) 
           )), 
         (a, b) =>

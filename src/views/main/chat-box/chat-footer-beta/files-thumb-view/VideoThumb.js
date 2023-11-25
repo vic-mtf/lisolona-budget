@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import Typography from "../../../../../components/Typography";
-import getFormatTime from "../../../../../utils/getFormatTime";
+import formatTime from "../../../../../utils/formatTime";
 import humanReadableSize from "../../../../../utils/humanReadableSize";
 import { FastDetail } from "./FileThumb";
 
@@ -15,13 +15,13 @@ export default function VideoThumb({src, coverUrl, size}) {
     return (
         <CardMedia
             sx={{
-                height: 100,
-                width: 100,
+                height: 98,
+                width: 98,
                 position: 'relative',
                 overflow: 'hidden',
             }}
-            height={100}
-            width={100}
+            height={98}
+            width={98}
             component="div"
         >
             <video

@@ -41,6 +41,7 @@ export default function AddLinButton ({editorState, addLink, onFocus, ...otherPr
                     value=""
                     selected={open || selected}
                     title={`${selected ? 'Modidier' : 'Ajouter'} le lien`}
+                    onMouseDown={event => event.preventDefault()}
                     onClick={() => setOpen(state => !state)}
                 >
                     <AddLinkOutlinedIcon fontSize="small" />
@@ -88,6 +89,7 @@ export default function AddLinButton ({editorState, addLink, onFocus, ...otherPr
                                 >Ajouter le lien</Typography>
                                 <IconButton
                                     onClick={() => setOpen(false)}
+                                    onMouseDown={event => event.preventDefault()}
                                 >
                                     <CloseOutlinedIcon fontSize="small" />
                                 </IconButton>
@@ -152,6 +154,7 @@ const NavContent = ({setOpen, nameRef, urlRef, editorState}) => {
         <DialogActions>
             <Button
                 onClick={() => setOpen(false)}
+                onMouseDown={event => event.preventDefault()}
             >Annuler</Button>
             <Button
                 variant="outlined"

@@ -9,7 +9,7 @@ import useAxios from "../../../utils/useAxios";
 import clearTimer from "../../../utils/clearTimer";
 import { DialogActions, ListItem, ListItemText, useTheme } from "@mui/material";
 import useAudio from '../../../utils/useAudio';
-import signal_src from "../../../assets/Samsung-Wing-SMS.mp3";
+import signal_src from "../../../assets/Samsung-Wing-SMS.aac";
 import getFullName from "../../../utils/getFullName";
 import { useLongTextCustomSnackbar }  from '../../../components/useCustomSnackbar';
 import AvatarStatus from "../../../components/AvatarStatus";
@@ -71,7 +71,7 @@ export default function useRoomCall () {
                 id: user._id,
                 name: getFullName(user),
                 type: 'direct',
-                avatarSrc: user.imageUrl
+                avatarSrc: user?.imageUrl
             };
 
             if(type === 'room') {
@@ -161,7 +161,7 @@ export default function useRoomCall () {
                                     </Button>
                                 </DialogActions>
                             )
-                        })
+                        });
                     }
                     clearTimer(timer);
                     settersCounters.updateObject({counter: 0, id});

@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import CustomSlider from "../../../../../components/CustomSlider";
 import Typography from "../../../../../components/Typography";
-import getFormatTime from "../../../../../utils/getFormatTime";
+import formatTime from "../../../../../utils/formatTime";
 
 export default function SliderControl ({videoRef}) {
     const [currentTime, setCurrentTime] = useState(0);
@@ -23,7 +23,7 @@ export default function SliderControl ({videoRef}) {
     return (
         <React.Fragment>
             <Typography noWrap textOverflow="initial">
-                {getFormatTime({currentTime: duration - currentTime})}
+                {formatTime({currentTime: duration - currentTime})}
             </Typography>
             <CustomSlider
                 size="small"
@@ -42,7 +42,7 @@ export default function SliderControl ({videoRef}) {
                 }}
             />
             <Typography noWrap textOverflow="initial">
-                {getFormatTime({currentTime})}
+                {formatTime({currentTime})}
             </Typography>
         </React.Fragment>
     )

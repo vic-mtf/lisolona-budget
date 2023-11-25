@@ -1,15 +1,13 @@
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
-import FormatQuoteOutlinedIcon from '@mui/icons-material/FormatQuoteOutlined';
-import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
 import TitleOutlinedIcon from '@mui/icons-material/TitleOutlined';
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
-import { Badge, ClickAwayListener, ToggleButton, alpha } from '@mui/material';
+import { Badge, ClickAwayListener, ToggleButton } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
-import { CustomPaper, ToggleButtonGroup } from '../WritingAreaHeader';
 import ElasticPopper from './ElasticPopper';
 import { RichUtils } from 'draft-js';
+import ToggleButtonGroup from './ToggleButtonGroup';
+import CustomPaper from './CustomPaper';
 
 export default function BlockStyleButton (props) {
     const {icon, label, value, getEditorState, setEditorState, ...otherProps} = props;
@@ -86,12 +84,13 @@ export function BlockStyleButtonHeader (props) {
                     <ElasticPopper
                         open={open}
                         anchorEl={anchorElRef.current}
-                        placement="right"
+                        placement="top"
                     >
                         <CustomPaper
                             sx={{
                                 backdropFilter: theme => `blur(${theme.customOptions.blur})`,
                                 background: 'transparent',
+                                boxShadow: "0px -3px 5px  rgba(0,0,0,0.2),0px -5px 5px rgba(0,0,0,0.14),0px -10px 14px transparent",
                                 mx: .5,
                                 '& .MuiToggleButtonGroup-grouped': {
                                     mx: .5,
@@ -106,6 +105,7 @@ export function BlockStyleButtonHeader (props) {
                                     onClick={() => setOpen(false)}
                                     onChange={onChangeHeader}
                                     value={valueHeader}
+                                    orientation="vertical"
                                 >
                                     {headerStyles.map(head => (
                                         <ToggleButton 

@@ -8,7 +8,7 @@ import { changeValues } from "./redux/user";
 import { setData } from "./redux/meeting";
 import scrollBarSx from "./utils/scrollBarSx";
 
-const channel = new BroadcastChannel('_geid_signin_connection_channel');
+const channel = new BroadcastChannel('_geid_sign_in_connection_channel');
 
 function App() {
   const [startApp, setStartApp] = useState(false);

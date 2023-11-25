@@ -52,6 +52,7 @@ function DiscussionItem ({
                     avatarSrc={avatarBuffer || avatarSrc}
                     type={type}
                     name={name}
+                    invisible={type === 'room'}
                 />
                 <ListItemText
                     primary={

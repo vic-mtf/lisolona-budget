@@ -13,6 +13,7 @@ const ChatContainer = ({target}) => {
     const [newMessagesCount, setNewMessagesCount] = useState(0);
     const [isAtBottom, setIsAtBottom] = useState(true);
 
+
     useEffect(() => {
        
         // Charger les messages initiaux et gérer l'ajout de nouveaux messages ici
@@ -30,8 +31,9 @@ const ChatContainer = ({target}) => {
             display="flex"
             flex={1}
             overflow="hidden"
+            bgcolor="red"
         >
-            <MessageList messages={messages} onScroll={handleScroll} />
+            {/* <MessageList messages={messages} onScroll={handleScroll} /> */}
             <FloatingDate />
             {/* {!isAtBottom && <FabButton newMessagesCount={newMessagesCount} />} */}
         </MuiBox>

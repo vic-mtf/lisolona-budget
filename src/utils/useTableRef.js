@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import mergeObjects, { deepMerge } from "./mergeObject";
+import mergeDeep from "./mergeDeep";
 
 const useStateRef = (init) => {
     const tableRef = useRef(init);
@@ -27,7 +27,7 @@ export default function useTableRef(initialTable=[]) {
         if (index !== -1) {
           const updatedTable = [...data];
           const currentObject = updatedTable[index];
-          updatedTable[index] = deepMerge(currentObject, updatedObject);
+          updatedTable[index] = mergeDeep(currentObject, updatedObject);
           setTable(updatedTable);
         } else {
           addObject(updatedObject);
@@ -191,7 +191,7 @@ export default function useTableRef(initialTable=[]) {
           const updatedObject = { ...table.current[objectIndex], [field]: value };
           const updatedTable = [...table.current];
           const object = updatedTable[objectIndex];
-          updatedTable[objectIndex] = mergeObjects(object, updatedObject);
+          updatedTable[objectIndex] = mergeDeep(object, updatedObject);
           setTable(updatedTable);
         }
       }

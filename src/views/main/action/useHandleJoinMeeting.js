@@ -6,14 +6,14 @@ import { setData } from "../../../redux/meeting";
 import { useSocket } from "../../../utils/SocketIOProvider";
 import { useData } from "../../../utils/DataProvider";
 
-export default function useHandleJoinMeeting () {
+export default function useHandleJoinMeeting (initMode = 'prepare') {
     const dispatch = useDispatch();
     const socket = useSocket();
     const [{secretCodeRef}] = useData();
 
-    const handleJoinMeeting = useCallback(({timer, data:target, origin}) => {
+    const handleJoinMeeting = useCallback(({timer, data:target, origin, defaultMode = initMode}) => {
         window.clearInterval(timer);
-        const mode = 'prepare';
+        const mode = defaultMode ||'prepare';
         const wd = openNewWindow({
             url: '/meeting/',
         });
@@ -29,7 +29,8 @@ export default function useHandleJoinMeeting () {
             dispatch(setData({ data: {mode}}));
             wd.openerSocket = socket;
         }
-    },[dispatch, socket, secretCodeRef]);
+        return wd;
+    },[dispatch, socket, secretCodeRef, initMode]);
     return handleJoinMeeting;
 }
 

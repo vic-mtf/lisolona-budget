@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useRef } from "react"
 import AgoraRTC from 'agora-rtc-sdk-ng';
+import eliminateDuplicatesByKey from "./filterByKey";
 
 const Data = createContext();
 export const useData = () => useContext(Data);
@@ -19,6 +20,15 @@ export default function DataProvider({children}) {
     , []);
 
     const pushMessages = ({id, messages, total}) => messagesRef.current[id] = {messages, total};
+    const updateMessages = ({id, messages}) => {
+        const oldMessages = messagesRef.current[id];
+        const newMessages = eliminateDuplicatesByKey('id', oldMessages, messages);
+        pushMessages({
+            id, 
+            messages: newMessages, 
+            total: newMessages.length
+        });
+    }
     
     const values = [
         {
@@ -41,6 +51,7 @@ export default function DataProvider({children}) {
         },
         {
             pushMessages, 
+            updateMessages,
         }
     ];
     return (<Data.Provider value={values}>{children}</Data.Provider>)

@@ -27,7 +27,7 @@ export default function useMicroProps () {
     const getAudioStream = useCallback(() => {
         setLoading(true);
         const audioDevice = store.getState().meeting.audio.input;
-        navigator.mediaDevices.getUserMedia({
+        navigator?.mediaDevices?.getUserMedia({
             audio: audioDevice.deviceId ? audioDevice : true,
         }).then(async stream => {
             audioStreamRef.current = stream;

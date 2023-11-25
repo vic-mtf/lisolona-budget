@@ -1,16 +1,11 @@
 import {  styled, 
     ToggleButtonGroup as TBG, 
     ClickAwayListener, Fade, 
-    Box as MuiBox, 
+    //Box as MuiBox, 
     Popper, ToggleButton, 
-    TextField, Toolbar, 
-    DialogActions, 
+    Toolbar,  
     Paper, 
-    FormControl, 
-    FormLabel, 
-    RadioGroup, 
-    FormControlLabel, 
-    Radio 
+    FormLabel
 } from '@mui/material';
 import Typography from '../../../../../../components/Typography';
 import IconButton from '../../../../../../components/IconButton';
@@ -34,7 +29,16 @@ export const ToggleButtonGroup = styled(TBG)(({ theme }) => ({
     },
 }));
 
-export default function SettingButton ({groupStyle, onChangeColor, onChangeGroupStyle, color, COLORS, STYLES, GROUPS,  ...otherProps}) {
+export default function SettingButton ({
+    groupStyle, 
+    onChangeColor, 
+    onChangeGroupStyle, 
+    color, 
+    COLORS, 
+    STYLES, 
+    GROUPS,  
+    ...otherProps
+}) {
     const [open, setOpen] = useState(false);
     const anchorElRef = useRef();
 
@@ -62,6 +66,7 @@ export default function SettingButton ({groupStyle, onChangeColor, onChangeGroup
                     open={open}
                     transition
                     sx={{zIndex: theme => theme.zIndex.tooltip,}}
+                    onMouseDown={event => event.preventDefault()}
                 >
                     {({ TransitionProps }) => (
                         <Fade {...TransitionProps} timeout={350}>
@@ -82,32 +87,41 @@ export default function SettingButton ({groupStyle, onChangeColor, onChangeGroup
                                     '& input, & label': {
                                         fontSize: theme => theme.typography.body2.fontSize
                                     },
-                                }}
-                                 
+                                }}  
                             >
                             <Toolbar
                                 variant="dense"
                                 disableGutters
-                                
                             >
                                 <Typography
                                     variant="body1"
                                     fontWeight="bold"
                                     flexGrow={1}
-                                >Parametre emoji</Typography>
+                                >Paramètre emoji </Typography>
                                 <IconButton
                                     onClick={() => setOpen(false)}
                                 >
                                     <CloseOutlinedIcon fontSize="small" />
                                 </IconButton>
                             </Toolbar>
-                             <RowRadioButtonsGroup
-                                value={groupStyle}
+                             <FormLabel id="colors">Style</FormLabel>
+                            <ToggleButtonGroup
+                                color="primary"
+                                value={[groupStyle]}
                                 onChange={onChangeGroupStyle}
-                                data={STYLES}
-                                formLabel="Styles"
-                             /> 
-                            <FormLabel id="colors">Couleurs</FormLabel>
+                            >
+                                {getEmojiStyles(STYLES).map(color => (
+                                    <CustomToggleButton
+                                        value={color?.id}
+                                        key={color?.id}
+                                        sx={{
+                                            m: 0,
+                                            p: .5
+                                        }}
+                                    >{color.label}</CustomToggleButton>
+                                ))}
+                            </ToggleButtonGroup>
+                            <FormLabel id="colors">Couleur</FormLabel>
                             <ToggleButtonGroup
                                 color="primary"
                                 value={[color]}
@@ -116,6 +130,11 @@ export default function SettingButton ({groupStyle, onChangeColor, onChangeGroup
                                 {getEmojiColors(COLORS).map(color => (
                                     <CustomToggleButton
                                         value={color.id}
+                                        key={color.id}
+                                        sx={{
+                                            m: 0,
+                                            p: .5
+                                        }}
                                     >{color.label}</CustomToggleButton>
                                 ))}
                             </ToggleButtonGroup>
@@ -129,47 +148,53 @@ export default function SettingButton ({groupStyle, onChangeColor, onChangeGroup
     )
 }
 
-function RowRadioButtonsGroup({onChange, value, data, formLabel}) {
-    return (
-      <FormControl>
-        <FormLabel id="emoji-style"
-        >{formLabel}</FormLabel>
-        <RadioGroup
-          row
-          aria-labelledby="emoji-style"
-          name="emoji-style-radio-buttons-group"
-          value={value}
-          onChange={onChange}
-        >
-            {
-                data.map((button) => (
-                    <FormControlLabel 
-                        key={button.id} 
-                        value={button.id} 
-                        control={<Radio value={button.id} size="small" />} 
-                        label={button.label}
-                        disableTypography
-                     />
-                ))
-            }
-        </RadioGroup>
-      </FormControl>
-    );
-}
-
 const getEmojiColors = COLORS => COLORS.map((id) => {
-    const imageData = getEmojisData('People & Body', id, 'Flat').find(({metadata}) => metadata.unicode === "1f91a")
+    const imageData = getEmojisData('People & Body', id, 'Flat')
+    .find(({metadata}) => metadata.unicode === "1f91a");
+   
     const label = (
-        <img 
-            src={imageData.src} 
-            height={20}
-            width={20}
-            alt={getCharacterFromCodeString(imageData.metadata.glyph)} 
+        <div 
+            style={{
+                height: 30,
+                width: 30,
+                backgroundImage: `url("${imageData.src}")`,
+                backgroundSize: '100%',
+                color: 'transparent',
+            }} 
+            children={getCharacterFromCodeString(imageData.metadata.glyph)} 
+            title={{
+                "Default": "Par Défaut",
+                "Light": "claire", 
+                "Medium-Light": "moyennement claire", 
+                "Medium": "moyenne", 
+                "Medium-Dark": "moyennement foncée",
+                "Dark":"foncée"
+            }[id]}
         />
     );
-    return {
-        id,
-       label,
-        ...imageData,
-    };
-})
+    return { id, label, ...imageData };
+});
+
+const getEmojiStyles = STYLES => STYLES.map(({id:style}) => {
+    const imageData = getEmojisData('Activities', 'Default', style)
+    .find(({metadata}) => metadata.unicode === "1f380");
+
+    const label = (
+        <div 
+            style={{
+                height: 30,
+                width: 30,
+                backgroundImage: `url("${imageData.src}")`,
+                backgroundSize: '100%',
+                color: 'transparent',
+            }} 
+            children={getCharacterFromCodeString(imageData.metadata.glyph)} 
+            title={{
+                "3D": "3d",
+                "Color": "Coloré",
+                "Flat": "Plat"
+            }[style]}
+        />
+    );
+    return { id: style, label, ...imageData };
+});
