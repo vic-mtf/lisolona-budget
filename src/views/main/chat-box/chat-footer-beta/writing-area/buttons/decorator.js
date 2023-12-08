@@ -23,6 +23,10 @@ const EMOJI = ({ entityKey, contentState, children }) => {
     <MuiBox
       component="span"
       sx={{
+        caretColor: theme => theme.palette.text.primary,
+        filter: 'blur(.1px)',
+      }}
+      style={{
         width:0,
         height: 0,
         position: 'relative',
@@ -31,11 +35,9 @@ const EMOJI = ({ entityKey, contentState, children }) => {
         backgroundRepeat: 'no-repeat',
         backgroundImage: `url(${url})`,
         color: 'transparent',
-        caretColor: theme => theme.palette.text.primary,
         fontFamily: "noto emoji",
-        filter: 'blur(.1px)',
-        p: 0,
-        m: 0,
+        padding: 0,
+        margin: 0,
       }}
     >
       <span>{children}</span>

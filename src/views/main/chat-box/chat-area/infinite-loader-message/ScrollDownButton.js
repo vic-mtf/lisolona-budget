@@ -1,13 +1,14 @@
-import { Virtuoso } from 'react-virtuoso';
-import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Badge, Fab, useTheme, Box as MuiBox, Zoom } from '@mui/material';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
-const MAX_PX_SHOW = 50;
+const MAX_PX_SHOW = 60;
 
-export default React.memo (function ScrollDownButton({scrollerRef, virtuosoRef}) {
+export default React.memo (function ScrollDownButton({scrollerRef, virtuosoRef, data}) {
     const [open, setOpen] = useState(false);
     const theme = useTheme();
+    const lenRef = useRef(data?.length);
+    const [news, setNews] = useState(0);
 
     const handleScrollToDown = useCallback(() => {
         const virtuoso = virtuosoRef?.current;
@@ -38,20 +39,35 @@ export default React.memo (function ScrollDownButton({scrollerRef, virtuosoRef})
 
     }, [scrollerRef, open]);
 
+    useEffect(() => {
+        if(open && lenRef.current !== data?.length) 
+            setNews(data?.length - lenRef.current);
+        
+        if(!open && lenRef.current !== data?.length) {
+            const scroller = scrollerRef?.current;
+            scroller.scrollTo({
+                top: scroller.scrollHeight,
+                behavior: "auto",
+            });
+            if(lenRef.current !== data?.length) setNews(0)
+            lenRef.current = data?.length;
+        }   
+    }, [open, data, handleScrollToDown, virtuosoRef, scrollerRef]);
+
     return (
         <Zoom 
             in={open}
             style={{
                 position: 'absolute',
-                zIndex: theme.zIndex.fab.toFixed(),
-                right: theme.spacing(1.5),
+                zIndex: theme.zIndex.fab.toFixed() +100,
+                right: theme.spacing(1),
                 bottom: theme.spacing(1),
             }}
             className='_zoom-container'
-            unmountOnExit
+            // unmountOnExit
         >
             <Badge 
-                badgeContent={0} 
+                badgeContent={news} 
                 color="primary"
                 showZero={false}
                 anchorOrigin={{
@@ -62,7 +78,10 @@ export default React.memo (function ScrollDownButton({scrollerRef, virtuosoRef})
                 <Fab
                     variant="circular"
                     size="small"
-                    sx={{borderRadius: 1}} 
+                    sx={{
+                        borderRadius: 1, 
+                        zIndex: theme => news ? 0 : theme.zIndex.fab.toFixed(),
+                    }} 
                     color="default"
                     onClick={handleScrollToDown}
                 >

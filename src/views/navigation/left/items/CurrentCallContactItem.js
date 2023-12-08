@@ -13,21 +13,14 @@ import AvatarStatus from "../../../../components/AvatarStatus";
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import {  useSelector } from "react-redux";
 import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
+import TimeElapsed from "../../../../components/TimeElapsed";
 
 export default function CurrentCallContactItem ({call}) {
-    const {avatarSrc, name, date, type, format, origin, id, avatarsSrc, location} = call;
+    const {avatarSrc, name, date, type, format, origin, id, avatarsSrc, location, createdAt} = call;
     const [contextMenu, setContextMenu] = React.useState(null);
     const {iconCallType, color } = useCallParams(type, format);
     const mode = useSelector(store => store.meeting.mode);
     const handleJoinMeeting = useHandleJoinMeeting();
-
-    const calls = (
-        <Typography 
-        component="span" 
-        variant="caption" 
-        color="text.primary"
-        >(Appel en cours)</Typography>
-        )
 
     const handleContextMenu = event => {
         event.preventDefault();
@@ -44,6 +37,7 @@ export default function CurrentCallContactItem ({call}) {
         handleJoinMeeting({data, origin});
     };
 
+
     return (
         <React.Fragment>
             <ListItem
@@ -56,23 +50,16 @@ export default function CurrentCallContactItem ({call}) {
                     disabled={mode !== 'none'}
                 >
                 <ListItemAvatar>
-                    <CustomBadge
-                        overlap="circular"
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        variant="dot"
+                    <AvatarStatus
+                        type={type}
+                        avatarSrc={avatarSrc}
+                        avatarsSrc={avatarsSrc}
+                        alt={name}
+                        name={name}
+                        id={location} 
                         online
                         active
-                    >
-                        <AvatarStatus
-                            type={type}
-                            avatarSrc={avatarSrc}
-                            avatarsSrc={avatarsSrc}
-                            alt={name}
-                            name={name}
-                            id={id}
-                            invisible
-                        />
-                    </CustomBadge>
+                    />
                 </ListItemAvatar>
                 <ListItemText
                     primary={name}
@@ -83,10 +70,17 @@ export default function CurrentCallContactItem ({call}) {
                             display="flex" 
                             alignItems="center"
                         >
-                          <Typography color={color}>{calls} {iconCallType}</Typography>
-                          {/* <Typography variant="caption" color="text.secondary" >
-                            Depuis {capStr(date)}
-                          </Typography>   */}
+                            <Typography
+                                variant="caption" 
+                                color="text.secondary"
+                            >
+                                <TimeElapsed
+                                    startDate={createdAt}
+                                    startWords="Appel en cours il y a "
+                                    endWords="..."
+                                    bigger
+                                />
+                            </Typography>
                         </Stack>
                     }
                     primaryTypographyProps={{

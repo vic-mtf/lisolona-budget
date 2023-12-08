@@ -1,4 +1,5 @@
 import useClientJoin from "./useClientJoin";
+import useClientMessage from "./useClientMessage";
 import useClientSignalHandRaised from "./useClientSignalHandRaised";
 import useCreateLocalTracks from "./useCreateLocalTracks";
 import useMeetingEnd from "./useMeetingEnd";
@@ -11,6 +12,7 @@ export default function ActionsWrapper () {
     useClientJoin();
     useSignalClientGuest();
     useSignalUpdate();
-    useClientSignalHandRaised()
+    useClientSignalHandRaised();
+    useClientMessage();
     return null;
 }

@@ -1,10 +1,29 @@
 import React, { useMemo } from "react";
-import { Box as MuiBox, Stack } from '@mui/material';
-import Avatar from "../../../../../components/Avatar";
+import { Box as MuiBox, Stack, useTheme, alpha } from '@mui/material';
+import AvatarStatus from "../../../../../components/AvatarStatus";
+import useGetSender from "../infinite-loader-message/useGetSender";
+import getFullName from "../../../../../utils/getFullName";
+import Typography from "../../../../../components/Typography";
+import getHoursAndMin from "./getHoursAndMin";
+import Text from "./text/Text";
+import useBorderRadius from "./getBorderRadius";
+import { grey } from '@mui/material/colors';
+import ExpireTimeout from "./ExpireTimeout";
 
+const Message = React.memo(({ data, group, small }) => {
 
-const Message = React.memo(({data, directions}) => {
-    const [, direction, lastDir] = useMemo(() => directions, [directions]);
+    const direction = useMemo(() => group?.direction, [group]); 
+    const isLast = useMemo(() => group?.isLast, [group]); 
+    const isFirst = useMemo(() => group?.isFirst, [group]); 
+    const sender = useGetSender(data);
+    const borderRadius = useBorderRadius({isFirst, isLast, direction});
+    const theme = useTheme();
+    const color = useMemo(() =>
+        direction === 'left' ?  
+        theme.palette.background.paper : 
+        theme.palette.mode === 'light' ? grey[100] :
+        alpha(theme.palette.primary.main, .5) 
+    ,[direction, theme]);
 
     return (
         <MuiBox
@@ -12,13 +31,12 @@ const Message = React.memo(({data, directions}) => {
             justifyContent={direction}
             flexDirection="row"
             overflow="hidden"
-            mx={direction === 'right' ? 6.5 : 1}
+            mx={2}
             sx={{
-                paddingBottom: direction === lastDir ? '1px' : 2,
-                ml: 1,
+                paddingBottom: isLast ? '1px' : 2,
                 mr: {
-                    sm: 1,
-                    md: direction === 'right' ? 6.5 : 1,
+                    sm: 2,
+                    md: direction === 'right' && !small ? 6.5 : 2,
                 }
             }}
         >
@@ -28,35 +46,51 @@ const Message = React.memo(({data, directions}) => {
                 width="100%"
             >
                 <MuiBox>
-                    <Avatar
-                        sx={{
-                            width: 30,
-                            height: 30,
-                        }}
-                    />
+                    {direction === 'left' &&
+                    <MuiBox
+                        width={30}
+                        height={30}
+                    >
+                        {!isFirst &&
+                            <AvatarStatus
+                                size={30}
+                                name={getFullName(sender)}
+                                id={sender?._id}
+                                avatarSrc={sender?.imageUrl}
+                                invisible
+                            />
+                        } 
+                    </MuiBox>}
                 </MuiBox>
                 <MuiBox
                     flexGrow={1}
                 >
-                    <MuiBox
+                   {!isFirst &&
+                   <MuiBox
                         flexDirection="row"
                         display="flex"
                         overflow="hidden"
                         component="span"
                         justifyContent={direction}
-                        // bgcolor="orange"
-                    >Date
-                    </MuiBox>
+                    >
+                      <Typography 
+                        variant="caption"
+                        color='text.secondary'
+                    >
+                            {direction === 'left' && getFullName(sender) + ', '} 
+                            {getHoursAndMin(data?.createdAt)}
+                      </Typography>
+                    </MuiBox>}
                     <MuiBox
-                        // bgcolor='red'
                         overflow="hidden"
                         flexDirection="row"
                         justifyContent={direction}
                         display="flex"
+                        alignItems="end"
+                        position="relative"
                     >
                         <MuiBox
-                            // bgcolor="plum"
-                            width="85%"
+                            width="90%"
                             overflow="hidden"
                             flexDirection="row"
                             justifyContent={direction}
@@ -66,11 +100,20 @@ const Message = React.memo(({data, directions}) => {
                                 overflow="hidden"
                                 display="inline-block"
                                 maxHeight="100%"
-                                bgcolor="tomato"
+                                borderRadius={borderRadius}
+                                bgcolor="background.paper"
                             >
-                                {data?.content}
+                                <Text
+                                    content={data?.content}
+                                    bgcolor={color}
+                                />
                             </MuiBox>
                         </MuiBox>
+                        <ExpireTimeout 
+                            invisible={direction === 'left' || data?.sended}
+                            fontSize="small" 
+                            createdAt={data?.createdAt}
+                        />
                     </MuiBox>
                 </MuiBox>
             </Stack>

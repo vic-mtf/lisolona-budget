@@ -13,14 +13,13 @@ export default function RaiseHandButton () {
     const socket = useSocket();
     const handleRaiseHand = useCallback(() => {
         const state = !handRaised;
-        dispatch(setConferenceData({ data: { handRaised: state}}));
+        dispatch(setConferenceData({ data: { handRaised: state }}));
         socket.emit('signal', {
             id: store.getState().meeting.meetingId,
             type: 'state',
             obj: {handRaised: state},
             who: [store.getState().meeting?.me?.id],
         });
-
     },[handRaised, dispatch, socket]);
 
     return (

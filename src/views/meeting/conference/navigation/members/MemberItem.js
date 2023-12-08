@@ -9,7 +9,6 @@ import useClientState from "../../actions/useClientState";
 export default function MemberItem ({id, active, name, isGuest, avatarSrc}) {
     const rootRef = useRef();
     const state = useClientState({id, props: [], key: 'state'});
-    console.log(state);
  
     return (
         <ListItem
@@ -76,7 +75,7 @@ export default function MemberItem ({id, active, name, isGuest, avatarSrc}) {
 
 function getStatus({isOrganizer, isSelf, isGuest}) {
     if (isOrganizer) 
-        return isSelf ? "Moderateur (vous)" : "Moderateur";
+        return isSelf ? "Modérateur (vous)" : isGuest ? "Modérateur (invité)": "Modérateur";
     else if (isGuest) 
         return "Invité";
     else if (isSelf)

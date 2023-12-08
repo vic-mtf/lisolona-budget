@@ -3,12 +3,9 @@ import {
 } from '@mui/material';
 import { useMemo } from 'react';
 import InfiniteLoaderMessage from './infinite-loader-message/InfiniteLoaderMessage';
-import { useData } from '../../../../utils/DataProvider';
 
-export default function ChatArea ({target}) {
+export default function ChatArea ({target, messages, small}) {
     const id = useMemo(() => target?.id, [target?.id]);
-    const [{messagesRef}] = useData();
-    const messages = useMemo(() => messagesRef.current[id]?.messages, [id, messagesRef]);
 
     return ( 
         <MuiBox
@@ -22,6 +19,8 @@ export default function ChatArea ({target}) {
         >
             <InfiniteLoaderMessage
                 data={messages}
+                target={target}
+                small={small}
             />
         </MuiBox>
     )

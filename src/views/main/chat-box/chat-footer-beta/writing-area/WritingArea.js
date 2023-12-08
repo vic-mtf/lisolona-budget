@@ -12,13 +12,14 @@ import { CHANNEL } from '../../ChatBox';
 import draftToHtml from 'draftjs-to-html';
 import { convertToRaw } from 'draft-js';
 import { getTextFromEditorState } from './countText';
+import customEntityTransform from './customEntityTransform';
 
 export const textAlignmentPlugin = createTextAlignmentPlugin();
 const staticToolbarPlugin = createStaticToolbarPlugin();
 export const { Toolbar: WritingAreaToolbar } = staticToolbarPlugin;
 export const plugins = [staticToolbarPlugin, textAlignmentPlugin];
 
-export default React.memo(function WritingArea ({onSubmit, target}) {
+export default React.memo(function WritingArea ({onSubmit, target, media}) {
   const filesRef = useRef([]);
   const rootRef = useRef();
   const paperRef = useRef();
@@ -32,7 +33,13 @@ export default React.memo(function WritingArea ({onSubmit, target}) {
     const editorState = editorRef?.current?.getEditorState();
     const isText = getTextFromEditorState(editorState).trim();
     const rawContentState = convertToRaw(editorState.getCurrentContent());
-    const HTML = isText ?  draftToHtml(rawContentState) : null;
+    console.log('Bonjour')
+    const HTML = isText ?  draftToHtml(
+      rawContentState,
+      {},
+      true,
+      customEntityTransform
+    ) : null;
     const Files = filesRef.current.length ? filesRef.current: null;
     if(HTML || Files) {
       const data = { HTML, Files };
@@ -69,8 +76,10 @@ export default React.memo(function WritingArea ({onSubmit, target}) {
             placeHolder={placeHolder}
             editorRef={editorRef}
             onSubmit={handleSubmit}
+            media={media}
          />
          
+         {media &&
          <AnimatedWrapper 
             path="data.chatBox.footer.recording"
             divided={false}
@@ -95,7 +104,7 @@ export default React.memo(function WritingArea ({onSubmit, target}) {
             }}
           >
             <VoiceRecord/>
-         </AnimatedWrapper>
+         </AnimatedWrapper>}
       </MuiBox>
     </Paper>
   );

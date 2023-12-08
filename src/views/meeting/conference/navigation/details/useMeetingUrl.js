@@ -1,15 +1,14 @@
-import Url from 'url';
+
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
+import path from 'path-browser';
 
 export default function useMeetingUrl() {
     const meetingId = useSelector(store => store.meeting.meetingId);
     const url = useMemo(() => 
-        Url.resolve(
-            Url.resolve(
-                window.location.origin,
-                process.env.PUBLIC_URL,
-            ),
+        path.join(
+            window.location.origin.trim(), 
+            process.env.PUBLIC_URL.trim(),  
             `/home?code=${meetingId}`
         ),
         [meetingId]

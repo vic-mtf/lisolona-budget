@@ -9,7 +9,7 @@ import {
     Tooltip,
     useTheme
 } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
 import Avatar from "../../../../components/Avatar";
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
@@ -24,6 +24,7 @@ import CustomBadge from "../../../../components/CustomBadge";
 import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import timeHumanReadable from "../../../../utils/timeHumanReadable";
+import { isPlainObject } from "lodash";
 
 // type = incoming | outgoing | missed
 // format = audio | video
@@ -40,7 +41,9 @@ export default function CallContactItem ({call}) {
         format, 
         callsInfos,
         avatarsSrc,
+        location,
     } = call;
+    
     const [contextMenu, setContextMenu] = React.useState(null);
 
     const handleContextMenu = event => {
@@ -51,6 +54,14 @@ export default function CallContactItem ({call}) {
             contextMenu === null ? {mouseX, mouseY} : null,
         );
     };
+
+    const time = useMemo(() => capStr(
+            timeHumanReadable(
+                createdAt, 
+                true, 
+                { showDetail: true }
+            )
+    ),[createdAt]);
 
     return (
         <React.Fragment>
@@ -80,7 +91,7 @@ export default function CallContactItem ({call}) {
                         avatarSrc={avatarSrc}
                         avatarsSrc={avatarsSrc}
                         invisible
-                        id={id}
+                        id={location}
                         name={name}
                         type={type}
                     />
@@ -94,11 +105,8 @@ export default function CallContactItem ({call}) {
                             display="flex" 
                             alignItems="center"
                         >
-                            <Typography variant="caption">({count})</Typography>
                             <Typography variant="caption" color="text.secondary" >
-                                {capStr(timeHumanReadable(createdAt, true, {
-                                    showDetail: true
-                                }))}
+                            ({count}) {time}
                             </Typography>  
                         </Stack>
                     }
@@ -107,7 +115,7 @@ export default function CallContactItem ({call}) {
                         noWrap: true,
                         title: name,
                         color: 'text.primary',
-                        //variant: 'caption',
+                        variant: 'body2'
                     }}
                     secondaryTypographyProps={{
                         component: "div",

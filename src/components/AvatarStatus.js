@@ -11,8 +11,8 @@ import { useSocket } from "../utils/SocketIOProvider";
 import { useSelector } from "react-redux";
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
-function AvatarStatus ({type="direct", name, avatarSrc, id, invisible, sx, avatarsSrc, size}) {
-    const images = Array.isArray(avatarsSrc) ? avatarsSrc : [];
+function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, size, active, online}) {
+
     const status = useSelector(store => store.status[id]);
     const isEmittedRef = useRef(true);
     const socket = useSocket();
@@ -28,22 +28,23 @@ function AvatarStatus ({type="direct", name, avatarSrc, id, invisible, sx, avata
     }), [background, text, sx]);
 
     useEffect(() => {
-        if(!status && !invisible) {
+        if(!status && !invisible && online === undefined) {
             isEmittedRef.current = true;
             if(type === 'direct' && isEmittedRef.current) {
                 socket?.emit('status', {who: id});
                 isEmittedRef.current = false;
             }
         }
-    }, [type, socket, id, status, invisible]);
+    }, [type, socket, id, status, invisible, online]);
 
     return (
         <ListItemAvatar>
             <CustomBadge 
-                overlap="circular"
+                overlap="rectangular"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 variant="dot"
-                online={status === 'online'}
+                active={active}
+                online={Boolean(online) || status === 'online'}
                 invisible={invisible}
             >
                 <AvatarFadeLoading
@@ -66,6 +67,7 @@ function AvatarStatus ({type="direct", name, avatarSrc, id, invisible, sx, avata
                         ...size ? {
                             height: size,
                             width: size,
+                            // fontSize: size / (8/6)
                         } : {},
                         textTransform: 'capitalize',
                         ...invisible ? {
@@ -80,6 +82,7 @@ function AvatarStatus ({type="direct", name, avatarSrc, id, invisible, sx, avata
 
 AvatarStatus.defaultProps = {
     type: 'direct',
+    active: false,
     sx: {},
 }
 

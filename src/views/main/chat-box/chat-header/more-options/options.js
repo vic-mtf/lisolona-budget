@@ -1,12 +1,12 @@
 // import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-// import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
+//import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
 import store from '../../../../../redux/store';
-import { addData } from '../../../../../redux/data';
+import { addData, modifyData } from '../../../../../redux/data';
 
 const options = (contact, callback) => [
     {
         label: `Fermer la discussion`,
-        //icon: <DisabledByDefaultOutlinedIcon/>,
+        // icon: <DisabledByDefaultOutlinedIcon/>,
         onClick() {
             store.dispatch(addData({key: 'target', data: null}));
             if(typeof callback === 'function')
@@ -16,16 +16,16 @@ const options = (contact, callback) => [
     {
         label: `Infos du ${contact?.type === 'room' ? 'Lisanga' : 'contact'}`,
         //icon: <InfoOutlinedIcon/>,
-        disabled: true,
+        // disabled: true,
         onClick() {
-            const name = '_user-infos';
-            const customEvent = new CustomEvent(
-                name, {
-                    detail: {name, contact}
-                }
+            
+            store.dispatch(
+                modifyData({ 
+                    data: true,
+                    key: 'target.showDetails',
+                 })
             );
-            document.getElementById('root')
-            .dispatchEvent(customEvent);
+
             if(typeof callback === 'function')
                 callback();
         }

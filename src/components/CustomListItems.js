@@ -25,6 +25,7 @@ export default function CustomListItems ({sx, data, itemContent})  {
                 className="item-container-list"
                 data={data}
                 itemContent={itemContent}
+                // topItemCount={2}
                 onScroll={onScroll}
             />
         </Box>

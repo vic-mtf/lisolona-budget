@@ -12,6 +12,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import db from '../../../../database/db';
 import CustomListItems from '../../../../components/CustomListItems';
 import filterByKeyword from '../../../../utils/filterByKeyword';
+import purifyObject from '../../../../utils/purifyObject';
 import SearchBar from '../SearchBar';
 import IconButton from '../../../../components/IconButton';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
@@ -61,6 +62,7 @@ const  ListItems = ({discussions, search}) => {
                 {...contact}
                 selected={id === contact.id}
                 onClick={handleClickDiscussion({
+                    ...purifyObject(contact),
                     id: contact?.id,
                     name: contact?.name,
                     members: contact?.members,
@@ -96,4 +98,3 @@ const  ListItems = ({discussions, search}) => {
         </React.Fragment>
     )
 }
-

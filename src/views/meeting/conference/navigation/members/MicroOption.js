@@ -7,21 +7,22 @@ import useMicroProps from "../../footer/buttons/useMicroProps";
 import { useSelector } from "react-redux";
 import useClientState from "../../actions/useClientState";
 import { useSocket } from "../../../../../utils/SocketIOProvider";
+import store from "../../../../../redux/store";
 
 export default function MicroOption ({active, id}) {
     const user = useSelector(store => store.meeting.me);
-    const meetingId = useSelector(store => store.meeting.meetingId);
     const isLocalMicro = useMemo(() => user?.id === id, [id, user]);
     const {micro, handleToggleMicro, loading} = useMicroProps();
-    const state = useClientState({id: user.id, props: ['isAdmin']});
+    const state = useClientState({id: user.id, props: ['isOrganizer']});
     const activeMicro = useMemo(() => isLocalMicro ? micro?.active : active, [isLocalMicro, micro, active]);
     const socket = useSocket();
 
 
-    const IconButtonProps = useMemo(() => state.isAdmin ? {
+    const IconButtonProps = useMemo(() => state.isOrganizer ? {
         onClick() {
+            const meetingId = store.getState().meeting.meetingId
             if(isLocalMicro) handleToggleMicro();
-            else if(state.isAdmin)
+            else if(state.isOrganizer)
                 socket.emit('signal', {
                     id: meetingId,
                     type: 'state',
@@ -36,11 +37,11 @@ export default function MicroOption ({active, id}) {
         onClick() {
             if(isLocalMicro) handleToggleMicro();
         }
-    }, [state, meetingId, handleToggleMicro, isLocalMicro, id, socket])
+    }, [state, handleToggleMicro, isLocalMicro, id, socket])
 
     return (
         <Tooltip
-            title={message(activeMicro, state.isAdmin)}
+            title={message(activeMicro, state.isOrganizer)}
             arrow
         >
             <div>
@@ -58,5 +59,5 @@ export default function MicroOption ({active, id}) {
     );
 }
 
-const message = (active, isAdmin) => isAdmin ? 
+const message = (active, isOrganizer) => isOrganizer ? 
 `${active ? 'Desactiver' : 'Activer'} le micro` : `Micro ${active ? 'Activé' : 'Desactivé'}`

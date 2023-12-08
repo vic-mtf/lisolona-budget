@@ -21,14 +21,6 @@ export default function structureDiscussionData ({
     const avatarSrc = type === 'direct' ? target?.imageUrl : discussion?.imageUrl;
     const [lastNotice] = message.slice(-1);
     const data = {
-        ...isUpdate ? {}:
-        { 
-            id: targetId, 
-            members,
-            createdBy: discussion.createdBy,
-            type,
-            createdAt: new Date(discussion?.createdAt),
-        },
         name,
         members,
         lastNotice,
@@ -37,6 +29,14 @@ export default function structureDiscussionData ({
         lastNoticeType: discussion?.lastNoticeType,
         description: discussion?.description,
         origin: discussion?.origin || discussion,
+        ...isUpdate ? {}:
+        { 
+            id: targetId, 
+            members,
+            createdBy: discussion.createdBy,
+            type,
+            createdAt: new Date(discussion?.createdAt),
+        },
     };
     Object.keys(data).forEach(key => {
         if(data[key] === undefined) delete data[key];

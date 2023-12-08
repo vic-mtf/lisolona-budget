@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTheme } from '@mui/material';
 import EditorText from './EditorText';
 import WritingAreaFooter from './WritingAreaFooter';
@@ -8,7 +8,7 @@ import EmojiPicker from '../emoji-picker/EmojiPicker';
 import FilesThumbView from '../files-thumb-view/FilesThumbView';
 import { CHANNEL } from '../../ChatBox';
 
-export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmit, placeHolder, editorRef}) {
+export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmit, placeHolder, editorRef, media}) {
   return (
       <>
         <AnimatedWrapper
@@ -38,12 +38,13 @@ export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmi
           onSubmit={onSubmit}
           placeHolder={placeHolder}
           editorRef={editorRef}
+          media={media}
         />
       </>
   )
 }
 
-const BottomFooterEditor = ({filesRef, rootRef, paperRef, onSubmit, placeHolder, editorRef}) => {
+const BottomFooterEditor = ({filesRef, rootRef, paperRef, onSubmit, placeHolder, editorRef, media}) => {
     const recording = useSelector(store => store?.data?.chatBox?.footer?.recording);
     const [hasFocus, setHasFocus] = useState(false);
     const [isEmpty, setIsEmpty] = useState(true);
@@ -101,6 +102,7 @@ const BottomFooterEditor = ({filesRef, rootRef, paperRef, onSubmit, placeHolder,
           hasFocus={hasFocus}
           onSubmit={onSubmit}
           editorRef={editorRef}
+          media={media}
         />
       </>
     );

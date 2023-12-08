@@ -1,8 +1,9 @@
-import { CssBaseline, Box as MuiBox } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import Main from "./main/Main";
-import NavigationLeft from "./navigation/left/NavigationLeft";
-import NavigationRight from "./navigation/right/NavigationRight";
+import { CssBaseline, Box as MuiBox } from '@mui/material';
+import React, { useMemo } from 'react';
+import Main from './main/Main';
+import NavigationLeft from './navigation/left/NavigationLeft';
+import NavigationRight from './navigation/right/NavigationRight';
+import { useSelector } from 'react-redux';
 
 export default function LiosoNaBudget () {
 
@@ -17,41 +18,22 @@ export default function LiosoNaBudget () {
       >
         <MuiBox sx={{ display: 'flex', flex: 1, width: "100%"}}>
           <CssBaseline />
-            <NavigationLeft/>
-            <MainRight/>
+          <NavigationLeft/>
+          <MainRight/>
         </MuiBox>
       </MuiBox>
     )
 }
 
 const MainRight = () => {
-  const [open, setOpen] = useState(false);
-  const [contact, setContact] = useState();
-  useEffect(() => {
-    const root = document.getElementById('root');
-    const handleOpenContact = event =>  {
-      const  state = event.detail?.state;
-      const contact = event.detail?.contact;
-      setOpen(state === undefined ? !open : state);
-      if(contact)
-        setContact(contact);
-    };
-    root.addEventListener(
-      '_user-infos',
-      handleOpenContact
-    );
-    return () =>  {
-      root.removeEventListener('_user-infos',
-      handleOpenContact);
-    };
-  },[open, contact]);
+  const detail = useSelector(store => store.data.target?.showDetails);
+  const open = useMemo(() => Boolean(detail), [detail]);
 
   return (
     <React.Fragment>
       <Main open={open}/>
       <NavigationRight
         open={open}
-        contact={contact}
       />
     </React.Fragment>
   )

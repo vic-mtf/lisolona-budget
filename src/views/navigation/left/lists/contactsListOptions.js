@@ -9,7 +9,9 @@ import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
 import Groups3OutlinedIcon from '@mui/icons-material/Groups3Outlined';
 import CastRoundedIcon from '@mui/icons-material/CastRounded';
 import { addData } from '../../../../redux/data';
-
+import { participantsAppel } from '../../../main/chat-box/chat-area/alert/Profile';
+import { getTime } from "../../../../utils/formatTime";
+import { isPlainObject } from "lodash";
 
 export function sortMeetings(calls) {
     const meetings = [];
@@ -21,13 +23,14 @@ export function sortMeetings(calls) {
             nativeParticipants[0]?.imageUrl,
             nativeParticipants[nativeParticipants?.length - 1]?.imageUrl,
         ];
-        const names = formatNames(
+        const names = participantsAppel(
             participants?.map(({ identity }) => participants.length > 1 ? identity?.fname : getFullName(identity))
         );
         const name = call?.name || names;
-        const type = (call?.origin?.room?._id || participants?.length > 1) ? 'room' : 'direct';
+        const type = (call?.origin?.room || participants?.length > 1) ? 'room' : 'direct';
         const avatarSrc = type === 'room' ? call?.origin?.room?.imageUrl : participants[0]?.identity?.imageUrl;
         const isCurrentCall = call?.status === 1;
+        const location = isPlainObject(call?.location) ? call?.location?._id: call?.location;
         const data = {
             ...call,
             avatarSrc,
@@ -36,7 +39,8 @@ export function sortMeetings(calls) {
             name,
             type,
             groupId: call?.location?.toString(),
-            title: timeHumanReadable(call.createdAt, true, { showDetail: false })
+            title: timeHumanReadable(call.createdAt, true, { showDetail: false }),
+            location
         }
         if (isCurrentCall) data.key = 'on';
         else data.key = 'end';
@@ -96,10 +100,10 @@ export const callsItems = {
 };
 
 export function sortByCreatedAt(objects) {
-    return objects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return objects.sort(({createdAt: a}, {createdAt: b}) => getTime(b) - getTime(a));
 }
 
-export const menuItemsCall = [
+export const menuGlobalCall = [
     {
         Icon: MeetingRoomOutlinedIcon,
         label: 'Rejoindre une reunion en cours',

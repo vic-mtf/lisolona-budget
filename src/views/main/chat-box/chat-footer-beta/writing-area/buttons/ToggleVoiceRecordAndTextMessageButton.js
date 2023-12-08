@@ -3,13 +3,17 @@ import KeyboardVoiceOutlinedIcon from '@mui/icons-material/KeyboardVoiceOutlined
 import { Fab, Tooltip, Zoom, useTheme } from '@mui/material';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 
-export default function ToggleVoiceRecordAndTextMessageButton ({type, onSend, onRecord}) {
+export default function ToggleVoiceRecordAndTextMessageButton ({type, onSend, onRecord, disabledVoice, disabledSendMessage}) {
     const theme = useTheme();
     const transitionDuration = {
         enter: theme.transitions.duration.enteringScreen,
         exit: theme.transitions.duration.leavingScreen,
     };
     const value = useMemo(() => type === "voice" ? 0 : 1, [type]);
+    const disabled = useMemo(() => 
+        [disabledVoice, disabledSendMessage], 
+        [disabledVoice, disabledSendMessage]
+    );
 
     return (
         fabs.map((fab, index) => (
@@ -39,6 +43,7 @@ export default function ToggleVoiceRecordAndTextMessageButton ({type, onSend, on
                             aria-label={fab.label} 
                             color={fab.color}
                             onClick={type === 'voice' ? onRecord : onSend}
+                            disabled={Boolean(disabled[index])}
                         >
                             {fab.icon}
                         </Fab>
@@ -54,7 +59,7 @@ const fabs =  [
         color: 'default',
         icon: <KeyboardVoiceOutlinedIcon fontSize="small" />,
         label: 'microphone',
-        title: 'Enregistrer'
+        title: 'Enregistrer',
     },
     {
         color: 'primary',

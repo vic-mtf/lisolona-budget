@@ -10,7 +10,7 @@ import store from '../../../../../redux/store';
 import { modifyData } from '../../../../../redux/data';
 import { useSelector } from 'react-redux';
 
-export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFocus, onSubmit, editorRef}) {
+export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFocus, onSubmit, editorRef, media}) {
     return (
         <WritingAreaToolbar>
         {
@@ -35,7 +35,7 @@ export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFo
                     >
                         <ToggleToolbarButton/>
                         <ToggleEmojiBarButton/>
-                        <AddFilesButton filesRef={filesRef}/>
+                        {media && <AddFilesButton filesRef={filesRef}/>}
                     </MuiBox>
                     <MuiBox
                         position="relative"
@@ -48,6 +48,7 @@ export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFo
                         <SubmitButton
                             onSubmit={onSubmit}
                             isEmpty={isEmpty}
+                            media={media}
                         />
                     </MuiBox>
                 </MuiBox>
@@ -57,7 +58,7 @@ export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFo
     );
 });
 
-const SubmitButton = ({onSubmit, isEmpty}) => {
+const SubmitButton = ({onSubmit, isEmpty, media}) => {
     const isFiles = useSelector(store => store.data.chatBox.footer.files.length);
 
     return (
@@ -71,7 +72,9 @@ const SubmitButton = ({onSubmit, isEmpty}) => {
                 );
             }}
             onSend={onSubmit}
-            type={(isFiles || !isEmpty) ? 'text' :'voice'}
+            type={(isFiles || !isEmpty) ? 'text' : 'voice'}
+            disabledVoice={!media}
+            
         />
     );
 };

@@ -26,7 +26,10 @@ export default function Details () {
 
     return (
         <>
-            <Toolbar variant="dense">
+            <Toolbar 
+                variant="dense"
+                sx={{mb: 2}}
+            >
                 <Typography
                     variant="h6"
                     fontWeight="bold"

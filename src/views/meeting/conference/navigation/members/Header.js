@@ -14,7 +14,10 @@ export default function Header ({setKeyword, keyword}) {
                 >
                 Participants</Typography>
             </Toolbar>
-            <Toolbar variant="dense">
+            <Toolbar 
+                variant="dense"
+                sx={{mb: 2}}
+            >
                 <SearchBar
                     value={keyword}
                     onChange={event => {

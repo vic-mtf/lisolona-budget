@@ -7,13 +7,15 @@ import EmojiPicker from "./emoji-picker/EmojiPicker";
 
 
 
-export default function ChatFooter ({target}) {
+export default function ChatFooter ({target, media}) {
  
 
   return (
         <MuiBox
             bgcolor="background.paper"
-            p={1}
+            p={.1}
+            px={1}
+            pt={1}
             display="flex"
             width="100%"
             alignItems="center"
@@ -22,13 +24,13 @@ export default function ChatFooter ({target}) {
             overflow="hidden"
             position="relative"
             sx={{
-                borderTop: theme => `1px solid ${theme.palette.divider}`,
                 zIndex: theme => theme.zIndex.appBar,
             }}
         >
             <WritingArea
                 target={target}
-                onSubmit={editorState => console.log(editorState)}
+                // onSubmit={editorState => console.log(editorState)}
+                media={media}
             />
         </MuiBox>
   );

@@ -1,117 +1,37 @@
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Alert, Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
-import { useCallback, useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Badge, Fab, Box as MuiBox, Stack, Tooltip } from '@mui/material';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
-import getPermission from '../../../../../utils/getPermission';
-import { setCameraData } from '../../../../../redux/meeting';
-import { useData } from '../../../../../utils/DataProvider';
 import IconButton from '../../../../../components/IconButton';
-import { toggleStreamActivation } from '../../../../home/checking/FooterButtons';
+import useCameraProps from './useCameraProps';
+import { useEffect } from 'react';
 import store from '../../../../../redux/store';
-import { useMeetingData } from '../../../../../utils/MeetingProvider';
-import AgoraRTC from 'agora-rtc-sdk-ng';
-import useCustomSnackbar from '../../../../../components/useCustomSnackbar';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { useSocket } from '../../../../../utils/SocketIOProvider';
 
 export default function CameraButton () {
-    const camera = useSelector(store => store.meeting.camera);
-    const { enqueueCustomSnackbar, closeCustomSnackbar} = useCustomSnackbar();
-    const [loading, setLoading] = useState(false);
-    const [permission, setPermission] = useState(null);
-    const [{videoStreamRef, client}] = useData();
-    const [{localTrackRef}] = useMeetingData();
-    const dispatch = useDispatch();
-
-    const handleDispatchAllowed = useCallback(allowed => {
-        dispatch(setCameraData({data: {allowed}}));
-    },[dispatch]);
-
-    const getVideoStream = useCallback(() => {
-        setLoading(true);
-        const videoDevice = store.getState().meeting.video.input;
-        navigator?.mediaDevices?.getUserMedia({
-            video: videoDevice.deviceId ? videoDevice : {
-                width: {ideal: window.innerWidth},
-                height: {ideal: window.innerHeight}
-            },
-        }).then(async stream => {
-            videoStreamRef.current = stream;
-            const screenPublished = store.getState().meeting.screenSharing.published;
-            if(!screenPublished) {
-                const [mediaStreamTrack] = stream.getVideoTracks();
-                localTrackRef.current.videoTrack = AgoraRTC.createCustomVideoTrack({mediaStreamTrack});
-                await client.publish([localTrackRef.current.videoTrack]);
-            } 
-            dispatch(setCameraData({data: {active: true,  published: true}}));
-            setLoading(false);
-        }).catch((e) => {
-            setLoading(false);
-            const message = e.toString().toLowerCase();
-            if('notreadableerror: could not start video source' === message) {
-                let key;
-                enqueueCustomSnackbar({
-                    message: `Caméra occupée par une autre application.`,
-                    severity: 'error',
-                    getKey: _key => key = _key,
-                    action: (
-                        <IconButton
-                            onClick={() => {
-                                closeCustomSnackbar(key);
-                            }}
-                        >
-                            <CloseOutlinedIcon/>
-                        </IconButton>
-                    )
-                })
+    const { camera, permission, handlerToggleCamera, loading } = useCameraProps();
+    const socket = useSocket();
+   
+   useEffect(() => {
+    const handleSignal = async event => {
+        const meeting = store.getState().meeting;
+        const camera = store.getState().meeting.camera;
+        if(meeting.meetingId === event?.where?._id) {
+            const users = Array.isArray(event?.who) ? event?.who : [event?.who];
+            const [id] =  users.map(user => typeof user === 'string' ? user : user?._id);
+            const [key] = Object.keys(event.what) || [];
+            const subKeys = key ? Object.keys(event.what[key]) : [];
+            if(meeting.me.id === id && camera.active && subKeys.includes('isCam')) {
+                handlerToggleCamera();
             }
-        });
-    }, [dispatch, videoStreamRef, localTrackRef, client, closeCustomSnackbar, enqueueCustomSnackbar]);
-
-    const handlerToggleCamera = useCallback(async () => {
-        if(permission?.state !== 'denied') {
-            const stream = videoStreamRef.current;
-            if(stream) {
-                setLoading(true);
-                toggleStreamActivation(stream, 'video');
-                const state = !camera.active;
-                const screenPublished = store.getState().meeting.screenSharing.published;
-                if(!screenPublished) {
-                    if(camera.published && camera.active) 
-                        await client.unpublish([localTrackRef.current.videoTrack]);
-                    if(!camera.published && !camera.active) {
-                        const [mediaStreamTrack] = stream.getVideoTracks();
-                        localTrackRef.current.videoTrack = AgoraRTC.createCustomVideoTrack({mediaStreamTrack})
-                        await client.publish([localTrackRef.current.videoTrack]);
-                    }
-                }
-                dispatch(setCameraData({data: {active: state, published: state}}));
-                setLoading(false);
-            } else getVideoStream();
-        } else {
-            //message video ici
         }
-    }, [videoStreamRef, camera, permission, dispatch, getVideoStream, client, localTrackRef]);
-    
-    useLayoutEffect(() => {
-        if(!permission)
-            getPermission('camera')
-            .then((permission) => {
-                setPermission(permission);
-                handleDispatchAllowed(permission.state === 'granted');
-            });
-        const handleChangeState = event => {
-            const permission = event.target;
-            setPermission(permission);
-            handleDispatchAllowed(permission.state === 'granted');
-        };
-        permission?.addEventListener('change', handleChangeState);
-        return () => {
-            permission?.removeEventListener('change', handleChangeState);
-        };
-    }, [permission, handleDispatchAllowed]);
+    }
+    socket.on('signal', handleSignal);
+    return () => {
+        socket.off('signal', handleSignal);
+    }
+   },[socket, handlerToggleCamera]);
 
     return (
         <Stack

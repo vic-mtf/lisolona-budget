@@ -11,9 +11,9 @@ export default function AdminOptionsButton () {
     const selected = useMemo(() => /admin-options-open/.test(nav), [nav]);
     const dispatch = useDispatch();
     const id = useSelector(store => store.meeting.me.id);
-    const state = useClientState({id, props:['isAdmin']});
+    const state = useClientState({id, props:['isOrganizer']});
 
-    return (Boolean(state.isAdmin) &&
+    return (Boolean(state.isOrganizer) &&
         <Stack
             sx={{
                 display: 'flex',
@@ -23,24 +23,25 @@ export default function AdminOptionsButton () {
             spacing={.1}
         >
             <Tooltip title="Options de modérateur " arrow>
-                <IconButton
-                    size="small"
-                    color="primary"
-                    selected={selected}
-                    disabled
-                    sx={{
-                        zIndex: 0,
-                        borderRadius: 1,
-                        boxShadow: 'none',
-                    }}
-                    onClick={() => dispatch(
-                        setConferenceData({
-                             data :{ nav: selected ? 'admin-options-close' : 'admin-options-open' }
-                        })
-                    )}
-                >
-                    <AdminPanelSettingsOutlinedIcon/>
-                </IconButton>
+                <div>
+                    <IconButton
+                        size="small"
+                        color="primary"
+                        selected={selected}
+                        sx={{
+                            zIndex: 0,
+                            borderRadius: 1,
+                            boxShadow: 'none',
+                        }}
+                        onClick={() => dispatch(
+                            setConferenceData({
+                                data :{ nav: selected ? 'admin-options-close' : 'admin-options-open' }
+                            })
+                        )}
+                    >
+                        <AdminPanelSettingsOutlinedIcon/>
+                    </IconButton>
+                </div>
             </Tooltip>
         </Stack>
     );

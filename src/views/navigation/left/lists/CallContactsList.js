@@ -15,7 +15,7 @@ import { escapeRegExp } from 'lodash';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
 import CustomListItemsGroup from '../../../../components/CustomListItemsGroup';
-import { callsItems, menuItemsCall, sortMeetings } from './contactsListOptions';
+import { callsItems, menuGlobalCall, sortMeetings } from './contactsListOptions';
 import store from '../../../../redux/store';
 import { setData } from '../../../../redux/data';
 
@@ -74,7 +74,7 @@ export default function CallContactsList ({navigation}) {
                     }
                 }}
             >
-                {menuItemsCall.map(({label, Icon, disabled, onClick}, key) => (
+                {menuGlobalCall.map(({label, Icon, disabled, onClick}, key) => (
                     <MenuItem
                         key={key}
                         disabled={disabled}
@@ -91,8 +91,8 @@ export default function CallContactsList ({navigation}) {
     );
 }
 
-const ListItems  = ({calls:cl, search}) => {
-    const meetingsGroups = useMemo(() => sortMeetings(cl), [cl]);
+const ListItems  = ({calls:_calls, search}) => {
+    const meetingsGroups = useMemo(() => sortMeetings(_calls), [_calls]);
     
     const calls = useMemo(() => 
         meetingsGroups.map(({data}) => data).flat(),

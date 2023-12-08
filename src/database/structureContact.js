@@ -5,10 +5,6 @@ import db from './db';
 export default function structureContact({contact, isUpdate = false}) {
     const name = getFullName(contact);
     const data = {
-        ...isUpdate ? {} : {
-            id: contact?._id,
-            createdAt: new Date(contact?.createdAt),
-        },
         name,
         email: contact?.email,
         grade: contact?.grade?.grade,
@@ -19,6 +15,10 @@ export default function structureContact({contact, isUpdate = false}) {
         avatarSrc: contact?.imageUrl,
         origin: contact,
         updatedAt: new Date(contact?.updatedAt),
+        ...isUpdate ? {} : {
+            id: contact?._id,
+            createdAt: new Date(contact?.createdAt),
+        },
     };
 
     Object.keys(data).forEach(key => {

@@ -8,6 +8,7 @@ export default function useSignalUpdate() {
 
     useEffect(() => {
         const handleSignal = async event => {
+            console.log('********************************', event);
             if(store.getState().meeting.meetingId === event?.where?._id) {
                 const users = Array.isArray(event?.who) ? event?.who : [event?.who];
                 const ids =  users.map(user => typeof user === 'string' ? user : user?._id);

@@ -8,7 +8,15 @@ const initialState = {
     nav: null, //|| 'participant' || 'message' || 'option',
     cameraView: 'float', // || 'float' || 'content',
     handRaised: false,
-    participants: [], // {identity, state, auth, uid, id}
+    participants: [], // { identity, state, auth, uid, id }
+    moderatorOptions: {
+        meetingManagement: false,
+        joinBeforeAll: false,
+        auth: {
+            id: null,
+            open: false,
+        }
+    },
     //participantsState: [],
     pinId: null,
 };

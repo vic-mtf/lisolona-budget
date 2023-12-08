@@ -23,10 +23,11 @@ export default function NetworkProblemChecker ({direction}) {
         }
     }, [open, dispatch, socket]);
     
-    return open && (
+    return (
         <Slide 
             in={open} 
             direction={direction}
+            unmountOnExit
         >
             <Alert
                 icon={<SignalWifiBadOutlinedIcon/>}

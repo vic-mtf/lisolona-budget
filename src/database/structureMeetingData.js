@@ -8,6 +8,11 @@ export default function structureMeetingData ({meeting, userId, isUpdate = false
     const avatarSrc = meeting?.room?.imageUrl;
     const id = userId || store?.getState()?.user?.id;
     const data =  {
+        members: meeting?.participants || meeting?.members,
+        avatarSrc,
+        status: meeting?.status,
+        origin: meeting?.origin || meeting,
+        updatedAt: new Date(meeting?.updatedAt),
         ...isUpdate ? {} : {
             id: meeting?._id,
             title: meeting?.title,
@@ -20,12 +25,7 @@ export default function structureMeetingData ({meeting, userId, isUpdate = false
             createdBy: meeting?.createdBy,
             startedAt: meeting?.start,
             name,
-        },
-        members: meeting?.participants || meeting?.members,
-        avatarSrc,
-        status: meeting?.status,
-        origin: meeting?.origin || meeting,
-        updatedAt: new Date(meeting?.updatedAt),
+        }
     };
     Object.keys(data).forEach(key => {
         if(data[key] === undefined) delete data[key];

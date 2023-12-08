@@ -116,11 +116,13 @@ function ContactItem (props) {
                         component: 'div', 
                         noWrap: true,
                         title: name,
+                        variant: 'body2'
                     }}
                     secondaryTypographyProps={{
                         component: "div",
                         noWrap: true,
                         title: email,
+                        variant: 'caption'
                     }}
                 />
                 </ListItemButton>

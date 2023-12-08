@@ -151,7 +151,7 @@ export default function VoiceRecord({open}) {
                                     track.stop();
                                 });
                                 store.dispatch(
-                                    modifyData({ data: false,key: 'chatBox.footer.recording' })
+                                    modifyData({ data: false, key: 'chatBox.footer.recording' })
                                 );
                             }}
                         >

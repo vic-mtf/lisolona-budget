@@ -8,9 +8,7 @@ const publicDraftStyle = {
     color: 'text.primary',
     '& div.DraftEditor-root ': {
         width: '100%',
-        px: 1,
-        pt: .5,
-        pb: 0,
+        fontFamily: theme => theme.typography.body1.fontFamily,
         '& blockquote': {
         borderLeft: theme => `4px solid ${theme.palette.divider}`,
         pl: .5
@@ -21,18 +19,18 @@ const publicDraftStyle = {
         textDecoration: 'underline',
     },
     '& div.DraftEditor-editorContainer': {
-        width: "100%",
         overflow: 'auto',
         overflowX: 'hidden',
-        maxHeight: 150,
-        fontSize: theme => theme.typography.body1.fontSize,
+        maxHeight: 100,
+        fontSize: theme => theme.typography.body2.fontSize,
+        p: 1,
     },
     '& .public-DraftEditorPlaceholder-root': {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         wordBreak: 'keep-all',
-        width: '100%',
+        p: 1,
         "& *": {
         fontSize: theme => theme.typography.body2.fontSize,
         color: theme => theme.palette.text.disabled,

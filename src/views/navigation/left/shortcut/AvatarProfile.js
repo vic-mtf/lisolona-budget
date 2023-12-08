@@ -24,7 +24,7 @@ export default function AvatarProfile () {
     return (
         <React.Fragment>
              <CustomBadge 
-                overlap="circular"
+                overlap="rectangular"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 variant="dot"
                 online={isOnLine}

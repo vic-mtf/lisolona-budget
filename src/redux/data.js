@@ -33,12 +33,13 @@ const data = createSlice({
             const target = (key === 'target' && data) || data?.target;
             if(target) {
                 state.target = {
-                    ...target
+                    ...target,
+                    showDetails: false,
                 }
-                const messages = state.messageGrouping?.find(
-                    message => message.targetId === target.id
-                )?.messages;
-                state.messages = messages || [];
+                // const messages = state.messageGrouping?.find(
+                //     message => message.targetId === target.id
+                // )?.messages;
+                // state.messages = messages || [];
             }
         },
         setData(state, actions) {
@@ -54,6 +55,7 @@ const data = createSlice({
         modifyData(state, actions) {
             const cloneState = {...state};
             modifyObject(cloneState, actions.payload);
+            console.log(JSON.parse(JSON.stringify(cloneState)))
             Object.keys(state).forEach(key => {
                 state[key] = cloneState[key];
             })

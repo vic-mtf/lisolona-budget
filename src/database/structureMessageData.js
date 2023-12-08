@@ -2,13 +2,12 @@ import getFullName from '../utils/getFullName';
 import store from '../redux/store';
 import db from './db';
 import { getTime } from '../utils/formatTime';
-import filterByKey from '../utils/filterByKey';
 
 export default function structureMessageData ({
     message, 
     discussion, 
-    userId = store.getState().user.id,
-    isUpdate = false
+    userId = store.getState().user.id || store.getState().meeting.me?.id,
+    isUpdate = false,
 }) {
     const members = discussion?.members;
     const target = members?.find(({_id: user}) => user._id !== userId)?._id;
@@ -17,7 +16,12 @@ export default function structureMessageData ({
     const sender = message?.sender;
     const name = getFullName(sender);
     const data = {
-        ...isUpdate ? {sended: true} : {
+            sended: message?.sended === undefined ? true : message?.sended,
+            content: message?.content,
+            status: message?.status,
+            origin: message,
+            updatedAt: message?.updatedAt || message?.createdAt,
+        ...isUpdate ? { sended: true } : {
             avatarSrc: message?.imageUrl,
             timeout: 10000,
             createdAt: message?.createdAt,
@@ -27,13 +31,8 @@ export default function structureMessageData ({
             targetId,
             isMine: sender?._id === userId,
             name,
-            id,
-        },
-        content: message?.content,
-        status: message?.status,
-        origin: message,
-        sended: false,
-        updatedAt: message?.updatedAt || message?.createdAt,
+            id
+        }
     };
     Object.keys(data).forEach(key => {
         if(data[key] === undefined) delete data[key];

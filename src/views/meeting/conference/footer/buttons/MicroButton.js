@@ -10,13 +10,14 @@ import useMicroProps from './useMicroProps';
 import { useSocket } from '../../../../../utils/SocketIOProvider';
 
 export default function MicroButton () {
-   const {permission, micro, handleToggleMicro, loading} = useMicroProps();
+   const { permission, micro, handleToggleMicro, loading } = useMicroProps();
    const socket = useSocket();
    
    useEffect(() => {
     const handleSignal = async event => {
         const meeting = store.getState().meeting;
         const micro = store.getState().meeting.micro;
+        console.log('Mbote mbote mbote', event);
         if(meeting.meetingId === event?.where?._id) {
             const users = Array.isArray(event?.who) ? event?.who : [event?.who];
             const [id] =  users.map(user => typeof user === 'string' ? user : user?._id);

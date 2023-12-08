@@ -1,15 +1,23 @@
 import {
-    Box as MuiBox, Toolbar
+    Box as MuiBox, 
+    Toolbar
 } from '@mui/material';
 import Box from "../../../../../components/Box";
 import ChatBody from "../../../../main/chat-box/chat-body/ChatBody";
-import ChatFooter from "../../../../main/chat-box/chat-footer/ChatFooter";
+// import ChatFooter from "../../../../main/chat-box/chat-footer/ChatFooter";
 import ChatHeader from "../../../../main/chat-box/chat-header/ChatHeader";
 import Typography from '../../../../../components/Typography';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
+import ChatArea from '../../../../main/chat-box/chat-area/ChatArea';
+import ChatFooter from '../../../../main/chat-box/chat-footer-beta/ChatFooter'
+import Content from './Content';
+import { useData } from '../../../../../utils/DataProvider';
 
 export default function ChatBox () {
-    const [{target}] = useMeetingData();
+    const [{ target }] = useMeetingData();
+    const [{ meetingMessagesRef }] = useData();
+
+    console.log(meetingMessagesRef);
 
     return (
         <>
@@ -34,7 +42,10 @@ export default function ChatBox () {
                     overflow="auto"
                     component="div"
                 >
-                    <ChatBody target={target} media={false}/>
+                    <Content
+                        target={target} 
+                        messagesRefs={meetingMessagesRef}
+                    />
                 </Box>
                 <MuiBox
                     overflow="hidden"
@@ -43,7 +54,11 @@ export default function ChatBox () {
                     alignItems="center"
                     width="100%"
                 >
-                    <ChatFooter target={target} media={false} toolbar={false}/>
+                   <ChatFooter 
+                        target={target} 
+                        media={false} 
+                        toolbar={false}
+                    />
                 </MuiBox>
             </MuiBox>
         </>

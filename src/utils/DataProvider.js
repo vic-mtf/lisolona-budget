@@ -7,6 +7,7 @@ export const useData = () => useContext(Data);
 
 export default function DataProvider({children}) {
     const messagesRef = useRef({});
+    const meetingMessagesRef = useRef([]);
     const downloadsRef = useRef([]);
     const voicesRef = useRef([]);
     const videosRef = useRef([]);
@@ -41,6 +42,7 @@ export default function DataProvider({children}) {
             screenStreamRef,
             mediaStreamRef,
             secretCodeRef,
+            meetingMessagesRef,
             client,
             streams: [
                 audioStreamRef,
