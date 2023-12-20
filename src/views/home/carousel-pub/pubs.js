@@ -1,6 +1,6 @@
-import _image_geid_2 from '../../../assets/Captures-02.29.54.png';
-import _image_geid_1 from '../../../assets/Captures-02.31.02.png';
-import _image_geid_3 from '../../../assets/Captures-02.30.26.png';
+import _image_geid_2 from '../../../assets/Captures-02.29.54.webp';
+import _image_geid_1 from '../../../assets/Captures-2023-12-20.webp';
+import _image_geid_3 from '../../../assets/Captures-02.30.26.webp';
 
 const pubs = [
     {

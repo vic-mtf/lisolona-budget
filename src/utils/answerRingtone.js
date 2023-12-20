@@ -1,15 +1,15 @@
-import outgoingCallRing from '../assets/ring-ton-outgoing-call.aac';
-import incomingCallRing from '../assets/Halloween-Cradles.aac';
-import disconnectRing from '../assets/calldisconnect.aac'
-import connexionRing from '../assets/mixkit-on-hold-ringtone.aac';
-import endCallRing from '../assets/end-call.aac';
-import signalRing from '../assets/ton-mobi.aac';
-import busyPhoneRing from '../assets/busyphone.aac';
-import sendMessageRing from '../assets/banana-peel-slip-zip-sound.aac';
-import answeringMachineRing from '../assets/answering-machine.aac';
-import actionRing from '../assets/s8note_s1tyd7115333623.aac';
-import errorRing from '../assets/computer-error.aac';
-import newMessageRing from '../assets/miui12dr_m5r75343.aac'
+import outgoingCallRing from '../assets/ring-ton-outgoing-call.webm';
+import incomingCallRing from '../assets/Halloween-Cradles.webm';
+import disconnectRing from '../assets/calldisconnect.webm'
+import connexionRing from '../assets/mixkit-on-hold-ringtone.webm';
+import endCallRing from '../assets/end-call.webm';
+import signalRing from '../assets/ton-mobi.webm';
+import busyPhoneRing from '../assets/busyphone.webm';
+import sendMessageRing from '../assets/banana-peel-slip-zip-sound.webm';
+import answeringMachineRing from '../assets/answering-machine.webm';
+import actionRing from '../assets/s8note_s1tyd7115333623.webm';
+import errorRing from '../assets/computer-error.webm';
+import newMessageRing from '../assets/miui12dr_m5r75343.webm'
 
 const nameSpace = 'GEID_LISOLONABUDGET_AUDIO_RINGTONE_SYTEME';
 

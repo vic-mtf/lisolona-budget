@@ -4,7 +4,7 @@ import { useRef, useLayoutEffect, useState, useCallback } from 'react';
 import { useMeetingData } from '../../../utils/MeetingProvider';
 import CallingState from './CallingState';
 import useAudio from '../../../utils/useAudio';
-import waiting_src from '../../../assets/mixkit-on-hold-ringtone.aac';
+import waiting_src from '../../../assets/mixkit-on-hold-ringtone.webm';
 import useGetMediaStream from '../actions/useGetMediaStream';
 import useVideoStreamState from '../actions/useVideoStreamState';
 import useBackgroundRoot from '../actions/useBackgroundRoot';

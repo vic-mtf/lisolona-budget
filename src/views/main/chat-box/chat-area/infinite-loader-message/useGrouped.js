@@ -21,4 +21,4 @@ export default function useGrouped (message, messages) {
 }
 
 const getGroupDirection = message => message?.isMine ? 'right' : 'left';
-const getOriginId = message => message?.order?.sender?.id;
+const getOriginId = message => message?.origin?.sender?._id;

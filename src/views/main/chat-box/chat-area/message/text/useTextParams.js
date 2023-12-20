@@ -14,7 +14,7 @@ export default function useTextParams() {
     useLayoutEffect(() => {
       const root = rootRef.current;
       const handleResizeObservable = _height => {
-        const height = _height || root.getBoundingClientRect().height;
+        const height = _height || root?.getBoundingClientRect()?.height;
         if(height >= MAX_HEIGHT * step && !more) setMore(true);
         if(height < MAX_HEIGHT * step && more) setMore(false);
       };

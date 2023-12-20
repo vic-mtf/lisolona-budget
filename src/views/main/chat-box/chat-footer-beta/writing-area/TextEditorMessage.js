@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import AnimatedWrapper from './AnimatedWrapper';
 import EmojiPicker from '../emoji-picker/EmojiPicker';
 import FilesThumbView from '../files-thumb-view/FilesThumbView';
-import { CHANNEL } from '../../ChatBox';
+import { MESSAGE_CHANNEL } from '../../ChatBox';
 
 export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmit, placeHolder, editorRef, media}) {
   return (
@@ -27,7 +27,7 @@ export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmi
               const customEvent = new CustomEvent(name, {
                 detail: {name, data}
               });
-              CHANNEL.dispatchEvent(customEvent);
+              MESSAGE_CHANNEL.dispatchEvent(customEvent);
             }}
           />
         </AnimatedWrapper>

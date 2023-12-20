@@ -73,13 +73,13 @@ const Message = React.memo(({ data, group, small }) => {
                         component="span"
                         justifyContent={direction}
                     >
-                      <Typography 
-                        variant="caption"
-                        color='text.secondary'
-                    >
-                            {direction === 'left' && getFullName(sender) + ', '} 
-                            {getHoursAndMin(data?.createdAt)}
-                      </Typography>
+                        <Typography 
+                            variant="caption"
+                            color='text.secondary'
+                        >
+                                {direction === 'left' && getFullName(sender) + ', '} 
+                                {getHoursAndMin(data?.createdAt)}
+                        </Typography>
                     </MuiBox>}
                     <MuiBox
                         overflow="hidden"

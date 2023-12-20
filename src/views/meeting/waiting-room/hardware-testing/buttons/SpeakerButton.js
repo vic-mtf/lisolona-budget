@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import IconButton from '../../../../../components/IconButton';
 import SpeakerOutlinedIcon from '@mui/icons-material/SpeakerOutlined';
-import audioSrc from '../../../../../assets/Offical-message-tone.aac';
+import audioSrc from '../../../../../assets/Offical-message-tone.webm';
 import AudioOutputButtonOptions from './AudioOutputButtonOptions';
 
 export default function SpeakerButton ({handleCheckErrors}) {

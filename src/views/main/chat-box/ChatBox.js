@@ -8,7 +8,7 @@ import ChatArea from './chat-area/ChatArea';
 import { useData } from '../../../utils/DataProvider';
 import { useMemo } from 'react';
 
-export const CHANNEL = document.createElement('div');
+export const MESSAGE_CHANNEL = document.createElement('div');
 
 export default function ChatBox () {
     const target = useSelector(store => store?.data?.target);

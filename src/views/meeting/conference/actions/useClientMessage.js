@@ -3,7 +3,7 @@ import { useMeetingData } from "../../../../utils/MeetingProvider";
 import { useSocket } from "../../../../utils/SocketIOProvider";
 import store from "../../../../redux/store";
 import structureMessageData from "../../../../database/structureMessageData";
-import { CHANNEL } from "../../../main/chat-box/ChatBox";
+import { MESSAGE_CHANNEL } from "../../../main/chat-box/ChatBox";
 import mergeDeep from "../../../../utils/mergeDeep";
 import { useData } from "../../../../utils/DataProvider";
 
@@ -58,7 +58,7 @@ export default function useClientMessage () {
                     name,
                 }
             });
-            CHANNEL.dispatchEvent(customEvent);
+            MESSAGE_CHANNEL.dispatchEvent(customEvent);
         };
 
         const handleGetMessage = ({message, where}) => {
@@ -82,10 +82,10 @@ export default function useClientMessage () {
             dispatchMessage(localMessage);
         };
 
-        CHANNEL.addEventListener(name, handleSendMessage);
+        MESSAGE_CHANNEL.addEventListener(name, handleSendMessage);
         socket.on('call-message', handleGetMessage);
         return () => {
-            CHANNEL.removeEventListener(name, handleSendMessage);
+            MESSAGE_CHANNEL.removeEventListener(name, handleSendMessage);
             socket.off('call-message', handleGetMessage);
         }
     },[socket, target, meetingMessagesRef]);

@@ -17,7 +17,7 @@ import Typography from '../../../../../components/Typography';
 export default function Profile ({target}) {
     const participants = useMemo(() => target?.members, [target]);
     const isSingle = useMemo(() => 
-        target?.type === "direct"  ? participants.length === 2 : target?.type === 'room', 
+        target?.type === "direct"  ? participants?.length === 2 : target?.type === 'room', 
         [participants, target]
     );
     return (

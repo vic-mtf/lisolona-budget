@@ -14,7 +14,7 @@ import { blockStyleFn } from './style-editor/style-editor';
 import editorStateEmpty from './editorStateEmpty';
 import store from '../../../../../redux/store';
 import { modifyData } from '../../../../../redux/data';
-import { CHANNEL } from '../../ChatBox';
+import { MESSAGE_CHANNEL } from '../../ChatBox';
 
 export default function EditorText ({
   onFocus, 
@@ -77,12 +77,12 @@ export default function EditorText ({
         }
       };
 
-      CHANNEL.addEventListener(events.selectEmoji, onSelectEmoji);
-      CHANNEL.addEventListener(events.submitMessage, onSubmitMessage);
+      MESSAGE_CHANNEL.addEventListener(events.selectEmoji, onSelectEmoji);
+      MESSAGE_CHANNEL.addEventListener(events.submitMessage, onSubmitMessage);
 
       return () => {
-        CHANNEL.removeEventListener(events.selectEmoji, onSelectEmoji);
-        CHANNEL.removeEventListener(events.submitMessage, onSubmitMessage);
+        MESSAGE_CHANNEL.removeEventListener(events.selectEmoji, onSelectEmoji);
+        MESSAGE_CHANNEL.removeEventListener(events.submitMessage, onSubmitMessage);
       };
     }, [editorState, onSubmit, filesRef, isEmpty]);
   

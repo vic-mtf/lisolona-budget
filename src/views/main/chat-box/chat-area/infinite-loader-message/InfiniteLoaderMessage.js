@@ -3,8 +3,7 @@ import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { Fade, Box as MuiBox } from '@mui/material';
 import ScrollDownButton from './ScrollDownButton';
 import MessageContainer from '../message/MessageContainer';
-import { CHANNEL } from '../../ChatBox';
-import mergeDeep from '../../../../../utils/mergeDeep';
+import { MESSAGE_CHANNEL } from '../../ChatBox';
 
 const INITIAL_ITEM_COUNT = 20;
 const styleRoot = {
@@ -48,9 +47,9 @@ export default function InfiniteLoaderMessage({INITIAL_ITEM_COUNT, data: _data, 
       ];
       setData(data);
     };
-    CHANNEL.addEventListener(name, handleGetNewMessage);
+    MESSAGE_CHANNEL.addEventListener(name, handleGetNewMessage);
     return () => {
-      CHANNEL.removeEventListener(name, handleGetNewMessage);
+      MESSAGE_CHANNEL.removeEventListener(name, handleGetNewMessage);
     };
   },[_data]);
   

@@ -8,7 +8,7 @@ import VoiceRecord from '../voice-record/VoiceRecord';
 import publicDraftStyle from './style-editor/publicDraftStyle';
 import AnimatedWrapper from './AnimatedWrapper';
 import TextEditorMessage from './TextEditorMessage';
-import { CHANNEL } from '../../ChatBox';
+import { MESSAGE_CHANNEL } from '../../ChatBox';
 import draftToHtml from 'draftjs-to-html';
 import { convertToRaw } from 'draft-js';
 import { getTextFromEditorState } from './countText';
@@ -47,7 +47,7 @@ export default React.memo(function WritingArea ({onSubmit, target, media}) {
         onSubmit(data);
       const name = '_submit-internal-message';
       const customEvent = new CustomEvent(name, {detail: {name, data}});
-      CHANNEL.dispatchEvent(customEvent);
+      MESSAGE_CHANNEL.dispatchEvent(customEvent);
     }
   },[onSubmit]);
 

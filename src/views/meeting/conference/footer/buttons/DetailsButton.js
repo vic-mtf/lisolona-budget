@@ -1,6 +1,6 @@
 
 import IconButton from '../../../../../components/IconButton';
-import { Badge, Stack } from '@mui/material';
+import { Tooltip, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { setConferenceData } from '../../../../../redux/conference';
@@ -20,6 +20,7 @@ export default function DetailsButton ({getVideoStream}) {
             }}
             spacing={.1}
         >
+            <Tooltip title="Detail de la réunion" arrow>
                 <IconButton
                     size="small"
                     color="primary"
@@ -37,6 +38,7 @@ export default function DetailsButton ({getVideoStream}) {
                 >
                     <InfoOutlinedIcon/>
                 </IconButton>
+            </Tooltip>
         </Stack>
     );
 }
