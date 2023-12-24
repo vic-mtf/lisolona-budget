@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 export default function UserStatus ({target}) {
     const status = useSelector(store => store.status[target?.id]);
     const online = useMemo(() => status === 'online', [status]);
-    return ( Boolean(status) &&
+    return (
             <Badge 
                 variant={online ? "dot" : undefined}
                 anchorOrigin={{
@@ -29,6 +29,7 @@ export default function UserStatus ({target}) {
                     color="text.secondary" 
                     variant="caption" 
                     textOverflow="ellipsis"
+                    
                     overflow="hidden"
                     pl={online ? 2 : 0}
                     noWrap

@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppTest from "../test/App.test";
 import Cover from "../views/cover/Cover";
-import LiosoNaBudget from "../views/LiosoNaBudget";
+import Views from "../views/Views";
 import SignInPage from '../views/signin/SignInPage';
 import HomePage from "../views/home/HomePage";
 import Meeting from "../views/meeting/Meeting";
@@ -11,7 +11,7 @@ const basename = process.env.PUBLIC_URL.trim();
 const protectedRoutes = (getters, setters) => [
     {
         element: getters?.isStarted?.current ? 
-        <Cover getters={getters} setters={setters}/> : <LiosoNaBudget/>,
+        <Cover getters={getters} setters={setters}/> : <Views/>,
         path:  '/*'
     },
 ];

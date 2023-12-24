@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider, Toolbar, Tooltip } from '@mui/material';
+import { createTheme, ThemeProvider, Toolbar, Tooltip, Paper } from '@mui/material';
 import appConfig from '../../../../configs/app-config.json';
 import AvatarStatus from './AvatarStatus';
 import IconButton from '../../../../components/IconButton';
@@ -11,8 +11,12 @@ import CallButton from './options-buttons/CallButton';
 export default function ChatHeader ({target}) {
     const theme = useTheme();
     return (
+        <Paper
+            sx={{
+                borderRadius: 0,
+            }}
+        >
             <Toolbar
-                sx={{bgcolor: appConfig.colors.main}}
                 variant="dense"
             >
                 <AvatarStatus target={target}/>
@@ -37,5 +41,6 @@ export default function ChatHeader ({target}) {
                     />
                 </ThemeProvider>
             </Toolbar>
+        </Paper>
     );
 }

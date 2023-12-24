@@ -34,7 +34,7 @@ const data = createSlice({
             if(target) {
                 state.target = {
                     ...target,
-                    showDetails: false,
+                    showDetail: false,
                 }
                 // const messages = state.messageGrouping?.find(
                 //     message => message.targetId === target.id

@@ -7,6 +7,7 @@ export default function Navigation ({
     toolBarProps, 
     color, 
     disableTooBar, 
+    sx,
     ...otherProps
 }) {
 
@@ -15,13 +16,20 @@ export default function Navigation ({
             variant="permanent"
             component={Drawer}
             sx={{
-               width: otherProps?.open ? drawerWidth : 0,
+               width: {
+                xs: '100%',
+                md: otherProps?.open ? drawerWidth : 0,
+               } ,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': { 
-                    width: drawerWidth, 
+                    width: {
+                        xs: '100%',
+                        md:  drawerWidth,
+                    },
                     boxSizing: 'border-box',
                     background: color || 'background.paper'
                 },
+                ...sx,
             }}
             {...otherProps}
         >

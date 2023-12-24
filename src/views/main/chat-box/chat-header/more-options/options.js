@@ -21,8 +21,8 @@ const options = (contact, callback) => [
             
             store.dispatch(
                 modifyData({ 
-                    data: true,
-                    key: 'target.showDetails',
+                    data: !store.getState().data.target?.showDetail,
+                    key: 'target.showDetail',
                  })
             );
 

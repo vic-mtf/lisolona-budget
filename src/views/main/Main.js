@@ -15,8 +15,11 @@ export default function Main () {
             height="100vh"
             sx={{ 
                 flexGrow: 1, 
-                width: 0, 
-                ml: drawerWidth / 8,
+                width: '100%', 
+                ml: {
+                    md: drawerWidth / 8,
+                    xs: 0
+                },
                 transition: theme => theme.transitions.create(['margin', 'width'], {
                     easing: theme.transitions.easing.sharp,
                     duration: theme.transitions.duration.leavingScreen,

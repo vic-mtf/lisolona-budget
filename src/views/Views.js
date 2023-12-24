@@ -5,7 +5,7 @@ import NavigationLeft from './navigation/left/NavigationLeft';
 import NavigationRight from './navigation/right/NavigationRight';
 import { useSelector } from 'react-redux';
 
-export default function LiosoNaBudget () {
+export default function Views () {
 
     return (
       <MuiBox
@@ -26,15 +26,17 @@ export default function LiosoNaBudget () {
 }
 
 const MainRight = () => {
-  const detail = useSelector(store => store.data.target?.showDetails);
-  const open = useMemo(() => Boolean(detail), [detail]);
+  const key = useSelector(store => store.data?.target?.id);
+  const showDetail = useSelector(store => store.data?.target?.showDetail);
+  const open = useMemo(() => Boolean(showDetail),[showDetail]);
 
   return (
     <React.Fragment>
       <Main open={open}/>
-      <NavigationRight
+      {/* <NavigationRight
         open={open}
-      />
+        key={key}
+      /> */}
     </React.Fragment>
   )
 }

@@ -38,6 +38,7 @@ function App() {
   return (
     <BoxGradient 
       overflow="hidden"
+      Colors={[]}
       sx={{
         '& *': {
           ...scrollBarSx,

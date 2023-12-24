@@ -6,7 +6,14 @@ import _logo_geid from '../../../assets/geid_logo_blue_without_title.webp';
 export default function Home () {
 
     return (
-        <Box>
+        <Box
+            sx={{
+                display: {
+                    xs: 'none',
+                    md: 'flex',
+                }
+            }}
+        >
           <Box
             justifyContent="center"
             alignItems="center"

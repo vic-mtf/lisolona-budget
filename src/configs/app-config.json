@@ -17,12 +17,12 @@
         "primary" : {
             "mode": "auto",
             "dark": {
-                "main": "#0095C9",
-                "default": "#00173e",
-                "paper": "#09162a"
+                "main": "#2E577F",
+                "default": "#0D123E",
+                "paper": "#111E26"
             },
             "light": {
-                "main": "#1C4294",
+                "main": "#274478",
                 "default": "#eeeeee",
                 "paper": "#ffffff"
             }
