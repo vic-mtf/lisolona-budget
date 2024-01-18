@@ -22,13 +22,12 @@ function App() {
   useEffect(() => {
     let handleAutoConnexion;
     if (!connected) 
-      handleAutoConnexion = (event) => {
+      handleAutoConnexion = event => {
         const {data} = event;
-        if(data) {
-          dispatch(changeValues(decrypt(data)));
-        }
+        if(data) 
+          dispatch( changeValues( decrypt(data) ) );
       };
-    else dispatch(setData({data : {me: user}}))
+    else dispatch(setData({ data : { me: user } }))
     channel.addEventListener('message', handleAutoConnexion);
     return () => {
       channel.removeEventListener('message', handleAutoConnexion);
@@ -40,9 +39,7 @@ function App() {
       overflow="hidden"
       Colors={[]}
       sx={{
-        '& *': {
-          ...scrollBarSx,
-        }
+        '& *': { ...scrollBarSx }
       }}
     >
         <RouterProvider 

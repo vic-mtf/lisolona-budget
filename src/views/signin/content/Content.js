@@ -9,9 +9,11 @@ import CheckEmail from './CheckEmail';
 import CheckPassword from './CheckPassword';
 import { decrypt } from '../../../utils/crypt';
 import useSignInSendData from './useSignInSendData';
+import { useLocation } from 'react-router-dom';
 
 export default function Content ({loading, refresh}) {
     const appStoreUser = useSelector(store => store.app.user);
+    const location = useLocation();
     const user = useMemo(() => decrypt(appStoreUser), 
         [appStoreUser]
     );
@@ -20,7 +22,6 @@ export default function Content ({loading, refresh}) {
             errorMessage,
             defaultEmail,
             emailRef,
-            userSession,
             passwordRef,
             email
         }, 
@@ -28,7 +29,9 @@ export default function Content ({loading, refresh}) {
             handleSendData,
             handleCleanErrorMessage
         }
-    ] = useSignInSendData({ refresh })
+    ] = useSignInSendData({ refresh });
+
+    const pathNames = useMemo(() => getPathnames(location?.pathname), [location?.pathname])
 
     return (
         <Box 
@@ -37,15 +40,14 @@ export default function Content ({loading, refresh}) {
             component="form"
             onSubmit={handleSendData}
         >
-            {!user && !email && <Navigate to="?email"/>}
             <Box flex={1} position="relative" flexDirection="column">
-                <TabLevel show={user} >
+                <TabLevel show={pathNames.includes('userfound')} >
                     <Account
                         user={user}
                         refresh={refresh}
                     />
                 </TabLevel>
-                <TabLevel show={defaultEmail === null}>
+                <TabLevel show={pathNames.includes('useremail')}>
                     <CheckEmail 
                         email={email}
                         errorMessage={errorMessage}
@@ -54,7 +56,7 @@ export default function Content ({loading, refresh}) {
                         emailRef={emailRef}
                     />
                 </TabLevel>
-                <TabLevel show={!!defaultEmail} >
+                <TabLevel show={pathNames.includes('password')} >
                     <CheckPassword 
                         email={defaultEmail} 
                         passwordRef={passwordRef} 
@@ -96,4 +98,9 @@ const TabLevel = ({show, children}) => {
             </Box>
         </Slide>
     )
+}
+
+export const getPathnames = input => {
+    const paths = input.startsWith('http') ? (new URL(input)).pathname : input;
+    return paths.split('/').filter(Boolean);
 }

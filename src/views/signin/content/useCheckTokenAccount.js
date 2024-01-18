@@ -23,7 +23,7 @@ export default function useCheckTokenAccount({ user, refresh }) {
             }
         }).catch((error) => {
             if(error?.response?.data?.found === false) 
-                navigateTo(`/account/signin?email=${email}`);
+                navigateTo(`/account/signin/${email}/password`);
         })
     }, [user, navigateTo, refresh]);
     return handleCheckAccount
