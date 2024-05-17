@@ -89,6 +89,7 @@ export default function CurrentCallContactItem ({call}) {
                         title: name,
                         color: 'text.primary'
                     }}
+                    
                     secondaryTypographyProps={{
                         component: "div",
                         noWrap: true,

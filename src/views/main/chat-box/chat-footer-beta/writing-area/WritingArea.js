@@ -19,7 +19,7 @@ const staticToolbarPlugin = createStaticToolbarPlugin();
 export const { Toolbar: WritingAreaToolbar } = staticToolbarPlugin;
 export const plugins = [staticToolbarPlugin, textAlignmentPlugin];
 
-export default React.memo(function WritingArea ({onSubmit, target, media}) {
+export default React.memo(function WritingArea ({ onSubmit, target, media }) {
   const filesRef = useRef([]);
   const rootRef = useRef();
   const paperRef = useRef();
@@ -33,13 +33,7 @@ export default React.memo(function WritingArea ({onSubmit, target, media}) {
     const editorState = editorRef?.current?.getEditorState();
     const isText = getTextFromEditorState(editorState).trim();
     const rawContentState = convertToRaw(editorState.getCurrentContent());
-    console.log('Bonjour')
-    const HTML = isText ?  draftToHtml(
-      rawContentState,
-      {},
-      true,
-      customEntityTransform
-    ) : null;
+    const HTML = isText ? draftToHtml(rawContentState, {}, true, customEntityTransform) : null;
     const Files = filesRef.current.length ? filesRef.current: null;
     if(HTML || Files) {
       const data = { HTML, Files };
@@ -60,8 +54,8 @@ export default React.memo(function WritingArea ({onSubmit, target, media}) {
         display: 'flex',
         height: '100%',
         width: '100%',
-        border: theme => `1px solid ${theme.palette.divider}`,
         position: 'relative',
+        overflow: 'hidden',
       }}
     >
       <MuiBox 

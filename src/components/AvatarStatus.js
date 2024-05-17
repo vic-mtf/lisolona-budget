@@ -11,7 +11,7 @@ import { useSocket } from "../utils/SocketIOProvider";
 import { useSelector } from "react-redux";
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
-function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, size, active, online}) {
+function AvatarStatus ({ type, name, avatarSrc, id, invisible, sx, size, active, online, BadgeProps }) {
 
     const status = useSelector(store => store.status[id]);
     const isEmittedRef = useRef(true);
@@ -31,7 +31,7 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, size, active, 
         if(!status && !invisible && online === undefined) {
             isEmittedRef.current = true;
             if(type === 'direct' && isEmittedRef.current) {
-                socket?.emit('status', {who: id});
+                socket?.emit('status', { who: id });
                 isEmittedRef.current = false;
             }
         }
@@ -46,6 +46,7 @@ function AvatarStatus ({type, name, avatarSrc, id, invisible, sx, size, active, 
                 active={active}
                 online={Boolean(online) || status === 'online'}
                 invisible={invisible}
+                {...BadgeProps}
             >
                 <AvatarFadeLoading
                     src={avatarSrc}

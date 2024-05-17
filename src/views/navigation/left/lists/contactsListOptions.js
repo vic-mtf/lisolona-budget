@@ -30,6 +30,10 @@ export function sortMeetings(calls) {
         const type = (call?.origin?.room || participants?.length > 1) ? 'room' : 'direct';
         const avatarSrc = type === 'room' ? call?.origin?.room?.imageUrl : participants[0]?.identity?.imageUrl;
         const isCurrentCall = call?.status === 1;
+
+        console.log(call?.status);
+        
+        const status = [ 'program', 'on', 'end', 'miss' ];
         const location = isPlainObject(call?.location) ? call?.location?._id: call?.location;
         const data = {
             ...call,
@@ -44,6 +48,7 @@ export function sortMeetings(calls) {
         }
         if (isCurrentCall) data.key = 'on';
         else data.key = 'end';
+        data.status = status[call?.status];
         meetings.push(data);
     });
     return groupByTitle(

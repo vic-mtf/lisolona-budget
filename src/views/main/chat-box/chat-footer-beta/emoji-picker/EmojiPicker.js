@@ -15,7 +15,7 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import { useDefaultNumButtonSizeByRoot } from '../writing-area/HeaderAutoHideResize';
 
 
-export default function EmojiPicker ({onSelect})  {
+export default function EmojiPicker ({ onSelect })  {
     const [color, setColor] = useState(COLORS[0]);
     const [style, setStyle] = useState(STYLES[2].id);
     const [group, setGroup] = useState(GROUPS[2].id);
@@ -24,17 +24,18 @@ export default function EmojiPicker ({onSelect})  {
 
     const handleChangeGroup = useCallback((event, newValues) => {
         const [, value] = newValues;
-        setGroup(value);
+        if(newValues.length) setGroup(value);
     }, []);
 
     const handleChangeColor = useCallback((event, newValues) => {
+        console.log(newValues);
         const [, value] = newValues;
-        setColor(value);
+        if(newValues.length) setColor(value);
     }, []);
 
     const handleChangeGroupStyle = useCallback((event, newValues) => {
         const [, value] = newValues;
-        setStyle(value);
+        if(newValues.length) setStyle(value);
     }, []);
 
     return (

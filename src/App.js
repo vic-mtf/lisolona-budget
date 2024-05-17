@@ -11,6 +11,7 @@ import scrollBarSx from "./utils/scrollBarSx";
 const channel = new BroadcastChannel('_geid_sign_in_connection_channel');
 
 function App() {
+
   const [startApp, setStartApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const user =  useSelector(store => store?.user);
@@ -18,14 +19,12 @@ function App() {
   const dispatch = useDispatch();
   const isStarted = useRef(true);
 
-
   useEffect(() => {
     let handleAutoConnexion;
     if (!connected) 
       handleAutoConnexion = event => {
         const {data} = event;
-        if(data) 
-          dispatch( changeValues( decrypt(data) ) );
+        if(data) dispatch( changeValues( decrypt(data) ) );
       };
     else dispatch(setData({ data : { me: user } }))
     channel.addEventListener('message', handleAutoConnexion);
@@ -37,7 +36,6 @@ function App() {
   return (
     <BoxGradient 
       overflow="hidden"
-      Colors={[]}
       sx={{
         '& *': { ...scrollBarSx }
       }}

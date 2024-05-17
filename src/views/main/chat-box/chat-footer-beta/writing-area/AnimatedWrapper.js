@@ -3,10 +3,22 @@ import { Divider } from '@mui/material';
 import Slide from './Slide';
 import Fade from './Fade';
 import store from '../../../../../redux/store';
+import PropTypes from 'prop-types';
 
-const AnimatedWrapper = React.memo (({children, path, type = 'slide', divided=true, defaultOpen, wrapperProps}) => {
-    const [open, setOpen] = useState(defaultOpen || Boolean(getValue(store.getState(), path)));
-    const WrapperComponent = useMemo(() => type?.toLowerCase() === 'slide' ? Slide : Fade, [type]);
+const AnimatedWrapper = React.memo(({ 
+  children, 
+  path, 
+  type, 
+  divided, 
+  defaultOpen, 
+  wrapperProps 
+}) => {
+
+    const value = Boolean(getValue(store.getState(), path));
+    const [open, setOpen] = useState(defaultOpen || value);
+    const WrapperComponent = useMemo(() => 
+        type?.toLowerCase() === 'slide' ? Slide : Fade, 
+    [type]);
   
     useEffect(() => {
       const unsubscribe = store.subscribe(() => {
@@ -14,9 +26,7 @@ const AnimatedWrapper = React.memo (({children, path, type = 'slide', divided=tr
         if(!open && state) setOpen(true);
         if(open && !state) setOpen(false);
       });
-      return () => {
-        unsubscribe();
-      };
+      return () => { unsubscribe(); };
     },[path, open]);
   
     return (
@@ -31,6 +41,20 @@ const AnimatedWrapper = React.memo (({children, path, type = 'slide', divided=tr
       </>
     )
 });
+
+AnimatedWrapper.defaultProps = {
+  type:'slide',
+  divided: true,
+};
+
+AnimatedWrapper.propTypes = {
+  children: PropTypes.node,
+  path: PropTypes.string,
+  type: PropTypes.oneOf(['slide', 'fade']),
+  divided: PropTypes.bool,
+  defaultOpen: PropTypes.bool,
+  wrapperProps: PropTypes.object,
+};
 
 export const getValue = (obj, path="") => {
     const parts = path.split('.');

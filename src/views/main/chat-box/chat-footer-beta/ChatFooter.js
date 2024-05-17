@@ -8,14 +8,11 @@ import EmojiPicker from "./emoji-picker/EmojiPicker";
 
 
 export default function ChatFooter ({target, media}) {
- 
 
   return (
         <MuiBox
             bgcolor="background.paper"
-            p={.1}
-            px={1}
-            pt={1}
+            p={.5}
             display="flex"
             width="100%"
             alignItems="center"

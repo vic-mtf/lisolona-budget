@@ -91,7 +91,7 @@ export default function CallContactsList ({navigation}) {
     );
 }
 
-const ListItems  = ({calls:_calls, search}) => {
+const ListItems  = ({ calls:_calls, search }) => {
     const meetingsGroups = useMemo(() => sortMeetings(_calls), [_calls]);
     
     const calls = useMemo(() => 

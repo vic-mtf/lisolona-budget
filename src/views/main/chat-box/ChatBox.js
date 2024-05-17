@@ -22,15 +22,16 @@ export default function ChatBox () {
         <Box
             overflow="hidden"
             height="100%"
+            key={target?.id}
         >
             <ChatHeader target={target}/>
-            <ChatBody target={target}/>
-            {/* <ChatArea 
+            {/* <ChatBody target={target}/> */}
+            <ChatArea 
                 target={target}
                 messages={messages}
-            /> */}
-            {/* <ChatFooterBeta target={target} media/> */}
-            <ChatFooter target={target}/>
+            />
+            <ChatFooterBeta target={target} media/>
+            {/* <ChatFooter target={target}/> */}
         </Box>
     );
 }

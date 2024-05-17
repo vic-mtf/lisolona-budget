@@ -5,7 +5,7 @@ import {
     DialogActions,
     DialogContent,
  } from "@mui/material";
-import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState, useRef } from "react";
 import Button from '../../../../../components/Button';
 import RecordStatus from "./RecordStatus";
 import hasPermission from '../../../../../utils/getPermission';
@@ -13,36 +13,37 @@ import { useFooterContext } from "../ChatFooter";
 
 export default function VoiceNoteEqualizer () {
     const [stream, setStream] = useState(null);
-    const [permission, setPermission] = useState(null);
-    const allowed = useMemo(() => permission?.state === 'granted', [permission?.state])
+    const [permissionState, setPermissionState] = useState();
     const [{target}, {handleToggleRecording}] = useFooterContext();
     const handleAudioStream = useCallback(() => {
         const mediaDevices = navigator.mediaDevices;
-        if(permission?.state !== 'denied' && mediaDevices) {
-            mediaDevices.getUserMedia({audio: true})
+        if(permissionState !== 'denied' && mediaDevices) {
+            mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
                 setStream(stream);
             }).catch((err) => {
                 console.error(`The following getUserMedia error occurred: ${err}`);
               })
         }
-    },[permission?.state]);
+    },[]);
 
     useLayoutEffect(() => {
+      
         const handleChangeStreamState = (event) => {
-            if(permission?.state !== 'denied') 
+            if(['prompt', 'granted'].includes(permissionState)) 
                 handleAudioStream();
-            else setPermission(event?.target);
         };
-        if(permission?.state === 'granted') {
-            handleAudioStream();
-            permission.addEventListener('change', handleChangeStreamState);
+        if(permissionState === 'granted') {
+            handleChangeStreamState()
+    
         }
-        else (async() => setPermission (await hasPermission()))();
-        return () => {
-            permission?.removeEventListener('change', handleChangeStreamState);
-        };
-    },[permission, handleAudioStream]);
+        if(!permissionState)
+            (async() => { 
+                    const permission = (await hasPermission());
+                    setPermissionState(permission.state);
+                    permission.addEventListener('change', handleChangeStreamState);
+            })();
+    },[handleAudioStream, permissionState]);
 
     return (
         <MuiBox
@@ -52,25 +53,31 @@ export default function VoiceNoteEqualizer () {
             bottom={0}
             sx={{
                 position: 'absolute',
-                background: theme => `linear-gradient(transparent 0%, ${
-                    theme.palette.background.paper
-                } 30%)`,
+                "& > div" : {
+                    background: theme => `linear-gradient(transparent 0%, ${
+                        theme.palette.background.paper
+                    } 100%)`,
+                    backdropFilter: theme => `blur(${theme.customOptions.blur})`,
+                },
                 zIndex: theme => theme.zIndex.tooltip,
             }}
         >
         <Slide direction="up" in>
             <MuiBox
-                height="100%"
+                // height="100%"
                 width="100%"
                 display="flex"
                 alignItems="end"
             >
-                {allowed  ?
-                (<RecordStatus
+                {stream  ?
+                (
+                <RecordStatus
                     stream={stream}
                     handleToggleRecording={handleToggleRecording}
                     target={target}
-                />):
+                />
+                ):
+                (
                 <DialogContent>
                     <DialogContentText
                         variant="body2"
@@ -78,20 +85,16 @@ export default function VoiceNoteEqualizer () {
                         Veuillez accorder à l'application <b>Lisolo Na Budget</b> l'autorisation 
                         d'accéder au microphone de votre appareil 
                         afin de vous permettre d'enregistrer votre note vocale {
-                        permission?.state === 'denied' && '(Vérifier dans le paramètre)'
+                        permissionState === 'denied' && '(Vérifier dans le paramètre)'
                         }.
                     </DialogContentText>
-                    <DialogActions sx={{ py: 0}}>
-                        <Button
-                            onClick={handleToggleRecording}
-                        >Annuler</Button>
-                        {permission?.state === 'prompt' &&
-                        <Button
-                            variant="outlined"
-                            onClick={handleAudioStream}
-                        >Autoriser</Button>}
+                    <DialogActions sx={{ py: 0 }}>
+                        <Button onClick={handleToggleRecording}>Annuler</Button>
+                        {permissionState === 'prompt' &&
+                        <Button variant="outlined" onClick={handleAudioStream} >Autoriser</Button>}
                     </DialogActions>
                 </DialogContent>
+                )
                 }
             </MuiBox>
         </Slide>

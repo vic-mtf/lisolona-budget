@@ -106,7 +106,7 @@ export default function EditorText ({
           onBlur={onBlur}
           blockStyleFn={blockStyleFn}
           blockRendererFn={blockRendererFn}
-          customStyleMap={customStyleMap({theme})}
+          customStyleMap={customStyleMap({ theme })}
           placeholder={placeHolder}
           onChange={onChange}
           plugins={plugins}

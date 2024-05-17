@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useTheme } from '@mui/material';
+import { useTheme, alpha } from '@mui/material';
 import EditorText from './EditorText';
 import WritingAreaFooter from './WritingAreaFooter';
 import { useSelector } from 'react-redux';
@@ -8,7 +8,16 @@ import EmojiPicker from '../emoji-picker/EmojiPicker';
 import FilesThumbView from '../files-thumb-view/FilesThumbView';
 import { MESSAGE_CHANNEL } from '../../ChatBox';
 
-export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmit, placeHolder, editorRef, media}) {
+export default function TextEditorMessage ({
+  rootRef, 
+  filesRef, 
+  paperRef, 
+  onSubmit, 
+  placeHolder, 
+  editorRef, 
+  media
+}) {
+
   return (
       <>
         <AnimatedWrapper
@@ -24,9 +33,10 @@ export default function TextEditorMessage ({rootRef, filesRef, paperRef, onSubmi
           <EmojiPicker
             onSelect={(data) =>  {
               const name = '_select-emoji';
-              const customEvent = new CustomEvent(name, {
-                detail: {name, data}
-              });
+              const event = {
+                detail: { name, data }
+              };
+              const customEvent = new CustomEvent(name, event);
               MESSAGE_CHANNEL.dispatchEvent(customEvent);
             }}
           />
@@ -49,8 +59,7 @@ const BottomFooterEditor = ({filesRef, rootRef, paperRef, onSubmit, placeHolder,
     const [hasFocus, setHasFocus] = useState(false);
     const [isEmpty, setIsEmpty] = useState(true);
     const theme = useTheme();
-  
-    const onFocus = useCallback(() => {
+    const onFocus = useCallback((e) => {
       editorRef.current.focus();
       setHasFocus(true);
     },[editorRef]);
@@ -73,6 +82,12 @@ const BottomFooterEditor = ({filesRef, rootRef, paperRef, onSubmit, placeHolder,
       }
       if(paper) {
         paper.style.boxShadow = theme.shadows[hasFocus ? 2 : 0];
+        paper.style.backgroundColor = alpha(
+          theme.palette.common[
+            theme.palette.mode === 'light'? 'black' : 'white'
+          ], 
+          hasFocus ? .05 : 0
+        );
       }
       return () => {
         root?.removeEventListener('click', onFocus);

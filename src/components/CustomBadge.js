@@ -4,11 +4,9 @@ import propTypes from 'prop-types';
 
 export const greenColor = '#44b700';
 export const greyColor = grey[500];
+const shouldForwardProp = (prop) => !['online', 'active'].includes(prop);
 
-const CustomBadge = styled(Badge, 
-    { 
-      shouldForwardProp: (prop) => prop !== 'online' && prop !== 'active'
-  })(({ theme, online, active }) => ({
+const CustomBadge = styled(Badge, { shouldForwardProp })(({ theme, online, active }) => ({
   '& .MuiBadge-badge': {
       zIndex: 0,
       backgroundColor: online ? greenColor : greyColor,

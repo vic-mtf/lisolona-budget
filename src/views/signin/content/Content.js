@@ -1,5 +1,5 @@
 import { Slide, Stack } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Button from '../../../components/Button';
 import Account from './Account';
 import { useSelector } from 'react-redux';
@@ -11,12 +11,13 @@ import { decrypt } from '../../../utils/crypt';
 import useSignInSendData from './useSignInSendData';
 import { useLocation } from 'react-router-dom';
 
-export default function Content ({loading, refresh}) {
+export default function Content ({ refresh }) {
     const appStoreUser = useSelector(store => store.app.user);
     const location = useLocation();
     const user = useMemo(() => decrypt(appStoreUser), 
         [appStoreUser]
     );
+    console.log(user);
     const [
         {
             errorMessage,
@@ -29,9 +30,9 @@ export default function Content ({loading, refresh}) {
             handleSendData,
             handleCleanErrorMessage
         }
-    ] = useSignInSendData({ refresh });
+    ] = useSignInSendData({ refresh, user });
 
-    const pathNames = useMemo(() => getPathnames(location?.pathname), [location?.pathname])
+    const pathNames = useMemo(() => getPathnames(location?.pathname), [location?.pathname]);
 
     return (
         <Box 

@@ -3,7 +3,7 @@ import "@draft-js-plugins/text-alignment/lib/plugin.css";
 import { Divider, Paper, ToggleButtonGroup as TBG, alpha, styled } from '@mui/material';
 import MoreOption from './buttons/MoreOption';
 
-export default function  HeaderAutoHideResize ({toggleButtonGroups, defaultNButton, disabled}) {
+export default function  HeaderAutoHideResize ({ toggleButtonGroups, defaultNButton, disabled }) {
     const rootRef = useRef();
     const [buttons, setButtons] = useState(defaultNButton || 0);
     const [toggleButtonShows, toggleButtonHides] = useMemo(() => {
@@ -35,11 +35,9 @@ export default function  HeaderAutoHideResize ({toggleButtonGroups, defaultNButt
   return (
     <CustomPaper
         ref={rootRef}
-        sx={{
-            flexWrap: 'nowrap'
-        }}
+        sx={{ flexWrap: 'nowrap' }}
     >
-        {toggleButtonShows.map(({children, ...props}, index, {length})  => (
+        {toggleButtonShows.map(({ children, ...props }, index, {length})  => (
             <React.Fragment key={index}>
                 <ToggleButtonGroup
                     {...props}
@@ -104,7 +102,7 @@ export const CustomPaper = styled(React.forwardRef((props, ref) => (
     )(({ theme }) => ({
     display: 'flex',
     borderRadius: 0,
-    padding: theme.spacing(0.5, 0, 0.5, 0),
+    padding: theme.spacing(0.25),
     background: alpha(
         theme.palette.common[ 
             theme.palette.mode === 'light' ? 

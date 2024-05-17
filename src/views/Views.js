@@ -2,7 +2,7 @@ import { CssBaseline, Box as MuiBox } from '@mui/material';
 import React, { useMemo } from 'react';
 import Main from './main/Main';
 import NavigationLeft from './navigation/left/NavigationLeft';
-import NavigationRight from './navigation/right/NavigationRight';
+// import NavigationRight from './navigation/right/NavigationRight';
 import { useSelector } from 'react-redux';
 
 export default function Views () {
@@ -26,7 +26,7 @@ export default function Views () {
 }
 
 const MainRight = () => {
-  const key = useSelector(store => store.data?.target?.id);
+  // const key = useSelector(store => store.data?.target?.id);
   const showDetail = useSelector(store => store.data?.target?.showDetail);
   const open = useMemo(() => Boolean(showDetail),[showDetail]);
 

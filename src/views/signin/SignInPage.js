@@ -5,9 +5,7 @@ import {
     LinearProgress,
     Fade,
     Backdrop,
-    Dialog,
-    Alert,
-    useMediaQuery
+    Alert
 } from '@mui/material';
 import Box from '../../components/Box';
 import Content from './content/Content';
@@ -19,16 +17,18 @@ import { setUser } from '../../redux/app';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Link from '../../components/Link';
+import Dialog from '../../components/Dialog';
 
 const channel = new BroadcastChannel('_geid_sign_in_connection_channel');
 
 export default function SignInPage() {
-    const [{loading}, refresh] = useAxios({},{manual: true});
+    const [{loading}, refresh] = useAxios('', { manual: true });
     const [finished, setFinished] = useState(false);
     const dispatch = useDispatch();
-    const match = useMediaQuery('@media (min-width:0px) and (max-width: 410px)');
 
     useEffect(() => {
+        const root = document.getElementById('root');
+        const name = '_connected';
         let handleAutoConnexion = event => {
             const { user } = event.detail;
             dispatch(setUser(user));
@@ -36,31 +36,20 @@ export default function SignInPage() {
             channel.postMessage(user, window?.location?.origin);
             window.close();
         };
-        document.getElementById('root')
-        .addEventListener(
-            '_connected', 
-            handleAutoConnexion
-            );
+        root.addEventListener(name, handleAutoConnexion);
         return () => {
-            document.getElementById('root')
-            .removeEventListener(
-                '_connected', 
-                handleAutoConnexion
-            );
+            root.removeEventListener(name, handleAutoConnexion);
         }
     }, [dispatch]);
 
     return (
-        <Box
-            justifyContent="center"
-            alignItems="center"
-        >
+        <Box justifyContent="center" alignItems="center">
             <MuiBox
                 height={460}
                 display="flex"
                 sx={{
-                    width: match ? 'auto' : 400,
-                    mx: match ? 1 : 0,
+                    width: { xs: 'auto', md: 400 },
+                    mx: { xs: 1, md: 0 } 
                 }}
             > 
                 <Card
@@ -109,24 +98,19 @@ export default function SignInPage() {
                 PaperProps={{
                     sx:{ border: theme => `1px solid ${theme.palette.divider}` }
                 }}
-                BackdropProps={{
-                    sx: {
-                        bgcolor: theme => theme.palette.background.paper +
-                        theme.customOptions.opacity,
-                        backdropFilter: theme => `blur(${theme.customOptions.blur})`,
-                    }
-                }}
             >
                 <Alert>
                     Vous avez réussi à vous connecter à votre compte et pouvez 
                     accéder à la plate-forme 
-                    pour <Link 
-                        component="a" 
-                        href="/?autoconnexion=true" 
-                        target="_blank"
-                    >continuer la navigation</Link>.
+                    pour <Link {...propsLink}>continuer la navigation</Link>.
                 </Alert>
             </Dialog>
         </Box>
     )
 }
+
+const propsLink = {
+    component: 'a',
+    href: '/?autoconnexion=true',
+    target: '_blank'
+};

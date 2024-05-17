@@ -2,71 +2,34 @@
 import { MenuItem, ThemeProvider, Tooltip } from '@mui/material';
 import IconButton from '../../../../../components/IconButton';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import HistoryToggleOffRoundedIcon from '@mui/icons-material/HistoryToggleOffRounded';
-import Groups3OutlinedIcon from '@mui/icons-material/Groups3Outlined';
-import CastRoundedIcon from '@mui/icons-material/CastRounded';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useDispatch, useSelector } from 'react-redux';
-import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import React, { useCallback, useMemo } from 'react';
 import Menu from '../../../../../components/Menu';
-import { useState } from 'react';
-import { useRef } from 'react';
-import openNewWindow from "../../../../../utils/openNewWindow";
-import { encrypt } from "../../../../../utils/crypt";
+import { useState, useRef } from 'react';
 import { useData } from '../../../../../utils/DataProvider';
-import { setData } from '../../../../../redux/meeting';
 import { useSocket } from '../../../../../utils/SocketIOProvider';
+import options from './options';
 
-export default function CallButton  ({target, theme}) {
+export default function CallButton  ({ target, theme }) {
     const mode = useSelector(store => store.meeting?.mode);
     const socket = useSocket();
-    const dispatch = useDispatch();
     const disabled = useMemo(() => mode !==  'none', [mode]);
-    const [{secretCodeRef}] = useData();
+    const [{ secretCodeRef }] = useData();
     const [anchorEl, setAnchorEl] = useState(null);
     const anchorElRef = useRef();
-
-    const handleOpenMeeting = mode => {
-        const wd = openNewWindow({
-            url: '/meeting/',
-        });
-        wd.geidMeetingData = encrypt({
-            target,
-            mode,
-            secretCode: secretCodeRef.current,
-            defaultCallingState: 'before',
-        });
-        if(wd) {
-            dispatch(setData({ data: {mode}}));
-            wd.openerSocket = socket;
-        }
-    }
     
-    const onOpen = () => {
-        setAnchorEl(anchorElRef.current);
-    };
+    const onOpen = () => setAnchorEl(anchorElRef.current);
 
-    const menuItems = [
-        {
-            Icon: Groups3OutlinedIcon,
-            label: 'Démarrer une réunion instantanée',
-            
-            onClick () {
-                setAnchorEl(null);
-                handleOpenMeeting('prepare');
-            }
-        },
-        {
-            Icon: HistoryToggleOffRoundedIcon,
-            label: 'Planifier une réunion',
-            disabled: true,
-        },
-        {
-            Icon: CastRoundedIcon,
-            label: 'Diffusion vidéo en direct',
-            disabled: true,
-        }
-    ];
+    const HandlerInitCall = useCallback((action, props) => () => {
+        setAnchorEl(null);
+        if(typeof action === 'function') action({
+            target,
+            secretCode: secretCodeRef.current,
+            socket,
+            ...props,
+        })
+    }, [secretCodeRef, socket, target]);
 
     return (
         <React.Fragment>
@@ -78,10 +41,17 @@ export default function CallButton  ({target, theme}) {
                         sx={{mx: 1}} 
                         disabled={disabled}
                         ref={anchorElRef}
-                        onClick={() => target?.type === 'room' ? onOpen() : handleOpenMeeting('outgoing')}
+                        onClick={() => 
+                            target?.type === 'room' ? 
+                            onOpen() : 
+                            HandlerInitCall(
+                                options[0].action,
+                                { mode: 'outgoing' }
+                            )()
+                        }
                     >  
-                            <LocalPhoneOutlinedIcon fontSize="small"/>
-                            {target?.type === "room" && <ExpandMoreIcon fontSize="small"/>}
+                        <LocalPhoneOutlinedIcon fontSize="small"/>
+                        {target?.type === "room" && <ExpandMoreIcon fontSize="small"/>}
                     </IconButton>
                 </div>
             </Tooltip>
@@ -93,22 +63,22 @@ export default function CallButton  ({target, theme}) {
                     sx={{
                         '& .MuiMenuItem-root': {
                             '& .MuiSvgIcon-root': {
-                            fontSize: 18,
-                            color: theme.palette.text.secondary,
-                            marginRight: theme.spacing(1.5),
+                                fontSize: 18,
+                                color: theme.palette.text.secondary,
+                                marginRight: theme.spacing(1.5),
                             },
                         }
                     }}
                 >
-                    {menuItems.map(({label, Icon, disabled, onClick}, key) => (
+                    {options.map(({ label, icon, disabled, action }, key) => (
                         <MenuItem 
                             key={key}
                             disabled={disabled}
-                            onClick={onClick}
+                            onClick={HandlerInitCall(action)}
                         > 
-                        {<Icon fontSize="small"/>} {label}
+                        {React.createElement(icon, { fontSize: 'small' })} {label}
                         </MenuItem>
-                    )) }
+                    ))}
                 </Menu>
             </ThemeProvider>
         </React.Fragment>
