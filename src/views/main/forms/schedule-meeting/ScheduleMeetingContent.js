@@ -1,4 +1,3 @@
-import Dialog from "../../../../components/Dialog";
 import { 
     DialogActions, 
     DialogContent, 
@@ -6,7 +5,7 @@ import {
     TextField, 
     Box as MuiBox
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import DateCalendarMeeting from './DateCalendarMeeting';
@@ -19,11 +18,7 @@ import PropTypes from 'prop-types';
 
 export default function ScheduleMeetingContent ({ target, onClose, formRef }) {
     const token = useSelector(store => store.user.token);
-    const {
-        register,
-        handleSubmit,
-        control,
-      } = useForm({ 
+    const { register, handleSubmit, control, } = useForm({ 
         defaultValues: {
             date: new Date(),
             startedAt: dayjs(Date()),
@@ -37,7 +32,6 @@ export default function ScheduleMeetingContent ({ target, onClose, formRef }) {
         headers: { Authorization: `Bearer ${token}` },
     }, { manual: true });
 
-
     const handleCreateMeetingRequest = useCallback(async (fields) => {
         const getDate = (HM) => {
             const date = new Date(fields.date);
@@ -46,13 +40,17 @@ export default function ScheduleMeetingContent ({ target, onClose, formRef }) {
             date.setMinutes(HMDate.getMinutes());
             return date;
         };
+        
         const data = {
             target: target?.id,
             type: target?.type,
             tokenType: 'uid',
             role: 'publisher',
+            scheduled: true,
             startedAt: getDate(fields.startedAt?.toString()),
             endedAt: getDate(fields.endedAt?.toString()),
+            title: fields.title,
+            description: fields.description,
         };
      
         try { await refetch({ data }); } 
@@ -86,10 +84,7 @@ export default function ScheduleMeetingContent ({ target, onClose, formRef }) {
                     inputProps={{ readOnly: loading }}
                     {...register('title')}
                 />
-                <MuiBox
-                    display="flex"
-                    flexDirection="row"
-                >
+                <MuiBox display="flex" flexDirection="row">
                     <MuiBox>
                         <Controller
                             name="date"
@@ -106,9 +101,7 @@ export default function ScheduleMeetingContent ({ target, onClose, formRef }) {
                         />
                     </MuiBox>
                     <MuiBox>
-                        <TimeClockMeeting
-                            control={control}
-                        />
+                        <TimeClockMeeting control={control}/>
                     </MuiBox>
                 </MuiBox>
                 <TextField
@@ -124,15 +117,8 @@ export default function ScheduleMeetingContent ({ target, onClose, formRef }) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button
-                    onClick={onClose}
-                    disabled={loading}
-                >Annuler</Button>
-                <Button
-                    variant="outlined"
-                    disabled={loading}
-                    type="submit"
-                >Confirmer</Button>
+                <Button onClick={onClose} disabled={loading}>Annuler</Button>
+                <Button variant="outlined" disabled={loading} type="submit">Confirmer</Button>
             </DialogActions>
         </>
     );

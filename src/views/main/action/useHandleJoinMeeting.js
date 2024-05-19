@@ -11,7 +11,7 @@ export default function useHandleJoinMeeting (initMode = 'prepare') {
     const socket = useSocket();
     const [{secretCodeRef}] = useData();
 
-    const handleJoinMeeting = useCallback(({timer, data:target, origin, defaultMode = initMode}) => {
+    const handleJoinMeeting = useCallback(({ timer, data:target, origin, defaultMode = initMode }) => {
         window.clearInterval(timer);
         const mode = defaultMode ||'prepare';
         const wd = openNewWindow({

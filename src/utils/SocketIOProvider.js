@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import axiosConfig from '../configs/axios-config.json';
@@ -7,27 +7,23 @@ import getFullName from './getFullName';
 
 const SocketIO = createContext(null);
 export const useSocket = () => useContext(SocketIO);
-const defaultOptions = {
-    transports: ['websocket'],
-};
 
+const defaultOptions = { transports: ['websocket'], };
 const openerSocket = window.openerSocket;
 
-export default function SocketIOProvider ({children, url, token, options = defaultOptions}) {
+export default function SocketIOProvider ({ children, url, token, options = defaultOptions }) {
     const defaultToken = useSelector(store => store?.user?.token);
     const dispatch = useDispatch();
     
     const socket = useMemo(() => {
         const tk = token || defaultToken;
         const baseURL = url || axiosConfig.baseURL;
-        if(openerSocket) 
-            return openerSocket
-        else 
-            return tk ? io(`${baseURL}?token=${tk}`, options) : null
+        if(openerSocket) return openerSocket
+        else return tk ? io(`${baseURL}?token=${tk}`, options) : null
     }, [token, url, defaultToken, options]);
 
     useEffect(() => {
-        const getInvitations = ({invitations}) => {
+        const getInvitations = ({ invitations }) => {
             const data = {
                 indexItem: 0,
                 label: 'Invitations',
@@ -47,16 +43,11 @@ export default function SocketIOProvider ({children, url, token, options = defau
             };
             dispatch(addNotification({data}));
         };
-        if(!openerSocket)
-            socket?.on('invitations', getInvitations);
+        if(!openerSocket) socket?.on('invitations', getInvitations);
         return () => {
             socket?.off('invitations', getInvitations);
         }
     },[socket, token, dispatch]);
    
-    return (
-        <SocketIO.Provider value={openerSocket || socket}>
-          {children}
-        </SocketIO.Provider>
-    );
+    return (<SocketIO.Provider value={socket}>{children}</SocketIO.Provider>);
 }
