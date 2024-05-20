@@ -1,21 +1,20 @@
 import React, { useEffect } from "react";
 import { useSnackbar } from "notistack";
 import {
-  Avatar,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useSocket } from "../../../utils/SocketIOProvider";
-import getFullName from "../../../utils/getFullName";
 import Button from "../../../components/Button";
 import useAxios from "../../../utils/useAxios";
 import AvatarStatus from "../../../components/AvatarStatus";
 import signal_src from "../../../assets/Samsung-Wing-SMS.webm";
 import useAudio from "../../../utils/useAudio";
 import setData from "../../../utils/setData";
+import formatDates from "../../../utils/formatDates";
 
 export default function useScheduledMeeting() {
   const socket = useSocket();
@@ -23,22 +22,13 @@ export default function useScheduledMeeting() {
   const token = useSelector((store) => store.user.token);
   const signalAudio = useAudio(signal_src);
   const [, refetch] = useAxios(
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
+    { headers: { Authorization: `Bearer ${token}` } },
     { manual: true },
   );
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const onScheduledMeeting = async ({ who, where }) => {
       let data;
-      const user = {
-        id: who._id,
-        name: getFullName(who),
-        type: "direct",
-        avatarSrc: who?.imageUrl,
-      };
       const id = where?._id;
       const location = where?.location;
       const url = `/api/chat/room/call/${id}`;
@@ -46,10 +36,8 @@ export default function useScheduledMeeting() {
 
       if (type === "room") {
         try {
-          data = await refetch({ url }).data;
-
-          console.log(data);
-
+          const response = await refetch({ url });
+          data = response?.data;
           setData({ meetings: [data] });
           signalAudio.audio?.play();
         } catch (e) {}
@@ -60,22 +48,26 @@ export default function useScheduledMeeting() {
         const title = data?.title;
         const imageUrl = data?.room?.imageUrl;
         const description = data?.description;
-        const date = "";
-
+        const startedAt = data?.startedAt;
+        const endedAt = data?.endedAt;
+        const date = formatDates(startedAt, endedAt);
         const addEmDash = (text) => (text ? ` — ${text}` : "");
 
         enqueueSnackbar(
           <ListItem alignItems="flex-start" sx={{ p: 0 }} dense>
             <ListItemAvatar>
               <AvatarStatus
+                mode={(mode) => (mode === "dark" ? "light" : mode)}
                 id={location}
                 avatarSrc={imageUrl}
                 type="room"
-                name={user.name}
+                invisible
+                name={name}
               />
             </ListItemAvatar>
             <ListItemText
               primary={name}
+              primaryTypographyProps={{ fontWeight: "bold" }}
               secondaryTypographyProps={{
                 color: "currentcolor",
                 display: "-webkit-box",
@@ -83,7 +75,7 @@ export default function useScheduledMeeting() {
                 textOverflow: "ellipsis",
                 sx: {
                   WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: 2,
+                  WebkitLineClamp: 3,
                 },
               }}
               secondary={
@@ -93,7 +85,7 @@ export default function useScheduledMeeting() {
                     component="span"
                     variant="body2"
                   >
-                    Réunion{addEmDash(title)}
+                    {title}
                     {addEmDash(date)}
                   </Typography>
                   {addEmDash(description)}
@@ -102,7 +94,7 @@ export default function useScheduledMeeting() {
             />
           </ListItem>,
           {
-            style: { maxWidth: 400 },
+            style: { maxWidth: 500 },
             action: ({ id }) => (
               <Button
                 onClick={() => {
@@ -116,7 +108,7 @@ export default function useScheduledMeeting() {
                 }}
                 color="inherit"
               >
-                Detail
+                Fermer
               </Button>
             ),
           },
