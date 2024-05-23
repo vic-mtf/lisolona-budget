@@ -1,62 +1,71 @@
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { useState } from 'react';
+import { styled, alpha } from "@mui/material/styles";
+import InputBase from "@mui/material/InputBase";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { useState } from "react";
 
-export default function SearchBar ({onChangeSearch, onChange:hdChange, value:dfValue}) {
-  const [value, setValue] = useState('');
-  const onChange = event => {
+export default function SearchBar({
+  onChangeSearch,
+  onChange: hdChange,
+  value: dfValue,
+}) {
+  const [value, setValue] = useState("");
+  const onChange = (event) => {
     setValue(event.target.value);
-    if(typeof onChangeSearch === 'function')
-      onChangeSearch(event)
+    if (typeof onChangeSearch === "function") onChangeSearch(event);
   };
 
   return (
-      <Search sx={{mr: 1}}>
-          <SearchIconWrapper>
-            <SearchOutlinedIcon fontSize="small" />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Chercher…"
-            sx={{fontSize: 15}}
-            inputProps={{ 
-              'aria-label': 'search',
-              onChange: hdChange || onChange,
-              value: dfValue || value,
-            }}
-          />
-        </Search>
-  )
+    <Search sx={{ mr: 1 }}>
+      <SearchIconWrapper>
+        <SearchOutlinedIcon fontSize="small" />
+      </SearchIconWrapper>
+      <StyledInputBase
+        placeholder="Chercher…"
+        sx={{ fontSize: 15 }}
+        inputProps={{
+          "aria-label": "search",
+          onChange: hdChange || onChange,
+          value: dfValue || value,
+        }}
+      />
+    </Search>
+  );
 }
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common[ theme.palette.mode === 'light' ? 'black' : 'white'], 0.04),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common[theme.palette.mode === 'light' ? 'black' : 'white'], 0.06),
-    },
-    marginLeft: 0,
-    width: '100%',
-  }));
-  
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 1),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-     padding: theme.spacing(.5, .5, .5, .5),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(2)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%'
-    },
-  }));
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(
+    theme.palette.common[theme.palette.mode === "light" ? "black" : "white"],
+    0.04,
+  ),
+  "&:hover": {
+    backgroundColor: alpha(
+      theme.palette.common[theme.palette.mode === "light" ? "black" : "white"],
+      0.06,
+    ),
+  },
+  marginLeft: 0,
+  width: "100%",
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 1),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(0.5, 0.5, 0.5, 0.5),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(2)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+  },
+}));

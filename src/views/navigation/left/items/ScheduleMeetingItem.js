@@ -5,16 +5,22 @@ import {
   ListItem,
   useTheme,
 } from "@mui/material";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import React from "react";
 import { useSelector } from "react-redux";
-import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
+
 import Typography from "../../../../components/Typography";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import formatDates from "../../../../utils/formatDates";
 import addEmDash from "../../../../utils/addEmDash";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
+import IconButton from "../../../../components/IconButton";
+import CopyLinkButton from "../../../../components/CopyLinkButton";
 import TimeElapsed from "../../../../components/TimeElapsed";
+import useMeetingUrl from "../../../meeting/conference/navigation/details/useMeetingUrl";
 
 export default function ScheduleMeetingItem({ call }) {
   const {
@@ -31,7 +37,8 @@ export default function ScheduleMeetingItem({ call }) {
     title,
     description,
   } = call;
-  console.log(call);
+
+  const url = useMeetingUrl(id);
   const [contextMenu, setContextMenu] = React.useState(null);
   const { iconCallType, color } = useCallParams(type, format);
   const mode = useSelector((store) => store.meeting.mode);
@@ -53,9 +60,39 @@ export default function ScheduleMeetingItem({ call }) {
   const time = formatDates(origin?.startedAt, origin?.endedAt);
   const detail =
     addEmDash(origin?.title) + addEmDash(time) + addEmDash(origin.description);
+
   return (
     <React.Fragment>
-      <ListItem disablePadding>
+      <ListItem
+        disablePadding
+        secondaryAction={
+          Boolean(window?.navigator?.share) ? (
+            <ShareLinkButton
+              text={origin?.description}
+              title={origin?.title}
+              url={url}
+              detail={detail}
+              IconProps={{
+                size: "small",
+              }}
+            />
+          ) : (
+            <CopyLinkButton
+              text={origin?.description}
+              title={origin?.title}
+              url={url}
+              render={({ copied, handleCopyLink }) => (
+                <IconButton onClick={handleCopyLink}>
+                  {React.createElement(
+                    copied ? DoneOutlinedIcon : ContentCopyOutlinedIcon,
+                    { size: "small" },
+                  )}
+                </IconButton>
+              )}
+            />
+          )
+        }
+      >
         <ListItemButton
           sx={{ overflow: "hidden" }}
           onContextMenu={handleContextMenu}
@@ -116,4 +153,22 @@ const useCallParams = () => {
     color: theme.palette.success.main,
     iconCallType: <OnlinePredictionIcon fontSize="inherit" />,
   };
+};
+
+const ShareLinkButton = ({ url, title, text, detail, IconProps }) => {
+  const handleClick = () => {
+    console.log(detail);
+    if (navigator.share) {
+      navigator
+        .share({ title, text, url })
+        .then(() => console.log("Partagé avec succès !"))
+        .catch((error) => console.error("Échec du partage", error));
+    }
+  };
+
+  return (
+    <IconButton onClick={handleClick}>
+      <ShareOutlinedIcon {...IconProps} />
+    </IconButton>
+  );
 };
