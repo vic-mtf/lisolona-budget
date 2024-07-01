@@ -12,7 +12,7 @@ export default function Navigation({
 }) {
   return (
     <MuiBox
-      variant="permanent"
+      variant='permanent'
       component={Drawer}
       sx={{
         width: {
@@ -30,9 +30,8 @@ export default function Navigation({
         },
         ...sx,
       }}
-      {...otherProps}
-    >
-      {!disableTooBar && <Toolbar variant="dense" {...toolBarProps} />}
+      {...otherProps}>
+      {!disableTooBar && <Toolbar variant='dense' {...toolBarProps} />}
       {children}
     </MuiBox>
   );

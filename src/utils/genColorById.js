@@ -21,8 +21,8 @@ export default function getHueColorById(_id = "") {
           blue ** 2 -
           red * green -
           red * blue -
-          green * blue,
-      ),
+          green * blue
+      )
   );
   angle = green >= blue ? angle : 360 - angle;
   return {
