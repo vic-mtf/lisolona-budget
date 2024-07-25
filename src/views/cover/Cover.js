@@ -33,7 +33,7 @@ export default function Cover({ getters, setters }) {
       url: "/api/chat",
       headers: { Authorization: `Bearer ${token}` },
     },
-    { manual: true },
+    { manual: true }
   );
   const startApp = useMemo(() => getters.startApp, [getters.startApp]);
 
@@ -92,70 +92,65 @@ export default function Cover({ getters, setters }) {
         left: 0,
         right: 0,
         bottom: 0,
-      }}
-    >
+      }}>
       <Stack
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
         flex={1}
-        spacing={1}
-      >
-        <CardMedia
-          component="img"
+        spacing={1}>
+        <img
           src={_lisolonabudget_logo}
           draggable={false}
-          sx={{
+          style={{
             height: 100,
             width: 100,
             animation: "swing .5s 1s",
+            aspectRatio: 1,
           }}
         />
         <MuiBox
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-          position="relative"
-        >
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          flexDirection='column'
+          position='relative'>
           <Stack
             spacing={1}
-            direction="row"
+            direction='row'
             width={500}
             my={1}
             divider={
               <Divider
                 flexItem
-                orientation="vertical"
+                orientation='vertical'
                 sx={{
                   bgcolor: "text.primary",
                   borderWidth: 1,
                 }}
               />
             }
-            display="flex"
-            justifyContent="center"
-          >
-            <CardMedia component="img" src={_logo_geid} sx={{ width: 120 }} />
-            <Typography noWrap variant="h4">
+            display='flex'
+            justifyContent='center'>
+            <CardMedia component='img' src={_logo_geid} sx={{ width: 120 }} />
+            <Typography noWrap variant='h4'>
               Lisolo Na Budget
             </Typography>
           </Stack>
           {loading && (
             <MuiBox
               sx={{ position: "absolute", top: "150%" }}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              color="text.primary"
-              flexDirection="column"
-            >
-              <CircularProgress size={15} color="inherit" />
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
+              color='text.primary'
+              flexDirection='column'>
+              <CircularProgress size={15} color='inherit' />
             </MuiBox>
           )}
         </MuiBox>
       </Stack>
-      <Typography variant="caption" paragraph>
+      <Typography variant='caption' paragraph>
         Direction Archives et Nouvelles Technologie de l'Information et de la
         Communication ©2022
       </Typography>

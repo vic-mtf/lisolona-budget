@@ -3,47 +3,47 @@ import Typography from "../../../components/Typography";
 import InputCode from "../../../components/InputCode";
 import store from "../../../redux/store";
 import { updateValues } from "../../../redux/user";
-import { useSocket } from '../../../utils/SocketIOProvider';
+import { useSocket } from "../../../utils/SocketIOProvider";
 
-const CodeMeeting = ({values, loading, refetch, codeRef}) => {
-    const socket = useSocket();
-    useLayoutEffect(() => {
-        const handleDisconnect = () => socket?.disconnect()
-        if(!store.getState().user.connected && socket) {
-            store.dispatch(updateValues({
-                token: undefined, 
-                name: undefined, 
-                id: undefined
-              }));
-            socket.disconnect();
-            socket.on('connection', handleDisconnect);
-        }
+const CodeMeeting = ({ values, loading, refetch, codeRef }) => {
+  const socket = useSocket();
+  useLayoutEffect(() => {
+    const handleDisconnect = () => socket?.disconnect();
+    if (!store.getState().user.connected && socket) {
+      store.dispatch(
+        updateValues({
+          token: undefined,
+          name: undefined,
+          id: undefined,
+        })
+      );
+      socket.disconnect();
+      socket.on("connection", handleDisconnect);
+    }
 
-        return () => {
-            socket?.off('connection', handleDisconnect);
-        };
-    }, [socket]);
+    return () => {
+      socket?.off("connection", handleDisconnect);
+    };
+  }, [socket]);
 
-    return (
-        <React.Fragment>
-             <Typography>
-                Saisissez le code de la réunion pour participer
-            </Typography>
-            <InputCode
-                length={9}
-                size={38}
-                values={values}
-                onComplete={(code) => {
-                    codeRef.current = code.join('');
-                    if(!loading) {
-                        refetch({
-                            url: 'api/chat/room/call/' + code.join('')
-                        });
-                    }
-                }}
-              />
-        </React.Fragment>
-    )
+  return (
+    <React.Fragment>
+      <Typography>Saisissez le code de la réunion pour participer</Typography>
+      <InputCode
+        length={9}
+        size={38}
+        values={values}
+        onComplete={(code) => {
+          codeRef.current = code.join("");
+          if (!loading) {
+            refetch({
+              url: "api/chat/room/call/" + code.join(""),
+            });
+          }
+        }}
+      />
+    </React.Fragment>
+  );
 };
 
 export default CodeMeeting;

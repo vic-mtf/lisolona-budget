@@ -1,6 +1,6 @@
 import { Box as MuiBox } from "@mui/material";
 
-export default function ViewAudioTrack({ audioTrack, type }) {
+export default function ViewAudioTrack({ audioTrack, type = "camera" }) {
   return (
     <MuiBox
       position='relative'
@@ -11,7 +11,3 @@ export default function ViewAudioTrack({ audioTrack, type }) {
       }}></MuiBox>
   );
 }
-
-ViewAudioTrack.defaultProps = {
-  type: "camera",
-};

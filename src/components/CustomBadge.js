@@ -8,7 +8,7 @@ const shouldForwardProp = (prop) =>
   !["online", "active", "color"].includes(prop);
 
 const CustomBadge = styled(Badge, { shouldForwardProp })(
-  ({ theme, online, active, color }) => ({
+  ({ theme, online = true, active, color }) => ({
     "& .MuiBadge-badge": {
       zIndex: 0,
       backgroundColor: online ? color || greenColor : greyColor,
@@ -36,15 +36,12 @@ const CustomBadge = styled(Badge, { shouldForwardProp })(
         opacity: 0,
       },
     },
-  }),
+  })
 );
-
-CustomBadge.defaultProps = {
-  online: true,
-};
 
 CustomBadge.propTypes = {
   onLine: propTypes.bool,
   active: propTypes.bool,
 };
+
 export default CustomBadge;

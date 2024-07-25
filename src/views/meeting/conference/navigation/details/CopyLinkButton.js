@@ -28,7 +28,7 @@ export default function CopyLinkButton() {
             setCopied(false);
           }, 2000);
         } catch (e) {
-          console.log("Error", e);
+          console.error("Error", e);
         }
       }
     },

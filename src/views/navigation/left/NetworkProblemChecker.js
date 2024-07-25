@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setStatus } from "../../../redux/status";
 import { useSocket } from "../../../utils/SocketIOProvider";
 
-export default function NetworkProblemChecker({ direction }) {
+export default function NetworkProblemChecker({ direction = "up" }) {
   const online = useOnLine();
   const dispatch = useDispatch();
   const open = useMemo(() => !online, [online]);
@@ -25,13 +25,10 @@ export default function NetworkProblemChecker({ direction }) {
 
   return (
     <Slide in={open} direction={direction} unmountOnExit>
-      <Alert icon={<SignalWifiBadOutlinedIcon />} severity="warning">
+      <Alert icon={<SignalWifiBadOutlinedIcon />} severity='warning'>
         <b>Lisolo Na Budget</b> peine à récupérer des données, votre appareil
         n'est plus relié au réseau Internet.
       </Alert>
     </Slide>
   );
 }
-NetworkProblemChecker.defaultProps = {
-  direction: "up",
-};

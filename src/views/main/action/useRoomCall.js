@@ -25,7 +25,7 @@ export default function useRoomCall() {
   const mode = useSelector((store) => store.meeting.mode);
   const [, settersCounters] = useTableRef();
   const [, settersTimers] = useTableRef();
-  const [{ secretCodeRef }] = useData();
+  const [{ secretCode }] = useData();
   const token = useSelector((store) => store.user.token);
   const signalAudio = useAudio(signal_src);
   const theme = useTheme();
@@ -33,7 +33,7 @@ export default function useRoomCall() {
     {
       headers: { Authorization: `Bearer ${token}` },
     },
-    { manual: true },
+    { manual: true }
   );
   const dispatch = useDispatch();
 
@@ -48,7 +48,7 @@ export default function useRoomCall() {
       wd.geidMeetingData = encrypt({
         target,
         mode,
-        secretCode: secretCodeRef.current,
+        secretCode: secretCode,
         defaultCallingState: "incoming",
         origin,
       });
@@ -107,7 +107,7 @@ export default function useRoomCall() {
                 },
               },
               message: (
-                <ListItem alignItems="flex-start" dense>
+                <ListItem alignItems='flex-start' dense>
                   <AvatarStatus
                     id={location}
                     avatarSrc={avatarSrc}
@@ -123,10 +123,9 @@ export default function useRoomCall() {
                     secondary={
                       <Typography
                         sx={{ display: "inline" }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
+                        component='span'
+                        variant='body2'
+                        color='text.primary'>
                         Une Nouvelle réunion est actuellement en cours. vous
                         êtes cordialement invité(e) à y participer
                       </Typography>
@@ -139,18 +138,16 @@ export default function useRoomCall() {
                   sx={{
                     p: 0,
                     m: 0,
-                  }}
-                >
+                  }}>
                   <Button
-                    variant="outlined"
+                    variant='outlined'
                     onClick={() => {
                       handleJoinMeeting({ data, origin, timer });
                       closeCustomSnackbar();
                       clearTimer(settersTimers.getObjectById(id)?.timer);
                       settersCounters.deleteObject(id);
                       settersTimers.deleteObject(id);
-                    }}
-                  >
+                    }}>
                     Participer
                   </Button>
                   <Button
@@ -160,8 +157,7 @@ export default function useRoomCall() {
                       clearTimer(settersTimers.getObjectById(id)?.timer);
                       settersCounters.deleteObject(id);
                       settersTimers.deleteObject(id);
-                    }}
-                  >
+                    }}>
                     Annuler
                   </Button>
                 </DialogActions>
@@ -203,7 +199,7 @@ export default function useRoomCall() {
     };
   }, [
     socket,
-    secretCodeRef,
+    secretCode,
     dispatch,
     mode,
     refetch,

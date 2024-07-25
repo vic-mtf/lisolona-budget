@@ -1,7 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isPlainObject } from "@reduxjs/toolkit";
 import deepMerge from "../utils/mergeDeep";
 import { openerData } from "../utils/MeetingProvider";
-import { isPlainObject } from "lodash";
 
 //mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join' || 'prepare' , || guest
 const options = openerData?.origin?.callDetails || null;
@@ -129,6 +128,17 @@ const meeting = createSlice({
         });
       if (state.mode === "on") state.startedAt = Date.now();
     },
+
+    updateMeetingData(state, actions) {
+      const { data } = actions?.payload || {};
+      if (data)
+        Object.keys(data)?.forEach((key) => {
+          if (isPlainObject(state[key]))
+            state[key] = deepMerge(state[key], data[key]);
+          else state[key] = data[key];
+        });
+      if (state.mode === "on") state.startedAt = Date.now();
+    },
   },
 });
 
@@ -141,5 +151,3 @@ export const {
   setData,
 } = meeting.actions;
 export default meeting.reducer;
-
-const printO = (value) => {};

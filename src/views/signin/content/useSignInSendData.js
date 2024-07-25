@@ -17,7 +17,6 @@ export default function  useSignInSendData ({ refresh, user }) {
         return paths[paths?.length - 2];
     }, [location?.pathname]);
 
-    console.log(user);
  
     const handleCleanErrorMessage = useCallback(() => {
         if(errorMessage) setErrorMessage(null);

@@ -60,7 +60,7 @@ export default function ScheduleMeetingContent({ target, onClose, formRef }) {
       try {
         await refetch({ data });
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
       onClose(null);
     },

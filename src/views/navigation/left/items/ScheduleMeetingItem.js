@@ -10,7 +10,6 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import React from "react";
 import { useSelector } from "react-redux";
-
 import Typography from "../../../../components/Typography";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import formatDates from "../../../../utils/formatDates";
@@ -19,7 +18,7 @@ import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
 import IconButton from "../../../../components/IconButton";
 import CopyLinkButton from "../../../../components/CopyLinkButton";
-import TimeElapsed from "../../../../components/TimeElapsed";
+// import TimeElapsed from "../../../../components/TimeElapsed";
 import useMeetingUrl from "../../../meeting/conference/navigation/details/useMeetingUrl";
 
 export default function ScheduleMeetingItem({ call }) {
@@ -85,20 +84,18 @@ export default function ScheduleMeetingItem({ call }) {
                 <IconButton onClick={handleCopyLink}>
                   {React.createElement(
                     copied ? DoneOutlinedIcon : ContentCopyOutlinedIcon,
-                    { size: "small" },
+                    { size: "small" }
                   )}
                 </IconButton>
               )}
             />
           )
-        }
-      >
+        }>
         <ListItemButton
           sx={{ overflow: "hidden" }}
           onContextMenu={handleContextMenu}
           onClick={handleClick}
-          disabled={mode !== "none"}
-        >
+          disabled={mode !== "none"}>
           <ListItemAvatar>
             <AvatarStatus
               type={type}
@@ -119,10 +116,9 @@ export default function ScheduleMeetingItem({ call }) {
               <React.Fragment>
                 <Typography
                   sx={{ display: "inline" }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
+                  component='span'
+                  variant='body2'
+                  color='text.primary'>
                   {time}
                 </Typography>
                 {detail}
@@ -151,18 +147,16 @@ const useCallParams = () => {
   const theme = useTheme();
   return {
     color: theme.palette.success.main,
-    iconCallType: <OnlinePredictionIcon fontSize="inherit" />,
+    iconCallType: <OnlinePredictionIcon fontSize='inherit' />,
   };
 };
 
 const ShareLinkButton = ({ url, title, text, detail, IconProps }) => {
   const handleClick = () => {
-    console.log(detail);
     if (navigator.share) {
-      navigator
-        .share({ title, text, url })
-        .then(() => console.log("Partagé avec succès !"))
-        .catch((error) => console.error("Échec du partage", error));
+      navigator.share({ title, text, url });
+      // .then(() => console.log("Partagé avec succès !"))
+      // .catch((error) => console.error("Échec du partage", error));
     }
   };
 

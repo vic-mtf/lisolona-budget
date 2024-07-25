@@ -12,7 +12,7 @@ export default function Meeting () {
     const mode = useSelector(store => store.meeting.mode);
     const meeting = useSelector(store => store.meeting);
     const show = useCallback((...states) => states.includes(mode), [mode]);
-    console.log(store.getState().conference.participants);
+
     return (
         <MeetingProvider>
             {show('outgoing', 'incoming') && <DirectCallEntry/>}

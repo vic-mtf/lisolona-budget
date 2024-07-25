@@ -10,8 +10,8 @@ export default function Client({
   id,
   audioTrack,
   videoTrack,
-  showVideo,
-  reverseScreen,
+  reverseScreen = false,
+  showVideo = true,
 }) {
   return (
     <MuiBox
@@ -46,8 +46,3 @@ export default function Client({
     </MuiBox>
   );
 }
-
-Client.defaultProps = {
-  reverseScreen: false,
-  showVideo: true,
-};

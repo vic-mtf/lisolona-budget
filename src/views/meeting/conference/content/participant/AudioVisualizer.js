@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 
 export const AudioVisualizer = React.memo(
-  ({ analyser, audioTrack, size, maxSize, radius, color }) => {
+  ({ analyser, audioTrack, color, size = 200, maxSize = 300, radius = 10 }) => {
     const recRef = useRef();
     const requestAnimationFrameRef = useRef();
 
@@ -60,12 +60,6 @@ export const AudioVisualizer = React.memo(
     );
   }
 );
-
-AudioVisualizer.defaultProps = {
-  size: 200,
-  maxSize: 300,
-  radius: 10,
-};
 
 function getValue(max, min, percentage) {
   return min + (max - min) * percentage;

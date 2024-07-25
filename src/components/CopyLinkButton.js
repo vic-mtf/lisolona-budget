@@ -11,7 +11,7 @@ export default function CopyLinkButton({ text, title, url, render }) {
 
   const value = useMemo(
     () => `${title}\n${text}\n${url}`.trim(),
-    [title, text, url],
+    [title, text, url]
   );
 
   const handleCopyLink = useCallback(
@@ -30,11 +30,11 @@ export default function CopyLinkButton({ text, title, url, render }) {
             setCopied(false);
           }, 2000);
         } catch (e) {
-          console.log("Error", e);
+          console.error("Error", e);
         }
       }
     },
-    [copied, value],
+    [copied, value]
   );
 
   useEffect(() => {
@@ -51,8 +51,7 @@ export default function CopyLinkButton({ text, title, url, render }) {
         <Button
           startIcon={copied ? <CheckOutlinedIcon /> : <ContentCopyIcon />}
           onClick={handleCopyLink}
-          fullWidth
-        >
+          fullWidth>
           {copied ? "Copié !" : "Copier"}
         </Button>
       )}

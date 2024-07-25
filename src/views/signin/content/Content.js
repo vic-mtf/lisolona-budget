@@ -17,7 +17,7 @@ export default function Content ({ refresh }) {
     const user = useMemo(() => decrypt(appStoreUser), 
         [appStoreUser]
     );
-    console.log(user);
+  
     const [
         {
             errorMessage,

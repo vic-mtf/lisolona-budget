@@ -8,7 +8,7 @@ import { setScreenSharingData } from "../../../../../redux/meeting";
 import { useData } from "../../../../../utils/DataProvider";
 import { useMeetingData } from "../../../../../utils/MeetingProvider";
 import store from "../../../../../redux/store";
-import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTC from "agora-rtc-react";
 import closeMediaStream from "../../../../../utils/closeMediaStream";
 import useClientState from "../../actions/useClientState";
 import { useSocket } from "../../../../../utils/SocketIOProvider";

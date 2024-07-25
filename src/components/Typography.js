@@ -1,13 +1,14 @@
 import { styled, Typography as MuiTypography } from "@mui/material";
 
-const Typography = styled(MuiTypography)(({theme}) => ({
-    //color: theme.palette.text.primary,
+const Typography = styled((props) => (
+  <MuiTypography
+    variant='body2'
+    component='div'
+    color='text.primary'
+    {...props}
+  />
+))(() => ({
+  //color: theme.palette.text.primary,
 }));
-
-Typography.defaultProps = {
-    variant: 'body2',
-    component: 'div',
-    color: 'text.primary'
-}
 
 export default Typography;

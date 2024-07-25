@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
 
-export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize, radius}) => {
+export const AudioVisualizer = React.memo(
+  ({ analyser, audioTrack, size = 200, maxSize = 300, radius = 10 }) => {
     const recRef = useRef();
     const requestAnimationFrameRef = useRef();
-  
+
     useEffect(() => {
-    if(!analyser && !audioTrack) return () => {};
+      if (!analyser && !audioTrack) return () => {};
       let bufferLength;
       let dataArray;
       if (analyser) {
@@ -13,8 +14,8 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
         bufferLength = analyser.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
       }
-      const {current: rect} = recRef;
-      
+      const { current: rect } = recRef;
+
       function renderFrame() {
         requestAnimationFrameRef.current = requestAnimationFrame(renderFrame);
         analyser?.getByteFrequencyData(dataArray);
@@ -24,9 +25,9 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
           volume = dataArray.reduce((acc, val) => acc + val, 0) / bufferLength;
           volume /= 255;
         }
-        if(audioTrack) volume = audioTrack?.getVolumeLevel()
+        if (audioTrack) volume = audioTrack?.getVolumeLevel();
         const rectSize = getValue(maxSize, size, volume);
-        const rectCoord = ( maxSize - rectSize ) / 2;
+        const rectCoord = (maxSize - rectSize) / 2;
         rect.setAttribute("width", rectSize);
         rect.setAttribute("height", rectSize);
         rect.setAttribute("x", rectCoord);
@@ -37,29 +38,21 @@ export const AudioVisualizer = React.memo(({analyser, audioTrack, size, maxSize,
         window.cancelAnimationFrame(requestAnimationFrameRef.current);
       };
     }, [analyser, size, maxSize, audioTrack]);
-  
+
     return (
-      <svg
-        height={maxSize}
-        width={maxSize}
-      >
-        <rect 
+      <svg height={maxSize} width={maxSize}>
+        <rect
           rx={radius}
-          fill="transparent" 
-          stroke="red"
+          fill='transparent'
+          stroke='red'
           ref={recRef}
           strokeWidth={2.5}
         />
       </svg>
     );
-  });
-  
-  AudioVisualizer.defaultProps = {
-    size: 200,
-    maxSize: 300,
-    radius: 10,
-  };
-
-  function getValue(max, min, percentage) {
-    return min + (max - min) * percentage;
   }
+);
+
+function getValue(max, min, percentage) {
+  return min + (max - min) * percentage;
+}

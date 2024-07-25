@@ -4,10 +4,8 @@ import compareArrays from "../../../../utils/compareArrays";
 
 export default function useClientState({ id, props = [], key = "state" }) {
   const [ClientStates, setClientStates] = useState(
-    handleGetUserState({ id, props, key }),
+    handleGetUserState({ id, props, key })
   );
-
-  console.log(ClientStates);
 
   useLayoutEffect(() => {
     const unsubscribe = store.subscribe(() => {

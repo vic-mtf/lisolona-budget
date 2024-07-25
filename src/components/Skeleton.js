@@ -1,14 +1,7 @@
-import { 
-    Skeleton, 
-    styled
-} from "@mui/material";
+import { Skeleton, styled } from "@mui/material";
 
-const CustomSkeleton = styled(Skeleton)(({theme}) => ({
-
-}));
-
-CustomSkeleton.defaultProps = {
-    animation: 'wave',
-};
+const CustomSkeleton = styled((props) => (
+  <Skeleton {...props} animation='wave' />
+))(() => ({}));
 
 export default CustomSkeleton;

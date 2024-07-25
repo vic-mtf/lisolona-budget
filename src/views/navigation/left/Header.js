@@ -44,7 +44,7 @@ export default function Header({
     (store) => store?.data?.notifications?.length,
   );
   const [scheduleMeeting, setScheduleMeeting] = useState(0);
-  console.log(scheduleMeeting);
+
   const onCallChange = useCallback(async () => {
     const calls = await db.calls.toArray();
     const scheduleCall = countScheduleMeeting(calls);

@@ -82,7 +82,6 @@ const conference = createSlice({
 
           if (index !== -1 && currentParticipant) {
             const currentParticipants = [...state.participants];
-            console.log(deepMerge(currentParticipant, participant));
             currentParticipants[index] = deepMerge(
               currentParticipant,
               participant

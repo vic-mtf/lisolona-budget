@@ -23,7 +23,7 @@ export default function useScheduledMeeting() {
   const signalAudio = useAudio(signal_src);
   const [, refetch] = useAxios(
     { headers: { Authorization: `Bearer ${token}` } },
-    { manual: true },
+    { manual: true }
   );
 
   useEffect(() => {
@@ -43,7 +43,6 @@ export default function useScheduledMeeting() {
         } catch (e) {}
       }
       if (data) {
-        console.log(data);
         const name = data?.room?.name;
         const title = data?.title;
         const imageUrl = data?.room?.imageUrl;
@@ -54,13 +53,13 @@ export default function useScheduledMeeting() {
         const addEmDash = (text) => (text ? ` — ${text}` : "");
 
         enqueueSnackbar(
-          <ListItem alignItems="flex-start" sx={{ p: 0 }} dense>
+          <ListItem alignItems='flex-start' sx={{ p: 0 }} dense>
             <ListItemAvatar>
               <AvatarStatus
                 mode={(mode) => (mode === "dark" ? "light" : mode)}
                 id={location}
                 avatarSrc={imageUrl}
-                type="room"
+                type='room'
                 invisible
                 name={name}
               />
@@ -82,9 +81,8 @@ export default function useScheduledMeeting() {
                 <React.Fragment>
                   <Typography
                     sx={{ display: "inline", color: "currentcolor" }}
-                    component="span"
-                    variant="body2"
-                  >
+                    component='span'
+                    variant='body2'>
                     {title}
                     {addEmDash(date)}
                   </Typography>
@@ -106,12 +104,11 @@ export default function useScheduledMeeting() {
                   });
                   root.dispatchEvent(customEvent);
                 }}
-                color="inherit"
-              >
+                color='inherit'>
                 Fermer
               </Button>
             ),
-          },
+          }
         );
       }
     };

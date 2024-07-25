@@ -55,7 +55,6 @@ const data = createSlice({
     modifyData(state, actions) {
       const cloneState = { ...state };
       modifyObject(cloneState, actions.payload);
-      console.log(JSON.parse(JSON.stringify(cloneState)));
       Object.keys(state).forEach((key) => {
         state[key] = cloneState[key];
       });
