@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import BoxGradient from "./components/BoxGradient";
@@ -7,51 +7,60 @@ import { decrypt } from "./utils/crypt";
 import { changeValues } from "./redux/user";
 import { setData } from "./redux/meeting";
 import scrollBarSx from "./utils/scrollBarSx";
+import store from "./redux/store";
+import { Box, Fade } from "@mui/material";
+import Cover from "./views/cover/Cover";
 
-const channel = new BroadcastChannel("_geid_sign_in_connection_channel");
+const CHANNEL = new BroadcastChannel("_GEID_SIGN_IN_CONNECTION");
 
 function App() {
-  const [startApp, setStartApp] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const user = useSelector((store) => store?.user);
-  const connected = useMemo(() => user?.connected, [user?.connected]);
+  const connected = useSelector((store) => store.user.connected);
   const dispatch = useDispatch();
-  const isStarted = useRef(true);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    let handleAutoConnexion;
-    if (!connected)
-      handleAutoConnexion = (event) => {
-        const { data } = event;
-        if (data) dispatch(changeValues(decrypt(data)));
-      };
-    else dispatch(setData({ data: { me: user } }));
-    channel.addEventListener("message", handleAutoConnexion);
-    return () => {
-      channel.removeEventListener("message", handleAutoConnexion);
+    let handleAutoConnection = (event) => {
+      const { data } = event;
+      if (data) dispatch(changeValues(decrypt(data)));
     };
-  }, [connected, dispatch, user]);
+    if (connected) dispatch(setData({ data: { me: store.getState().user } }));
+    CHANNEL.addEventListener("message", handleAutoConnection);
+    return () => CHANNEL.removeEventListener("message", handleAutoConnection);
+  }, [connected, dispatch]);
 
   return (
     <BoxGradient
       overflow='hidden'
+      display='relative'
       sx={{
         "& *": { ...scrollBarSx },
+        "& > div; & > div > div": {
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        },
       }}>
-      <RouterProvider
-        router={router(
-          {
-            connected,
-            loading,
-            startApp,
-            isStarted,
-          },
-          {
-            setLoading,
-            setStartApp,
-          }
-        )}
-      />
+      <Fade in={!loaded && connected} unmountOnExit>
+        <Box>
+          <Cover
+            setLoaded={setLoaded}
+            key={connected ? "connected" : "disconnected"}
+          />
+        </Box>
+      </Fade>
+      <Fade in={loaded || !connected} unmountOnExit>
+        <Box sx={{ display: connected && !loaded ? "none" : "flex" }}>
+          <RouterProvider router={router(connected)} />
+        </Box>
+      </Fade>
     </BoxGradient>
   );
 }

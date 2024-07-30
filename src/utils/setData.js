@@ -7,11 +7,11 @@ import { setMeetingData } from "../database/structureMeetingData";
 
 export default async function getData(
   { discussions = [], contacts = [], invitations = [], meetings = [] },
-  callback,
+  callback
 ) {
-  const functions = [setDiscussion, setContacts, setMeetingData];
-  const args = [[discussions], [contacts], [meetings]];
-  Promise.all(functions.map((fn, index) => fn(...args[index]))).then(() => {
-    if (typeof callback === "function") callback();
-  });
+  const setters = [setDiscussion, setContacts, setMeetingData];
+  const args = [discussions, contacts, meetings];
+  const values = await Promise.all(setters.map((fn, index) => fn(args[index])));
+  if (typeof callback === "function") callback(values);
+  return values;
 }

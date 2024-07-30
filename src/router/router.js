@@ -1,53 +1,55 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import AppTest from "../test/App.test";
-import Cover from "../views/cover/Cover";
 import Views from "../views/Views";
-import SignInPage from '../views/signin/SignInPage';
+import SignInPage from "../views/signin/SignInPage";
 import HomePage from "../views/home/HomePage";
-import Meeting from "../views/meeting/Meeting";
+// import Meeting from "../views/meeting/Meeting";
+import { createElement } from "react";
 
-const basename = process.env.PUBLIC_URL.trim();
+const PUBLIC_URL = process.env.PUBLIC_URL.trim();
 
-const protectedRoutes = (getters, setters) => [
-    {
-        element: getters?.isStarted?.current ? 
-        <Cover getters={getters} setters={setters}/> : <Views/>,
-        path:  '/*'
-    },
-];
-const unprotectedRouter = (getters, setters) => [
-    {
-        element: <Navigate to="/home"/>,
-        path: '/*',
-    },
-    {
-        element: <HomePage/>,
-        path:  '/home/*',
-    },
-    {
-        element: <SignInPage/>,
-        path:  '/account/signin/*',
-    },
+const PROTECTED_ROUTES = [
+  {
+    component: Views,
+    path: "/*",
+  },
 ];
 
-const publicsRoutes = () => [
-    {
-        element: <AppTest/>,
-        path: '/test',
+const UNPROTECTED_ROUTES = [
+  {
+    component: Navigate,
+    path: "/*",
+    props: {
+      to: "/home",
     },
-    {
-        element: <Meeting/> ,
-        path: '/meeting/*',
-    }
+  },
+  {
+    component: HomePage,
+    path: "/home/*",
+  },
+  {
+    component: SignInPage,
+    path: "/account/signin/*",
+  },
 ];
 
-const router = (getters, setters) => createBrowserRouter([
-    ...publicsRoutes(getters, setters),
-    ...getters.connected ? 
-    protectedRoutes(getters, setters) : 
-    unprotectedRouter(getters, setters)
-],{
-    basename,
-});
+const PUBLIC_ROUTES = [
+  //   {
+  //     component: Meeting,
+  //     path: "/meeting/*",
+  //   },
+];
+
+const router = (connected) => {
+  const routes = [
+    PUBLIC_ROUTES,
+    connected ? PROTECTED_ROUTES : UNPROTECTED_ROUTES,
+  ]
+    .flat()
+    .map(({ component, props, ...otherParams }) => ({
+      element: createElement(component, props),
+      ...otherParams,
+    }));
+  return createBrowserRouter(routes, { basename: PUBLIC_URL });
+};
 
 export default router;

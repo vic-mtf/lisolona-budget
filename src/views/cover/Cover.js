@@ -1,85 +1,54 @@
 import Box from "../../components/Box";
 import _lisolonabudget_logo from "../../assets/group_speak.webp";
-import {
-  CardMedia,
-  Stack,
-  Box as MuiBox,
-  CircularProgress,
-  Divider,
-} from "@mui/material";
+import { Stack, Box as MuiBox, CircularProgress, Divider } from "@mui/material";
 import Typography from "../../components/Typography";
 import "animate.css/source/attention_seekers/swing.css";
 import _logo_geid from "../../assets/geid_logo_blue_without_title.webp";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from "react";
-import useAxios, { axiosBase } from "../../utils/useAxios";
-import { useSelector } from "react-redux";
+import { useCallback } from "react";
+import useAxios from "../../utils/useAxios";
 import setData from "../../utils/setData";
 import db, { clearDatabase } from "../../database/db";
-import { useNavigate } from "react-router-dom";
-import { useTimer } from "react-timer-hook";
+import SwingAnimation from "../../components/Swin";
+import store from "../../redux/store";
+import useToken from "../../hooks/useToken";
+import PropTypes from "prop-types";
+export default function Cover({ setLoaded }) {
+  const Authorization = useToken();
 
-export default function Cover({ getters, setters }) {
-  const token = useSelector((store) => store.user.token);
-  const userId = useSelector((store) => store.user.id);
-  const navigateTo = useNavigate();
   const [{ loading }, refresh] = useAxios(
     {
       url: "/api/chat",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization },
     },
     { manual: true }
   );
-  const startApp = useMemo(() => getters.startApp, [getters.startApp]);
 
-  const handelLauncher = useCallback(async () => {
-    setters?.setLoading(false);
-    navigateTo("/");
-    getters.isStarted.current = false;
-  }, [setters, navigateTo, getters]);
-
-  const handleStartApp = useCallback(async () => {
-    const key = "a2f4c6d8e0b1f7a9c3e5d7b9f2a0c1e6";
-    const user = await db.user.get(key);
-    if (user && user?.userId !== userId) {
-      clearDatabase().then(() => {
-        window.location.reload();
-      });
-    } else if (user === undefined) await db.user.put({ id: key, userId });
-    try {
-      const { data } = await refresh();
-      const {
-        chats: discussions,
-        contacts,
-        invitations,
-        callHistory,
-      } = data || {};
-      setData({ discussions, userId, contacts, meetings: [] }, handelLauncher);
-    } catch (error) {
-      handelLauncher();
-    }
-  }, [handelLauncher, refresh, userId]);
-
-  useLayoutEffect(() => {
-    if (userId && startApp) handleStartApp();
-  }, [userId, startApp, handleStartApp]);
-
-  useTimer({
-    expiryTimestamp: (() => {
-      const time = new Date();
-      time.setMilliseconds(2800);
-      return time;
-    })(),
-    onExpire() {
-      if (!startApp) setters.setStartApp(true);
+  const handleDataApp = useCallback(
+    async (userId) => {
+      const key = "a2f4c6d8e0b1f7a9c3e5d7b9f2a0c1e6";
+      const user = await db.user.get(key);
+      console.log(user);
+      if (user && user?.userId !== userId)
+        clearDatabase().then(() => window.location.reload());
+      if (!user) await db.user.put({ id: key, userId });
+      try {
+        const response = await refresh();
+        const {
+          chats: discussions,
+          contacts,
+          // invitations,
+          // callHistory,
+        } = response.data || {};
+        const { data } = await refresh({ url: "/api/chat/room/call/" });
+        const meetings = data?.meetings || [];
+        await setData({ discussions, userId, contacts, meetings });
+      } catch (error) {
+        console.error(error);
+      }
+      setLoaded(true);
     },
-  });
-  useGetCalls();
+    [setLoaded, refresh]
+  );
 
   return (
     <Box
@@ -99,16 +68,23 @@ export default function Cover({ getters, setters }) {
         alignItems='center'
         flex={1}
         spacing={1}>
-        <img
-          src={_lisolonabudget_logo}
-          draggable={false}
-          style={{
-            height: 100,
-            width: 100,
-            animation: "swing .5s 1s",
-            aspectRatio: 1,
-          }}
-        />
+        <SwingAnimation
+          delay={2}
+          onFinish={() => {
+            handleDataApp(store.getState().user?.id);
+          }}>
+          <img
+            src={_lisolonabudget_logo}
+            draggable={false}
+            alt='lisolo na budget'
+            style={{
+              height: 100,
+              width: 100,
+              aspectRatio: 1,
+            }}
+          />
+        </SwingAnimation>
+
         <MuiBox
           display='flex'
           justifyContent='center'
@@ -132,7 +108,7 @@ export default function Cover({ getters, setters }) {
             }
             display='flex'
             justifyContent='center'>
-            <CardMedia component='img' src={_logo_geid} sx={{ width: 120 }} />
+            <img alt='geid-budget' src={_logo_geid} width={120} />
             <Typography noWrap variant='h4'>
               Lisolo Na Budget
             </Typography>
@@ -150,7 +126,7 @@ export default function Cover({ getters, setters }) {
           )}
         </MuiBox>
       </Stack>
-      <Typography variant='caption' paragraph>
+      <Typography variant='caption' paragraph p={2}>
         Direction Archives et Nouvelles Technologie de l'Information et de la
         Communication ©2022
       </Typography>
@@ -158,20 +134,6 @@ export default function Cover({ getters, setters }) {
   );
 }
 
-const useGetCalls = () => {
-  const token = useSelector((store) => store.user.token);
-  const loadingRef = useRef(true);
-  useEffect(() => {
-    if (token && loadingRef.current) {
-      loadingRef.current = false;
-      axiosBase
-        .get("/api/chat/room/call/", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then(({ data: meetings }) => {
-          setData({ meetings });
-        })
-        .catch((err) => {});
-    }
-  }, [token]);
+Cover.propTypes = {
+  setLoaded: PropTypes.func.isRequired,
 };

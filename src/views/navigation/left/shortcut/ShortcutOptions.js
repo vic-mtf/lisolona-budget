@@ -27,7 +27,7 @@ export default function ShortcutOptions() {
         .orderBy("createdAt")
         .filter(({ type }) => type === "room")
         .toArray(),
-    [],
+    []
   );
 
   const target = useSelector((store) => store?.data?.target);
@@ -37,22 +37,20 @@ export default function ShortcutOptions() {
     <React.Fragment>
       <ContactListForm />
       <Toolbar
-        variant="dense"
+        variant='dense'
         disableGutters
-        sx={{ display: "flex", justifyContent: "center", mb: 2 }}
-      >
+        sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
         <AvatarProfile />
       </Toolbar>
       <Stack
-        display="flex"
+        display='flex'
         flex={1}
-        alignItems="center"
+        alignItems='center'
         spacing={1}
-        overflow="hidden"
-      >
+        overflow='hidden'>
         <Tabs
-          orientation="vertical"
-          variant="scrollable"
+          orientation='vertical'
+          variant='scrollable'
           value={0}
           sx={{
             [`& .MuiTabs-indicator`]: {
@@ -61,8 +59,7 @@ export default function ShortcutOptions() {
           }}
           TabScrollButtonProps={{
             sx: { height: 10 },
-          }}
-        >
+          }}>
           {groups
             ?.map((group, index) => (
               <Tab
@@ -74,11 +71,10 @@ export default function ShortcutOptions() {
                       addData({
                         key: "target",
                         data: JSON.parse(JSON.stringify(group)),
-                      }),
+                      })
                     );
                   },
-                }}
-              >
+                }}>
                 <ShortcutAvatar
                   name={group?.name}
                   alt={group?.name}
@@ -95,7 +91,7 @@ export default function ShortcutOptions() {
           [0, 1, 2, 4, 5, 6, 7, 8].map((key) => (
             <CustomSkeleton
               key={key}
-              variant="rounded"
+              variant='rounded'
               sx={{
                 borderRadius: 2,
                 width: 42,
@@ -104,42 +100,43 @@ export default function ShortcutOptions() {
             />
           ))
         ) : (
-          <Tooltip title="Créer nouveau Lisanga" arrow placement="right-start">
-            <IconButton
-              onClick={() => {
-                const name = "_auto_open_create_group";
-                const customEvent = new CustomEvent(name, {
-                  detail: { name, mode: "group" },
-                });
-                document.getElementById("root").dispatchEvent(customEvent);
-              }}
-            >
-              <GroupAddOutlinedIcon fontSize="small" />
-            </IconButton>
+          <Tooltip title='Créer nouveau Lisanga' arrow placement='right-start'>
+            <div>
+              <IconButton
+                onClick={() => {
+                  const name = "_auto_open_create_group";
+                  const customEvent = new CustomEvent(name, {
+                    detail: { name, mode: "group" },
+                  });
+                  document.getElementById("root").dispatchEvent(customEvent);
+                }}>
+                <GroupAddOutlinedIcon fontSize='small' />
+              </IconButton>
+            </div>
           </Tooltip>
         )}
       </Stack>
       <Toolbar
-        variant="dense"
+        variant='dense'
         disableGutters
-        sx={{ display: "flex", justifyContent: "center" }}
-      >
+        sx={{ display: "flex", justifyContent: "center" }}>
         <Stack spacing={1} my={2}>
-          <Tooltip title="Paramètre" arrow placement="right-start">
+          <Tooltip title='Paramètre' arrow placement='right-start'>
             <div>
               <IconButton disabled>
-                <SettingsOutlinedIcon fontSize="small" />
+                <SettingsOutlinedIcon fontSize='small' />
               </IconButton>
             </div>
           </Tooltip>
-          <Tooltip title="Sortir" arrow placement="right-start">
-            <IconButton
-              LinkComponent="a"
-              href="/"
-              onClick={() => window.close()}
-            >
-              <ExitToAppOutlinedIcon fontSize="small" />
-            </IconButton>
+          <Tooltip title='Sortir' arrow placement='right-start'>
+            <div>
+              <IconButton
+                LinkComponent='a'
+                href='/'
+                onClick={() => window.close()}>
+                <ExitToAppOutlinedIcon fontSize='small' />
+              </IconButton>
+            </div>
           </Tooltip>
         </Stack>
       </Toolbar>

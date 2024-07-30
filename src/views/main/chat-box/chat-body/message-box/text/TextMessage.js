@@ -25,12 +25,13 @@ export default function TextMessage({
   );
 
   useLayoutEffect(() => {
-    const rootHeight = parseInt(
-      window.getComputedStyle(rootRef.current).height
-    );
-    const show = rootHeight >= MAX_HEIGHT * moreStep;
-    if (show && !showMore) setShowMore(show);
-    if (!show && showMore) setShowMore(show);
+    const root = rootRef?.current;
+    if (root) {
+      const rootHeight = parseFloat(window.getComputedStyle(root).height);
+      const show = rootHeight >= MAX_HEIGHT * moreStep;
+      if (show && !showMore) setShowMore(show);
+      if (!show && showMore) setShowMore(show);
+    }
   }, [showMore, moreStep]);
 
   return (
@@ -83,7 +84,7 @@ export default function TextMessage({
                   position: "relative",
                   top: "-2.5px",
                 }}>
-                voir plus...
+                Voir plus...
               </Button>
             )}
           </MuiBox>

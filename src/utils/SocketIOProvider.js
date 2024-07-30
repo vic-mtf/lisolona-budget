@@ -21,7 +21,7 @@ export default function SocketIOProvider({
   const socket = useMemo(
     () =>
       OPENER_SOCKET || (token ? io(`${url}?token=${token}`, options) : null),
-    [token, url, defaultToken, options]
+    [token, url, options]
   );
 
   useEffect(() => {

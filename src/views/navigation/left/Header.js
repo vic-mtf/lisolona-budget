@@ -6,6 +6,7 @@ import {
   ThemeProvider,
   Toolbar,
   Tooltip,
+  Divider,
 } from "@mui/material";
 import React, {
   useEffect,
@@ -19,9 +20,10 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import Typography from "../../../components/Typography";
-import IconButton from "../../../components/IconButton";
+import geid_logo from "../../../assets/geid_logo_white_without_title.webp";
+// import IconButton from "../../../components/IconButton";
 import appConfig from "../../../configs/app-config.json";
-import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+// import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import MoreOption from "./shortcut/MoreOption";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
@@ -39,9 +41,9 @@ export default function Header({
   onChangeSearch,
 }) {
   const [anchor, setAnchor] = useState(null);
-  const anchorEl = useRef();
+  // const anchorEl = useRef();
   const notificationsNumber = useSelector(
-    (store) => store?.data?.notifications?.length,
+    (store) => store?.data?.notifications?.length
   );
   const [scheduleMeeting, setScheduleMeeting] = useState(0);
 
@@ -75,7 +77,7 @@ export default function Header({
         nbr: notificationsNumber || 0,
       },
     ],
-    [notificationsNumber, scheduleMeeting],
+    [notificationsNumber, scheduleMeeting]
   );
 
   useEffect(() => {
@@ -89,39 +91,49 @@ export default function Header({
   return (
     <React.Fragment>
       <ThemeProvider theme={createTheme({ palette: { mode: "dark" } })}>
-        <Toolbar variant="dense" sx={{ bgcolor: appConfig.colors.main }}>
+        <Toolbar
+          variant='dense'
+          sx={{ bgcolor: appConfig.colors.main, py: 0.5 }}>
+          <img alt='geid-logo' src={geid_logo} width={80} />
+          <Divider
+            flexItem
+            orientation='vertical'
+            variant='middle'
+            sx={{
+              bgcolor: "text.primary",
+              borderWidth: 1,
+              mx: 1,
+            }}
+          />
           <Typography
             flexGrow={1}
             fontSize={18}
-            fontWeight="bold"
-            variant="h6"
+            //fontWeight='bold'
+            variant='h6'
             noWrap
-            component="div"
-            color="text.primary"
-          >
+            component='div'
+            color='text.primary'>
             Lisolo Na Budget
           </Typography>
-          <Tooltip title="Plus d'options" arrow>
+          {/* <Tooltip title="Plus d'options" arrow>
             <div>
               <IconButton
-                aria-label="more"
+                aria-label='more'
                 disabled
                 ref={anchorEl}
-                onClick={() => setAnchor(anchorEl?.current)}
-              >
-                <MoreVertOutlinedIcon fontSize="small" />
+                onClick={() => setAnchor(anchorEl?.current)}>
+                <MoreVertOutlinedIcon fontSize='small' />
               </IconButton>
             </div>
-          </Tooltip>
+          </Tooltip> */}
         </Toolbar>
       </ThemeProvider>
-      <Toolbar variant="dense">
+      <Toolbar variant='dense'>
         <BottomNavigation
           showLabels
           value={navigation}
           sx={{ width: "100%", my: 1 }}
-          onChange={onChangeNavigation}
-        >
+          onChange={onChangeNavigation}>
           {navigationOptions.map((nav, index) => (
             <BottomNavigationAction
               label={
@@ -130,7 +142,7 @@ export default function Header({
                 </LabelSignalActive>
               }
               icon={
-                <StyledBadge color="primary" badgeContent={nav.nbr}>
+                <StyledBadge color='primary' badgeContent={nav.nbr}>
                   {nav.icon}
                 </StyledBadge>
               }
@@ -150,7 +162,7 @@ const Label = ({ children, active }) => {
     <Typography
       color={active ? "bacground.primary" : "text.primary"}
       fontSize={10}
-      variant="caption"
+      variant='caption'
       children={children}
     />
   );
@@ -182,8 +194,7 @@ const LabelSignalActive = ({ children, activeKey }) => {
     <CustomBadge
       variant={active ? "dot" : undefined}
       online={active}
-      active={active}
-    >
+      active={active}>
       {children}
     </CustomBadge>
   );
