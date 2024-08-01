@@ -9,7 +9,7 @@ import { Fade, Box as MuiBox } from "@mui/material";
 import AutoScrollDown, { MAX_OFFSET } from "./AutoScrollDown";
 import MessageGroupBoxByDate from "./MessageGroupBoxByDate";
 import { useSelector } from "react-redux";
-import { useData } from "../../../../../utils/DataProvider";
+
 import dbConfig from "../../../../../configs/database-config.json";
 import ProgressiveScrollingContainer from "./ProgressiveScrollingContainer";
 import replaceObjects from "../../../../../utils/replaceObjects";
@@ -21,7 +21,7 @@ function MessageContent({ rootRef: _rootRef, target, media }) {
   const rootRef = useRef();
   const isScrollableRef = useRef(false);
   const userId = useSelector((store) => store.user.id);
-  const [{ messagesRef }] = useData();
+  const [{ messagesRef }] useLocalStoreData();
 
   const subMessages = useMemo(() => {
     const data = messagesRef?.current[target?.id] || {

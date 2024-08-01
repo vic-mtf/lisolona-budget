@@ -1,9 +1,9 @@
 import store from "../../../redux/store";
-import { useData } from "../../../utils/DataProvider";
+
 import { useMeetingData } from "../../../utils/MeetingProvider";
 
 export default function useJoinedAndPublishedLocalClient () {
-    const [{client}] = useData();
+    const [{client}] useLocalStoreData();
     const [{localTrackRef}] = useMeetingData();
     const handleUserJoinedAndPublished = async ({APP_ID, TOKEN, CHANEL, uid}, published = true) => {
         const data = {};

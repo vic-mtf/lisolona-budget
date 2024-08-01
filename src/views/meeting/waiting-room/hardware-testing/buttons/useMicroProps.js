@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMeetingData } from "../../../../../utils/MeetingProvider";
-import { useData } from "../../../../../utils/DataProvider";
+
 import { setMicroData } from "../../../../../redux/meeting";
 import store from "../../../../../redux/store";
 import AgoraRTC from "agora-rtc-react";
@@ -16,7 +16,7 @@ export default function useMicroProps() {
   const micro = useSelector((store) => store.meeting.micro);
   const [permission, setPermission] = useState(null);
   // const [{localTrackRef}] = useMeetingData();
-  const [{ audioStreamRef }] = useData();
+  const [{ audioStreamRef }] useLocalStoreData();
 
   const handleDispatchAllowed = useCallback((allowed) => {
     store.dispatch(setMicroData({ data: { allowed } }));

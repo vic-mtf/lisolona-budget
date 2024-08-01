@@ -3,7 +3,7 @@ import { Stack, Tooltip } from "@mui/material";
 import IconButton from "../../../../../components/IconButton";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import LoadingIndicator from "./LoadingIndicator";
-import { useSocket } from "../../../../../utils/SocketIOProvider";
+import useSocket from "../../../../../hooks/useSocket";
 import CustomZoom from "../../../../../components/CustomZoom";
 import store from "../../../../../redux/store";
 

@@ -1,99 +1,96 @@
 {
-    "name": "__ROOT_GEID_DATABASE_LISOLONABUDGET_APP",
-    "version": 1,
-    "options": {
-        "allowEmptyDB": true
+  "name": "__ROOT_GEID_DATABASE_LISOLONABUDGET_APP",
+  "version": 1,
+  "options": {
+    "allowEmptyDB": true
+  },
+  "stores": [
+    {
+      "name": "discussions",
+      "keys": [
+        "id",
+        "targetId",
+        "name",
+        "members",
+        "createdBy",
+        "lastNotice",
+        "description",
+        "avatarSrc",
+        "avatarBuffer",
+        "type",
+        "updatedAt",
+        "createdAt",
+        "origin"
+      ]
     },
-    "stores": [
-        {
-            "name": "discussions",
-            "keys": [
-                "id", 
-                "targetId",
-                "name", 
-                "members",
-                "createdBy",
-                "lastNotice",
-                "description",
-                "avatarSrc",
-                "avatarBuffer",
-                "type",
-                "updatedAt",
-                "createdAt",
-                "origin"
-            ]
-        },
-        {
-            "name": "messages",
-            "keys": [
-                "id",
-                "sended",
-                "type",
-                "content",
-                "buffer",
-                "targetId",
-                "isMine",
-                "timeout",
-                "remoteId",
-                "refId",
-                "read",
-                "status",
-                "subType",
-                "updatedAt",
-                "createdAt",
-                "avatarSrc",
-                "avatarBuffer",
-                "localId",
-                "origin",
-                "cover",
-                "numPages"
-            ]
-        },
-        {
-            "name": "contacts",
-            "keys": [
-                "id",
-                "name",
-                "email",
-                "grade",
-                "avatarSrc",
-                "avatarBuffer",
-                "role",
-                "firstName",
-                "lastName",
-                "middleName",
-                "origin",
-                "updatedAt"
-            ]
-        },
-        {
-            "name": "calls",
-            "keys": [
-                "id",
-                "status",
-                "createdBy",
-                "title",
-                "name",
-                "description",
-                "duration",
-                "updatedAt",
-                "isMine",
-                "options",
-                "location",
-                "createdAt",
-                "startedAt",
-                "origin",
-                "avatarSrc",
-                "avatarBuffer",
-                "members"
-            ]
-        },
-        {
-            "name": "user",
-            "keys": [
-                "id",
-                "userId"
-            ]
-        }
-    ]
+    {
+      "name": "messages",
+      "keys": [
+        "id",
+        "sended",
+        "type",
+        "content",
+        "buffer",
+        "targetId",
+        "isMine",
+        "timeout",
+        "remoteId",
+        "refId",
+        "read",
+        "status",
+        "subType",
+        "updatedAt",
+        "createdAt",
+        "avatarSrc",
+        "avatarBuffer",
+        "localId",
+        "origin",
+        "cover",
+        "numPages"
+      ]
+    },
+    {
+      "name": "contacts",
+      "keys": [
+        "id",
+        "name",
+        "email",
+        "grade",
+        "avatarSrc",
+        "avatarBuffer",
+        "role",
+        "firstName",
+        "lastName",
+        "middleName",
+        "origin",
+        "updatedAt"
+      ]
+    },
+    {
+      "name": "calls",
+      "keys": [
+        "id",
+        "status",
+        "createdBy",
+        "title",
+        "name",
+        "description",
+        "duration",
+        "updatedAt",
+        "isMine",
+        "options",
+        "location",
+        "createdAt",
+        "startedAt",
+        "origin",
+        "avatarSrc",
+        "avatarBuffer",
+        "members"
+      ]
+    },
+    {
+      "name": "user",
+      "keys": ["id", "userId"]
+    }
+  ]
 }

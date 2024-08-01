@@ -5,10 +5,6 @@ const BoxGradient = styled(Box, {
 })(({ colors = ["#0095c940", "#fff24b40", "#db383240"] }) => ({
   display: "flex",
   flex: 1,
-  height: "100%",
-  width: "100%",
-  justifyContent: "center",
-  alignItems: "center",
   overflow: "hidden",
   flexDirection: "column",
   background: colors

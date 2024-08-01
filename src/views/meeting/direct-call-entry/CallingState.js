@@ -9,7 +9,7 @@ import getShort from "../../../utils/getShort";
 import useRinging from "./answers/useRinging";
 import useBusy from "./answers/useBusy";
 import useDisconnect from "./answers/useDisconnect";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import useJoin from "./answers/useJoin";
 
 export default function CallingState({ callState, setCallState }) {

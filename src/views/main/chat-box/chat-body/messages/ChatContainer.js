@@ -5,10 +5,10 @@ import {
 import MessageList from './MessageList';
 import FloatingDate from './FloatingDate';
 import FabButton from './FabButton';
-import { useData } from '../../../../../utils/DataProvider';
+
 
 const ChatContainer = ({target}) => {
-    const [{messagesRef}] = useData();
+    const [{messagesRef}] useLocalStoreData();
     const [messages, setMessages] = useState(messagesRef.current[target.id]?.messages?.slice(0, 15).reverse() || []);
     const [newMessagesCount, setNewMessagesCount] = useState(0);
     const [isAtBottom, setIsAtBottom] = useState(true);

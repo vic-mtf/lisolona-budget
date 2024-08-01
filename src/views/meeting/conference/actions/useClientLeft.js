@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { findUser } from "../../../../utils/MeetingProvider";
-import { useSocket } from "../../../../utils/SocketIOProvider";
-import useAudio from "../../../../utils/useAudio";
+import useSocket from "../../../../hooks/useSocket";
+import useAudio from "../../../../hooks/useAudio";
 import signal_src from "../../../../assets/iPhone-Msg-Sent.webm";
 import useCustomSnackbar from "../../../../components/useCustomSnackbar";
 import { isBoolean } from "lodash";
-import useTableRef from "../../../../utils/useTableRef";
+import useTableRef from "../../../../hooks/useTableRef";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import IconButton from "../../../../components/IconButton";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -42,7 +42,7 @@ export default function useClientLeft() {
               invisible
               name={name}
               id={id}
-              type="direct"
+              type='direct'
               sx={{
                 width: 30,
                 height: 30,
@@ -53,11 +53,10 @@ export default function useClientLeft() {
           action: (
             <Stack
               spacing={1}
-              direction="row"
-              display="flex"
-              justifyContent="center"
-              alignContent="center"
-            >
+              direction='row'
+              display='flex'
+              justifyContent='center'
+              alignContent='center'>
               <IconButton disableTouchRipple>
                 <AnimatedWavingHand />
               </IconButton>

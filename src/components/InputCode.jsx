@@ -78,8 +78,7 @@ export default function InputCode({
             autoFocus={!readOnly && value === ""}
             value={value}
             sx={{
-              fontWeight: "bold",
-              fontSize: (10 * size) / 20,
+              fontSize: (10 * size) / 25,
               width: size,
               height: size,
               justifyContent: "center",
@@ -87,7 +86,8 @@ export default function InputCode({
               display: "flex",
               "& input": {
                 textAlign: "center",
-                lineHeight: "2em",
+                lineHeight: "1em",
+                p: 0.25,
               },
             }}
           />
@@ -101,6 +101,8 @@ export default function InputCode({
       display='flex'
       gap={0.5}
       sx={{
+        justifyContent: "center",
+        alignItems: "center",
         flexDirection: {
           xs: length <= 6 ? "rom" : "column",
           md: "row",
@@ -108,7 +110,7 @@ export default function InputCode({
       }}>
       <Stack
         direction='row'
-        spacing={0.5}
+        spacing={0.1}
         ref={rootRef}
         display='flex'
         flex={1}>

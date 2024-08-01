@@ -14,23 +14,23 @@ const useTheme = () => {
   );
 
   const { main, paper, ...otherKey } = useMemo(
-    () => appConfig.colors.primary[mode],
+    () => appConfig.colors.primary[mode || 'dark'],
     [mode]
   );
-
-  return createTheme({
+  
+  const theme = useMemo(() =>  createTheme({
     palette: {
       mode,
-      primary: {
-        main: main || appConfig.colors.main,
-      },
+      primary: { main  },
       background: { ...otherKey, paper },
     },
     customOptions: {
       opacity: Math.round(255 * opacity).toString(16),
       blur: `${blur}px`,
     },
-  });
+  }), [mode, main, paper, opacity, blur, otherKey])
+
+  return theme;
 };
 
 export default useTheme;

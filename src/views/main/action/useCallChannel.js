@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useData } from "../../../utils/DataProvider";
+
 import { useDispatch } from "react-redux";
 import { setData } from "../../../redux/meeting";
 import { useMemo } from "react";
 
 export default function useCallChannel() {
-  const [{ secretCode }] = useData();
+  const [{ secretCode }] useLocalStoreData();
   const dispatch = useDispatch();
 
   const channel = useMemo(

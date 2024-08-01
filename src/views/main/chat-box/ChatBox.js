@@ -5,14 +5,14 @@ import ChatFooter from "./chat-footer/ChatFooter";
 import Box from "../../../components/Box";
 import { useSelector } from "react-redux";
 // import ChatArea from './chat-area/ChatArea';
-import { useData } from "../../../utils/DataProvider";
+
 // import { useMemo } from 'react';
 
 export const MESSAGE_CHANNEL = document.createElement("div");
 
 export default function ChatBox() {
   const target = useSelector((store) => store?.data?.target);
-  const [{ messagesRef }] = useData();
+  const [{ messagesRef }] useLocalStoreData();
   // const messages = useMemo(() =>
   //     messagesRef.current[target?.id]?.messages,
   //     [target, messagesRef]

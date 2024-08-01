@@ -1,9 +1,9 @@
 
-import { useData } from "../../../../utils/DataProvider";
+
 import getServerUri from "../../../../utils/getServerUri";
 
 export default function useSendFiles ({target, }) {
-    const [{downloadsRef}] = useData();
+    const [{downloadsRef}] useLocalStoreData();
 
     return function sendFiles({group}) {
         const xhr = new XMLHttpRequest();

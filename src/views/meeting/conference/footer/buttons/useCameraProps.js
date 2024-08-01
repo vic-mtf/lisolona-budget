@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMeetingData } from "../../../../../utils/MeetingProvider";
-import { useData } from "../../../../../utils/DataProvider";
+
 import { setCameraData } from "../../../../../redux/meeting";
 import store from "../../../../../redux/store";
 import AgoraRTC from "agora-rtc-react";
@@ -16,7 +16,7 @@ export default function useCameraProps() {
   const { enqueueCustomSnackbar, closeCustomSnackbar } = useCustomSnackbar();
   const [loading, setLoading] = useState(false);
   const [permission, setPermission] = useState(null);
-  const [{ videoStreamRef, client }] = useData();
+  const [{ videoStreamRef, client }] useLocalStoreData();
   const [{ localTrackRef }] = useMeetingData();
   const dispatch = useDispatch();
 

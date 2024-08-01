@@ -19,14 +19,14 @@ import hasCommonElement from '../../../../../../utils/hasCommonElement';
 import humanReadableSize from '../../../../../../utils/humanReadableSize';
 import bull from './bull';
 import getFileNameAndExtension from './getFileNameAndExtension';
-import { useData } from '../../../../../../utils/DataProvider';
+
 import DownloadLevel from './DownloadLevel';
 import DocMessageActions from './DocMessageActions';
 import { useTheme } from '@emotion/react';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 
 export default function DocMessage ({type:typeMIME, bgcolor, buffer:bf, content, id, cover, sended, numPages, isMine}) {
-    const [{downloadsRef}] = useData();
+    const [{downloadsRef}] useLocalStoreData();
     const [download, setDownload] = useState(null);
     const [buffer, setBuffer] = useState(bf);
     const [infos, setInfos] = useState({

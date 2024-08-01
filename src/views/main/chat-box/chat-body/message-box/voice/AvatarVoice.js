@@ -4,7 +4,7 @@ import CustomBadge from "../../../../../../components/CustomBadge";
 import Avatar from "../../../../../../components/Avatar";
 import getShort from "../../../../../../utils/getShort";
 import { useMemo } from "react";
-import { AudioVisualizer } from "../../../../../../utils/AudioVisualizer";
+import { AudioVisualizer } from "../../../../../../components/AudioVisualizer";
 
 export default function AvatarVoice ({name, avatarSrc, id}) {
     const theme = useTheme();

@@ -7,12 +7,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import Button from "../../../components/Button";
-import useAxios from "../../../utils/useAxios";
+import useAxios from "../../../hooks/useAxios";
 import AvatarStatus from "../../../components/AvatarStatus";
 import signal_src from "../../../assets/Samsung-Wing-SMS.webm";
-import useAudio from "../../../utils/useAudio";
+import useAudio from "../../../hooks/useAudio";
 import setData from "../../../utils/setData";
 import formatDates from "../../../utils/formatDates";
 

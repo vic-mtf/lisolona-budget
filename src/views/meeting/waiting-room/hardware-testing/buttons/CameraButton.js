@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import getPermission from '../../../../../utils/getPermission';
 import { setCameraData } from '../../../../../redux/meeting';
-import { useData } from '../../../../../utils/DataProvider';
+
 import IconButton from '../../../../../components/IconButton';
 import { toggleStreamActivation } from '../../../../home/checking/FooterButtons';
 import store from '../../../../../redux/store';
@@ -18,7 +18,7 @@ export default function CameraButton ({handleCheckErrors}) {
     const camera = useSelector(store => store.meeting.camera);
     const { enqueueCustomSnackbar, closeCustomSnackbar} = useCustomSnackbar();
     const [permission, setPermission] = useState(null);
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef}] useLocalStoreData();
     const dispatch = useDispatch();
     const [hasDevice, setHasDevice] = useState(true);
  

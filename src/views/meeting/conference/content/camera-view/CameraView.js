@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import Client from '../participant/Client';
 import { useMeetingData } from '../../../../../utils/MeetingProvider';
 import { useLayoutEffect } from 'react';
-import { useData } from '../../../../../utils/DataProvider';
+
 import { useRef } from 'react';
 
 export default function CameraView ({mode}) {
@@ -14,7 +14,7 @@ export default function CameraView ({mode}) {
     const micro = useSelector(store => store.meeting.micro);
     const user = useSelector(store => store.meeting.me);
     const [{localTrackRef}] = useMeetingData();
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef}] useLocalStoreData();
     const videoRef = useRef();
 
     useLayoutEffect(() => {

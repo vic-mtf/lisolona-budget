@@ -1,14 +1,15 @@
 @font-face {
   font-family: Calibri;
-  src: url('../assets/calibri_regular.ttf');
+  src: url("../assets/calibri_regular.ttf");
 }
 @font-face {
   font-family: "noto emoji";
-  src: url('../assets/noto_emoji_regular.ttf');
+  src: url("../assets/noto_emoji_regular.ttf");
 }
 
-html{
+html {
   background: #eee5;
+  margin: 0;
 }
 body {
   margin: 0;
@@ -18,46 +19,45 @@ body {
 }
 
 #root {
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
   display: flex;
   flex: 1;
 }
 
 @keyframes rgb-grandient {
   0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes linearGradientMove {
   100% {
-      background-position: 4px 0, -4px 100%, 0 -4px, 100% 4px;
+    background-position: 4px 0, -4px 100%, 0 -4px, 100% 4px;
   }
 }
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   appearance: textfield;
 }
 
 /* Chrome */
 input::-webkit-inner-spin-button,
-input::-webkit-outer-spin-button { 
--webkit-appearance: none;
-margin:0;
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Opéra*/
 input::-o-inner-spin-button,
-input::-o-outer-spin-button { 
--o-appearance: none;
-margin:0
+input::-o-outer-spin-button {
+  -o-appearance: none;
+  margin: 0;
 }
 /* width */
 
@@ -72,7 +72,7 @@ margin:0
 }
 
 @property --angle {
-  syntax: '<angle>';
+  syntax: "<angle>";
   initial-value: 90deg;
   inherits: true;
 }

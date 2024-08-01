@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import useAxios from "../../../utils/useAxios";
+import useAxios from "../../../hooks/useAxios";
 import { useCallback } from "react";
 import store from "../../../redux/store";
 import { setData } from "../../../redux/meeting";
 import setGlobalData from "../../../utils/setData";
 import useJoinedAndPublishedLocalClient from "./useJoinedAndPublishedLocalClient";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import { addParticipants } from "../../../redux/conference";
 import { isPlainObject } from "lodash";
 
@@ -13,7 +13,7 @@ export default function useJoinMeeting() {
   const token = useSelector((store) => store.user.token);
   const [, refetch] = useAxios(
     { headers: { Authorization: `Bearer ${token}` } },
-    { manual: true },
+    { manual: true }
   );
 
   const handleUserJoined = useJoinedAndPublishedLocalClient();
@@ -27,7 +27,7 @@ export default function useJoinMeeting() {
       if (isPlainObject(meetingData)) {
         const id = store.getState().user?.id;
         const uid = meetingData?.participants?.find(
-          ({ identity: { _id } }) => _id === id,
+          ({ identity: { _id } }) => _id === id
         )?.uid;
         const options = meetingData?.callDetails;
         const {
@@ -50,7 +50,7 @@ export default function useJoinMeeting() {
                     }
                   : participant.state,
             })),
-          }),
+          })
         );
 
         if (client !== "guest") {
@@ -74,7 +74,7 @@ export default function useJoinMeeting() {
       }
       return meetingData;
     },
-    [refetch, handleUserJoined, socket],
+    [refetch, handleUserJoined, socket]
   );
   return handleJoinMeetingRequest;
 }

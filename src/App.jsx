@@ -34,18 +34,18 @@ function App() {
       display='relative'
       sx={{
         "& *": { ...scrollBarSx },
-        "& > div; & > div > div": {
-          width: "100%",
-          height: "100%",
+        "& > div": {
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           flex: 1,
           position: "absolute",
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
+        },
+        "& > div > div": {
+          display: "flex",
+          flex: 1,
         },
       }}>
       <Fade in={!loaded && connected} unmountOnExit>

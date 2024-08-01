@@ -1,6 +1,5 @@
-import { useSocket } from "../../../../utils/SocketIOProvider";
+import useSocket from "../../../../hooks/useSocket";
 
-export default function useSignal () {
-   const socket = useSocket();
-   
+export default function useSignal() {
+  const socket = useSocket();
 }

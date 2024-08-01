@@ -6,15 +6,15 @@ import { useSelector } from "react-redux";
 import React, { useCallback, useMemo } from "react";
 import Menu from "../../../../../components/Menu";
 import { useState, useRef } from "react";
-import { useData } from "../../../../../utils/DataProvider";
-import { useSocket } from "../../../../../utils/SocketIOProvider";
+
+import useSocket from "../../../../../hooks/useSocket";
 import options from "./options";
 
 export default function CallButton({ target, theme }) {
   const mode = useSelector((store) => store.meeting?.mode);
   const socket = useSocket();
   const disabled = useMemo(() => mode !== "none", [mode]);
-  const [{ secretCode }] = useData();
+  const [{ secretCode }] useLocalStoreData();
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElRef = useRef();
 

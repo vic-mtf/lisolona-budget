@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import getPermission from '../../../utils/getPermission';
 import { setCameraData } from '../../../redux/meeting';
-import { useData } from '../../../utils/DataProvider';
+
 import { toggleStreamActivation } from './FooterButtons';
 
 export default function CameraButton ({getVideoStream}) {
     const camera = useSelector(store => store.meeting.camera);
     const [permission, setPermission] = useState(null);
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef}] useLocalStoreData();
     const dispatch = useDispatch();
 
     const handleDispatchAllowed = useCallback(allowed => {

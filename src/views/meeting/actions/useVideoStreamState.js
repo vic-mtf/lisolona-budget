@@ -1,9 +1,9 @@
 import { useLayoutEffect } from "react";
-import { useData } from "../../../utils/DataProvider";
+
 import store from "../../../redux/store";
 
 export default function useVideoStreamState (videoRef) {
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef}] useLocalStoreData();
     useLayoutEffect(() => {
         let defaultState;
         let display;

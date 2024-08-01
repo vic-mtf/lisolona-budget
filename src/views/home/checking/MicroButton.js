@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import getPermission from '../../../utils/getPermission';
 import { setMicroData } from '../../../redux/meeting';
-import { useData } from '../../../utils/DataProvider';
+
 import { toggleStreamActivation } from './FooterButtons';
 
 export default function MicroButton ({getAudioStream}) {
     const micro = useSelector(store => store.meeting.micro);
     const [permission, setPermission] = useState(null);
-    const [{audioStreamRef}] = useData();
+    const [{audioStreamRef}] useLocalStoreData();
     const dispatch = useDispatch();
     
     const handleDispatchAllowed = useCallback(allowed => {

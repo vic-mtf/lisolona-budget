@@ -5,9 +5,9 @@ import { SnackbarProvider } from "notistack";
 import store from "./redux/store";
 import "./styles/index.css";
 import App from "./App";
-import ConfigAppWrapper from "./utils/ConfigAppWrapper";
-import SocketIOProvider from "./utils/SocketIOProvider";
-import DataProvider from "./utils/DataProvider";
+import ConfigAppProvider from "./components/ConfigAppProvider";
+import SocketIOProvider from "./components/SocketIOProvider";
+import LocalStoreDataProvider from "./components/LocalStoreDataProvider";
 import { snackbarComponents } from "./components/ReportComplete";
 import AgoraProviderClient from "./components/AgoraProviderClient";
 
@@ -17,15 +17,15 @@ root.render(
   <React.StrictMode>
     <ReduxProvider store={store}>
       <SocketIOProvider>
-        <ConfigAppWrapper>
+        <ConfigAppProvider>
           <SnackbarProvider Components={snackbarComponents}>
-            <DataProvider>
+            <LocalStoreDataProvider>
               <AgoraProviderClient>
                 <App />
               </AgoraProviderClient>
-            </DataProvider>
+            </LocalStoreDataProvider>
           </SnackbarProvider>
-        </ConfigAppWrapper>
+        </ConfigAppProvider>
       </SocketIOProvider>
     </ReduxProvider>
   </React.StrictMode>

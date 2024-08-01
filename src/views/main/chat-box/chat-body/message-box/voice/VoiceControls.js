@@ -5,7 +5,7 @@ import IconButton from "../../../../../../components/IconButton";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseOutlinedIcon from '@mui/icons-material/PauseOutlined';
 import formatTime from "../../../../../../utils/formatTime";
-import { useData } from "../../../../../../utils/DataProvider";
+
 
 export default function VoiceControls ({voiceData}) {
     const [playing, setPlaying] = useState(voiceData?.audio?.paused === false);
@@ -69,7 +69,7 @@ const AudioSlider = ({voiceData}) => {
     const [currentTime, setCurrentTime] = useState(voiceData?.currentTime);
     const [duration, setDuration] = useState(voiceData?.duration);
     const firstStateRef = useRef(voiceData?.duration === 0);
-    const [{voicesRef}] = useData();
+    const [{voicesRef}] useLocalStoreData();
 
     useLayoutEffect(() => {
         const audio = voiceData?.audio;

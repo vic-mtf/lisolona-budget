@@ -7,7 +7,7 @@ import useJoinMeeting from "../actions/useJoinMeeting";
 import store from "../../../redux/store";
 import { setData } from "../../../redux/meeting";
 import Typography from "../../../components/Typography";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 
 export default function Footer() {
   const [{ meetingData }] = useMeetingData();

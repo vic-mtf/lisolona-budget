@@ -2,7 +2,7 @@ import { Box as MuiBox, Backdrop, LinearProgress } from "@mui/material";
 import HardwareTesting from "./hardware-testing/HardwareTesting";
 import MeetingBoard from "./meeting-board/MeetingBoard";
 import { useMeetingData } from "../../../utils/MeetingProvider";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import useJoinMeeting from "../actions/useJoinMeeting";
 import React, { useCallback, useEffect, useState } from "react";
 import Typography from "../../../components/Typography";

@@ -1,77 +1,77 @@
 import React, {
   createContext,
   useState,
-  useContext,
   useRef,
-  useCallback,
+  // useCallback,
   useLayoutEffect,
 } from "react";
-import { useData } from "./DataProvider";
-import { decrypt } from "./crypt";
-import useMediaTracks from "./useMediaTracks";
-import { useDispatch } from "react-redux";
+import { decrypt } from "../utils/crypt";
+// import { useDispatch } from "react-redux";
 import store from "../redux/store";
-import { addParticipants, updateParticipantState } from "../redux/conference";
+import {
+  addParticipants /*, updateParticipantState */,
+} from "../redux/conference";
 import { setData } from "../redux/meeting";
+// import useLocalStoreData from "../hooks/useLocalStoreData";
 
 export default function MeetingProvider({ children }) {
-  const [{ client }] = useData();
+  // const [{ client }] = useLocalStoreData();
   const contentRootRef = useRef();
   const [meetingData, setMeetingData] = useState(openerData);
   const [openEndMessageType, setOpenEndMessageType] = useState(null);
-  const [remoteVideoTracks, settersRemoteVideoTracks] = useMediaTracks({
-    type: "video",
-  });
-  const [remoteAudioTracks, settersRemoteAudioTracks] = useMediaTracks({
-    type: "audio",
-  });
-  const dispatch = useDispatch();
+  // const [remoteVideoTracks, settersRemoteVideoTracks] = useMediaTracks({
+  //   type: "video",
+  // });
+  // const [remoteAudioTracks, settersRemoteAudioTracks] = useMediaTracks({
+  //   type: "audio",
+  // });
+  // const dispatch = useDispatch();
   const ringRef = useRef(null);
   const timerRef = useRef(null);
   const localTrackRef = useRef({ videoTrack: null, audioTrack: null });
-  const handleUserToggleJoin = useCallback(
-    (joined) =>
-      ({ uid }) => {
-        const id = getUserIdByUid(uid);
-        if (id) {
-          const data = {
-            ids: [id],
-            uid,
-            key: "state",
-            state: { isInRoom: joined },
-          };
-          dispatch(updateParticipantState({ data }));
-        }
-      },
-    [dispatch]
-  );
+  // const handleUserToggleJoin = useCallback(
+  //   (joined) =>
+  //     ({ uid }) => {
+  //       const id = getUserIdByUid(uid);
+  //       if (id) {
+  //         const data = {
+  //           ids: [id],
+  //           uid,
+  //           key: "state",
+  //           state: { isInRoom: joined },
+  //         };
+  //         dispatch(updateParticipantState({ data }));
+  //       }
+  //     },
+  //   [dispatch]
+  // );
 
-  const handleUserTogglePublished = useCallback(
-    (published) => async (user, mediaType) => {
-      const uid = user.uid;
-      const id = getUserIdByUid(uid);
-      const setters = {
-        audio: settersRemoteAudioTracks,
-        video: settersRemoteVideoTracks,
-      }[mediaType];
-      if (id) {
-        let track = null;
-        if (published) {
-          await client.subscribe(user, mediaType);
-          if (mediaType === "audio") user.audioTrack.play();
-          track = user[mediaType + "Track"];
-        }
-        setters.toggleTrack({ id, uid, track });
-      }
-    },
-    [settersRemoteAudioTracks, settersRemoteVideoTracks, client]
-  );
+  // const handleUserTogglePublished = useCallback(
+  //   (published) => async (user, mediaType) => {
+  //     const uid = user.uid;
+  //     const id = getUserIdByUid(uid);
+  //     const setters = {
+  //       // audio: settersRemoteAudioTracks,
+  //       // video: settersRemoteVideoTracks,
+  //     }[mediaType];
+  //     if (id) {
+  //       let track = null;
+  //       if (published) {
+  //         await client.subscribe(user, mediaType);
+  //         if (mediaType === "audio") user.audioTrack.play();
+  //         track = user[mediaType + "Track"];
+  //       }
+  //       setters.toggleTrack({ id, uid, track });
+  //     }
+  //   },
+  //   [/*settersRemoteAudioTracks, settersRemoteVideoTracks,*/ client]
+  // );
 
   const getters = {
     localTrackRef,
     openEndMessageType,
-    remoteVideoTracks,
-    remoteAudioTracks,
+    // remoteVideoTracks,
+    // remoteAudioTracks,
     contentRootRef,
     ...(meetingData ? { meetingData, ...meetingData } : {}),
     ringRef,
@@ -80,30 +80,30 @@ export default function MeetingProvider({ children }) {
 
   const setters = {
     setOpenEndMessageType,
-    settersRemoteVideoTracks,
-    settersRemoteAudioTracks,
+    // settersRemoteVideoTracks,
+    // settersRemoteAudioTracks,
     setMeetingData(newData) {
       if (newData) setMeetingData((data) => ({ ...data, ...newData }));
       else setMeetingData({});
     },
   };
 
-  useLayoutEffect(() => {
-    const onUserPublished = handleUserTogglePublished(true);
-    const onUserUnpublished = handleUserTogglePublished(false);
-    const onUserJoined = handleUserToggleJoin(true);
-    const onUserLeft = handleUserToggleJoin(false);
-    client.on("user-joined", onUserJoined);
-    client.on("user-published", onUserPublished);
-    client.on("user-unpublished", onUserUnpublished);
-    client.on("user-left", onUserLeft);
-    return () => {
-      client.off("user-published", onUserPublished);
-      client.off("user-unpublished", onUserUnpublished);
-      client.off("user-joined", onUserJoined);
-      client.off("user-left", onUserLeft);
-    };
-  }, [client, handleUserTogglePublished, handleUserToggleJoin]);
+  // useLayoutEffect(() => {
+  //   const onUserPublished = handleUserTogglePublished(true);
+  //   const onUserUnpublished = handleUserTogglePublished(false);
+  //   const onUserJoined = handleUserToggleJoin(true);
+  //   const onUserLeft = handleUserToggleJoin(false);
+  //   client.on("user-joined", onUserJoined);
+  //   client.on("user-published", onUserPublished);
+  //   client.on("user-unpublished", onUserUnpublished);
+  //   client.on("user-left", onUserLeft);
+  //   return () => {
+  //     client.off("user-published", onUserPublished);
+  //     client.off("user-unpublished", onUserUnpublished);
+  //     client.off("user-joined", onUserJoined);
+  //     client.off("user-left", onUserLeft);
+  //   };
+  // }, [client, handleUserTogglePublished, handleUserToggleJoin]);
 
   useLayoutEffect(() => {
     if (openerData?.origin) {
@@ -141,11 +141,7 @@ export default function MeetingProvider({ children }) {
     }
   }, []);
 
-  return (
-    <MeetingDataContext.Provider value={[getters, setters]}>
-      {children}
-    </MeetingDataContext.Provider>
-  );
+  return <Provider value={[getters, setters]}>{children}</Provider>;
 }
 
 export const getUserIdByUid = (uid) => {
@@ -172,8 +168,10 @@ export const findUser = (id) => {
 export const openerData = window.geidMeetingData
   ? decrypt(window.geidMeetingData)
   : null;
-const MeetingDataContext = createContext(openerData);
-export const useMeetingData = () => useContext(MeetingDataContext);
+
+export const MeetingDataContext = createContext(openerData);
+const { Provider } = MeetingDataContext;
+
 export const bcName = `_geid_call_window_${openerData?.secretCode}`;
 
 if (window.opener && window.location.pathname.indexOf("meeting") !== -1) {

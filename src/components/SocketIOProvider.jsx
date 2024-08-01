@@ -1,15 +1,15 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import axiosConfig from "../configs/axios-config.json";
 import { addNotification } from "../redux/data";
-import getFullName from "./getFullName";
+import getFullName from "../utils/getFullName";
 
 const DEFAULT_OPTIONS = { transports: ["websocket"] };
 const OPENER_SOCKET = window.openerSocket;
 const BASE_URL = axiosConfig.baseURL;
 
-export function SocketIOProvider({
+export default function SocketIOProvider({
   children,
   url = BASE_URL,
   token: defaultToken,
@@ -57,8 +57,3 @@ export function SocketIOProvider({
 export const SocketIOContext = createContext(null);
 
 const { Provider } = SocketIOContext;
-
-export default function useSocket() {
-  const context = useContext(SocketIOContext);
-  return context;
-}

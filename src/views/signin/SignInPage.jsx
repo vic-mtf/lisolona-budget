@@ -10,7 +10,7 @@ import {
 import Box from "../../components/Box";
 import Content from "./content/Content";
 import Header from "./header/Header";
-import useAxios from "../../utils/useAxios";
+import useAxios from "../../hooks/useAxios";
 import ErrorNetwork from "../error/ErrorNetwork";
 import Footer from "./footer/Footer";
 import { setUser } from "../../redux/app";

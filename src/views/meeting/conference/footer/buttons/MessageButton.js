@@ -4,7 +4,7 @@ import { Badge, Stack, Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { setConferenceData } from "../../../../../redux/conference";
-import useAudio from "../../../../../utils/useAudio";
+import useAudio from "../../../../../hooks/useAudio";
 import message_signal_audio from "../../../../../assets/miui12dr_m5r75343.webm";
 import { MESSAGE_CHANNEL } from "../../../../main/chat-box/ChatBox";
 

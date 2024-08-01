@@ -12,9 +12,9 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Button from "../../../../components/Button";
 import InputController from "../../../../components/InputController";
 import { LoadingButton } from "@mui/lab";
-import useAxios from "../../../../utils/useAxios";
+import useAxios from "../../../../hooks/useAxios";
 import { useSelector } from "react-redux";
-import useCustomSnackbar from "../../../../components/useCustomSnackbar";
+import useCustomSnackbar from "../../../../hooks/useSnackbar";
 import IconButton from "../../../../components/IconButton";
 
 export default function InvitationRequestForm({ open, onClose }) {

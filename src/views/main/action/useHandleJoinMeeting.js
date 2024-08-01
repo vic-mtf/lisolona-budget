@@ -3,13 +3,13 @@ import { useDispatch } from "react-redux";
 import openNewWindow from "../../../utils/openNewWindow";
 import { encrypt } from "../../../utils/crypt";
 import { setData } from "../../../redux/meeting";
-import { useSocket } from "../../../utils/SocketIOProvider";
-import { useData } from "../../../utils/DataProvider";
+import useSocket from "../../../hooks/useSocket";
+import useLocalStoreData from "../../../hooks/useLocalStoreData";
 
 export default function useHandleJoinMeeting(initMode = "prepare") {
   const dispatch = useDispatch();
   const socket = useSocket();
-  const [{ secretCode }] = useData();
+  const [{ secretCode }] = useLocalStoreData();
 
   const handleJoinMeeting = useCallback(
     ({ timer, data: target, origin, defaultMode = initMode }) => {

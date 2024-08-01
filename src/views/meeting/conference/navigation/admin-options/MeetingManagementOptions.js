@@ -11,7 +11,7 @@ import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import RecommendOutlinedIcon from "@mui/icons-material/RecommendOutlined";
 import { useDispatch, useSelector } from "react-redux";
-import { useSocket } from "../../../../../utils/SocketIOProvider";
+import useSocket from "../../../../../hooks/useSocket";
 import { setConferenceData } from "../../../../../redux/conference";
 import store from "../../../../../redux/store";
 

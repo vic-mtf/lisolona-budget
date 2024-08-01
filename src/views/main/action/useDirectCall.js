@@ -1,19 +1,19 @@
 import { useLayoutEffect } from "react";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import openNewWindow from "../../../utils/openNewWindow";
 import { encrypt } from "../../../utils/crypt";
 import { setData } from "../../../redux/meeting";
 import { useDispatch, useSelector } from "react-redux";
-import { useData } from "../../../utils/DataProvider";
-import useAxios from "../../../utils/useAxios";
+
+import useAxios from "../../../hooks/useAxios";
 import store from "../../../redux/store";
 import getFullName from "../../../utils/getFullName";
 import song_src from "../../../assets/Halloween-Cradles.webm";
-import useAudio from "../../../utils/useAudio";
+import useAudio from "../../../hooks/useAudio";
 
 export default function useDirectCall() {
   const socket = useSocket();
-  const [{ secretCode }] = useData();
+  const [{ secretCode }] useLocalStoreData();
   const token = useSelector((store) => store.user.token);
   const [, refetch] = useAxios(
     {

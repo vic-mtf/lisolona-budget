@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import Avatar from "../../../../components/Avatar";
 import CustomBadge from "../../../../components/CustomBadge";
-import useOnLine from "../../../../utils/useOnLine";
+import useOnLine from "../../../../hooks/useOnLine";
 import getFullName from "../../../../utils/getFullName";
 import getShort from "../../../../utils/getShort";
 import { generateColorsFromId } from "../../../../utils/genColorById";
@@ -19,18 +19,17 @@ export default function AvatarProfile() {
       fontWeight: "bold",
       fontSize: 15,
     }),
-    [background, text],
+    [background, text]
   );
 
   return (
     <React.Fragment>
       <CustomBadge
-        overlap="rectangular"
+        overlap='rectangular'
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        variant="dot"
+        variant='dot'
         online={isOnLine}
-        invisible={!isOnLine}
-      >
+        invisible={!isOnLine}>
         <Avatar
           src={user?.image}
           srcSet={user?.image}

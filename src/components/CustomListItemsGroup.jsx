@@ -1,7 +1,7 @@
 import { GroupedVirtuoso } from "react-virtuoso";
 import Box from "./Box";
-import useShadow from "../utils/useShadow";
-import useScroll from "../utils/useScroll";
+import useShadow from "../hooks/useShadow";
+import useScroll from "../hooks/useScroll";
 
 export default function CustomListItemsGroup({
   sx,
@@ -14,7 +14,7 @@ export default function CustomListItemsGroup({
 
   return (
     <Box
-      overflow="hidden"
+      overflow='hidden'
       sx={{
         boxShadow: show ? shadow : 0,
         "& .item-container-list": {
@@ -22,11 +22,10 @@ export default function CustomListItemsGroup({
           height: "100%",
           ...sx,
         },
-      }}
-    >
+      }}>
       <GroupedVirtuoso
         style={{ height: "100%" }}
-        className="item-container-list"
+        className='item-container-list'
         groupCounts={groupCounts}
         groupContent={groupContent}
         itemContent={itemContent}

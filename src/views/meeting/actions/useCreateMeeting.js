@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import useAxios from "../../../utils/useAxios";
+import useAxios from "../../../hooks/useAxios";
 import { useCallback } from "react";
 import { useMeetingData } from "../../../utils/MeetingProvider";
 import db from "../../../database/db";
@@ -19,7 +19,7 @@ export default function useCreateMeeting() {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     },
-    { manual: true },
+    { manual: true }
   );
   const handleUserJoined = useJoinedAndPublishedLocalClient();
   const handleCreateMeetingRequest = useCallback(
@@ -44,7 +44,7 @@ export default function useCreateMeeting() {
         meetingData.room = room;
         const id = store.getState().user?.id;
         const uid = meetingData?.participants?.find(
-          ({ identity: { _id } }) => _id === id,
+          ({ identity: { _id } }) => _id === id
         )?.uid;
         const options = meetingData?.callDetails;
         const {
@@ -68,7 +68,7 @@ export default function useCreateMeeting() {
                     }
                   : participant.state,
             })),
-          }),
+          })
         );
 
         store.dispatch(
@@ -84,15 +84,15 @@ export default function useCreateMeeting() {
                   uid,
                   CHANEL: location,
                 },
-                published,
+                published
               )),
             },
-          }),
+          })
         );
       }
       return meetingData;
     },
-    [refetch, target, handleUserJoined],
+    [refetch, target, handleUserJoined]
   );
   return handleCreateMeetingRequest;
 }

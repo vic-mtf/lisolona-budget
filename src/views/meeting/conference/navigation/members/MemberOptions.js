@@ -15,7 +15,7 @@ import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import { useSocket } from "../../../../../utils/SocketIOProvider";
+import useSocket from "../../../../../hooks/useSocket";
 import useMicroProps from "../../footer/buttons/useMicroProps";
 import useCameraProps from "../../footer/buttons/useCameraProps";
 import { setConferenceData } from "../../../../../redux/conference";

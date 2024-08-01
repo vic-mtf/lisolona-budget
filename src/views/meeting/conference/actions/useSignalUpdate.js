@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSocket } from "../../../../utils/SocketIOProvider";
+import useSocket from "../../../../hooks/useSocket";
 import store from "../../../../redux/store";
 import {
   setConferenceData,

@@ -7,7 +7,7 @@ import RecordStatusVisualizer from "./RecordStatusVisualizer";
 import RecordStatusReader from "./RecordStatusReader";
 import closeMediaStream from "../../../../../utils/closeMediaStream";
 import sendVoice from "./sendVoice";
-import { useData } from "../../../../../utils/DataProvider";
+
 import { useFooterContext } from "../ChatFooter";
 
 export default function RecordStatus ({stream}) {
@@ -16,7 +16,7 @@ export default function RecordStatus ({stream}) {
     const timeoutRef = useRef(0);
     const mediaRecorderRef = useRef();
     const [{target}, {handleToggleRecording}] = useFooterContext();
-    const [{downloadsRef}] = useData();
+    const [{downloadsRef}] useLocalStoreData();
     const [paused, setPaused] = useState(false);
 
     const handleSendVoice = () => {

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Avatar from "../../../../components/Avatar";
 import { generateColorsFromId } from "../../../../utils/genColorById";
 import getShort from "../../../../utils/getShort";
-import { useSocket } from "../../../../utils/SocketIOProvider";
+import useSocket from "../../../../hooks/useSocket";
 
 export default function ShortcutAvatar({ name, avatarSrc, id, len, title }) {
   const { background, text } = generateColorsFromId(id);
@@ -17,7 +17,7 @@ export default function ShortcutAvatar({ name, avatarSrc, id, len, title }) {
       fontWeight: "bold",
       fontSize: 15,
     }),
-    [background, text],
+    [background, text]
   );
 
   useEffect(() => {

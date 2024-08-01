@@ -1,22 +1,22 @@
 import { useLayoutEffect } from "react";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import openNewWindow from "../../../utils/openNewWindow";
 import { encrypt } from "../../../utils/crypt";
 import { setData } from "../../../redux/meeting";
 import { useDispatch, useSelector } from "react-redux";
-import { useData } from "../../../utils/DataProvider";
-import useAxios from "../../../utils/useAxios";
+
+import useAxios from "../../../hooks/useAxios";
 import clearTimer from "../../../utils/clearTimer";
 import { DialogActions, ListItem, ListItemText, useTheme } from "@mui/material";
-import useAudio from "../../../utils/useAudio";
+import useAudio from "../../../hooks/useAudio";
 import signal_src from "../../../assets/Samsung-Wing-SMS.webm";
 import getFullName from "../../../utils/getFullName";
-import { useLongTextCustomSnackbar } from "../../../components/useCustomSnackbar";
+import { useLongTextCustomSnackbar } from "../../../hooks/useSnackbar";
 import AvatarStatus from "../../../components/AvatarStatus";
 import Button from "../../../components/Button";
 import setGlobalData from "../../../utils/setData";
 import Typography from "../../../components/Typography";
-import useTableRef from "../../../utils/useTableRef";
+import useTableRef from "../../../hooks/useTableRef";
 
 export default function useRoomCall() {
   const socket = useSocket();
@@ -25,7 +25,7 @@ export default function useRoomCall() {
   const mode = useSelector((store) => store.meeting.mode);
   const [, settersCounters] = useTableRef();
   const [, settersTimers] = useTableRef();
-  const [{ secretCode }] = useData();
+  const [{ secretCode }] useLocalStoreData();
   const token = useSelector((store) => store.user.token);
   const signalAudio = useAudio(signal_src);
   const theme = useTheme();

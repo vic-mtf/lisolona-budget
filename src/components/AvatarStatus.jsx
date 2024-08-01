@@ -4,7 +4,7 @@ import Avatar from "./Avatar";
 import CustomBadge from "./CustomBadge";
 import { generateColorsFromId } from "../utils/genColorById";
 import getShort from "../utils/getShort";
-import { useSocket } from "../utils/SocketIOProvider";
+import useSocket from "../hooks/useSocket";
 import { useSelector } from "react-redux";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 

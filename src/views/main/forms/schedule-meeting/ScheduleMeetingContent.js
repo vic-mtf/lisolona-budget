@@ -12,7 +12,7 @@ import DateCalendarMeeting from "./DateCalendarMeeting";
 import TimeClockMeeting from "./DateTimeMeeting";
 import LinearProgressLayer from "../../../../components/LinearProgressLayer";
 import Button from "../../../../components/Button";
-import useAxios from "../../../../utils/useAxios";
+import useAxios from "../../../../hooks/useAxios";
 import dayjs from "dayjs";
 import PropTypes from "prop-types";
 
@@ -32,7 +32,7 @@ export default function ScheduleMeetingContent({ target, onClose, formRef }) {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     },
-    { manual: true },
+    { manual: true }
   );
 
   const handleCreateMeetingRequest = useCallback(
@@ -64,7 +64,7 @@ export default function ScheduleMeetingContent({ target, onClose, formRef }) {
       }
       onClose(null);
     },
-    [target, refetch, onClose],
+    [target, refetch, onClose]
   );
 
   useEffect(() => {
@@ -82,19 +82,19 @@ export default function ScheduleMeetingContent({ target, onClose, formRef }) {
       <DialogTitle>Planifier une réunion</DialogTitle>
       <DialogContent>
         <TextField
-          type="text"
-          variant="outlined"
-          label="Titre"
+          type='text'
+          variant='outlined'
+          label='Titre'
           fullWidth
           disabled={loading}
           sx={{ my: 1 }}
           inputProps={{ readOnly: loading }}
           {...register("title")}
         />
-        <MuiBox display="flex" flexDirection="row">
+        <MuiBox display='flex' flexDirection='row'>
           <MuiBox>
             <Controller
-              name="date"
+              name='date'
               control={control}
               render={({
                 field,
@@ -110,8 +110,8 @@ export default function ScheduleMeetingContent({ target, onClose, formRef }) {
         </MuiBox>
         <TextField
           multiline
-          variant="outlined"
-          label="Description"
+          variant='outlined'
+          label='Description'
           minRows={5}
           fullWidth
           sx={{ my: 1 }}
@@ -124,7 +124,7 @@ export default function ScheduleMeetingContent({ target, onClose, formRef }) {
         <Button onClick={onClose} disabled={loading}>
           Annuler
         </Button>
-        <Button variant="outlined" disabled={loading} type="submit">
+        <Button variant='outlined' disabled={loading} type='submit'>
           Confirmer
         </Button>
       </DialogActions>

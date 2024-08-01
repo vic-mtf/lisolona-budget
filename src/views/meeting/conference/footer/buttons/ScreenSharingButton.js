@@ -5,20 +5,20 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
 import { setScreenSharingData } from "../../../../../redux/meeting";
-import { useData } from "../../../../../utils/DataProvider";
+
 import { useMeetingData } from "../../../../../utils/MeetingProvider";
 import store from "../../../../../redux/store";
 import AgoraRTC from "agora-rtc-react";
 import closeMediaStream from "../../../../../utils/closeMediaStream";
 import useClientState from "../../actions/useClientState";
-import { useSocket } from "../../../../../utils/SocketIOProvider";
+import useSocket from "../../../../../hooks/useSocket";
 
 export default function ScreenSharingButton() {
   const screen = useSelector((store) => store.meeting.screenSharing);
   const socket = useSocket();
   const id = useSelector((store) => store.meeting.me.id);
   const auth = useClientState({ id, props: ["shareScreen"], key: "auth" });
-  const [{ videoStreamRef, screenStreamRef, client }] = useData();
+  const [{ videoStreamRef, screenStreamRef, client }] useLocalStoreData();
   const [{ localTrackRef }] = useMeetingData();
   const [loading, setLoading] = useState();
   const dispatch = useDispatch();

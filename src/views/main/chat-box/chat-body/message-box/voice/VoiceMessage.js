@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTheme } from '@emotion/react';
-import { useData } from '../../../../../../utils/DataProvider';
+
 import AvatarVoice from './AvatarVoice';
 import VoiceControls from './VoiceControls';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import getServerUri from '../../../../../../utils/getServerUri';
 
 export default function VoiceMessage ({bgcolor, buffer:bf, content, id, isMine, name:nm, avatarSrc}) {
    const user = useSelector(store => store.user);
-   const [{downloadsRef, voicesRef}] = useData();
+   const [{downloadsRef, voicesRef}] useLocalStoreData();
    const [buffer, setBuffer] = useState(bf);
    const urlRef = useRef(buffer && URL.createObjectURL(buffer));
    const [download, setDownload] = useState(null);

@@ -6,12 +6,12 @@ import {
   useTheme,
 } from "@mui/material";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import { useData } from "../../../utils/DataProvider";
+
 import { getUserUidById, useMeetingData } from "../../../utils/MeetingProvider";
 import { setData } from "../../../redux/meeting";
 import { useSelector } from "react-redux";
 import Typography from "../../../components/Typography";
-import { useSocket } from "../../../utils/SocketIOProvider";
+import useSocket from "../../../hooks/useSocket";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import AgoraRTC from "agora-rtc-react";
 import clearTimer from "../../../utils/clearTimer";
@@ -20,7 +20,7 @@ import useJoinedAndPublishedLocalClient from "../actions/useJoinedAndPublishedLo
 import { updateParticipantState } from "../../../redux/conference";
 
 export default function AnswerButton() {
-  const [{ videoStreamRef, audioStreamRef, client }] = useData();
+  const [{ videoStreamRef, audioStreamRef, client }] useLocalStoreData();
   const [{ localTrackRef, ringRef, timerRef }] = useMeetingData();
   const mode = useSelector((store) => store.meeting.mode);
   const userId = useSelector((store) => store.user.id);

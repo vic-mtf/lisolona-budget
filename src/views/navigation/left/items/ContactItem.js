@@ -16,8 +16,8 @@ import AvatarStatus from "../../../../components/AvatarStatus";
 import openNewWindow from "../../../../utils/openNewWindow";
 import { encrypt } from "../../../../utils/crypt";
 import { setData } from "../../../../redux/meeting";
-import { useData } from "../../../../utils/DataProvider";
-import { useSocket } from "../../../../utils/SocketIOProvider";
+
+import useSocket from "../../../../hooks/useSocket";
 
 function ContactItem(props) {
   const {
@@ -36,7 +36,7 @@ function ContactItem(props) {
   const [contextMenu, setContextMenu] = useState(null);
   const [showSecondaryAction, setShowSecondaryAction] = useState(false);
   const socket = useSocket();
-  const [{ secretCode }] = useData();
+  const [{ secretCode }] useLocalStoreData();
   const dispatch = useDispatch();
 
   const handleContextMenu = (event) => {

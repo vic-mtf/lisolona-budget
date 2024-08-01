@@ -8,7 +8,7 @@ import { Divider, ListItemIcon, ListItemText, MenuItem, Box as MuiBox } from '@m
 import { useDispatch, useSelector } from 'react-redux';
 import { setAudioDevice } from '../../../../../redux/meeting';
 import AudioLevelIndicator from './AudioLevelIndicator.js';
-import { useData } from '../../../../../utils/DataProvider';
+
 import closeMediaStream from '../../../../../utils/closeMediaStream';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '../../../../../components/IconButton.js';
@@ -19,7 +19,7 @@ export default function AudioInputButtonOptions ({setHasDevice, hasDevice, handl
     const micro = useSelector(store => store.meeting.micro);
     const [open, setOpen] = useState(false);    
     const anchorElRef = useRef();
-    const [{audioStreamRef}] = useData();
+    const [{audioStreamRef}] useLocalStoreData();
     const deviceIdSelected = useMemo(() => 
         devicesRef.current?.find(
             ({deviceId}) => device?.deviceId === deviceId

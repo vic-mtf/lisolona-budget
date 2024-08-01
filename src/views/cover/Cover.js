@@ -5,7 +5,7 @@ import Typography from "../../components/Typography";
 import "animate.css/source/attention_seekers/swing.css";
 import _logo_geid from "../../assets/geid_logo_blue_without_title.webp";
 import { useCallback } from "react";
-import useAxios from "../../utils/useAxios";
+import useAxios from "../../hooks/useAxios";
 import setData from "../../utils/setData";
 import db, { clearDatabase } from "../../database/db";
 import SwingAnimation from "../../components/Swin";

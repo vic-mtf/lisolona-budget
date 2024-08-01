@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useData } from "../../../../../../utils/DataProvider";
+
 import CircularProgressIconButton from "./CircularProgressIconButton";
 import onDownload from "./onDownload";
 
 export default function LoadingMedia ({seeMore, id, url, type, name, setBuffer}) {
-    const [{downloadsRef, messagesRef}] = useData();
+    const [{downloadsRef, messagesRef}] useLocalStoreData();
     const [loaded, setLoaded] = useState();
 
     const download = useMemo(() => 

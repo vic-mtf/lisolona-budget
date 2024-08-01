@@ -8,11 +8,11 @@ import { useMeetingData } from "../../../../../utils/MeetingProvider";
 // import ChatArea from "../../../../main/chat-box/chat-area/ChatArea";
 import ChatFooter from "../../../../main/chat-box/chat-footer-beta/ChatFooter";
 import Content from "./Content";
-import { useData } from "../../../../../utils/DataProvider";
+
 
 export default function ChatBox() {
   const [{ target }] = useMeetingData();
-  const [{ meetingMessagesRef }] = useData();
+  const [{ meetingMessagesRef }] useLocalStoreData();
 
   return (
     <>

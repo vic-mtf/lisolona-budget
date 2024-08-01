@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { useMeetingData } from "../../../../utils/MeetingProvider";
-import { useSocket } from "../../../../utils/SocketIOProvider";
+import useSocket from "../../../../hooks/useSocket";
 import store from "../../../../redux/store";
 import structureMessageData from "../../../../database/structureMessageData";
 import { MESSAGE_CHANNEL } from "../../../main/chat-box/ChatBox";
 import deepMerge from "../../../../utils/mergeDeep";
-import { useData } from "../../../../utils/DataProvider";
+
 
 export default function useClientMessage() {
   const [{ target }] = useMeetingData();
   const socket = useSocket();
-  const [{ meetingMessagesRef }] = useData();
+  const [{ meetingMessagesRef }] useLocalStoreData();
 
   useEffect(() => {
     const name = "_submit-internal-message";

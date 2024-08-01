@@ -1,17 +1,17 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import Views from "../views/Views";
+// import Views from "../views/Views";
 import SignInPage from "../views/signin/SignInPage";
-import HomePage from "../views/home/HomePage";
+import HomePage from "../views/home/Home";
 // import Meeting from "../views/meeting/Meeting";
 import { createElement } from "react";
 
 const PUBLIC_URL = process.env.PUBLIC_URL.trim();
 
 const PROTECTED_ROUTES = [
-  {
-    component: Views,
-    path: "/*",
-  },
+  // {
+  //   component: Views,
+  //   path: "/*",
+  // },
 ];
 
 const UNPROTECTED_ROUTES = [

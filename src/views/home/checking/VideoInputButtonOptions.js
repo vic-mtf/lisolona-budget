@@ -7,14 +7,14 @@ import Menu from '../../../components/Menu';
 import { ListItemIcon, ListItemText, MenuItem, Box as MuiBox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVideoDevice } from '../../../redux/meeting';
-import { useData } from '../../../utils/DataProvider';
+
 import closeMediaStream from '../../../utils/closeMediaStream';
 
 export default function VideoInputButtonOptions () {
     const devicesRef = useRef([]);
     const device = useSelector(store => store.meeting.video.input);
     const camera = useSelector(store => store.meeting.camera);
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef}] useLocalStoreData();
     const [open, setOpen] = useState(false);    
     const anchorElRef = useRef();
     const deviceIdSelected = useMemo(() => 

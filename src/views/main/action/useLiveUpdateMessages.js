@@ -1,12 +1,12 @@
 import { useLiveQuery } from "dexie-react-hooks"
 import { useLayoutEffect } from "react";
-import { useData } from "../../../utils/DataProvider";
+
 import structureMessages from "../../../utils/structureMessages";
 import db from "../../../database/db";
 import { getTime } from "../../../utils/formatTime";
 
 export default function useLiveUpdateMessages() {
-    const [,{pushMessages}] = useData();
+    const [,{pushMessages}] useLocalStoreData();
     const data = useLiveQuery(() => db?.messages.orderBy('createdAt').toArray(), [db]);
 
     useLayoutEffect(() => {

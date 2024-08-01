@@ -1,11 +1,11 @@
 import { useLayoutEffect } from "react";
-import { useData } from "../../../../utils/DataProvider";
+
 import { useMeetingData } from "../../../../utils/MeetingProvider";
 import AgoraRTC from "agora-rtc-react";
 import store from "../../../../redux/store";
 
 export default function useCreateLocalTracks() {
-  const [{ videoStreamRef, audioStreamRef, screenStreamRef }] = useData();
+  const [{ videoStreamRef, audioStreamRef, screenStreamRef }] useLocalStoreData();
   const [{ localTrackRef }] = useMeetingData();
 
   useLayoutEffect(() => {

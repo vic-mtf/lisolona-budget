@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react"
 import { useSelector } from "react-redux";
-import { useData } from "../../../../utils/DataProvider";
+
 import Typography from "../../../../components/Typography";
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 
 
 export default function CameraPreview () {
     const camera = useSelector(store => store.meeting.camera);
-    const [{videoStreamRef}] = useData();
+    const [{videoStreamRef}] useLocalStoreData();
     const videoRef = useRef();
 
     useEffect(() => {

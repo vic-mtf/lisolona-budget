@@ -1,12 +1,12 @@
 import AgoraRTC from "agora-rtc-react";
 import store from "../../../redux/store";
-import { useData } from "../../../utils/DataProvider";
+
 import { useMeetingData } from "../../../utils/MeetingProvider";
 import { setData } from "../../../redux/meeting";
 import { useCallback } from "react";
 
 export default function useGetMediaStream() {
-  const [{ videoStreamRef, audioStreamRef, mediaStreamRef }] = useData();
+  const [{ videoStreamRef, audioStreamRef, mediaStreamRef }] useLocalStoreData();
   const [{ localTrackRef }] = useMeetingData();
 
   const handleGetMediaStream = useCallback(
