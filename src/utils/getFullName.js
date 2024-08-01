@@ -1,10 +1,32 @@
 export default function getFullName(obj) {
-  let lname = obj?.lname?.trim() || obj?.lastname?.trim() || obj?.lastName?.trim();
-  let fname = obj?.fname?.trim() || obj?.firstname?.trim() || obj?.firstName?.trim();
-  let mname = obj?.mname?.trim() || obj?.middlename?.trim() || obj?.middleName?.trim();
-  let name = obj?.name?.trim();
-
-  if (lname || fname || mname) 
-      return `${fname || ''} ${mname || ''} ${lname || ''}`.trim();
-  else return name || '';
+  let lname = getValFromObj(
+    obj,
+    ["lname", "lastName", "lastname", "userLName", "userLname"],
+    ""
+  );
+  let fname = getValFromObj(
+    obj,
+    ["fname", "firstName", "firstname", "userFName", "userFname"],
+    ""
+  );
+  let mname = getValFromObj(
+    obj,
+    ["mname", "middleName", "middlename", "userMName", "userMname"],
+    ""
+  );
+  return (obj?.name || `${fname} ${lname} ${mname}`)?.trim();
 }
+
+export const getValFromObj = (obj = {}, keys = [], output = null) => {
+  let val = null;
+  keys?.forEach((key) => {
+    if (val === null && obj?.hasOwnProperty(key))
+      val =
+        typeof obj[key] === "string"
+          ? obj[key].trim() || null
+          : obj[key] === undefined
+          ? output
+          : obj[key];
+  });
+  return val;
+};

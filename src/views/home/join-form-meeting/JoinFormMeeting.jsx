@@ -1,17 +1,31 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import useSnackbar from "../../../hooks/useSnackbar";
 import queryString from "query-string";
-import { Backdrop, Box, Fade, LinearProgress, Typography } from "@mui/material";
-import messages from "./messages";
+import {
+  Backdrop,
+  Box,
+  Fade,
+  FormLabel,
+  LinearProgress,
+  Toolbar,
+  Tooltip,
+} from "@mui/material";
 import useAxios from "../../../hooks/useAxios";
 import IconButton from "../../../components/IconButton";
 import CodeMeeting from "./CodeMeeting";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import IdentifyForm from "./IdentifyForm";
+import Typography from "../../../components/Typography";
+import { useNavigate } from "react-router-dom";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 export default function JoinFormMeeting({ message }) {
   const location = useLocation();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const meetingData = useMemo(
+    () => location?.state?.meeting,
+    [location.state?.meeting]
+  );
+
+  const navigateTo = useNavigate();
   const values = useMemo(() => {
     let code = [];
     try {
@@ -22,29 +36,13 @@ export default function JoinFormMeeting({ message }) {
     return code;
   }, [location.search]);
 
-  const [{ loading, data, error }, refetch] = useAxios(
+  const [{ loading }, refetch] = useAxios(
     {
       url: "api/chat/room/call/" + values.join(""),
       method: "GET",
     },
-    { manual: values?.length !== 9 }
+    { manual: true }
   );
-
-  useEffect(() => {
-    const status = error?.request?.status;
-    const { message, severity } = messages[status] || {};
-
-    if (severity)
-      enqueueSnackbar({
-        message,
-        severity,
-        action: (key) => (
-          <IconButton onClick={() => closeSnackbar(key)}>
-            <CloseOutlinedIcon />
-          </IconButton>
-        ),
-      });
-  }, [error, enqueueSnackbar, closeSnackbar]);
 
   return (
     <>
@@ -66,17 +64,28 @@ export default function JoinFormMeeting({ message }) {
             flexDirection: "column",
           },
         }}>
-        <Fade unmountOnExit in={!data}>
+        <Fade unmountOnExit in={!meetingData}>
           <Box display='flex'>
             <CodeMeeting loading={loading} values={values} refetch={refetch} />
           </Box>
         </Fade>
-        <Fade unmountOnExit in={!!data}>
+        <Fade unmountOnExit in={!!meetingData}>
           <Box display='flex' gap={1}>
-            <Typography>
-              Identifiez vous pour participer à la réunion
-            </Typography>
-            <Identify loading={loading} values={values} refetch={refetch} />
+            <Toolbar
+              sx={{ width: "100%", gap: 1 }}
+              disableGutters
+              variant='dense'>
+              <Tooltip title='Retour' arrow>
+                <IconButton
+                  onClick={() => navigateTo("/home", { replace: true })}>
+                  <ArrowBackOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+              <FormLabel sx={{ flexGrow: 1 }}>
+                Identifiez vous pour participer à la réunion
+              </FormLabel>
+            </Toolbar>
+            <IdentifyForm loading={loading} values={values} refetch={refetch} />
           </Box>
         </Fade>
       </Box>

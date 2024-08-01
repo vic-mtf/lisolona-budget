@@ -8,8 +8,9 @@ import Box from "../../../components/Box";
 import CheckEmail from "./CheckEmail";
 import CheckPassword from "./CheckPassword";
 import { decrypt } from "../../../utils/crypt";
-import useSignInSendData from "./useSignInSendData";
+import useSignInSendData from "../../../hooks/useSignInSendData";
 import { useLocation } from "react-router-dom";
+import getPathnames from "../../../utils/getPathnames";
 
 export default function Content({ refresh }) {
   const appStoreUser = useSelector((store) => store.app.user);
@@ -89,9 +90,4 @@ const TabLevel = ({ show, children }) => {
       </Box>
     </Slide>
   );
-};
-
-export const getPathnames = (input) => {
-  const paths = input.startsWith("http") ? new URL(input).pathname : input;
-  return paths.split("/").filter(Boolean);
 };

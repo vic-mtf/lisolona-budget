@@ -2,9 +2,10 @@ import { Box, Divider, Toolbar } from "@mui/material";
 import { Stack } from "@mui/system";
 import Typography from "../../components/Typography";
 import logo from "../../assets/geid_logo_blue_without_title.webp";
-import MainZone from "./MainZone";
 import CarouselPub from "./carousel-pub/CarouselPub";
 import CopyrightFooter from "../../components/CopyrightFooter";
+import JoinFormMeeting from "./join-form-meeting/JoinFormMeeting";
+import Panel from "./join-form-meeting/Panel";
 
 export default function Home() {
   return (
@@ -52,7 +53,15 @@ export default function Home() {
             </Typography>
           </Stack>
         </Toolbar>
-        <MainZone />
+        <Box
+          p={2}
+          gap={2}
+          display='flex'
+          flexDirection='column'
+          sx={{ pt: { xs: 8, md: 24 } }}>
+          <Panel />
+          <JoinFormMeeting />
+        </Box>
       </Box>
       <Box
         sx={{

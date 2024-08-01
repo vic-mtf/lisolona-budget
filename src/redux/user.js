@@ -1,49 +1,43 @@
 import { createSlice } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage/session";
-import getBase64Image from "../utils/getBase64Image";
+import deepMerge from "../utils/mergeDeep";
 
-const reducers = {};
-reducers.updateValues = (state, actions)  => {
-    Object.keys(actions.payload).forEach(key => {
-        state[key] = actions.payload[key];
-        if(key === 'avatarSrc') {
-            getBase64Image().then(url => {
-                state.avatarSrc = url;
-            })
-        }
-    });
-};
-
-reducers.changeValues = (state, actions) => {
-    const { token } = actions.payload;
-    reducers.updateValues(state, actions);
-    if(token)
-        state.connected = true;
+const initialState = {
+  id: null,
+  token: null,
+  email: null,
+  firstName: null,
+  lastName: null,
+  middleName: null,
+  docTypes: null,
+  number: null,
+  image: null,
+  grade: null,
+  role: null,
+  auth: null,
+  connected: false,
 };
 
 const user = createSlice({
-    name: 'user',
-    initialState: {
-        connected: false,
-        //image: null,
+  name: "user",
+  initialState,
+  reducers: {
+    updateUser(state, actions) {
+      const { data } = actions.payload;
+      const states = deepMerge(state, data);
+      Object.keys(states).forEach((key) => {
+        state[key] = states[key];
+      });
     },
-    reducers: {
-        ...reducers,
-        updateValue(state, actions) {
-            const {key, value} = actions.payload;
-            state[key] = value;
-        },
-        disconnected (state) {
-            state.connected = false;
-        }
-    }
+  },
 });
 
-export const { changeValues, disconnected, updateValue, updateValues } = user.actions;
-export default persistReducer({
+export const { updateUser } = user.actions;
+export default persistReducer(
+  {
     storage,
-    key:'__ROOT_GEID_USER_CONFIG_APP'
-}, 
-user.reducer
+    key: "__ROOT_GEID_USER_CONFIG_APP",
+  },
+  user.reducer
 );

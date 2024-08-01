@@ -13,34 +13,14 @@ import Header from "./header/Header";
 import useAxios from "../../hooks/useAxios";
 import ErrorNetwork from "../error/ErrorNetwork";
 import Footer from "./footer/Footer";
-import { setUser } from "../../redux/app";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 import Link from "../../components/Link";
 import Dialog from "../../components/Dialog";
 
-const channel = new BroadcastChannel("_GEID_SIGN_IN_CONNECTION");
-
 export default function SignInPage() {
   const [{ loading }, refresh] = useAxios("", { manual: true });
-  const [finished, setFinished] = useState(false);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const root = document.getElementById("root");
-    const name = "_connected";
-    let handleAutoConnexion = (event) => {
-      const { user } = event.detail;
-      dispatch(setUser(user));
-      setFinished(true);
-      channel.postMessage(user, window?.location?.origin);
-      window.close();
-    };
-    root.addEventListener(name, handleAutoConnexion);
-    return () => {
-      root.removeEventListener(name, handleAutoConnexion);
-    };
-  }, [dispatch]);
+  const connected = useSelector((store) => store.user.connected);
 
   return (
     <Box justifyContent='center' alignItems='center'>
@@ -91,22 +71,19 @@ export default function SignInPage() {
       />
       <ErrorNetwork />
       <Dialog
-        open={finished}
+        open={connected}
         PaperProps={{
           sx: { border: (theme) => `1px solid ${theme.palette.divider}` },
         }}>
         <Alert>
           Vous avez réussi à vous connecter à votre compte et pouvez accéder à
           la plate-forme pour{" "}
-          <Link {...propsLink}>continuer la navigation</Link>.
+          <Link component='a' href='/' target='_black'>
+            continuer la navigation
+          </Link>
+          .
         </Alert>
       </Dialog>
     </Box>
   );
 }
-
-const propsLink = {
-  component: "a",
-  href: "/?autoconnexion=true",
-  target: "_blank",
-};

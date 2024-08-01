@@ -1,10 +1,14 @@
 import { Stack, OutlinedInput, Box as MuiBox } from "@mui/material";
-import React, { useRef, useMemo, useState } from "react";
-import propTypes from "prop-types";
-import { useCallback } from "react";
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  useCallback,
+  useLayoutEffect,
+} from "react";
+import PropTypes from "prop-types";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import IconButton from "./IconButton";
-import { useEffect } from "react";
 
 export default function InputCode({
   length = 6,
@@ -16,23 +20,26 @@ export default function InputCode({
 }) {
   const [codes, setCodes] = useState(values.slice(0, length));
   const rootRef = useRef();
-  const changingRef = useRef(true);
+  const changing = useMemo(() => ({ value: true }), []);
   const handleChange = useCallback(
-    ({ event, index }) => {
-      const value = event.target.value?.trim()?.charAt(0);
-      onChange(event, { index, value });
-      const inputs = rootRef.current.querySelectorAll("input");
-      const nextInput = inputs[index + 1];
-      if (index < length) changingRef.current = true;
-      if (verifyType(type, value) || value === "") {
-        if (value) {
-          event.target?.blur();
-          nextInput?.focus();
-          setCodes((codes) => [...codes, value]);
+    ({ event, index: _index }) => {
+      const values = event.target.value?.trim();
+      values.split("").forEach((value, __index) => {
+        const index = _index + __index;
+        onChange(event, { index, value });
+        const inputs = rootRef.current.querySelectorAll("input");
+        const nextInput = inputs[index + 1];
+        if (index < length) changing.value = true;
+        if (verifyType(type, value) || value === "") {
+          if (value) {
+            event.target?.blur();
+            nextInput?.focus();
+            setCodes((codes) => [...codes, value].slice(0, length));
+          }
         }
-      }
+      });
     },
-    [type, onChange, length]
+    [type, onChange, length, changing]
   );
 
   const handleDelete = useCallback(
@@ -52,12 +59,14 @@ export default function InputCode({
     [codes]
   );
 
-  useEffect(() => {
-    if (codes.length === length && changingRef.current) {
-      onComplete(codes);
-      changingRef.current = false;
+  useLayoutEffect(() => {
+    if (codes.length === length && changing.value) {
+      setTimeout(() => {
+        onComplete(codes);
+        changing.value = false;
+      });
     }
-  }, [codes, length, onComplete]);
+  }, [codes, length, onComplete, changing]);
 
   const inputs = useMemo(
     () =>
@@ -128,12 +137,12 @@ export default function InputCode({
 }
 
 InputCode.propType = {
-  length: propTypes.number,
-  size: propTypes.number,
-  values: propTypes.array,
-  onChange: propTypes.func,
-  onComplete: propTypes.func,
-  type: propTypes.oneOf(["numeric", "alphanumeric", "alphabetic"]),
+  length: PropTypes.number,
+  size: PropTypes.number,
+  values: PropTypes.array,
+  onChange: PropTypes.func,
+  onComplete: PropTypes.func,
+  type: PropTypes.oneOf(["numeric", "alphanumeric", "alphabetic"]),
 };
 function verifyType(type, str) {
   let regex;

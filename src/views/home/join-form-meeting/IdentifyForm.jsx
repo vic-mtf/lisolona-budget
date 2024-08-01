@@ -1,71 +1,67 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { Toolbar, TextField, Tooltip } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
-import Typography from "../../../components/Typography";
 import Button from "../../../components/Button";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
+// import useHandleJoinMeeting from "../../main/action/useHandleJoinMeeting";
+import CoPresentOutlinedIcon from "@mui/icons-material/CoPresentOutlined";
 
-import useHandleJoinMeeting from "../../main/action/useHandleJoinMeeting";
+// import { useNavigate } from "react-router-dom";
 
-import IconButton from "../../../components/IconButton";
-import { useNavigate } from "react-router-dom";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import { CHANNEL } from "../Home";
-import { setData } from "../../../redux/meeting";
-import { updateValues } from "../../../redux/user";
-import useLocalStoreData from "../../../hooks/useLocalStoreData";
+// import { CHANNEL } from "../Home";
+// import { setData } from "../../../redux/meeting";
+// import { updateUser } from "../../../redux/user";
 
 export default function IdentifyForm({ loading, refetch }) {
-  const [data] = useLocalStoreData();
   const nameRef = useRef();
   const [disabled, setDisabled] = useState(true);
-  const dispatch = useDispatch();
-  const navigateTo = useNavigate();
-  const handleJoinMeeting = useHandleJoinMeeting("guest");
+  // const dispatch = useDispatch();
+  // const navigateTo = useNavigate();
+  // const handleJoinMeeting = useHandleJoinMeeting("guest");
 
-  const handleGetData = (event) => {
-    event.preventDefault();
-    const name = nameRef?.current?.value?.trim();
-    if (name?.length > 2) {
-      refetch({
-        url: "api/chat/room/call/register",
-        method: "POST",
-        data: {
-          name: nameRef?.current?.value?.trim(),
-        },
-      }).then(async ({ data }) => {
-        const { name, _id: id, token } = data;
-        dispatch(updateValues({ id, name, token }));
-        const Authorization = `Bearer ${token}`;
-        const result = await refetch({
-          headers: { Authorization },
-          url: "/api/chat/room/call/" + data.meetingCode,
-          method: "GET",
-        });
-        const event = "_open_meeting_sub_window";
-        const customEvent = new CustomEvent(event, {
-          detail: {
-            name: event,
-            subWindow: handleJoinMeeting({
-              data: {
-                id: result?.data?.room?._id,
-                name: result?.data?.room?.name,
-                avatarSrc: result?.data?.room?.image,
-                type: "room",
-              },
-              origin: result.data,
-            }),
-          },
-        });
-        CHANNEL.dispatchEvent(customEvent);
-        dispatch(
-          setData({
-            data: { mode: data?.mode },
-          })
-        );
-      });
-    }
-  };
+  // const handleGetData = useCallback((event) => {
+  //   event.preventDefault();
+  //   const name = nameRef?.current?.value?.trim();
+  //   if (name?.length > 2) {
+  //     refetch({
+  //       url: "api/chat/room/call/register",
+  //       method: "POST",
+  //       data: {
+  //         name: nameRef?.current?.value?.trim(),
+  //       },
+  //     }).then(async ({ data }) => {
+  //       const { name, _id: id, token } = data;
+  //       dispatch(updateUser({ data: { id, name, token } }));
+  //       const Authorization = `Bearer ${token}`;
+  //       const result = await refetch({
+  //         headers: { Authorization },
+  //         url: "/api/chat/room/call/" + data.meetingCode,
+  //         method: "GET",
+  //       });
+  //       const event = "_open_meeting_sub_window";
+  //       const customEvent = new CustomEvent(event, {
+  //         detail: {
+  //           name: event,
+  //           subWindow: handleJoinMeeting({
+  //             data: {
+  //               id: result?.data?.room?._id,
+  //               name: result?.data?.room?.name,
+  //               avatarSrc: result?.data?.room?.image,
+  //               type: "room",
+  //             },
+  //             origin: result.data,
+  //           }),
+  //         },
+  //       });
+  //       CHANNEL.dispatchEvent(customEvent);
+  //       dispatch(
+  //         setData({
+  //           data: { mode: data?.mode },
+  //         })
+  //       );
+  //     });
+  //   }
+  // }, []);
 
   const handleChange = useCallback(() => {
     const name = nameRef.current.value?.trim();
@@ -79,21 +75,14 @@ export default function IdentifyForm({ loading, refetch }) {
   }, [handleChange]);
 
   return (
-    <Toolbar
-      disableGutters
-      variant='dense'
-      component='form'
-      onSubmit={handleGetData}
+    <Box
+      display='flex'
+      gap={1}
       sx={{
-        m: 0,
-        p: 0,
-        gap: 1,
+        flexDirection: { xs: "column", md: "row" },
+
+        width: "100%",
       }}>
-      <Tooltip title='Retour' arrow>
-        <IconButton onClick={() => navigateTo("/home")}>
-          <ArrowBackOutlinedIcon />
-        </IconButton>
-      </Tooltip>
       <TextField
         size='small'
         label='Nom complet'
@@ -103,15 +92,19 @@ export default function IdentifyForm({ loading, refetch }) {
         placeholder='Ex: Viael Mongolo Tanzey'
         inputRef={nameRef}
         onChange={handleChange}
+        sx={{ minWidth: { xs: "auto", md: 300 } }}
       />
-      <Button
-        variant='outlined'
-        disabled={disabled}
-        size='medium'
-        endIcon={<LaunchOutlinedIcon />}
-        type='submit'>
-        Participer
-      </Button>
-    </Toolbar>
+      <Box display='flex' flexDirection='row' gap={1}>
+        <Button
+          variant='outlined'
+          disabled={disabled}
+          size='medium'
+          endIcon={<LaunchOutlinedIcon />}
+          startIcon={<CoPresentOutlinedIcon />}
+          type='submit'>
+          Participer à la réunion
+        </Button>
+      </Box>
+    </Box>
   );
 }

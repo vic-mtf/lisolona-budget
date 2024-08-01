@@ -4,14 +4,11 @@ import { RouterProvider } from "react-router-dom";
 import BoxGradient from "./components/BoxGradient";
 import router from "./router/router";
 import { decrypt } from "./utils/crypt";
-import { changeValues } from "./redux/user";
-import { setData } from "./redux/meeting";
+import { updateUser } from "./redux/user";
 import scrollBarSx from "./utils/scrollBarSx";
-import store from "./redux/store";
 import { Box, Fade } from "@mui/material";
 import Cover from "./views/cover/Cover";
-
-const CHANNEL = new BroadcastChannel("_GEID_SIGN_IN_CONNECTION");
+import { SIGN_IN_CHANNEL } from "./utils/broadcastChannel";
 
 function App() {
   const connected = useSelector((store) => store.user.connected);
@@ -19,13 +16,17 @@ function App() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    let handleAutoConnection = (event) => {
-      const { data } = event;
-      if (data) dispatch(changeValues(decrypt(data)));
+    const handleAutoConnection = (event) => {
+      const { data: encryptData } = event;
+      const decryptData = decrypt(encryptData);
+      if (decryptData) {
+        const data = { ...decryptData, connected: true };
+        dispatch(updateUser({ data }));
+      }
     };
-    if (connected) dispatch(setData({ data: { me: store.getState().user } }));
-    CHANNEL.addEventListener("message", handleAutoConnection);
-    return () => CHANNEL.removeEventListener("message", handleAutoConnection);
+    SIGN_IN_CHANNEL.addEventListener("message", handleAutoConnection);
+    return () =>
+      SIGN_IN_CHANNEL.removeEventListener("message", handleAutoConnection);
   }, [connected, dispatch]);
 
   return (
@@ -43,10 +44,7 @@ function App() {
           right: 0,
           bottom: 0,
         },
-        "& > div > div": {
-          display: "flex",
-          flex: 1,
-        },
+        "& > div > div": { display: "flex", flex: 1 },
       }}>
       <Fade in={!loaded && connected} unmountOnExit>
         <Box>
