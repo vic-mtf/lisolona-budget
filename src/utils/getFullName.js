@@ -1,3 +1,5 @@
+import { getValFromObj } from "./formatObjectData";
+
 export default function getFullName(obj) {
   let lname = getValFromObj(
     obj,
@@ -16,17 +18,3 @@ export default function getFullName(obj) {
   );
   return (obj?.name || `${fname} ${lname} ${mname}`)?.trim();
 }
-
-export const getValFromObj = (obj = {}, keys = [], output = null) => {
-  let val = null;
-  keys?.forEach((key) => {
-    if (val === null && obj?.hasOwnProperty(key))
-      val =
-        typeof obj[key] === "string"
-          ? obj[key].trim() || null
-          : obj[key] === undefined
-          ? output
-          : obj[key];
-  });
-  return val;
-};

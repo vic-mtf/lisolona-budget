@@ -18,6 +18,7 @@ import { encrypt } from "../../../../utils/crypt";
 import { setData } from "../../../../redux/meeting";
 
 import useSocket from "../../../../hooks/useSocket";
+import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 
 function ContactItem(props) {
   const {
@@ -36,7 +37,7 @@ function ContactItem(props) {
   const [contextMenu, setContextMenu] = useState(null);
   const [showSecondaryAction, setShowSecondaryAction] = useState(false);
   const socket = useSocket();
-  const [{ secretCode }] useLocalStoreData();
+  const [{ secretCode }] = useLocalStoreData();
   const dispatch = useDispatch();
 
   const handleContextMenu = (event) => {

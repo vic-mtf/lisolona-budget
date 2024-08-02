@@ -4,7 +4,7 @@ import { useLayoutEffect, useMemo } from "react";
 import { ThemeProvider } from "@mui/material";
 
 export default function ConfigAppProvider({ children }) {
-  const { lang } = useSelector((store) => store.app);
+  const lang = useSelector((store) => store.app.lang);
   const theme = useTheme();
   const bgcolor = useMemo(() => theme.palette.background.default, [theme]);
 

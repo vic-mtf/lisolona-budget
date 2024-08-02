@@ -9,6 +9,7 @@ import ConfigAppProvider from "./components/ConfigAppProvider";
 import SocketIOProvider from "./components/SocketIOProvider";
 import LocalStoreDataProvider from "./components/LocalStoreDataProvider";
 import { snackbarComponents } from "./components/ReportComplete";
+import InboundUpdateEventDetector from "./components/InboundUpdateEventDetector";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -20,6 +21,7 @@ root.render(
           <SnackbarProvider Components={snackbarComponents}>
             <LocalStoreDataProvider>
               <App />
+              <InboundUpdateEventDetector />
             </LocalStoreDataProvider>
           </SnackbarProvider>
         </ConfigAppProvider>

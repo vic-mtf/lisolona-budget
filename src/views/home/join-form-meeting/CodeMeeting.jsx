@@ -20,7 +20,7 @@ const CodeMeeting = ({ values, loading, refetch }) => {
           const { data: meeting } = await refetch({
             url: "api/chat/room/call/" + code.join(""),
           });
-          navigateTo("/home", { replace: true, state: { meeting } });
+          navigateTo("/", { replace: true, state: { meeting } });
         } catch (error) {
           const status = error?.request?.status;
           const { message, severity } = messages[status] || {};

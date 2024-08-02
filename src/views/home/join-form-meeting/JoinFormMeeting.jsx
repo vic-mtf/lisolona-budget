@@ -76,8 +76,7 @@ export default function JoinFormMeeting({ message }) {
               disableGutters
               variant='dense'>
               <Tooltip title='Retour' arrow>
-                <IconButton
-                  onClick={() => navigateTo("/home", { replace: true })}>
+                <IconButton onClick={() => navigateTo("/", { replace: true })}>
                   <ArrowBackOutlinedIcon />
                 </IconButton>
               </Tooltip>

@@ -1,15 +1,9 @@
-import formatObjectData from "../../utils/formatObjectData";
+import formatObjectData, { formatUser } from "../../utils/formatObjectData";
 import deepMerge from "../../utils/mergeDeep";
 
 const updateArraysData = (state, actions) => {
   const { payload, store } = actions;
   const keys = Object.keys(payload);
-  const formatUser = (obj) =>
-    formatObjectData({
-      ...obj,
-      grade: obj.grade?.grade || obj.grade,
-      role: obj?.grade?.role || obj.role,
-    });
 
   keys.forEach((key) => {
     const values = payload[key];

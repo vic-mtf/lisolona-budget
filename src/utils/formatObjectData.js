@@ -1,5 +1,3 @@
-import { getValFromObj } from "./getFullName";
-
 export default function formatObjectData(
   data = {},
   keyConfig = userFormatConfig
@@ -25,11 +23,32 @@ export default function formatObjectData(
   return result;
 }
 
+export const getValFromObj = (obj = {}, keys = [], output = null) => {
+  let val = null;
+  keys?.forEach((key) => {
+    if (val === null && obj?.hasOwnProperty(key))
+      val =
+        typeof obj[key] === "string"
+          ? obj[key].trim() || null
+          : obj[key] === undefined
+          ? output
+          : obj[key];
+  });
+  return val;
+};
+
 export const deleteKeysFromObject = (obj, keys) => {
   const result = Object.assign({}, obj);
   (Array.isArray(keys) ? keys : [keys]).forEach((key) => delete result[key]);
   return result;
 };
+
+export const formatUser = (obj) =>
+  formatObjectData({
+    ...obj,
+    grade: obj.grade?.grade || obj.grade,
+    role: obj?.grade?.role || obj.role,
+  });
 
 export const userFormatConfig = {
   id: ["_id", "userId"],
