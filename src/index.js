@@ -9,7 +9,6 @@ import ConfigAppProvider from "./components/ConfigAppProvider";
 import SocketIOProvider from "./components/SocketIOProvider";
 import LocalStoreDataProvider from "./components/LocalStoreDataProvider";
 import { snackbarComponents } from "./components/ReportComplete";
-import AgoraProviderClient from "./components/AgoraProviderClient";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -20,9 +19,7 @@ root.render(
         <ConfigAppProvider>
           <SnackbarProvider Components={snackbarComponents}>
             <LocalStoreDataProvider>
-              <AgoraProviderClient>
-                <App />
-              </AgoraProviderClient>
+              <App />
             </LocalStoreDataProvider>
           </SnackbarProvider>
         </ConfigAppProvider>

@@ -1,83 +1,81 @@
 export default function isTextFile(extension) {
-    switch (extension) {
-      case 'txt':
-      case 'md':
-      case 'rtf':
-      case 'odt':
-      case 'csv':
-      case 'tsv':
-      case 'xml':
-      case 'yml':
-      case 'yaml':
-      case 'ini':
-      case 'conf':
-      case 'jsonl':
-      case 'log':
-      case 'msg':
-      case 'eml':
-      case 'mbox':
-      case 'nfo':
-      case 'README':
-      case 'LICENSE':
-      case 'CHANGELOG':
-      case 'js':
-      case 'jsx':
-      case 'ts':
-      case 'tsx':
-      case 'json':
-      case 'html':
-      case 'css':
-      case 'scss':
-      case 'sass':
-      case 'less':
-      case 'styl':
-      case 'php':
-      case 'py':
-      case 'rb':
-      case 'java':
-      case 'c':
-      case 'cpp':
-      case 'h':
-      case 'hpp':
-      case 'cs':
-      case 'swift':
-      case 'go':
-      case 'rust':
-      case 'dart':
-      case 'kt':
-      case 'groovy':
-      case 'scala':
-      case 'lua':
-      case 'perl':
-      case 'r':
-      case 'matlab':
-      case 'sql':
-      case 'pl':
-      case 'tcl':
-      case 'asm':
-      case 's':
-      case 'm':
-      case 'ml':
-      case 'mli':
-      case 'mll':
-      case 'mly':
-      case 'fs':
-      case 'fsi':
-      case 'fsx':
-      case 'fsscript':
-      case 'fsharp':
-      case 'f90':
-      case 'f95':
-      case 'f03':
-      case 'f08':
-      case 'ada':
-      case 'awk':
-      case 'bat':
-      case 'cbl':
-      case 'cobol':
-      case 'coffee': 
-        return true;
-        default: return false;
-    }
-  }
-  
+  const extensions = [
+    "md",
+    "txt",
+    "rtf",
+    "odt",
+    "csv",
+    "tsv",
+    "xml",
+    "yml",
+    "yaml",
+    "ini",
+    "conf",
+    "jsonl",
+    "log",
+    "msg",
+    "eml",
+    "mbox",
+    "nfo",
+    "README",
+    "LICENSE",
+    "CHANGELOG",
+    "js",
+    "jsx",
+    "ts",
+    "tsx",
+    "json",
+    "html",
+    "css",
+    "scss",
+    "sass",
+    "less",
+    "styl",
+    "php",
+    "py",
+    "rb",
+    "java",
+    "c",
+    "cpp",
+    "h",
+    "hpp",
+    "cs",
+    "swift",
+    "go",
+    "rust",
+    "dart",
+    "kt",
+    "groovy",
+    "scala",
+    "lua",
+    "perl",
+    "r",
+    "matlab",
+    "sql",
+    "pl",
+    "tcl",
+    "asm",
+    "s",
+    "m",
+    "ml",
+    "mli",
+    "mll",
+    "mly",
+    "fs",
+    "fsi",
+    "fsx",
+    "fsscript",
+    "fsharp",
+    "f90",
+    "f95",
+    "f03",
+    "f08",
+    "ada",
+    "awk",
+    "bat",
+    "cbl",
+    "cobol",
+    "coffee",
+  ];
+  return extensions.includes(extension?.toLowerCase());
+}

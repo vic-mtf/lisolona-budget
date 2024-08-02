@@ -1,7 +1,7 @@
 import { CssBaseline, Box as MuiBox } from "@mui/material";
 import React, { useMemo } from "react";
 import Main from "./main/Main";
-import NavigationLeft from "./navigation/left/NavigationLeft";
+// import NavigationLeft from "./navigation/left/NavigationLeft";
 // import NavigationRight from './navigation/right/NavigationRight';
 import { useSelector } from "react-redux";
 
@@ -16,7 +16,8 @@ export default function Views() {
       overflow='hidden'>
       <MuiBox sx={{ display: "flex", flex: 1, width: "100%" }}>
         <CssBaseline />
-        <NavigationLeft />
+        {/* <NavigationLeft /> */}
+
         <MainRight />
       </MuiBox>
     </MuiBox>

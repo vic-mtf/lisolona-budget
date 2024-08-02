@@ -7,7 +7,7 @@ import { SIGN_IN_CHANNEL } from "../utils/broadcastChannel";
 import store from "../redux/store";
 import { updateApp } from "../redux/app";
 import { updateUser } from "../redux/user";
-import { getValFromObj } from "../utils/getFullName";
+import formatUserData from "../utils/formatObjectData";
 
 export default function useSignInSendData({ refresh, user }) {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -111,20 +111,11 @@ export function useCheckTokenAccount({ user, refresh }) {
 }
 
 export const setSignInData = (data) => {
-  const user = {
-    id: getValFromObj(data, ["_id", "id", "userId"]),
-    token: data.token,
-    email: getValFromObj(data, ["userEmail", "email"]),
-    firstName: getValFromObj(data, ["userFname", "fname", "firstName"]),
-    lastName: getValFromObj(data, ["userLname", "lname", "lastName"]),
-    middleName: getValFromObj(data, ["userMname", "mname", "middleName"]),
-    docTypes: data.docTypes,
-    number: getValFromObj(data, ["phoneCell", "number"]),
-    image: getValFromObj(data, ["userImage", "image"]),
+  const user = formatUserData({
+    ...data,
     grade: data?.grade || data?.userGrade?.grade,
     role: data?.role || data?.userGrade?.role,
-    auth: data?.auth,
-  };
+  });
 
   const encryptUser = encrypt(user);
   SIGN_IN_CHANNEL.postMessage(encryptUser, window.location.origin);

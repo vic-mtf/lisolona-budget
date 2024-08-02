@@ -5,20 +5,13 @@ import Typography from "../../../components/Typography";
 
 export default function Home() {
   return (
-    <Box
-      sx={{
-        display: {
-          xs: "none",
-          md: "flex",
-        },
-      }}>
+    <Box sx={{ display: { xs: "none", md: "flex" } }}>
       <Box
         justifyContent='center'
         alignItems='center'
         flexDirection='column'
         px={2}>
         <Toolbar variant='dense' />
-
         <Chip
           variant='outlined'
           label='Veuillez sélectionner une conversation pour entamer une discussion.'

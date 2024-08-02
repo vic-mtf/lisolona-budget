@@ -1,20 +1,19 @@
 import Box from "../../components/Box";
-import _lisolonabudget_logo from "../../assets/group_speak.webp";
+import _app_logo from "../../assets/group_speak.webp";
 import { Stack, Box as MuiBox, CircularProgress, Divider } from "@mui/material";
 import Typography from "../../components/Typography";
 import "animate.css/source/attention_seekers/swing.css";
-import _logo_geid from "../../assets/geid_logo_blue_without_title.webp";
+import _platform_logo from "../../assets/geid_logo_blue_without_title.webp";
 import { useCallback } from "react";
 import useAxios from "../../hooks/useAxios";
-import setData from "../../utils/setData";
-import db, { clearDatabase } from "../../database/db";
-import SwingAnimation from "../../components/Swin";
+
+import SwingAnimation from "../../components/SwingAnimation";
 import store from "../../redux/store";
 import useToken from "../../hooks/useToken";
 import PropTypes from "prop-types";
+import { updateArraysData } from "../../redux/data/data";
 export default function Cover({ setLoaded }) {
   const Authorization = useToken();
-
   const [{ loading }, refresh] = useAxios(
     {
       url: "/api/chat",
@@ -23,32 +22,31 @@ export default function Cover({ setLoaded }) {
     { manual: true }
   );
 
-  const handleDataApp = useCallback(
-    async (userId) => {
-      const key = "a2f4c6d8e0b1f7a9c3e5d7b9f2a0c1e6";
-      const user = await db.user.get(key);
-      console.log(user);
-      if (user && user?.userId !== userId)
-        clearDatabase().then(() => window.location.reload());
-      if (!user) await db.user.put({ id: key, userId });
-      try {
-        const response = await refresh();
-        const {
-          chats: discussions,
+  const handleDataApp = useCallback(async () => {
+    try {
+      const response = await refresh();
+
+      const {
+        chats: discussions,
+        contacts,
+        invitations,
+        callHistory,
+      } = response.data || {};
+      const { data: calls } = await refresh({ url: "/api/chat/room/call/" });
+      store.dispatch(
+        updateArraysData({
+          calls,
+          discussions,
           contacts,
-          // invitations,
-          // callHistory,
-        } = response.data || {};
-        const { data } = await refresh({ url: "/api/chat/room/call/" });
-        const meetings = data?.meetings || [];
-        await setData({ discussions, userId, contacts, meetings });
-      } catch (error) {
-        console.error(error);
-      }
-      setLoaded(true);
-    },
-    [setLoaded, refresh]
-  );
+          invitations,
+          callHistory,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+    setLoaded(true);
+  }, [setLoaded, refresh]);
 
   return (
     <Box
@@ -68,13 +66,9 @@ export default function Cover({ setLoaded }) {
         alignItems='center'
         flex={1}
         spacing={1}>
-        <SwingAnimation
-          delay={2}
-          onFinish={() => {
-            handleDataApp(store.getState().user?.id);
-          }}>
+        <SwingAnimation delay={2} onFinish={handleDataApp}>
           <img
-            src={_lisolonabudget_logo}
+            src={_app_logo}
             draggable={false}
             alt='lisolo na budget'
             style={{
@@ -84,7 +78,6 @@ export default function Cover({ setLoaded }) {
             }}
           />
         </SwingAnimation>
-
         <MuiBox
           display='flex'
           justifyContent='center'
@@ -108,7 +101,7 @@ export default function Cover({ setLoaded }) {
             }
             display='flex'
             justifyContent='center'>
-            <img alt='geid-budget' src={_logo_geid} width={120} />
+            <img alt='geid-budget' src={_platform_logo} width={120} />
             <Typography noWrap variant='h4'>
               Lisolo Na Budget
             </Typography>

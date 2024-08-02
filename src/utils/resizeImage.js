@@ -1,28 +1,27 @@
 const defaultProps = {
-    url: null, 
-    maxWidth: null, 
-    maxHeight: null, 
-    quality: 1,
-    scale: 1,
-    multiQuality: false,
-    imageSmoothingQuality: null,
+  url: null,
+  maxWidth: null,
+  maxHeight: null,
+  quality: 1,
+  scale: 1,
+  multiQuality: false,
+  imageSmoothingQuality: null,
 };
 export default function resizeImage(props = defaultProps) {
   const {
-    url, 
-    maxWidth: mW, 
-    maxHeight: mH, 
-    quality, 
-    scale, 
-    imageSmoothingQuality, 
-    multiQuality 
-  } = 
-  {...defaultProps, ...props};
+    url,
+    maxWidth: mW,
+    maxHeight: mH,
+    quality,
+    scale,
+    imageSmoothingQuality,
+    multiQuality,
+  } = { ...defaultProps, ...props };
   return new Promise((resolve, reject) => {
     try {
       const img = new Image();
       img.src = url;
-      img.onload = function() {
+      img.onload = function () {
         const canvas = document.createElement("canvas");
         let width = img.width;
         let height = img.height;
@@ -43,24 +42,24 @@ export default function resizeImage(props = defaultProps) {
         canvas.height = height;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-        if(imageSmoothingQuality) 
+        if (imageSmoothingQuality)
           ctx.imageSmoothingQuality = imageSmoothingQuality;
         const normal = canvas.toDataURL("image/webp", quality);
         let high = null;
         let medium = null;
         let low = null;
-        if(multiQuality) {
-          ctx.imageSmoothingQuality = 'low';
+        if (multiQuality) {
+          ctx.imageSmoothingQuality = "low";
           low = canvas.toDataURL("image/webp", quality);
-          ctx.imageSmoothingQuality = 'medium';
+          ctx.imageSmoothingQuality = "medium";
           medium = canvas.toDataURL("image/webp", quality);
-          ctx.imageSmoothingQuality = 'high';
+          ctx.imageSmoothingQuality = "high";
           high = canvas.toDataURL("image/webp", quality);
         }
-        resolve({normal, high, medium, low});
+        resolve({ normal, high, medium, low });
       };
-    } catch(error) {
+    } catch (error) {
       reject(error);
-    };
+    }
   });
 }

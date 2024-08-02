@@ -1,6 +1,5 @@
 export default function compareArrays(arr1, arr2) {
-  if (arr1.length !== arr2.length)
-    return false;
+  if (arr1.length !== arr2.length) return false;
   for (let i = 0; i < arr1.length; i++) {
     let found = false;
     for (let j = 0; j < arr2.length; j++)

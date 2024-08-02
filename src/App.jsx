@@ -27,7 +27,7 @@ function App() {
     SIGN_IN_CHANNEL.addEventListener("message", handleAutoConnection);
     return () =>
       SIGN_IN_CHANNEL.removeEventListener("message", handleAutoConnection);
-  }, [connected, dispatch]);
+  }, [dispatch]);
 
   return (
     <BoxGradient

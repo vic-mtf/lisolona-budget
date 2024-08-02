@@ -1,9 +1,12 @@
-const _ = require('lodash');
+import { escapeRegExp } from "lodash";
 
 export default function filterByKeyword(object, keyword) {
-  const escapedKeyword = _.escapeRegExp(keyword);
-  const words = escapedKeyword.split(' ');
-  const regexes = words.filter(word => words.length > 1 ? word.trim()  : true)
-  .map((word) => new RegExp(word, 'i'));
-  return regexes.some((regex) => regex.test(object.name) || regex.test(object.email));
+  const escapedKeyword = escapeRegExp(keyword);
+  const words = escapedKeyword.split(" ");
+  const regExes = words
+    .filter((word) => (words.length > 1 ? word.trim() : true))
+    .map((word) => new RegExp(word, "i"));
+  return regExes.some(
+    (regex) => regex.test(object.name) || regex.test(object.email)
+  );
 }
