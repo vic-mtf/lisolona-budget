@@ -1,5 +1,5 @@
 import * as React from "react";
-import NavDrawer, { DrawerHeader } from "../../../components/NavDrawer";
+import NavDrawer from "../../../components/NavDrawer";
 import {
   Divider,
   Stack,
@@ -10,12 +10,15 @@ import {
   useTheme as useMuiTheme,
 } from "@mui/material";
 import useTheme from "../../../hooks/useTheme";
+import LogoTitle from "./LogoTitle";
+import NavTab from "./NavTab";
+import NavigationContent from "./NavigationContent";
 
 export default function Navigation() {
   const toolbarTheme = useTheme("light");
   const contentToolbarTheme = useTheme("dark");
   const muiTheme = useMuiTheme();
-  const matches = useMediaQuery(muiTheme.breakpoints.up("sm"));
+  const matches = useMediaQuery(muiTheme.breakpoints.down("md"));
 
   return (
     <>
@@ -30,7 +33,7 @@ export default function Navigation() {
                 duration: theme.transitions.duration.enteringScreen,
               }),
           },
-          ...(!matches && {
+          ...(matches && {
             width: "100%",
             "& .MuiDrawer-paper": {
               width: "100%",
@@ -45,7 +48,9 @@ export default function Navigation() {
         <Toolbar
           sx={{ bgcolor: toolbarTheme.palette.primary.main }}
           variant='dense'>
-          <ThemeProvider theme={contentToolbarTheme}></ThemeProvider>
+          <ThemeProvider theme={contentToolbarTheme}>
+            <LogoTitle />
+          </ThemeProvider>
         </Toolbar>
         <Stack
           divider={<Divider orientation='vertical' />}
@@ -59,8 +64,34 @@ export default function Navigation() {
               height: "100%",
             },
           }}>
-          <Box width={60}>a</Box>
-          <Box>b</Box>
+          <Box width={40}></Box>
+          <Box
+            display='flex'
+            overflow='hidden'
+            flex={1}
+            sx={{ flexDirection: { xs: "column-reverse", md: "column" } }}>
+            <Box>
+              <NavTab />
+            </Box>
+            <Box
+              display='flex'
+              flex={1}
+              overflow='hidden'
+              position='relative'
+              sx={{
+                "& > div": {
+                  display: "flex",
+                  overflow: "hidden",
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%",
+                  top: 0,
+                  left: 0,
+                },
+              }}>
+              <NavigationContent />
+            </Box>
+          </Box>
         </Stack>
       </NavDrawer>
     </>

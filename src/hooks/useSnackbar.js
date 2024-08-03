@@ -38,7 +38,7 @@ export default function useSnackbar() {
               border: (theme) => `1px solid ${theme.palette.divider}`,
             },
             children: Children.toArray([
-              title && <AlertTitle>{title}</AlertTitle>,
+              title && createElement(AlertTitle, null, title),
               message,
             ]),
           });
