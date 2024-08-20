@@ -1,12 +1,15 @@
 import formatObjectData, { formatUser } from "../../utils/formatObjectData";
+import getFullName from "../../utils/getFullName";
 import deepMerge from "../../utils/mergeDeep";
 
 const updateArraysData = (state, actions) => {
   const { payload, store } = actions;
   const keys = Object.keys(payload);
+  const sortByUpdateDate = ({ updatedAt: a }, { updatedAt: b }) =>
+    new Date(b).getTime() - new Date(a).getTime();
 
   keys.forEach((key) => {
-    const values = payload[key];
+    const values = payload[key]?.sort(sortByUpdateDate);
     values.forEach((value) => {
       const formattedValue = formatObjectData(value);
 
@@ -36,7 +39,7 @@ const updateArraysData = (state, actions) => {
         formattedValue.messages = formattedValue.messages.map((message) =>
           formatObjectData(
             { ...message, sender: formatUser(message?.sender) },
-            { id: "_id" }
+            { id: "_id", subType: "subtype" }
           )
         );
 
@@ -52,12 +55,29 @@ const updateArraysData = (state, actions) => {
       );
 
       if (key === "discussions") {
-        state.app.messages[formattedValue.id] = formattedValue.messages.map(
-          (msg) => ({ ...msg, status: "send" })
-        );
+        const newMessages = formattedValue.messages.map((msg) => ({
+          ...msg,
+          status: "send",
+        })); //.sort((a, b) => new Date(b.updatedAt).getTime()  - new Date(a.updatedAt).getTime());
+        let messages = state.app.messages[formattedValue.id] || [];
+        newMessages.forEach((newMessage) => {
+          const index = messages.findIndex((msg) => msg.id === newMessage.id);
+          if (index === -1) messages.push(newMessage);
+          else messages[index] = deepMerge(messages[index], newMessage);
+        });
+        messages = messages.sort(sortByUpdateDate);
+        state.app.messages[formattedValue.id] = messages;
         delete formattedValue.messages;
-      }
+        const [message] = messages;
+        formattedValue.message = message;
 
+        if (formattedValue.type === "direct") {
+          const contactPerson = formattedValue.members.find(
+            ({ id }) => id !== store?.user?.id
+          );
+          formattedValue.name = getFullName(contactPerson);
+        }
+      }
       if (index > -1) {
         const oldValue = state.app[key][index];
         state.app[key][index] = deepMerge(oldValue, formattedValue);

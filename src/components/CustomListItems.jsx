@@ -13,7 +13,8 @@ export default function CustomListItems({ sx, data, itemContent }) {
       sx={{
         boxShadow: show ? shadow : 0,
         "& .item-container-list": {
-          overflow: "auto",
+          overflow: "hidden",
+          overflowY: "auto",
           height: "100%",
           ...sx,
         },
