@@ -3,12 +3,15 @@ import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import getFullName from "../../../../utils/getFullName";
 import { escapeRegExp } from "lodash";
+// import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
+import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
 
 const filterCategory = [
   {
     label: "Tous",
     id: "all",
     icon: "div",
+    // icon: ChatOutlinedIcon,
   },
   {
     label: "Non lues",
@@ -19,6 +22,11 @@ const filterCategory = [
     label: "Lisanga",
     id: "room",
     icon: GroupsOutlinedIcon,
+  },
+  {
+    label: "Favories",
+    id: "favorite",
+    icon: GradeOutlinedIcon,
   },
 ];
 

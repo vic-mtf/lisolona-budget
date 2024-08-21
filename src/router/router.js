@@ -5,7 +5,7 @@ import HomePage from "../views/home/Home";
 import { createElement } from "react";
 import MainView from "../views/main-view/MainView";
 
-const PUBLIC_URL = process.env.PUBLIC_URL.trim();
+const PUBLIC_URL = import.meta.env.BASE_URL;
 
 const PROTECTED_ROUTES = [
   {

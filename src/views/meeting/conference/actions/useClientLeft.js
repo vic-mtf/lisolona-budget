@@ -72,7 +72,7 @@ export default function useClientLeft() {
     const handleSignal = async (event) => {
       if (store.getState().meeting.meetingId === event?.where?._id) {
         const state = event?.what?.state?.handRaised;
-        console.log(event?.what?.state);
+
         const [id] = Array.isArray(event?.who) ? event?.who : [event?.who?._id];
         const isHandRaiseAlert = isBoolean(state);
         if (isHandRaiseAlert) handleShowAlert({ state, id });

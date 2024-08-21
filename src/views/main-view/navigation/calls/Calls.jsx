@@ -1,35 +1,27 @@
 import { Chip, Stack, Toolbar } from "@mui/material";
-import filterCategory, {
-  filterByCategory,
-  filterByName,
-} from "./filterCategory";
+
 import { createElement, useState, useMemo, useCallback } from "react";
 import InputSearch from "../../../../components/InputSearch";
 import Typography from "../../../../components/Typography";
 import { useSelector } from "react-redux";
-import DiscussionList from "./DiscussionList";
-import DiscussionItem from "./DiscussionItem";
+// import DiscussionList from "./DiscussionList";
+// import DiscussionItem from "./DiscussionItem";
 import store from "../../../../redux/store";
 import { updateData } from "../../../../redux/data/data";
-import AddDiscussion from "./AddDiscussion";
 
-export default function Discussions() {
-  const bulkDiscussions = useSelector((store) => store.data.app.discussions);
+export default function Calls() {
+  const bulkCalls = useSelector((store) => store.data.app.calls);
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
-  const [category, setCategory] = useState(filterCategory[0].id);
   const [search, setSearch] = useState("");
 
-  const discussions = useMemo(
-    () =>
-      bulkDiscussions?.filter(
-        (item) => filterByCategory(item, category) && filterByName(item, search)
-      ),
-    [bulkDiscussions, category, search]
+  const calls = useMemo(
+    () => bulkCalls?.filter(() => true),
+    [bulkCalls, search]
   );
 
   const itemContent = useCallback(
     ({ index, style }) => {
-      const data = discussions[index];
+      const data = calls[index];
       const id = data?.id;
       const remote = data.members.find(
         ({ id }) => id !== store.getState().user.id
@@ -38,7 +30,7 @@ export default function Discussions() {
 
       return (
         <div key={id} style={style}>
-          <DiscussionItem
+          {/* <DiscussionItem
             {...data}
             image={image}
             onClick={() =>
@@ -57,13 +49,13 @@ export default function Discussions() {
                 data,
               }));
             }}
-            divider={index !== discussions.length - 1}
+            divider={index !== calls.length - 1}
             selected={data.id === discussionTarget}
-          />
+          /> */}
         </div>
       );
     },
-    [discussions, discussionTarget]
+    [calls, discussionTarget]
   );
 
   return (
@@ -71,29 +63,17 @@ export default function Discussions() {
       <Stack spacing={1} px={1} pb={1}>
         <Toolbar variant='dense'>
           <Typography variant='h6' flexGrow={1}>
-            Discussions
+            Appels
           </Typography>
-          <AddDiscussion />
         </Toolbar>
+        {/* <Toolbar variant='dense'></Toolbar> */}
         <InputSearch
           placeholder='Recherche'
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        <Stack direction='row' spacing={0.5}>
-          {filterCategory.map(({ id, label, icon }) => (
-            <Chip
-              key={id}
-              label={label}
-              color={category === id ? "primary" : "default"}
-              onClick={() => setCategory(id)}
-              icon={createElement(icon)}
-              sx={{ borderRadius: 1 }}
-            />
-          ))}
-        </Stack>
       </Stack>
-      <DiscussionList data={discussions} itemContent={itemContent} />
+      {/* <DiscussionList data={calls} itemContent={itemContent} /> */}
     </>
   );
 }

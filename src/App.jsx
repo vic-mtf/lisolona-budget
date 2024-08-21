@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import BoxGradient from "./components/BoxGradient";
@@ -12,8 +12,8 @@ import { SIGN_IN_CHANNEL } from "./utils/broadcastChannel";
 
 function App() {
   const connected = useSelector((store) => store.user.connected);
+  const loaded = useSelector((store) => store.data.app.loaded);
   const dispatch = useDispatch();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const handleAutoConnection = (event) => {
@@ -45,17 +45,20 @@ function App() {
           bottom: 0,
         },
         "& > div > div": { display: "flex", flex: 1 },
+        "& > div > #router-container": {
+          display: (connected ? loaded : true) ? "flex" : "none",
+        },
       }}>
       <Fade in={!loaded && connected} unmountOnExit>
         <Box>
-          <Cover
-            setLoaded={setLoaded}
-            key={connected ? "connected" : "disconnected"}
-          />
+          <Cover />
         </Box>
       </Fade>
-      <Fade in={loaded || !connected} unmountOnExit>
-        <Box sx={{ display: connected && !loaded ? "none" : "flex" }}>
+      <Fade
+        in={connected ? loaded : true}
+        unmountOnExit
+        key={connected ? "connected" : "disconnected"}>
+        <Box id='router-container'>
           <RouterProvider router={router(connected)} />
         </Box>
       </Fade>

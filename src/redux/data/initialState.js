@@ -5,6 +5,7 @@ export const initialState = {
   dialog: null,
   activeCall: false,
   app: {
+    loaded: false,
     contacts: [],
     discussions: [],
     notifications: [],

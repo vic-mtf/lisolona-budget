@@ -1,6 +1,7 @@
 import { CssBaseline, Box as MuiBox } from "@mui/material";
 import React from "react";
 import Navigation from "./navigation/Navigation";
+import { useSelector } from "react-redux";
 
 export default function MainView() {
   return (

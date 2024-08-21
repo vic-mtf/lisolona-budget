@@ -17,7 +17,7 @@ import partitionArray from "../../../../../utils/partitionArray";
 import { unionBy } from "lodash";
 import getMessages from "../../../../../database/getMessages";
 
-function MessageContent({ rootRef: _rootRef, target, media }) {
+function MessageItemContent({ rootRef: _rootRef, target, media }) {
   const rootRef = useRef();
   const isScrollableRef = useRef(false);
   const userId = useSelector((store) => store.user.id);
@@ -152,4 +152,4 @@ function MessageContent({ rootRef: _rootRef, target, media }) {
   );
 }
 
-export default MessageContent;
+export default MessageItemContent;

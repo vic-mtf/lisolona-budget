@@ -64,7 +64,7 @@ export default function Navigation() {
               height: "100%",
             },
           }}>
-          <Box width={40}></Box>
+          {/* <Box width={50}></Box> */}
           <Box
             display='flex'
             overflow='hidden'

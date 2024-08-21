@@ -1,15 +1,14 @@
-import { styled, ToggleButton } from "@mui/material";
+import { styled, IconButton as MuiIconButton } from "@mui/material";
 import React from "react";
 
 const IconButton = styled(
   React.forwardRef((props, ref) => (
-    <ToggleButton size='small' value='' {...props} ref={ref} />
+    <MuiIconButton size='small' value='' {...props} ref={ref} />
   ))
-)(() => ({
-  // textTransform: 'none',
-  border: "none",
-  "&:disabled": {
-    border: "none",
+)(({ theme }) => ({
+  borderRadius: theme.spacing(0.5),
+  "& .MuiTouchRipple-root span": {
+    borderRadius: theme.spacing(0.5),
   },
 }));
 

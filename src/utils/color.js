@@ -43,3 +43,12 @@ export function paleColor(color, theme) {
 
   return hex;
 }
+
+export function colorFromId(id, mode = "light") {
+  const num = parseInt(id?.toString()?.substr(-6), 16);
+  let lightness = mode === "light" ? 70 : 30;
+  return {
+    backgroundColor: `hsl(${num % 360}, 100%, ${lightness}%)`,
+    color: `hsl(${num % 360}, 100%, ${lightness - 30}%)`,
+  };
+}

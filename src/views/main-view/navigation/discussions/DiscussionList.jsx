@@ -1,14 +1,16 @@
-import { Box, List, Stack, Zoom } from "@mui/material";
+import { Box, List as MUIList, Stack, Zoom } from "@mui/material";
 import useScrollEnd from "../../../../hooks/useScrollEnd";
 import { Virtuoso } from "react-virtuoso";
 import React from "react";
 import PropTypes from "prop-types";
 import Typography from "../../../../components/Typography";
+import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
+import List from "react-virtualized/dist/commonjs/List";
+import DiscussionItem from "./DiscussionItem";
+import { useState } from "react";
 
 const DiscussionList = React.memo(({ data, itemContent }) => {
-  const [show, { onScroll }] = useScrollEnd();
-
-  console.log(data.length);
+  const [showBoxShadow, setShowBoxShadow] = useState(false);
 
   return (
     <Box
@@ -17,7 +19,9 @@ const DiscussionList = React.memo(({ data, itemContent }) => {
       sx={{
         position: "relative",
         boxShadow: (theme) =>
-          !show ? `inset 0 5px 5px -5px ${theme.palette.divider}` : 0,
+          `inset 0 5px 5px -5px ${
+            showBoxShadow ? theme.palette.divider : "transparent"
+          }`,
         "&  > #virtuoso-container-list": {
           overflow: "hidden",
           overflowY: "auto",
@@ -45,15 +49,23 @@ const DiscussionList = React.memo(({ data, itemContent }) => {
           </Stack>
         </Zoom>
       ) : (
-        <Virtuoso
-          style={{ height: "100%" }}
-          id='virtuoso-container-list'
-          components={{ List }}
-          data={data}
-          itemContent={itemContent}
-          // topItemCount={2}
-          onScroll={onScroll}
-        />
+        <AutoSizer>
+          {({ width, height }) => (
+            <List
+              height={height}
+              width={width}
+              rowCount={data.length}
+              rowHeight={72.5}
+              rowRenderer={itemContent}
+              noContentRenderer={MUIList}
+              style={{ overflowX: "hidden" }}
+              onScroll={({ scrollTop }) => {
+                if (showBoxShadow && scrollTop <= 0) setShowBoxShadow(false);
+                if (!showBoxShadow && scrollTop > 0) setShowBoxShadow(true);
+              }}
+            />
+          )}
+        </AutoSizer>
       )}
     </Box>
   );

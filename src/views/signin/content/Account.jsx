@@ -14,7 +14,6 @@ import Button from "../../../components/Button";
 
 export default function Account({ user, refresh }) {
   const handleCheckAccount = useCheckTokenAccount({ refresh, user });
-  console.log(user);
   return (
     <MuiBox sx={{ width: "100%" }}>
       <Typography color='text.primary' paragraph>

@@ -11,9 +11,12 @@ import SwingAnimation from "../../components/SwingAnimation";
 import store from "../../redux/store";
 import useToken from "../../hooks/useToken";
 import PropTypes from "prop-types";
-import { updateArraysData } from "../../redux/data/data";
-export default function Cover({ setLoaded }) {
+import { updateArraysData, updateData } from "../../redux/data/data";
+import { useDispatch } from "react-redux";
+
+export default function Cover() {
   const Authorization = useToken();
+  const dispatch = useDispatch();
   const [{ loading }, refresh] = useAxios(
     {
       url: "/api/chat",
@@ -45,8 +48,8 @@ export default function Cover({ setLoaded }) {
     } catch (error) {
       console.error(error);
     }
-    setLoaded(true);
-  }, [setLoaded, refresh]);
+    dispatch(updateData({ data: { app: { loaded: true } } }));
+  }, [refresh]);
 
   return (
     <Box
@@ -126,7 +129,3 @@ export default function Cover({ setLoaded }) {
     </Box>
   );
 }
-
-Cover.propTypes = {
-  setLoaded: PropTypes.func.isRequired,
-};

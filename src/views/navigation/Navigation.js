@@ -10,7 +10,6 @@ export default function Navigation({
   sx,
   ...otherProps
 }) {
-  console.log(otherProps);
   return (
     <MuiBox
       variant='permanent'
