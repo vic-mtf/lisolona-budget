@@ -1,6 +1,4 @@
-import { Box as MuiBox, createTheme } from "@mui/material";
-import Typography from "../../../../../../components/Typography";
-import Button from "../../../../../../components/Button";
+import { Box as MuiBox, createTheme, Button, Typography } from "@mui/material";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 

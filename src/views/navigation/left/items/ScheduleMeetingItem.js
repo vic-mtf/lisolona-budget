@@ -4,13 +4,13 @@ import {
   ListItemText,
   ListItem,
   useTheme,
+  Typography,
 } from "@mui/material";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import React from "react";
 import { useSelector } from "react-redux";
-import Typography from "../../../../components/Typography";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import formatDates from "../../../../utils/formatDates";
 import addEmDash from "../../../../utils/addEmDash";

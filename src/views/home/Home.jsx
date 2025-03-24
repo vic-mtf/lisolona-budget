@@ -1,7 +1,6 @@
-import { Box, Divider, Toolbar } from "@mui/material";
+import { Box, Divider, Toolbar, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import Typography from "../../components/Typography";
-import logo from "../../assets/geid_logo_blue_without_title.webp";
+import logo from "../../assets/geid_logo_blue_without_title.png";
 import CarouselPub from "./carousel-pub/CarouselPub";
 import CopyrightFooter from "../../components/CopyrightFooter";
 import JoinFormMeeting from "./join-form-meeting/JoinFormMeeting";
@@ -19,7 +18,7 @@ export default function Home() {
         flexDirection: { xs: "column", md: "row" },
         "& > div": {
           display: "flex",
-          flex: 1,
+          //flex: 1,
           flexDirection: "column",
           minHeight: "100vh",
         },
@@ -28,8 +27,9 @@ export default function Home() {
         sx={{
           justifyContent: "start",
           alignItems: "start",
+          flex: 1,
           background: ({ palette }) =>
-            `linear-gradient(0.5turn, ${palette.background.paper},  ${palette.background.default})`,
+            `linear-gradient(.35turn, ${palette.background.paper},${palette.background.paper},  ${palette.background.default}, ${palette.background.default}, ${palette.background.default},transparent)`,
         }}>
         <Toolbar>
           <Stack
@@ -65,6 +65,7 @@ export default function Home() {
       </Box>
       <Box
         sx={{
+          flex: 0.8,
           justifyContent: {
             xs: "start",
             md: "center",

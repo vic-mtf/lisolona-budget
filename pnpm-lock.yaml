@@ -44,12 +44,12 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^1.9.1
         version: 1.9.7(react-redux@8.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1))(react@18.3.1)
+      '@yudiel/react-qr-scanner':
+        specifier: ^2.0.8
+        version: 2.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       agora-rtc-react:
         specifier: ^2.2.0
         version: 2.2.0(react@18.3.1)
-      animate.css:
-        specifier: ^4.1.1
-        version: 4.1.1
       axios:
         specifier: ^1.3.2
         version: 1.7.2
@@ -92,6 +92,9 @@ importers:
       draftjs-to-html:
         specifier: ^0.9.1
         version: 0.9.1
+      draftjs-to-markdown:
+        specifier: ^0.6.0
+        version: 0.6.0
       emoji-picker-react:
         specifier: ^4.4.8
         version: 4.11.1(react@18.3.1)
@@ -113,6 +116,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      markdown-draft-js:
+        specifier: ^2.4.0
+        version: 2.4.0
       notistack:
         specifier: ^3.0.1
         version: 3.0.1(csstype@3.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -173,6 +179,9 @@ importers:
       react-window:
         specifier: ^1.8.9
         version: 1.8.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-zoom-pan-pinch:
+        specifier: ^3.6.1
+        version: 3.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       redux-persist:
         specifier: ^6.0.0
         version: 6.0.0(react@18.3.1)(redux@4.2.1)
@@ -185,6 +194,9 @@ importers:
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
+      virtua:
+        specifier: ^0.34.2
+        version: 0.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       wavesurfer.js:
         specifier: ^7.4.2
         version: 7.8.2
@@ -1987,6 +1999,12 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
+  '@types/dom-webcodecs@0.1.11':
+    resolution: {integrity: sha512-yPEZ3z7EohrmOxbk/QTAa0yonMFkNkjnVXqbGb7D4rMr+F1dGQ8ZUFxXkyLLJuiICPejZ0AZE9Rrk9wUCczx4A==}
+
+  '@types/emscripten@1.39.13':
+    resolution: {integrity: sha512-cFq+fO/isvhvmuP/+Sl4K4jtU6E23DoivtbO4r50e3odaxAiVdbfSYRDdJ4gCdxx+3aRjhphS5ZMwIH4hFy/Cw==}
+
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
 
@@ -2236,6 +2254,12 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
+  '@yudiel/react-qr-scanner@2.0.8':
+    resolution: {integrity: sha512-/7WHsdC1a/Z909J2zZxqgpUQ1iI554fZxIagucH/tFu1MhZkNIeykYI1OdZgDEwV4CzuSi+h90wwNrhmETcmRw==}
+    peerDependencies:
+      react: ^17 || ^18
+      react-dom: ^17 || ^18
+
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
     deprecated: Use your platform's native atob() and btoa() methods instead
@@ -2315,9 +2339,6 @@ packages:
 
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
-
-  animate.css@4.1.1:
-    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
 
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
@@ -2450,6 +2471,9 @@ packages:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
 
+  autolinker@3.16.2:
+    resolution: {integrity: sha512-JiYl7j2Z19F9NdTmirENSUUIIL/9MytEWtmzhfmsKPCp9E+G35Y0UNCMoM9tFigxT59qSc8Ml2dlZXOCVTYwuA==}
+
   autoprefixer@10.4.19:
     resolution: {integrity: sha512-BaENR2+zBZ8xXhM4pUaKUxlVdxZ0EZhjvbopwnXmxRUfqDmwSpC2lAi/QXvx7NRdPCo1WKEcEF6mV64si1z4Ew==}
     engines: {node: ^10 || ^12 || >=14}
@@ -2547,6 +2571,9 @@ packages:
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  barcode-detector@2.2.8:
+    resolution: {integrity: sha512-m3YGKrcNBTYOIWD+FRDJzNU+qbVJ1xI4Th9OAZBITB4rZX13ShZVO8tnSM8ceglLV2yMovwiphr6P+SNIfjzOg==}
 
   batch@0.6.1:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
@@ -3236,6 +3263,9 @@ packages:
 
   draftjs-to-html@0.9.1:
     resolution: {integrity: sha512-fFstE6+IayaVFBEvaFt/wN8vdj8FsTRzij7dy7LI9QIwf5LgfHFi9zSpvCg+feJ2tbYVqHxUkjcibwpsTpgFVQ==}
+
+  draftjs-to-markdown@0.6.0:
+    resolution: {integrity: sha512-nmze89CrGOQCzPLd16i2hYpmVyQhZnZuIuuLK7SCuGCRCYTPSnf6PE2f9ONcvjT357G+yEdEQh3K3Ry5cNVMcQ==}
 
   duplexer@0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
@@ -4714,6 +4744,10 @@ packages:
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
 
+  markdown-draft-js@2.4.0:
+    resolution: {integrity: sha512-MalOqajYYaELKLPHLnUcaU7kwhIHveVdKd15SKBkDkWj1NBLHuM5uZjXQ5TDfM4rrk4tcAzIvwWhCJzdGNcmkg==}
+    engines: {node: '>=10.13.0'}
+
   mdn-data@2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
 
@@ -5844,6 +5878,13 @@ packages:
       react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
 
+  react-zoom-pan-pinch@3.6.1:
+    resolution: {integrity: sha512-SdPqdk7QDSV7u/WulkFOi+cnza8rEZ0XX4ZpeH7vx3UZEg7DoyuAy3MCmm+BWv/idPQL2Oe73VoC0EhfCN+sZQ==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '*'
+      react-dom: '*'
+
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
@@ -5921,6 +5962,11 @@ packages:
   relateurl@0.2.7:
     resolution: {integrity: sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==}
     engines: {node: '>= 0.10'}
+
+  remarkable@2.0.1:
+    resolution: {integrity: sha512-YJyMcOH5lrR+kZdmB0aJJ4+93bEojRZ1HGDn9Eagu6ibg7aVZhc3OWbbShRid+Q5eAfsEqWxpe+g5W5nYNfNiA==}
+    engines: {node: '>= 6.0.0'}
+    hasBin: true
 
   renderkid@3.0.0:
     resolution: {integrity: sha512-q/7VIQA8lmM1hF+jn+sFSPWGlMkSAeNYcPLmDQx2zzuiDfaLrOmumR8iaUKlenFgh0XRPIUeSPlH3A+AW3Z5pg==}
@@ -6076,6 +6122,9 @@ packages:
   schema-utils@4.2.0:
     resolution: {integrity: sha512-L0jRsrPpjdckP3oPug3/VxNKt2trR8TcabrM6FOAAlvC/9Phcmm+cuAgTlxBqdBR1WJx7Naj9WHw+aOmheSVbw==}
     engines: {node: '>= 12.13.0'}
+
+  sdp@3.2.0:
+    resolution: {integrity: sha512-d7wDPgDV3DDiqulJjKiV2865wKsJ34YI+NDREbm+FySq6WuKOikwyNQcm+doLAZ1O6ltdO0SeKle2xMpN3Brgw==}
 
   selderee@0.11.0:
     resolution: {integrity: sha512-5TF+l7p4+OsnP8BCCvSyZiSPc4x4//p5uPwK8TCnVPJYRmU2aYKMpOXvw8zM5a5JvuuCGN1jmsMwuU2W02ukfA==}
@@ -6701,6 +6750,26 @@ packages:
     resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
     engines: {'0': node >=0.6.0}
 
+  virtua@0.34.2:
+    resolution: {integrity: sha512-r43hQsryJRqVChrf6Go52rScyc89szl/IxFclOJRXF5qd6fv1Lzb68K51htI1NhtaPk+GQxuS2Gd21YL5ZGeDg==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
+      solid-js: '>=1.0'
+      svelte: '>=4.0'
+      vue: '>=3.2'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      solid-js:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   vite@5.4.2:
     resolution: {integrity: sha512-dDrQTRHp5C1fTFzcSaMxjk6vdpKvT+2/mIdE07Gw2ykehT49O0z/VHS3zZ8iV/Gh8BJJKHWOe5RjaNrW5xf/GA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -6812,6 +6881,10 @@ packages:
     peerDependenciesMeta:
       webpack-cli:
         optional: true
+
+  webrtc-adapter@9.0.1:
+    resolution: {integrity: sha512-1AQO+d4ElfVSXyzNVTOewgGT/tAomwwztX/6e3totvyyzXPvXIIuUUjAmyZGbKBKbZOXauuJooZm3g6IuFuiNQ==}
+    engines: {node: '>=6.0.0', npm: '>=3.10.0'}
 
   websocket-driver@0.7.4:
     resolution: {integrity: sha512-b17KeDIQVjvb0ssuSDF2cYXSg2iztliJ4B9WdsuB6J952qCPKmnVq4DyW5motImXHDC1cBT/1UezrJVsKw5zjg==}
@@ -7018,6 +7091,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zxing-wasm@1.2.12:
+    resolution: {integrity: sha512-UzQvEA5Hv4Nd/jJoKq7UN/jfkQwEDMASqoi1unlXrEgOB9rseLpmNTywcv4/2d9aMqKjfczyk3T25r6DYxAb7g==}
 
 snapshots:
 
@@ -9036,6 +9112,10 @@ snapshots:
     dependencies:
       '@types/node': 20.14.12
 
+  '@types/dom-webcodecs@0.1.11': {}
+
+  '@types/emscripten@1.39.13': {}
+
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.0
@@ -9361,6 +9441,13 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
+  '@yudiel/react-qr-scanner@2.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      barcode-detector: 2.2.8
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      webrtc-adapter: 9.0.1
+
   abab@2.0.6: {}
 
   abbrev@1.1.1:
@@ -9433,8 +9520,6 @@ snapshots:
       fast-uri: 3.0.1
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
-
-  animate.css@4.1.1: {}
 
   ansi-escapes@4.3.2:
     dependencies:
@@ -9582,6 +9667,10 @@ snapshots:
   asynckit@0.4.0: {}
 
   at-least-node@1.0.0: {}
+
+  autolinker@3.16.2:
+    dependencies:
+      tslib: 2.6.3
 
   autoprefixer@10.4.19(postcss@8.4.40):
     dependencies:
@@ -9744,6 +9833,11 @@ snapshots:
       - supports-color
 
   balanced-match@1.0.2: {}
+
+  barcode-detector@2.2.8:
+    dependencies:
+      '@types/dom-webcodecs': 0.1.11
+      zxing-wasm: 1.2.12
 
   batch@0.6.1: {}
 
@@ -10440,6 +10534,8 @@ snapshots:
       - encoding
 
   draftjs-to-html@0.9.1: {}
+
+  draftjs-to-markdown@0.6.0: {}
 
   duplexer@0.1.2: {}
 
@@ -12397,6 +12493,10 @@ snapshots:
     dependencies:
       tmpl: 1.0.5
 
+  markdown-draft-js@2.4.0:
+    dependencies:
+      remarkable: 2.0.1
+
   mdn-data@2.0.14: {}
 
   mdn-data@2.0.4: {}
@@ -13586,6 +13686,11 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  react-zoom-pan-pinch@3.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
@@ -13679,6 +13784,11 @@ snapshots:
       jsesc: 0.5.0
 
   relateurl@0.2.7: {}
+
+  remarkable@2.0.1:
+    dependencies:
+      argparse: 1.0.10
+      autolinker: 3.16.2
 
   renderkid@3.0.0:
     dependencies:
@@ -13856,6 +13966,8 @@ snapshots:
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       ajv-keywords: 5.1.0(ajv@8.17.1)
+
+  sdp@3.2.0: {}
 
   selderee@0.11.0:
     dependencies:
@@ -14574,6 +14686,11 @@ snapshots:
       core-util-is: 1.0.2
       extsprintf: 1.3.0
 
+  virtua@0.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    optionalDependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   vite@5.4.2(@types/node@20.14.12)(terser@5.31.3):
     dependencies:
       esbuild: 0.21.5
@@ -14712,6 +14829,10 @@ snapshots:
       - '@swc/core'
       - esbuild
       - uglify-js
+
+  webrtc-adapter@9.0.1:
+    dependencies:
+      sdp: 3.2.0
 
   websocket-driver@0.7.4:
     dependencies:
@@ -14981,3 +15102,7 @@ snapshots:
       yargs-parser: 20.2.9
 
   yocto-queue@0.1.0: {}
+
+  zxing-wasm@1.2.12:
+    dependencies:
+      '@types/emscripten': 1.39.13

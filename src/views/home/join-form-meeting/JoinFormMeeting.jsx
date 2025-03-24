@@ -9,15 +9,15 @@ import {
   LinearProgress,
   Toolbar,
   Tooltip,
+  IconButton,
+  Typography,
 } from "@mui/material";
 import useAxios from "../../../hooks/useAxios";
-import IconButton from "../../../components/IconButton";
 import CodeMeeting from "./CodeMeeting";
 import IdentifyForm from "./IdentifyForm";
-import Typography from "../../../components/Typography";
 import { useNavigate } from "react-router-dom";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-
+import PropTypes from "prop-types";
 export default function JoinFormMeeting({ message }) {
   const location = useLocation();
   const meetingData = useMemo(
@@ -70,11 +70,8 @@ export default function JoinFormMeeting({ message }) {
           </Box>
         </Fade>
         <Fade unmountOnExit in={!!meetingData}>
-          <Box display='flex' gap={1}>
-            <Toolbar
-              sx={{ width: "100%", gap: 1 }}
-              disableGutters
-              variant='dense'>
+          <Box display='flex' gap={2}>
+            <Toolbar sx={{ gap: 1 }} disableGutters variant='dense'>
               <Tooltip title='Retour' arrow>
                 <IconButton onClick={() => navigateTo("/", { replace: true })}>
                   <ArrowBackOutlinedIcon />
@@ -93,20 +90,20 @@ export default function JoinFormMeeting({ message }) {
         sx={{
           background: (theme) =>
             theme.palette.background.paper + theme.customOptions.opacity,
-        }}
-        children={
-          <>
-            <LinearProgress
-              sx={{
-                width: "100%",
-                position: "absolute",
-                top: 0,
-              }}
-            />
-            {message && <Typography mt={2}>{message}</Typography>}
-          </>
-        }
-      />
+        }}>
+        <LinearProgress
+          sx={{
+            width: "100%",
+            position: "absolute",
+            top: 0,
+          }}
+        />
+        {message && <Typography mt={2}>{message}</Typography>}
+      </Backdrop>
     </>
   );
 }
+
+JoinFormMeeting.propTypes = {
+  message: PropTypes.string,
+};

@@ -4,14 +4,14 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Typography,
+  Button,
 } from "@mui/material";
 import { Link as ReactRouterLink } from "react-router-dom";
-import Typography from "../../../components/Typography";
-import Avatar from "../../../components/Avatar";
 import { useCheckTokenAccount } from "../../../hooks/useSignInSendData";
 import getFullName from "../../../utils/getFullName";
-import Button from "../../../components/Button";
-
+import ListAvatar from "../../../components/ListAvatar";
+import PropTypes from "prop-types";
 export default function Account({ user, refresh }) {
   const handleCheckAccount = useCheckTokenAccount({ refresh, user });
   return (
@@ -22,7 +22,9 @@ export default function Account({ user, refresh }) {
       </Typography>
       <ListItemButton onClick={handleCheckAccount}>
         <ListItemAvatar>
-          <Avatar src={user.image} />
+          <ListAvatar src={user.image} invisible id={user?.id}>
+            {getFullName(user)?.toUpperCase()?.charAt(0)}
+          </ListAvatar>
         </ListItemAvatar>
         <ListItemText
           primary={getFullName(user)}
@@ -42,3 +44,8 @@ export default function Account({ user, refresh }) {
     </MuiBox>
   );
 }
+
+Account.propTypes = {
+  user: PropTypes.oneOfType([PropTypes.object, PropTypes.instanceOf(null)]),
+  refresh: PropTypes.func.isRequired,
+};

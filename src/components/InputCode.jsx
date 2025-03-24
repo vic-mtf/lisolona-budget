@@ -1,11 +1,5 @@
-import { Stack, OutlinedInput, Box as MuiBox } from "@mui/material";
-import React, {
-  useRef,
-  useMemo,
-  useState,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import { Stack, OutlinedInput, Box as MuiBox, Zoom } from "@mui/material";
+import { useRef, useMemo, useState, useCallback, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import IconButton from "./IconButton";
@@ -17,12 +11,14 @@ export default function InputCode({
   type = "alphanumeric",
   onChange = () => null,
   onComplete = () => null,
+  backspace = false,
 }) {
   const [codes, setCodes] = useState(values.slice(0, length));
   const rootRef = useRef();
   const changing = useMemo(() => ({ value: true }), []);
   const handleChange = useCallback(
     ({ event, index: _index }) => {
+      event.preventDefault();
       const values = event.target.value?.trim();
       values.split("").forEach((value, __index) => {
         const index = _index + __index;
@@ -33,7 +29,9 @@ export default function InputCode({
         if (verifyType(type, value) || value === "") {
           if (value) {
             event.target?.blur();
+            if (nextInput) nextInput.readOnly = false;
             nextInput?.focus();
+
             setCodes((codes) => [...codes, value].slice(0, length));
           }
         }
@@ -46,11 +44,13 @@ export default function InputCode({
     ({ event, notControlled }) => {
       const inputs = rootRef.current.querySelectorAll("input");
       const previousInput = inputs[codes.length > 0 ? codes.length - 1 : 0];
+      if (previousInput) previousInput.readOnly = false;
       if (
         event?.keyCode === 8 ||
         event?.code?.toLowerCase() === "backspace" ||
         notControlled
       ) {
+        event.preventDefault();
         event.target?.blur();
         previousInput?.focus();
         setCodes((codes) => codes.slice(0, codes.length - 1));
@@ -59,18 +59,9 @@ export default function InputCode({
     [codes]
   );
 
-  useLayoutEffect(() => {
-    if (codes.length === length && changing.value) {
-      setTimeout(() => {
-        onComplete(codes);
-        changing.value = false;
-      });
-    }
-  }, [codes, length, onComplete, changing]);
-
   const inputs = useMemo(
     () =>
-      new Array(length).fill("_").map((_, index, __) => {
+      new Array(length).fill("_").map((_, index) => {
         const value = codes[index] === undefined ? "" : codes[index];
         const readOnly =
           index > 0
@@ -105,6 +96,20 @@ export default function InputCode({
     [codes, length, size, handleChange, handleDelete]
   );
 
+  useLayoutEffect(() => {
+    if (codes.length === length && changing.value) {
+      setTimeout(() => {
+        onComplete(codes);
+        changing.value = false;
+      });
+    }
+  }, [codes, length, onComplete, changing]);
+
+  // useEffect(() => {
+  //   const input = rootRef.current?.querySelector("input");
+  //   if (input) input.focus();
+  // }, []);
+
   return (
     <MuiBox
       display='flex'
@@ -125,25 +130,32 @@ export default function InputCode({
         flex={1}>
         {inputs}
       </Stack>
-      <MuiBox justifyContent='center' alignItems='center' display='flex'>
-        <IconButton
-          onClick={(event) => handleDelete({ event, notControlled: true })}
-          onMouseDown={(event) => event.preventDefault()}>
-          <BackspaceOutlinedIcon />
-        </IconButton>
-      </MuiBox>
+      <Zoom appear={false} in={backspace} unmountOnExit>
+        <MuiBox justifyContent='center' alignItems='center' display='flex'>
+          <IconButton
+            onClick={(event) => {
+              event.preventDefault();
+              handleDelete({ event, notControlled: true });
+            }}
+            onMouseDown={(event) => event.preventDefault()}>
+            <BackspaceOutlinedIcon />
+          </IconButton>
+        </MuiBox>
+      </Zoom>
     </MuiBox>
   );
 }
 
-InputCode.propType = {
+InputCode.propTypes = {
   length: PropTypes.number,
   size: PropTypes.number,
   values: PropTypes.array,
   onChange: PropTypes.func,
   onComplete: PropTypes.func,
   type: PropTypes.oneOf(["numeric", "alphanumeric", "alphabetic"]),
+  backspace: PropTypes.bool,
 };
+
 function verifyType(type, str) {
   let regex;
   switch (type) {

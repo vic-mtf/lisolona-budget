@@ -1,7 +1,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { TextField, Box } from "@mui/material";
+import { TextField, Box, Button } from "@mui/material";
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
-import Button from "../../../components/Button";
 // import { useDispatch } from "react-redux";
 // import useHandleJoinMeeting from "../../main/action/useHandleJoinMeeting";
 import CoPresentOutlinedIcon from "@mui/icons-material/CoPresentOutlined";
@@ -79,31 +78,32 @@ export default function IdentifyForm({ loading, refetch }) {
       display='flex'
       gap={1}
       sx={{
-        flexDirection: { xs: "column", md: "row" },
+        flexDirection: "column",
 
-        width: "100%",
+        width: { xs: "100%", md: 400 },
       }}>
       <TextField
-        size='small'
         label='Nom complet'
         variant='outlined'
         type='text'
         name='name'
-        placeholder='Ex: Viael Mongolo Tanzey'
+        placeholder='Ex: Victor Mongolo Tanzey'
         inputRef={nameRef}
         onChange={handleChange}
         sx={{ minWidth: { xs: "auto", md: 300 } }}
       />
       <Box display='flex' flexDirection='row' gap={1}>
-        <Button
-          variant='outlined'
-          disabled={disabled}
-          size='medium'
-          endIcon={<LaunchOutlinedIcon />}
-          startIcon={<CoPresentOutlinedIcon />}
-          type='submit'>
-          Participer à la réunion
-        </Button>
+        <div>
+          <Button
+            variant='outlined'
+            disabled={disabled}
+            size='medium'
+            endIcon={<LaunchOutlinedIcon />}
+            startIcon={<CoPresentOutlinedIcon />}
+            type='submit'>
+            Participer à la réunion
+          </Button>
+        </div>
       </Box>
     </Box>
   );

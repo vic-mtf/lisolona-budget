@@ -1,7 +1,12 @@
-import { TextField, Box as MuiBox, Alert, Fade } from "@mui/material";
+import {
+  TextField,
+  Box as MuiBox,
+  Alert,
+  Fade,
+  Typography,
+} from "@mui/material";
 import Box from "../../../components/Box";
 import Link from "../../../components/Link";
-import Typography from "../../../components/Typography";
 import { useCheckTokenAccount } from "../../../hooks/useSignInSendData";
 
 export default function CheckEmail({

@@ -1,24 +1,20 @@
-import {
-    Box as MuiBox
-} from '@mui/material';
-import _geid_logo from '../../../assets/geid_logo_blue.webp';
-import Typography from '../../../components/Typography';
+import { Box as MuiBox, Typography } from "@mui/material";
+import _geid_logo from "../../../assets/geid_logo_blue.png";
 
 export default function Header() {
-    return (
-        <MuiBox>
-            <MuiBox
-                component="img"
-                src={_geid_logo}
-                srcSet={_geid_logo}
-                width="80%"
-                draggable={false}
-                sx={{ userSelect: 'none'}}
-
-            />
-            <Typography align="center" variant="h6" paragraph>
-                Authentification
-            </Typography>
-        </MuiBox>
-    );
+  return (
+    <MuiBox>
+      <MuiBox
+        component='img'
+        src={_geid_logo}
+        srcSet={_geid_logo}
+        width='80%'
+        draggable={false}
+        sx={{ userSelect: "none" }}
+      />
+      <Typography align='center' variant='h6' paragraph>
+        Authentification
+      </Typography>
+    </MuiBox>
+  );
 }

@@ -27,24 +27,24 @@ const MessageItemContent = React.memo(({ message, type }) => {
   );
 
   const Icon = messageIconTypes[message?.subType?.toLowerCase() || "document"];
-  if (!message) return "Nouvelle discussions";
+  if (!message || typeof message === "string")
+    return message || "Nouvelle discussion";
 
   return (
     <>
       {senderName && (
         <>
-          <Typography component='span' variant='body2' color='text.primary'>
+          <Typography component='span' variant='body2' color='text.secondary'>
             {senderName}:
           </Typography>{" "}
         </>
       )}
-      {console.log(message)}
       {message?.type === "text"
         ? htmlToText(message?.content)
         : Icon && (
             <Icon
               sx={{
-                fontSize: (theme) => theme.typography.body1.fontSize,
+                fontSize: (theme) => theme.typography.body2.fontSize,
                 position: "relative",
                 top: 3,
               }}
@@ -55,7 +55,7 @@ const MessageItemContent = React.memo(({ message, type }) => {
 });
 
 MessageItemContent.propTypes = {
-  message: PropTypes.object,
+  message: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   type: PropTypes.string.isRequired,
 };

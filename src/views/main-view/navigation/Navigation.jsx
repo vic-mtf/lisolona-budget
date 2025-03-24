@@ -1,32 +1,26 @@
-import * as React from "react";
-import NavDrawer from "../../../components/NavDrawer";
-import {
-  Divider,
-  Stack,
-  Box,
-  Toolbar,
-  ThemeProvider,
-  useMediaQuery,
-  useTheme as useMuiTheme,
-} from "@mui/material";
-import useTheme from "../../../hooks/useTheme";
-import LogoTitle from "./LogoTitle";
+import { Stack, Box } from "@mui/material";
 import NavTab from "./NavTab";
 import NavigationContent from "./NavigationContent";
+import NavDrawer from "../../../components/NavDrawer";
+import { useSelector } from "react-redux";
+import useSmallScreen from "../../../hooks/useSmallScreen";
 
 export default function Navigation() {
-  const toolbarTheme = useTheme("light");
-  const contentToolbarTheme = useTheme("dark");
-  const muiTheme = useMuiTheme();
-  const matches = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const matches = useSmallScreen();
+
+  const targetView = useSelector((store) => store.data.targetView);
 
   return (
     <>
       <NavDrawer
         anchor='left'
-        open
+        variant={matches ? "persistent" : "permanent"}
+        open={!targetView}
         sx={{
           "& .MuiDrawer-paper": {
+            border: "none",
+            borderRight: (theme) =>
+              matches ? "none" : `1px solid ${theme.palette.divider}`,
             transition: (theme) =>
               theme.transitions.create("width", {
                 easing: theme.transitions.easing.easeOut,
@@ -45,15 +39,7 @@ export default function Navigation() {
             },
           }),
         }}>
-        <Toolbar
-          sx={{ bgcolor: toolbarTheme.palette.primary.main }}
-          variant='dense'>
-          <ThemeProvider theme={contentToolbarTheme}>
-            <LogoTitle />
-          </ThemeProvider>
-        </Toolbar>
         <Stack
-          divider={<Divider orientation='vertical' />}
           direction='row'
           display='flex'
           flex={1}
@@ -64,7 +50,6 @@ export default function Navigation() {
               height: "100%",
             },
           }}>
-          {/* <Box width={50}></Box> */}
           <Box
             display='flex'
             overflow='hidden'

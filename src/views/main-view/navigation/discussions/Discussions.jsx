@@ -1,28 +1,36 @@
-import { Chip, Stack, Toolbar } from "@mui/material";
+import { Chip, Stack, Toolbar, Typography } from "@mui/material";
 import filterCategory, {
   filterByCategory,
   filterByName,
+  sortbyKey,
 } from "./filterCategory";
 import { createElement, useState, useMemo, useCallback } from "react";
 import InputSearch from "../../../../components/InputSearch";
-import Typography from "../../../../components/Typography";
 import { useSelector } from "react-redux";
-import DiscussionList from "./DiscussionList";
 import DiscussionItem from "./DiscussionItem";
 import store from "../../../../redux/store";
 import { updateData } from "../../../../redux/data/data";
-import AddDiscussion from "./AddDiscussion";
+import VirtualizedList from "../../../../components/VirtualizedList";
+import MenuDiscussionItem from "./MenuDiscussionItem";
+import CreateDiscussionGroupButton from "./CreateDiscussionGroupButton.";
+import toggleFullScreen from "../../../../utils/toggleFullscreen";
 
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
+  const [menuItem, setMenuItem] = useState({ contextMenu: null, data: null });
   const [category, setCategory] = useState(filterCategory[0].id);
   const [search, setSearch] = useState("");
 
   const discussions = useMemo(
     () =>
-      bulkDiscussions?.filter(
-        (item) => filterByCategory(item, category) && filterByName(item, search)
+      sortbyKey(
+        bulkDiscussions?.filter(
+          (item) =>
+            filterByCategory(item, category) && filterByName(item, search)
+        ),
+        "update",
+        false
       ),
     [bulkDiscussions, category, search]
   );
@@ -39,26 +47,34 @@ export default function Discussions() {
       return (
         <div key={id} style={style}>
           <DiscussionItem
-            {...data}
+            name={data?.name}
             image={image}
+            type={data?.type}
+            message={data?.message || "Nouvelle discussion"}
+            status={data?.status}
+            id={id}
+            updatedAt={data?.updatedAt}
             onClick={() =>
-              store.dispatch(updateData({ data: { discussionTarget: id } }))
+              store.dispatch(
+                updateData({
+                  data: { discussionTarget: data, targetView: "messages" },
+                })
+              )
             }
             onContextMenu={(event) => {
               event.preventDefault();
-              setItem((item) => ({
+              const [Touch] = event?.changedTouches || [];
+              const mouseX = (Touch?.clientX || event?.clientX) + 2;
+              const mouseY = (Touch?.clientY || event?.clientY) - 6;
+
+              setMenuItem((item) => ({
                 contextMenu:
-                  item.contextMenu === null
-                    ? {
-                        mouseX: event.clientX + 2,
-                        mouseY: event.clientY - 6,
-                      }
-                    : null,
+                  item.contextMenu === null ? { mouseX, mouseY } : null,
                 data,
               }));
             }}
             divider={index !== discussions.length - 1}
-            selected={data.id === discussionTarget}
+            selected={data.id === discussionTarget?.id}
           />
         </div>
       );
@@ -69,11 +85,14 @@ export default function Discussions() {
   return (
     <>
       <Stack spacing={1} px={1} pb={1}>
-        <Toolbar variant='dense'>
-          <Typography variant='h6' flexGrow={1}>
+        <Toolbar>
+          <Typography
+            variant='h5'
+            flexGrow={1}
+            onDoubleClick={() => toggleFullScreen(document.body)}>
             Discussions
           </Typography>
-          <AddDiscussion />
+          <CreateDiscussionGroupButton />
         </Toolbar>
         <InputSearch
           placeholder='Recherche'
@@ -81,19 +100,30 @@ export default function Discussions() {
           onChange={(event) => setSearch(event.target.value)}
         />
         <Stack direction='row' spacing={0.5}>
-          {filterCategory.map(({ id, label, icon }) => (
+          {filterCategory.map(({ id, label, icon, disabled }) => (
             <Chip
               key={id}
               label={label}
               color={category === id ? "primary" : "default"}
               onClick={() => setCategory(id)}
               icon={createElement(icon)}
-              sx={{ borderRadius: 1 }}
+              disabled={disabled}
+              sx={{ flex: 1 }}
             />
           ))}
         </Stack>
       </Stack>
-      <DiscussionList data={discussions} itemContent={itemContent} />
+      <VirtualizedList
+        data={discussions}
+        itemContent={itemContent}
+        rowHeight={69}
+        emptyMessage='Aucune discussion trouvée'
+      />
+      <MenuDiscussionItem
+        {...menuItem}
+        discussionTarget={discussionTarget}
+        onClose={() => setMenuItem({ contextMenu: null, data: null })}
+      />
     </>
   );
 }

@@ -1,25 +1,29 @@
+import { isPlainObject } from "@reduxjs/toolkit";
+
 export default function formatObjectData(
   data = {},
   keyConfig = userFormatConfig
 ) {
   const result = {};
-  Object.keys(data).forEach((key) => {
-    const keys = [];
-    Object.keys(keyConfig).forEach((configKey) => {
-      const _configKeys = keyConfig[configKey];
-      const configKeys = [
-        configKey,
-        ...(Array.isArray(_configKeys) ? _configKeys : [_configKeys]),
-      ];
-      configKeys.forEach((k) => !keys.includes(k) && keys.push(k));
-      if (
-        configKeys.find((key) => data.hasOwnProperty(key)) &&
-        result[configKey] === undefined
-      )
-        result[configKey] = getValFromObj(data, configKeys);
+  if (isPlainObject(data))
+    Object.keys(data).forEach((key) => {
+      const keys = [];
+      Object.keys(keyConfig).forEach((configKey) => {
+        const _configKeys = keyConfig[configKey];
+        const configKeys = [
+          configKey,
+          ...(Array.isArray(_configKeys) ? _configKeys : [_configKeys]),
+        ];
+        configKeys.forEach((k) => !keys.includes(k) && keys.push(k));
+        if (
+          configKeys.find((key) => data.hasOwnProperty(key)) &&
+          result[configKey] === undefined
+        )
+          result[configKey] = getValFromObj(data, configKeys);
+      });
+      if (!keys.includes(key) && data[key] !== undefined)
+        result[key] = data[key];
     });
-    if (!keys.includes(key) && data[key] !== undefined) result[key] = data[key];
-  });
   return result;
 }
 

@@ -23,7 +23,17 @@ const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat((api) => (next) => (action) => {
-      action.store = api.getState();
+      const store = api.getState();
+
+      const elapsedTime = store.data.elapsedTime;
+      const duration = store.data.duration;
+
+      if (Date.now() - elapsedTime <= duration) {
+        action.store = {
+          ...store,
+          data: {}, // Delete data from store.data
+        };
+      }
       next(action);
     }),
 });

@@ -1,80 +1,124 @@
-import { Box, List as MUIList, Stack, Zoom } from "@mui/material";
-import useScrollEnd from "../../../../hooks/useScrollEnd";
-import { Virtuoso } from "react-virtuoso";
-import React from "react";
+import { Box } from "@mui/material";
+import {
+  displays,
+  filterByName,
+  filterByType,
+  sortbyKey,
+} from "./filterCategory";
+import { useState, useMemo, useCallback } from "react";
+import InputSearch from "../../../../components/InputSearch";
+import { useSelector } from "react-redux";
+import store from "../../../../redux/store";
+import VirtualizedList from "../../../../components/VirtualizedList";
 import PropTypes from "prop-types";
-import Typography from "../../../../components/Typography";
-import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
-import List from "react-virtualized/dist/commonjs/List";
+import getFullName from "../../../../utils/getFullName";
 import DiscussionItem from "./DiscussionItem";
-import { useState } from "react";
+import SortButton from "./SortButton";
 
-const DiscussionList = React.memo(({ data, itemContent }) => {
-  const [showBoxShadow, setShowBoxShadow] = useState(false);
+export default function DiscussionList({
+  onClose,
+  closable = true,
+  secondaryAction,
+  onClickItem,
+  itemType = "all",
+}) {
+  const bulkDiscussions = useSelector((store) => store.data.app.discussions);
+  const bulkContacts = useSelector((store) => store.data.app.contacts);
+  const [sortMode, setSortMode] = useState({
+    type: "name",
+    order: "asc",
+    display: itemType,
+  });
+  const bulkAllDiscussions = useMemo(() => {
+    let contacts = [...bulkContacts];
+    const allDiscussions = bulkDiscussions?.map((discussion) => {
+      const contact = contacts.find(({ id }) => id === discussion?.id);
+      contacts = contacts.filter(({ id }) => id !== contact?.id);
+      return {
+        ...contact,
+        ...discussion,
+      };
+    });
+    return allDiscussions?.concat(contacts) || [];
+  }, [bulkDiscussions, bulkContacts]);
+
+  const [search, setSearch] = useState("");
+
+  const discussions = useMemo(() => {
+    const { type, order, display } = sortMode;
+    const data = bulkAllDiscussions?.filter(
+      (item) => filterByName(item, search) && filterByType(item, display)
+    );
+    return sortbyKey(data, type, order === "desc");
+  }, [bulkAllDiscussions, search, sortMode]);
+
+  const itemContent = useCallback(
+    ({ index, style }) => {
+      const data = discussions[index];
+      const id = data?.id;
+      const remote = data?.members?.find(
+        ({ id }) => id !== store.getState().user.id
+      );
+      const image = data?.type === "room" ? data?.image : remote?.image;
+      const name = getFullName(data);
+      const onClick = (event) => {
+        if (onClickItem) onClickItem(event, { name, id, ...data });
+        if (closable) onClose();
+      };
+      return (
+        <div key={id} style={style}>
+          <DiscussionItem
+            id={data?.id}
+            name={name}
+            image={image}
+            status={data?.status}
+            type={data?.type}
+            email={data?.email}
+            description={data?.description}
+            onClick={onClick}
+            divider={index !== discussions.length - 1}
+            secondaryAction={
+              typeof secondaryAction === "function"
+                ? secondaryAction({ name, id, ...data, onClick })
+                : secondaryAction
+            }
+          />
+        </div>
+      );
+    },
+    [discussions, onClose, secondaryAction, onClickItem, closable]
+  );
 
   return (
-    <Box
-      overflow='hidden'
-      height='100%'
-      sx={{
-        position: "relative",
-        boxShadow: (theme) =>
-          `inset 0 5px 5px -5px ${
-            showBoxShadow ? theme.palette.divider : "transparent"
-          }`,
-        "&  > #virtuoso-container-list": {
-          overflow: "hidden",
-          overflowY: "auto",
-          height: "100%",
-        },
-      }}>
-      {data.length === 0 ? (
-        <Zoom
-          unmountOnExit
-          in
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            top: 0,
-            left: 0,
-          }}>
-          <Stack>
-            <Typography color='text.secondary'>
-              Aucune discussion trouvée
-            </Typography>
-          </Stack>
-        </Zoom>
-      ) : (
-        <AutoSizer>
-          {({ width, height }) => (
-            <List
-              height={height}
-              width={width}
-              rowCount={data.length}
-              rowHeight={72.5}
-              rowRenderer={itemContent}
-              noContentRenderer={MUIList}
-              style={{ overflowX: "hidden" }}
-              onScroll={({ scrollTop }) => {
-                if (showBoxShadow && scrollTop <= 0) setShowBoxShadow(false);
-                if (!showBoxShadow && scrollTop > 0) setShowBoxShadow(true);
-              }}
-            />
-          )}
-        </AutoSizer>
-      )}
+    <Box display='flex' flex={1} overflow='hidden' flexDirection='column'>
+      <Box display='flex' flexDirection='row' gap={1} px={2} pb={1}>
+        <InputSearch
+          placeholder='Recherche'
+          sx={{ flexGrow: 1 }}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <SortButton
+          {...sortMode}
+          itemType={itemType}
+          onChange={(mode) => setSortMode((value) => ({ ...value, ...mode }))}
+        />
+      </Box>
+
+      <VirtualizedList
+        data={discussions}
+        itemContent={itemContent}
+        rowHeight={69}
+        emptyMessage='Aucune discussion trouvée'
+      />
     </Box>
   );
-});
+}
 
-DiscussionList.displayName = "DiscussionList";
 DiscussionList.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
-  itemContent: PropTypes.func,
+  onClose: PropTypes.func,
+  closable: PropTypes.bool,
+  secondaryAction: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+  itemType: PropTypes.oneOf(displays.map(({ id }) => id)),
+  onClickItem: PropTypes.func,
 };
-
-export default DiscussionList;

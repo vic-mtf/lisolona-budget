@@ -8,9 +8,9 @@ import {
   ListItemIcon,
   ListItemText,
   Switch,
+  Button,
 } from "@mui/material";
 // import DialogContentText from '@mui/material/DialogContentText';
-import Button from "../../../../../components/Button";
 import { options } from "../admin-options/MeetingManagementOptions";
 import useSocket from "../../../../../hooks/useSocket";
 import { useDispatch, useSelector } from "react-redux";

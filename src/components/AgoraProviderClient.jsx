@@ -3,7 +3,7 @@ import AgoraRTC, {
   AgoraRTCScreenShareProvider,
 } from "agora-rtc-react";
 import { useMemo } from "react";
-
+import PropTypes from "prop-types";
 export default function AgoraProviderClient({ children }) {
   const RTCClient = useMemo(
     () => AgoraRTC.createClient({ mode: "rtc", codec: "vp8" }),
@@ -22,3 +22,7 @@ export default function AgoraProviderClient({ children }) {
     </AgoraRTCProvider>
   );
 }
+
+AgoraProviderClient.propTypes = {
+  children: PropTypes.node.isRequired,
+};

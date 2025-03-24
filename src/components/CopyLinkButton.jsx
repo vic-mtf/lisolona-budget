@@ -1,8 +1,15 @@
 // import ChatHeader from "../../../../main/chat-box/chat-header/ChatHeader";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  Button,
+} from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import Button from "./Button";
+import PropTypes from "prop-types";
 
 export default function CopyLinkButton({ text, title, url, render }) {
   const [copied, setCopied] = useState(false);
@@ -10,7 +17,7 @@ export default function CopyLinkButton({ text, title, url, render }) {
   const textareaRef = useRef();
 
   const value = useMemo(
-    () => `${title}\n${text}\n${url}`.trim(),
+    () => `${title}\n\n${text}\n\n${url}`.trim(),
     [title, text, url]
   );
 
@@ -28,7 +35,7 @@ export default function CopyLinkButton({ text, title, url, render }) {
           setCopied(true);
           timerRef.current = setTimeout(() => {
             setCopied(false);
-          }, 2000);
+          }, 800);
         } catch (e) {
           console.error("Error", e);
         }
@@ -55,8 +62,14 @@ export default function CopyLinkButton({ text, title, url, render }) {
           {copied ? "Copié !" : "Copier"}
         </Button>
       )}
-
-      <textarea hidden ref={textareaRef} value={value} />
+      <textarea hidden ref={textareaRef} defaultValue={value} readOnly />
     </>
   );
 }
+
+CopyLinkButton.propTypes = {
+  text: PropTypes.string,
+  title: PropTypes.string,
+  url: PropTypes.string,
+  render: PropTypes.func,
+};

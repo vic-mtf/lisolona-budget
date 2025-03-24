@@ -1,0 +1,110 @@
+import React from "react";
+import { Box, Fab, ToggleButton, Tooltip } from "@mui/material";
+import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
+import { Stack } from "@mui/system";
+import TextFieldsOutlinedIcon from "@mui/icons-material/TextFieldsOutlined";
+import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
+import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
+import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
+import sendData from "./buttons/sendData";
+import PropTypes from "prop-types";
+
+const EditorAreaFooter = React.memo(
+  ({ hideToolbar, isSendable = false, onToggleToolbar }) => {
+    return (
+      <Box
+        display='flex'
+        flexDirection='row'
+        p={0.5}
+        component='div'
+        onMouseDown={(event) => event.preventDefault()}>
+        <Stack
+          flexGrow={1}
+          sx={{
+            "& button": { border: "none" },
+            "& button:disabled": { border: "none" },
+          }}
+          spacing={1}
+          direction='row'>
+          <Box>
+            <Tooltip title='fichier' placement='bottom' enterDelay={1200}>
+              <div>
+                <ToggleButton
+                  size='small'
+                  color='primary'
+                  value='file'
+                  disabled>
+                  <AttachFileOutlinedIcon
+                    fontSize='small'
+                    sx={{
+                      transition: "transform .2s",
+                      transform: "rotate(45deg)",
+                      "&:hover": { transform: "rotate(0deg)" },
+                    }}
+                  />
+                </ToggleButton>
+              </div>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip
+              title="barre d'outils"
+              placement='bottom'
+              enterDelay={1200}>
+              <ToggleButton
+                size='small'
+                color='primary'
+                value='toolbar'
+                selected={!hideToolbar}
+                onClick={onToggleToolbar}>
+                <TextFieldsOutlinedIcon fontSize='small' />
+              </ToggleButton>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip title='Emoji icon' placement='bottom' enterDelay={1200}>
+              <div>
+                <ToggleButton
+                  size='small'
+                  color='primary'
+                  value='toolbar'
+                  disabled>
+                  <SentimentSatisfiedOutlinedIcon fontSize='small' />
+                </ToggleButton>
+              </div>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip
+              title='Entrez un audio'
+              placement='bottom'
+              enterDelay={1200}>
+              <div>
+                <ToggleButton
+                  size='small'
+                  color='primary'
+                  value='voice'
+                  disabled>
+                  <MicOutlinedIcon fontSize='small' />
+                </ToggleButton>
+              </div>
+            </Tooltip>
+          </Box>
+        </Stack>
+        <Fab color='primary' onClick={sendData} disabled={isSendable}>
+          <SendOutlinedIcon />
+        </Fab>
+      </Box>
+    );
+  }
+);
+
+EditorAreaFooter.displayName = "EditorAreaFooter";
+
+EditorAreaFooter.propTypes = {
+  hideToolbar: PropTypes.bool.isRequired,
+  isSendable: PropTypes.bool.isRequired,
+  onToggleToolbar: PropTypes.func.isRequired,
+};
+
+export default EditorAreaFooter;

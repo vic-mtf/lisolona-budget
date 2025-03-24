@@ -1,6 +1,4 @@
-import { Box } from "@mui/material";
-import Typography from "../../../components/Typography";
-import Button from "../../../components/Button";
+import { Box, Button, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import openSignIn from "../../../utils/openSignIn";
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
@@ -12,7 +10,7 @@ export default function Panel() {
   };
   return (
     <>
-      <Typography variant='h4' fontSize={32}>
+      <Typography variant='h4' fontSize={32} fontWeight='lighter'>
         Optimisez la collaboration et renforcez l'efficacité de vos réunions en
         ligne
       </Typography>

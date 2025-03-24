@@ -5,10 +5,15 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Divider, ListSubheader, MenuItem, Toolbar } from "@mui/material";
+import {
+  Divider,
+  ListSubheader,
+  MenuItem,
+  Toolbar,
+  Button,
+} from "@mui/material";
 import db from "../../../../database/db";
 import { useLiveQuery } from "dexie-react-hooks";
-import Button from "../../../../components/Button";
 import AddIcCallOutlinedIcon from "@mui/icons-material/AddIcCallOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import Menu from "../../../../components/Menu";
@@ -36,11 +41,11 @@ export default function CallContactsList({ navigation }) {
         .filter(({ name }) =>
           new RegExp(
             escapeRegExp(search.trim().split(/\s/).join("|")),
-            "ig",
-          ).test(name),
+            "ig"
+          ).test(name)
         )
         .toArray(),
-    [search],
+    [search]
   );
 
   useEffect(() => {
@@ -49,18 +54,18 @@ export default function CallContactsList({ navigation }) {
         data: {
           activeCall: Boolean(calls?.find((call) => call?.status === 1)),
         },
-      }),
+      })
     );
   }, [calls]);
 
   return (
     navigation === 1 && (
       <React.Fragment>
-        <Toolbar variant="dense">
+        <Toolbar variant='dense'>
           <Button
-            children="Lancer un nouvel appel"
-            variant="outlined"
-            color="inherit"
+            children='Lancer un nouvel appel'
+            variant='outlined'
+            color='inherit'
             sx={{ mx: "auto" }}
             ref={anchorElRef}
             startIcon={<AddIcCallOutlinedIcon />}
@@ -83,8 +88,7 @@ export default function CallContactsList({ navigation }) {
                 marginRight: (theme) => theme.spacing(1.5),
               },
             },
-          }}
-        >
+          }}>
           {menuGlobalCall.map(({ label, Icon, disabled, onClick }, key) => (
             <MenuItem
               key={key}
@@ -92,9 +96,8 @@ export default function CallContactsList({ navigation }) {
               onClick={(event) => {
                 setAnchorEl(null);
                 onClick(event);
-              }}
-            >
-              {<Icon fontSize="small" />} {label}
+              }}>
+              {<Icon fontSize='small' />} {label}
             </MenuItem>
           ))}
         </Menu>
@@ -108,7 +111,7 @@ const ListItems = ({ calls: _calls, search }) => {
 
   const calls = useMemo(
     () => meetingsGroups.map(({ data }) => data).flat(),
-    [meetingsGroups],
+    [meetingsGroups]
   );
 
   const itemContent = useCallback(
@@ -121,11 +124,11 @@ const ListItems = ({ calls: _calls, search }) => {
       return (
         <div>
           {Boolean(CallItem) && <CallItem call={call} search={search} />}
-          {isDivisible && <Divider variant="inset" component="div" />}
+          {isDivisible && <Divider variant='inset' component='div' />}
         </div>
       );
     },
-    [search, calls],
+    [search, calls]
   );
 
   const groupContent = useCallback(
@@ -141,24 +144,23 @@ const ListItems = ({ calls: _calls, search }) => {
             background: (theme) =>
               `linear-gradient(transparent 0%, ${theme.palette.background.paper} 100%)`,
             backdropFilter: (theme) => `blur(${theme.customOptions.blur})`,
-          }}
-        >
+          }}>
           {meetingsGroups[index]?.title}
         </ListSubheader>
       );
     },
-    [meetingsGroups],
+    [meetingsGroups]
   );
 
   const groupCounts = useMemo(
     () => meetingsGroups.map(({ count }) => count),
-    [meetingsGroups],
+    [meetingsGroups]
   );
   return (
     <React.Fragment>
       <LoadingList loading={calls === undefined} />
       <EmptyContentMessage
-        title="Aucun appel trouvé"
+        title='Aucun appel trouvé'
         show={calls?.length === 0}
         description={`
                 Commencez à passer des appels pour voir 

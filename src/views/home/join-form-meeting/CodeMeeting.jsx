@@ -1,11 +1,10 @@
-import React, { useCallback /*,useLayoutEffect*/ } from "react";
+import { useCallback /*,useLayoutEffect*/ } from "react";
+import { Box, FormLabel, Toolbar, IconButton } from "@mui/material";
 import InputCode from "../../../components/InputCode";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useNavigate } from "react-router-dom";
 import useSnackbar from "../../../hooks/useSnackbar";
 import messages from "./messages";
-import IconButton from "../../../components/IconButton";
-import { Box, FormLabel, Toolbar } from "@mui/material";
 import PropTypes from "prop-types";
 
 const CodeMeeting = ({ values, loading, refetch }) => {
@@ -13,9 +12,7 @@ const CodeMeeting = ({ values, loading, refetch }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const handleCompleteCode = useCallback(
     async (code) => {
-      console.log("Joining meeting with code:", code);
       if (!loading) {
-        console.log("Joining meeting with code:", code);
         try {
           const { data: meeting } = await refetch({
             url: "api/chat/room/call/" + code.join(""),
@@ -41,7 +38,12 @@ const CodeMeeting = ({ values, loading, refetch }) => {
   );
 
   return (
-    <Box display='flex' gap={1} width='100%' flexDirection='column'>
+    <Box
+      display='flex'
+      gap={1}
+      width='100%'
+      flexDirection='column'
+      alignItems='center'>
       <Toolbar variant='dense' disableGutters>
         <FormLabel mb={1}>
           Entrez le code de la réunion pour participer
@@ -50,7 +52,7 @@ const CodeMeeting = ({ values, loading, refetch }) => {
       <div style={{ width: "auto", display: "inline-flex" }}>
         <InputCode
           length={9}
-          size={35}
+          size={38}
           values={values}
           onComplete={handleCompleteCode}
         />

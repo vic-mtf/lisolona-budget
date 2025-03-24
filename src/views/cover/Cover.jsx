@@ -1,16 +1,18 @@
 import Box from "../../components/Box";
 import _app_logo from "../../assets/group_speak.webp";
-import { Stack, Box as MuiBox, CircularProgress, Divider } from "@mui/material";
-import Typography from "../../components/Typography";
-import "animate.css/source/attention_seekers/swing.css";
+import {
+  Stack,
+  Box as MuiBox,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import _platform_logo from "../../assets/geid_logo_blue_without_title.webp";
 import { useCallback } from "react";
 import useAxios from "../../hooks/useAxios";
-
 import SwingAnimation from "../../components/SwingAnimation";
 import store from "../../redux/store";
 import useToken from "../../hooks/useToken";
-import PropTypes from "prop-types";
 import { updateArraysData, updateData } from "../../redux/data/data";
 import { useDispatch } from "react-redux";
 
@@ -49,7 +51,7 @@ export default function Cover() {
       console.error(error);
     }
     dispatch(updateData({ data: { app: { loaded: true } } }));
-  }, [refresh]);
+  }, [refresh, dispatch]);
 
   return (
     <Box
@@ -62,6 +64,7 @@ export default function Cover() {
         left: 0,
         right: 0,
         bottom: 0,
+        overflow: "hidden",
       }}>
       <Stack
         display='flex'
@@ -103,8 +106,23 @@ export default function Cover() {
               />
             }
             display='flex'
-            justifyContent='center'>
-            <img alt='geid-budget' src={_platform_logo} width={120} />
+            justifyContent='center'
+            alignItems='center'
+            sx={{
+              "& > img": {
+                height: {
+                  xs: 35,
+                  md: 40,
+                },
+              },
+              "& > div": {
+                fontSize: {
+                  xs: 25,
+                  md: 30,
+                },
+              },
+            }}>
+            <img alt='geid-budget' src={_platform_logo} />
             <Typography noWrap variant='h4'>
               Lisolo Na Budget
             </Typography>
@@ -122,7 +140,12 @@ export default function Cover() {
           )}
         </MuiBox>
       </Stack>
-      <Typography variant='caption' paragraph p={2}>
+      <Typography
+        variant='caption'
+        paragraph
+        p={2}
+        fontSize={12}
+        textAlign='center'>
         Direction Archives et Nouvelles Technologie de l'Information et de la
         Communication ©2022
       </Typography>

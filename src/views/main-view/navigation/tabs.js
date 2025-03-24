@@ -5,6 +5,8 @@ import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCale
 import Discussions from "./discussions/Discussions";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Calls from "./calls/Calls";
+import Contacts from "./contacts/Contacts";
+import Notices from "./notices/Notices";
 
 const tabs = [
   {
@@ -23,19 +25,20 @@ const tabs = [
     label: "Contacts",
     icon: PermContactCalendarOutlinedIcon,
     id: "contacts",
-    component: "div",
+    component: Contacts,
   },
   {
     label: "Notifications",
     icon: NotificationsOutlinedIcon,
     id: "notifications",
-    component: "div",
+    component: Notices,
   },
   {
     label: "Paramètres",
     icon: SettingsOutlinedIcon,
     id: "settings",
     component: "div",
+    disabled: true,
   },
 ];
 

@@ -6,14 +6,14 @@ const updateArraysData = (state, actions) => {
   const { payload, store } = actions;
   const keys = Object.keys(payload);
   const sortByUpdateDate = ({ updatedAt: a }, { updatedAt: b }) =>
-    new Date(b).getTime() - new Date(a).getTime();
+    new Date(b) - new Date(a);
 
   keys.forEach((key) => {
     const values = payload[key]?.sort(sortByUpdateDate);
     values.forEach((value) => {
       const formattedValue = formatObjectData(value);
 
-      if (formattedValue.hasOwnProperty("participants")) {
+      if (Object.hasOwnProperty.call(formattedValue, "participants")) {
         formattedValue.participants = formattedValue.participants.map(
           (participant) => ({
             ...participant,
@@ -21,21 +21,21 @@ const updateArraysData = (state, actions) => {
           })
         );
       }
-      if (formattedValue.hasOwnProperty("location"))
+      if (Object.hasOwnProperty.call(formattedValue, "location"))
         formattedValue.location = formatObjectData(formattedValue.location);
 
-      if (formattedValue.hasOwnProperty("grade")) {
-        formattedValue.grade = formattedValue?.grade?.grade;
+      if (Object.hasOwnProperty.call(formattedValue, "grade")) {
         formattedValue.role = formattedValue?.grade?.role;
+        formattedValue.grade = formattedValue?.grade?.grade;
       }
 
-      if (formattedValue.hasOwnProperty("members"))
+      if (Object.hasOwnProperty.call(formattedValue, "members"))
         formattedValue.members = formattedValue.members.map((member) => ({
           ...formatUser(member?._id),
           level: member?.role,
         }));
 
-      if (formattedValue.hasOwnProperty("messages")) {
+      if (Object.hasOwnProperty.call(formattedValue, "messages")) {
         formattedValue.messages = formattedValue.messages.map((message) =>
           formatObjectData(
             { ...message, sender: formatUser(message?.sender) },
@@ -55,13 +55,18 @@ const updateArraysData = (state, actions) => {
       );
 
       if (key === "discussions") {
+        formattedValue.createdBy = formatObjectData(formattedValue.createdBy);
         const newMessages = formattedValue.messages.map((msg) => ({
+          status: msg?.status || "sended",
           ...msg,
-          status: "send",
         })); //.sort((a, b) => new Date(b.updatedAt).getTime()  - new Date(a.updatedAt).getTime());
         let messages = state.app.messages[formattedValue.id] || [];
         newMessages.forEach((newMessage) => {
-          const index = messages.findIndex((msg) => msg.id === newMessage.id);
+          const index = messages.findIndex((msg) =>
+            msg.id
+              ? msg.id === newMessage.id
+              : msg.clientId === newMessage.clientId
+          );
           if (index === -1) messages.push(newMessage);
           else messages[index] = deepMerge(messages[index], newMessage);
         });
@@ -80,7 +85,8 @@ const updateArraysData = (state, actions) => {
       }
       if (index > -1) {
         const oldValue = state.app[key][index];
-        state.app[key][index] = deepMerge(oldValue, formattedValue);
+        const updateValue = deepMerge(oldValue, formattedValue);
+        state.app[key][index] = updateValue;
       } else state.app[key].push(formattedValue);
     });
   });

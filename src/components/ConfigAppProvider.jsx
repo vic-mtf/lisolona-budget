@@ -2,7 +2,7 @@ import useTheme from "../hooks/useTheme";
 import { useSelector } from "react-redux";
 import { useLayoutEffect, useMemo } from "react";
 import { ThemeProvider } from "@mui/material";
-
+import PropTypes from "prop-types";
 export default function ConfigAppProvider({ children }) {
   const lang = useSelector((store) => store.app.lang);
   const theme = useTheme();
@@ -16,3 +16,7 @@ export default function ConfigAppProvider({ children }) {
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 }
+
+ConfigAppProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

@@ -1,21 +1,21 @@
-import { CssBaseline, Box as MuiBox } from "@mui/material";
-import React from "react";
+import { CssBaseline, Box } from "@mui/material";
 import Navigation from "./navigation/Navigation";
-import { useSelector } from "react-redux";
+import Views from "./view-content-box/ViewContentBox";
 
 export default function MainView() {
   return (
-    <MuiBox
+    <Box
       display='flex'
       flex={1}
       width='100%'
       flexDirection='column'
       position='relative'
       overflow='hidden'>
-      <MuiBox sx={{ display: "flex", flex: 1, width: "100%" }}>
+      <Box sx={{ display: "flex", flex: 1, width: "100%" }}>
         <CssBaseline />
         <Navigation />
-      </MuiBox>
-    </MuiBox>
+        <Views />
+      </Box>
+    </Box>
   );
 }

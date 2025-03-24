@@ -6,15 +6,15 @@ import {
   DialogActions,
   ListItemIcon,
   Stack,
+  Button,
+  Typography,
+  IconButton,
 } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import useSocket from "../../../../hooks/useSocket";
 import store from "../../../../redux/store";
 import useCustomSnackbar from "../../../../components/useCustomSnackbar";
 import AvatarStatus from "../../../../components/AvatarStatus";
-import Typography from "../../../../components/Typography";
-import Button from "../../../../components/Button";
-import IconButton from "../../../../components/IconButton";
 import getFullName from "../../../../utils/getFullName";
 
 export default function useSignalClientGuest() {

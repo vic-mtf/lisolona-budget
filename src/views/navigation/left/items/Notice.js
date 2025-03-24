@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { Badge, Stack } from "@mui/material";
-import Typography from "../../../../components/Typography";
+import { Badge, Stack, Typography } from "@mui/material";
 import PhotoOutlinedIcon from "@mui/icons-material/PhotoOutlined";
 import SlideshowOutlinedIcon from "@mui/icons-material/SlideshowOutlined";
 import KeyboardVoiceOutlinedIcon from "@mui/icons-material/KeyboardVoiceOutlined";

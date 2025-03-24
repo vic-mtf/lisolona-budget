@@ -5,10 +5,10 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
+  Button,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import useSocket from "../../../hooks/useSocket";
-import Button from "../../../components/Button";
 import useAxios from "../../../hooks/useAxios";
 import AvatarStatus from "../../../components/AvatarStatus";
 import signal_src from "../../../assets/Samsung-Wing-SMS.webm";

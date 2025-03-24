@@ -1,7 +1,12 @@
-import { Box as MuiBox, Card, CardMedia, CardContent } from "@mui/material/";
+import {
+  Box as MuiBox,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+} from "@mui/material/";
 import Carousel from "react-material-ui-carousel";
 import pubs from "./pubs";
-import Typography from "../../../components/Typography";
 
 export default function CarouselPub() {
   return (

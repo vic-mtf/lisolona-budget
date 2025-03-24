@@ -1,6 +1,5 @@
-import { Slide, Stack } from "@mui/material";
+import { Slide, Stack, Button } from "@mui/material";
 import React, { useMemo } from "react";
-import Button from "../../../components/Button";
 import Account from "./Account";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";

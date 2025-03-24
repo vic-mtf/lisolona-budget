@@ -8,14 +8,13 @@ import {
   Stack,
   Tooltip,
   Box as MuiBox,
+  Typography,
+  IconButton,
 } from "@mui/material";
 import React, { useState } from "react";
 import Avatar from "../../../../components/Avatar";
-import IconButton from "../../../../components/IconButton";
 import CustomBadge from "../../../../components/CustomBadge";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import Button from "../../../../components/Button";
-import Typography from "../../../../components/Typography";
 import capStr from "../../../../utils/capStr";
 import { LoadingButton } from "@mui/lab";
 import useAxios from "../../../../hooks/useAxios";

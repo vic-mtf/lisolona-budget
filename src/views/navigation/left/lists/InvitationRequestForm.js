@@ -6,10 +6,10 @@ import {
   DialogActions,
   TextField,
   Box as MuiBox,
+  Button,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import Button from "../../../../components/Button";
 import InputController from "../../../../components/InputController";
 import { LoadingButton } from "@mui/lab";
 import useAxios from "../../../../hooks/useAxios";

@@ -1,4 +1,5 @@
 export const initialState = {
+  targetView: null,
   discussionTarget: null,
   notifications: [],
   calls: [],
@@ -11,6 +12,21 @@ export const initialState = {
     notifications: [],
     calls: [],
     messages: {},
+    actions: {
+      messaging: {
+        info: {
+          open: false,
+        },
+        draft: {},
+        reply: {},
+        medias: {
+          viewer: {
+            open: false,
+            id: null,
+          },
+        },
+      },
+    },
   },
   chatBox: {
     footer: {

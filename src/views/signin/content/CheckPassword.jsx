@@ -7,12 +7,12 @@ import {
   FormControlLabel,
   Checkbox,
   FormControl,
+  Typography,
+  Button,
 } from "@mui/material";
 import { useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Box from "../../../components/Box";
-import Typography from "../../../components/Typography";
-import Button from "../../../components/Button";
 
 export default function CheckPassword({ passwordRef, email, errorMessage }) {
   const [show, setShow] = useState(false);

@@ -1,7 +1,5 @@
-import { Box as MuiBox } from "@mui/material";
-import Typography from "../../../../../../components/Typography";
+import { Box as MuiBox, Typography, Button } from "@mui/material";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import Button from "../../../../../../components/Button";
 import { useCallback } from "react";
 import DOMPurify from "dompurify";
 import { htmlToText } from "html-to-text";

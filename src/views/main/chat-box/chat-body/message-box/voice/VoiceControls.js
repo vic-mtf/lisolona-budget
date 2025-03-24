@@ -1,7 +1,6 @@
-import { Box as MuiBox, ListItemText, ListItemIcon } from "@mui/material";
+import { Box as MuiBox, ListItemText, ListItemIcon, IconButton } from "@mui/material";
 import CustomSlider from "../../../../../../components/CustomSlider";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import IconButton from "../../../../../../components/IconButton";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseOutlinedIcon from '@mui/icons-material/PauseOutlined';
 import formatTime from "../../../../../../utils/formatTime";

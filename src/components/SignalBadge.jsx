@@ -7,15 +7,16 @@ const props = ["status", "active"];
 const colors = {
   online: "#44b700",
   offline: "#bdbdbd",
-  away: "#ff3d00",
+  away: "#ff784e",
 };
 
 const SignalBadge = styled(Badge, {
   shouldForwardProp: (prop) => !props.includes(prop),
-})(({ theme, status = "offline", active = false }) => ({
+})(({ theme, status = "offline", active = false, invisible }) => ({
   "& .MuiBadge-badge": {
-    color: colors[status],
-    backgroundColor: "currentColor",
+    color: invisible ? "transparent" : colors[status],
+    backgroundColor: invisible ? "transparent" : "currentColor",
+    display: invisible && "none",
     ...(active && {
       "&::after": {
         position: "absolute",
@@ -24,17 +25,17 @@ const SignalBadge = styled(Badge, {
         width: "100%",
         height: "100%",
         borderRadius: "50%",
-        animation: "ripple 1.5s infinite ease-in-out",
-        border: ".5px solid currentColor",
+        animation: "ripple 1.2s infinite ease-in-out",
+        border: "1.5px solid currentColor",
         content: '""',
       },
       "@keyframes ripple": {
         "0%": {
-          transform: "scale(.5)",
+          transform: "scale(.2)",
           opacity: 1,
         },
         "100%": {
-          transform: "scale(2.5)",
+          transform: "scale(3)",
           opacity: 0,
         },
       },

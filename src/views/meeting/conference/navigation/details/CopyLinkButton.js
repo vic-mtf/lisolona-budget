@@ -1,7 +1,7 @@
 // import ChatHeader from "../../../../main/chat-box/chat-header/ChatHeader";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { Button } from "@mui/material";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import Button from "../../../../../components/Button";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import useMeetingUrl from "./useMeetingUrl";
@@ -32,7 +32,7 @@ export default function CopyLinkButton() {
         }
       }
     },
-    [url, copied],
+    [url, copied]
   );
 
   useEffect(() => {
@@ -46,8 +46,7 @@ export default function CopyLinkButton() {
       <Button
         startIcon={copied ? <CheckOutlinedIcon /> : <ContentCopyIcon />}
         onClick={handleCopyLink}
-        fullWidth
-      >
+        fullWidth>
         Copier
       </Button>
       <input hidden ref={inputRef} value={url} />

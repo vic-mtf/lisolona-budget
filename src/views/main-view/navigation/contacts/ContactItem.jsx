@@ -1,0 +1,111 @@
+import React from "react";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import {
+  Checkbox,
+  IconButton,
+  ListItem,
+  ListItemButton,
+  Stack,
+  Tooltip,
+} from "@mui/material";
+import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
+import PropTypes from "prop-types";
+import AvatarStatus from "../../../../components/AvatarStatus";
+
+const ContactItem = React.memo(
+  ({
+    selected,
+    name,
+    image,
+    id,
+    email,
+    divider,
+    checkable,
+    checked,
+    CheckboxProps,
+    ...otherProps
+  }) => {
+    return (
+      <div>
+        <ListItem
+          disablePadding
+          alignItems='flex-start'
+          secondaryAction={
+            checkable ? (
+              <Checkbox
+                edge='end'
+                checked={checked}
+                inputProps={{ "aria-labelledby": id }}
+                {...CheckboxProps}
+              />
+            ) : (
+              <Tooltip title='Appel'>
+                <IconButton edge='end'>
+                  <CallOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            )
+          }>
+          <ListItemButton selected={selected} {...otherProps}>
+            <ListItemAvatar>
+              <AvatarStatus src={image} alt={name} id={id}>
+                {name?.toUpperCase()?.charAt(0)}
+              </AvatarStatus>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Stack direction='row' spacing={1}>
+                  <Typography
+                    flexGrow={1}
+                    textOverflow='ellipsis'
+                    whiteSpace='nowrap'
+                    overflow='hidden'
+                    fontWeight={550}>
+                    {name}
+                  </Typography>
+                </Stack>
+              }
+              secondary={
+                <Stack direction='row' spacing={1}>
+                  <Typography
+                    alignItems='center'
+                    flexGrow={1}
+                    textOverflow='ellipsis'
+                    whiteSpace='nowrap'
+                    overflow='hidden'
+                    color='text.secondary'
+                    variant='body2'>
+                    {email}
+                  </Typography>
+                </Stack>
+              }
+              primaryTypographyProps={{ component: "div" }}
+              secondaryTypographyProps={{ component: "div" }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant='inset' sx={{ opacity: divider ? 1 : 0 }} />
+      </div>
+    );
+  }
+);
+
+ContactItem.displayName = "ContactItem";
+
+ContactItem.propTypes = {
+  selected: PropTypes.bool,
+  name: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  email: PropTypes.string,
+  divider: PropTypes.bool,
+  checkable: PropTypes.bool,
+  checked: PropTypes.bool,
+  CheckboxProps: PropTypes.object,
+  image: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
+  status: PropTypes.oneOf(["online", "offline", "away"]),
+};
+
+export default ContactItem;
