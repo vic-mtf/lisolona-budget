@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import AnimatedHeaderWrapper from "./AnimatedHeaderWrapper";
 import ReplyMessage from "./ReplyMessage";
 import { useCallback } from "react";
+import { useSelector } from "react-redux";
 
 export default function WritingArea({
   onSend,
@@ -22,17 +23,22 @@ export default function WritingArea({
   const [hasFocus, setHasFocus] = useState(false);
   const [hideToolbar, setHideToolbar] = useState(false);
   const [isSendable, setIsSendable] = useState(false);
+  const recording = useSelector((store) => store.data.chatBox.footer.recording);
   const matches = useSmallScreen();
   const theme = useTheme();
 
   const onToggleToolbar = useCallback(() => setHideToolbar((v) => !v), []);
 
   useEffect(() => {
-    if (!matches && placeholder) {
+    if (!matches && placeholder && !recording) {
       setHasFocus(true);
       editorRef.current?.focus();
     }
-  }, [matches, placeholder, editorRef]);
+    if (recording) {
+      setHasFocus(false);
+      editorRef.current?.blur();
+    }
+  }, [matches, placeholder, editorRef, recording]);
 
   return (
     <Box overflow='hidden' sx={{ p: { md: 1 } }}>

@@ -18,7 +18,9 @@ const useNewMessage = () => {
       const id = type === "room" ? _id : remoteUser?._id;
       const discussions = [{ updatedAt, messages, id }];
       console.log("remote discussion => ", id);
-      store.dispatch(updateArraysData({ discussions }));
+      const user = store.getState().user;
+      const data = { discussions };
+      store.dispatch(updateArraysData({ data, user }));
     };
     socket?.on("direct-chat", handleNewMessage);
     return () => {

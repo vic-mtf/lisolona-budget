@@ -7,6 +7,7 @@ import {
 } from "@mui/material/";
 import Carousel from "react-material-ui-carousel";
 import pubs from "./pubs";
+import PropTypes from "prop-types";
 
 export default function CarouselPub() {
   return (
@@ -37,7 +38,7 @@ export default function CarouselPub() {
   );
 }
 
-const Item = (props) => {
+const Item = ({ desc, ...otherProps }) => {
   return (
     <Card
       sx={{
@@ -65,11 +66,16 @@ const Item = (props) => {
         }}
         component='img'
         draggable={false}
-        {...props}
+        desc={desc}
+        {...otherProps}
       />
       <CardContent sx={{ maxWidth: 500, height: 100 }}>
-        <Typography variant='body1'>{props.desc}</Typography>
+        <Typography variant='body1'>{desc}</Typography>
       </CardContent>
     </Card>
   );
+};
+
+Item.propTypes = {
+  desc: PropTypes.string,
 };

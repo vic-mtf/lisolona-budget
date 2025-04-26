@@ -18,7 +18,8 @@ const messageActions = [
       const discussionId = store.getState().data.discussionTarget?.id;
       const key = `app.actions.messaging.reply.${discussionId}`;
       store.dispatch(updateData({ key, data }));
-      editorRef.current?.focus();
+      if (!store.getState().data.chatBox.footer.recording)
+        editorRef.current?.focus();
     },
     types: ["text", "media"],
     targets: ["remote"],

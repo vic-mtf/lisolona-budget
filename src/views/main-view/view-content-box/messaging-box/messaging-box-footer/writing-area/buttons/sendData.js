@@ -56,6 +56,13 @@ export function convertToEditorState(data, format) {
   return EditorState.createWithContent(contentState);
 }
 
+export function getRawTextFromEditorState(editorState) {
+  const contentState = editorState.getCurrentContent();
+  const blockMap = contentState.getBlockMap();
+  const rawText = blockMap.map((block) => block.getText()).join("\n");
+  return rawText;
+}
+
 export function isEditorStateEmpty(editorState) {
   const contentState = editorState.getCurrentContent();
   const blockMap = contentState.getBlockMap();

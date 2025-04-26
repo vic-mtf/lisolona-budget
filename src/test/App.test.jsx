@@ -1,7 +1,9 @@
-import ImageContent from "../views/main-view/view-content-box/media-viewer/media-viewer-content/ImageContent";
-import src from "../assets/_DSC7640.webp";
-import HandWave from "./HandWave";
+// import ImageContent from "../views/main-view/view-content-box/media-viewer/media-viewer-content/ImageContent";
+// import src from "../assets/_DSC7640.webp";
+// import HandWave from "./HandWave";
 import { Box } from "@mui/material";
+//import AudioPlayView from "../components/AudioPlayView";
+
 const AppTest = () => {
   return (
     <>
@@ -12,7 +14,7 @@ const AppTest = () => {
         justifyContent='center'
         alignItems='center'
         overflow='hidden'>
-        <ImageContent src={src} mode='zoom' />
+        {/* <AudioPlayView /> */}
       </Box>
     </>
   );

@@ -7,7 +7,7 @@ import CreateCallButton from "./CreateCallButton";
 import FilterCallButton from "./FilterCallButton";
 import VirtualizedList from "../../../../components/VirtualizedList";
 import RunningCallItem from "./RunningCallItem";
-import ScheduledCallItem from "./scheduledCallItem";
+import ScheduledCallItem from "./ScheduledCallItem";
 import CallItem from "./CallItem";
 import toggleFullscreen from "../../../../utils/toggleFullscreen";
 

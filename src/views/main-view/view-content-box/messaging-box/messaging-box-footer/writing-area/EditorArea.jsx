@@ -23,6 +23,7 @@ import {
   listenSendData,
 } from "./buttons/sendData";
 import AnimatedHeaderWrapper from "./AnimatedHeaderWrapper";
+import { useSelector } from "react-redux";
 
 const EditorArea = React.memo(
   ({
@@ -37,6 +38,12 @@ const EditorArea = React.memo(
   }) => {
     const [editorState, setEditorState] = useState(
       convertToEditorState(defaultContent, format)
+    );
+    const [isSendable, setIsSendable] = useState(
+      !isEditorStateEmpty(editorState)
+    );
+    const disabled = useSelector(
+      (store) => store.data.chatBox.footer.recording
     );
     const matches = useSmallScreen();
     const style = useMemo(
@@ -54,6 +61,10 @@ const EditorArea = React.memo(
     );
 
     useEffect(() => {
+      if (typeof onFocus === "function") onFocus(hasFocus);
+    }, [onFocus, hasFocus]);
+
+    useEffect(() => {
       const onSelectLink = ({ detail: { data } }) =>
         selectLink(data, editorState, setEditorState);
       const onSendData = () =>
@@ -62,19 +73,18 @@ const EditorArea = React.memo(
       EVENT_CHANGE_DATA.addEventListener(_SELECT_LINK_EVENT, onSelectLink);
       EVENT_CHANGE_DATA.addEventListener(_SEND_DATA_EVENT, onSendData);
 
-      if (typeof onFocus === "function") onFocus(hasFocus);
-      if (typeof onSendable === "function")
-        onSendable(isEditorStateEmpty(editorState));
-
       return () => {
         EVENT_CHANGE_DATA.removeEventListener(_SELECT_LINK_EVENT, onSelectLink);
         EVENT_CHANGE_DATA.removeEventListener(_SEND_DATA_EVENT, onSendData);
       };
-    }, [editorState, editorRef, onFocus, hasFocus, onSend, onSendable, format]);
+    }, [editorState, onSend, format]);
 
     return (
       <>
         <EditorStyledWrapper
+          sx={{
+            pointerEvents: disabled ? "none" : "auto",
+          }}
           onClick={() => {
             if (!hasFocus) editorRef.current.focus();
           }}>
@@ -99,7 +109,18 @@ const EditorArea = React.memo(
               handleKeyCommand(keyCommand, editorState, setEditorState)
             }
             onChange={(editorState) => {
-              setEditorState(EditorState.set(editorState, { decorator }));
+              const newEditorState = EditorState.set(editorState, {
+                decorator,
+              });
+              setEditorState(newEditorState);
+              const _isSendable = !isEditorStateEmpty(newEditorState);
+              if (
+                isSendable !== _isSendable &&
+                typeof onSendable === "function"
+              ) {
+                setIsSendable(_isSendable);
+                onSendable(_isSendable);
+              }
             }}
             keyBindingFn={(e) =>
               keyBindingFn(e, editorState, setEditorState, !matches)

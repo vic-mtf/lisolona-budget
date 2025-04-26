@@ -3,13 +3,13 @@ import getFullName from "../../utils/getFullName";
 import deepMerge from "../../utils/mergeDeep";
 
 const updateArraysData = (state, actions) => {
-  const { payload, store } = actions;
-  const keys = Object.keys(payload);
+  const { data, user } = actions.payload;
+  const keys = Object.keys(data);
   const sortByUpdateDate = ({ updatedAt: a }, { updatedAt: b }) =>
     new Date(b) - new Date(a);
 
   keys.forEach((key) => {
-    const values = payload[key]?.sort(sortByUpdateDate);
+    const values = data[key]?.sort(sortByUpdateDate);
     values.forEach((value) => {
       const formattedValue = formatObjectData(value);
 
@@ -44,10 +44,10 @@ const updateArraysData = (state, actions) => {
         );
 
         if (formattedValue.type === "direct") {
-          const remoteUSer = formattedValue.members.find(
-            ({ id }) => id !== store.user.id
+          const remoteUser = formattedValue.members.find(
+            ({ id }) => id !== user.id
           );
-          formattedValue.id = remoteUSer?.id;
+          formattedValue.id = remoteUser?.id;
         }
       }
       const index = state.app[key].findIndex(
@@ -78,7 +78,7 @@ const updateArraysData = (state, actions) => {
 
         if (formattedValue.type === "direct") {
           const contactPerson = formattedValue.members.find(
-            ({ id }) => id !== store?.user?.id
+            ({ id }) => id !== user?.id
           );
           formattedValue.name = getFullName(contactPerson);
         }

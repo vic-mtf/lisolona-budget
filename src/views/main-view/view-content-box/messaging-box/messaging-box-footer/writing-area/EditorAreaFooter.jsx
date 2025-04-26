@@ -8,9 +8,15 @@ import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
 import sendData from "./buttons/sendData";
 import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../../../../../../redux/data/data";
 
 const EditorAreaFooter = React.memo(
   ({ hideToolbar, isSendable = false, onToggleToolbar }) => {
+    const disabledMic = useSelector(
+      (store) => store.data.chatBox.footer.recording
+    );
+    const dispatch = useDispatch();
     return (
       <Box
         display='flex'
@@ -76,7 +82,7 @@ const EditorAreaFooter = React.memo(
           </Box>
           <Box>
             <Tooltip
-              title='Entrez un audio'
+              title='Enregistrer un audio'
               placement='bottom'
               enterDelay={1200}>
               <div>
@@ -84,14 +90,21 @@ const EditorAreaFooter = React.memo(
                   size='small'
                   color='primary'
                   value='voice'
-                  disabled>
+                  disabled={disabledMic}
+                  onClick={() => {
+                    dispatch(
+                      updateData({
+                        data: { chatBox: { footer: { recording: true } } },
+                      })
+                    );
+                  }}>
                   <MicOutlinedIcon fontSize='small' />
                 </ToggleButton>
               </div>
             </Tooltip>
           </Box>
         </Stack>
-        <Fab color='primary' onClick={sendData} disabled={isSendable}>
+        <Fab color='primary' onClick={sendData} disabled={!isSendable}>
           <SendOutlinedIcon />
         </Fab>
       </Box>

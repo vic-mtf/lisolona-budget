@@ -38,15 +38,15 @@ export default function Cover() {
         callHistory,
       } = response.data || {};
       const { data: calls } = await refresh({ url: "/api/chat/room/call/" });
-      store.dispatch(
-        updateArraysData({
-          calls,
-          discussions,
-          contacts,
-          invitations,
-          callHistory,
-        })
-      );
+      const data = {
+        calls,
+        discussions,
+        contacts,
+        invitations,
+        callHistory,
+      };
+      const user = store.getState().user;
+      store.dispatch(updateArraysData({ data, user }));
     } catch (error) {
       console.error(error);
     }
@@ -146,8 +146,9 @@ export default function Cover() {
         p={2}
         fontSize={12}
         textAlign='center'>
-        Direction Archives et Nouvelles Technologie de l'Information et de la
-        Communication ©2022
+        {
+          "Direction Archives et Nouvelles Technologie de l'Information et de la Communication ©2022"
+        }
       </Typography>
     </Box>
   );

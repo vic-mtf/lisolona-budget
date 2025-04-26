@@ -12,11 +12,11 @@ const MessageActionItem = React.memo(({ message }) => {
   const messagingData = useContext(MessagingContext);
   const userId = useSelector((store) => store.user.id);
   const target = userId === message?.sender?.id ? "local" : "remote";
-  const Authorization = useToken();
-  const [{ data }] = useAxios({
-    url: "api/stuff/archives/archived/",
-    headers: { Authorization },
-  });
+  // const Authorization = useToken();
+  // const [{ data }] = useAxios({
+  //   url: "api/stuff/archives/archived/",
+  //   headers: { Authorization },
+  // });
 
   return (
     <Box

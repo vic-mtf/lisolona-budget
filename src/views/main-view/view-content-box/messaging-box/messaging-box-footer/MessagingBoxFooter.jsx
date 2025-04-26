@@ -9,6 +9,7 @@ import { MessagingContext } from "../MessagingBoxProvider";
 import store from "../../../../../redux/store";
 import { updateArraysData, updateData } from "../../../../../redux/data/data";
 import useSocket from "../../../../../hooks/useSocket";
+import AudioRecording from "./audio-recording/AudioRecording";
 
 export default function MessagingBoxFooter() {
   const socket = useSocket();
@@ -45,8 +46,8 @@ export default function MessagingBoxFooter() {
       ];
 
       const discussions = [{ updatedAt, messages, id: user?.id }];
-      console.log("discussions => ", discussions);
-      store.dispatch(updateArraysData({ discussions }));
+      const data = { discussions };
+      store.dispatch(updateArraysData({ data, user: store.getState().user }));
       if (replyMessage) onCancelReplyMessage();
       socket?.emit(
         `${user?.type}-message`,
@@ -78,13 +79,13 @@ export default function MessagingBoxFooter() {
           const index = data.messages.findIndex(
             ({ id }) => id === replyMessage?.id
           );
-
           if (list && isNumber(index))
             list?.scrollToIndex(index, {
               align: "center",
             });
         }}
       />
+      <AudioRecording />
     </Box>
   );
 }
