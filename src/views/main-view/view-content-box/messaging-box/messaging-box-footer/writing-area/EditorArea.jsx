@@ -22,7 +22,7 @@ import {
   isEditorStateEmpty,
   listenSendData,
 } from "./buttons/sendData";
-import AnimatedHeaderWrapper from "./AnimatedHeaderWrapper";
+import VerticalCollapse from "./VerticalCollapse";
 import { useSelector } from "react-redux";
 
 const EditorArea = React.memo(
@@ -88,7 +88,7 @@ const EditorArea = React.memo(
           onClick={() => {
             if (!hasFocus) editorRef.current.focus();
           }}>
-          <AnimatedHeaderWrapper open={!hideToolbar}>
+          <VerticalCollapse open={!hideToolbar}>
             <EditorAreaHeader
               editorState={editorState}
               setEditorState={setEditorState}
@@ -100,7 +100,7 @@ const EditorArea = React.memo(
               editorRef={editorRef}
             />
             <Divider />
-          </AnimatedHeaderWrapper>
+          </VerticalCollapse>
 
           <Editor
             editorState={editorState}

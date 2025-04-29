@@ -1,9 +1,17 @@
 import { Box, Slider } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import waveSurferInfo from "./waveSurferInfo";
+import PropTypes from "prop-types";
 
-const ProgressSlider = React.memo(() => {
+const ProgressSlider = React.memo(({ waveSurfer }) => {
   const [data, setData] = useState({ duration: 0, currentTime: 0 });
+
+  // const handlePause = () => {
+  //   if (waveSurfer?.isPlaying) waveSurfer?.pause();
+  // };
+
+  // const handlePlay = () => {
+  //   waveSurfer?.play();
+  // };
 
   useEffect(() => {
     const onTimeupdate = (currentTime) => {
@@ -12,17 +20,16 @@ const ProgressSlider = React.memo(() => {
         duration: Math.max(duration, waveSurfer?.getDuration()),
       }));
     };
-    const waveSurfer = waveSurferInfo.instance;
+
     waveSurfer?.on("timeupdate", onTimeupdate);
     return () => {
       waveSurfer?.un("timeupdate", onTimeupdate);
     };
-  }, []);
+  }, [waveSurfer]);
 
   useEffect(() => {
-    const waveSurfer = waveSurferInfo.instance;
     waveSurfer?.setTime(10000000);
-  }, []);
+  }, [waveSurfer]);
 
   return (
     <Box
@@ -39,9 +46,22 @@ const ProgressSlider = React.memo(() => {
         min={0}
         max={data.duration}
         value={data.currentTime}
+        step={0.00001}
+        slotProps={
+          {
+            // thumb: {
+            //   onMouseDown: handlePause,
+            //   onMouseUp: handlePlay,
+            //   onMouseLeave: handlePlay,
+            //   onTouchStart: handlePause,
+            //   onTouchCancel: handlePlay,
+            //   onTouchEnd: handlePlay,
+            // },
+          }
+        }
         onChange={(_, currentTime) => {
           setData(({ duration }) => ({ duration, currentTime }));
-          waveSurferInfo.instance?.setTime(currentTime);
+          waveSurfer?.setTime(currentTime);
         }}
         sx={{
           position: "absolute",
@@ -69,7 +89,9 @@ const ProgressSlider = React.memo(() => {
   );
 });
 
-ProgressSlider.propTypes = {};
+ProgressSlider.propTypes = {
+  waveSurfer: PropTypes.object,
+};
 
 ProgressSlider.displayName = "ProgressSlider";
 export default ProgressSlider;

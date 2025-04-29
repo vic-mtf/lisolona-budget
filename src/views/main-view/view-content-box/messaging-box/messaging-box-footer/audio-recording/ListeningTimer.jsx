@@ -1,26 +1,26 @@
 import { Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
-import waveSurferInfo from "./waveSurferInfo";
 import formatTime from "../../../../../../utils/formatTime";
 
-const ListeningTimer = React.memo(() => {
+const ListeningTimer = React.memo(({ waveSurfer }) => {
   const [currentTime, setCurrentTime] = useState(() => {
-    waveSurferInfo.instance?.setTime(100000000);
-    return waveSurferInfo.instance?.getDuration() || 0;
+    return waveSurfer?.getDuration() || 0;
   });
 
   useEffect(() => {
-    const onTimeupdate = (time) => {
-      setCurrentTime(time);
-    };
-    const waveSurfer = waveSurferInfo.instance;
+    const onTimeupdate = (time) => setCurrentTime(time);
+
     waveSurfer?.on("timeupdate", onTimeupdate);
     return () => {
       waveSurfer?.un("timeupdate", onTimeupdate);
       waveSurfer?.setTime(0);
     };
-  }, []);
+  }, [waveSurfer]);
+
+  useEffect(() => {
+    waveSurfer?.setTime(100000000);
+  }, [waveSurfer]);
 
   return (
     <Typography variant='body1' component='div'>
@@ -31,7 +31,6 @@ const ListeningTimer = React.memo(() => {
 
 ListeningTimer.displayName = "ListeningTimer";
 ListeningTimer.propTypes = {
-  pause: PropTypes.bool,
-  timeRef: PropTypes.object,
+  waveSurfer: PropTypes.object,
 };
 export default ListeningTimer;

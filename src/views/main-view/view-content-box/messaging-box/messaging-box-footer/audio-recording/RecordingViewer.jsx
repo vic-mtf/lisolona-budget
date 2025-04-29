@@ -23,6 +23,8 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
         scrollingWaveform: true,
         continuousWaveform: false,
         continuousWaveformDuration: 30,
+        scrollingWaveformWindow: 4,
+        mimeType: "audio/webm",
       });
 
       const waveSurfer = WaveSurfer.create({
@@ -85,15 +87,15 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
         }),
       }}>
       {paused ? (
-        <ToggleListingButton />
+        <ToggleListingButton waveSurfer={waveSurferInfo.instance} />
       ) : (
         <RecordingTimer pause={paused} timeRef={timeRef} />
       )}
       <Box position='relative' flexGrow={1} sx={{ transition: ".2s all" }}>
         <Box ref={containerRef} height={35} y={1}></Box>
-        {paused && <ProgressSlider />}
+        {paused && <ProgressSlider waveSurfer={waveSurferInfo.instance} />}
       </Box>
-      {paused && <ListeningTimer />}
+      {paused && <ListeningTimer waveSurfer={waveSurferInfo.instance} />}
     </Box>
   );
 });

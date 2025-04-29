@@ -13,16 +13,24 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
       downloads: [],
       voices: [],
       videos: [],
+      images: [],
+      documents: [],
       audioStream: null,
       videoStream: null,
       screenStream: null,
       streams: {
         audio: null,
         video: null,
-        screen: null,
+        audioVideo: null,
+        screen: {
+          audio: null,
+          video: null,
+          audioVideo: null,
+        },
       },
       app: {
         downloads: {
+          images: {},
           voices: {},
           videos: {},
           documents: {},

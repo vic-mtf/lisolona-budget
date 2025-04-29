@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 
-const AnimatedHeaderWrapper = React.memo(({ open, appear, children }) => {
+const VerticalCollapse = React.memo(({ open, appear, children }) => {
   const rendered = useMemo(() => ({ value: false }), []);
 
   useLayoutEffect(() => {
@@ -27,12 +27,12 @@ const AnimatedHeaderWrapper = React.memo(({ open, appear, children }) => {
   );
 });
 
-AnimatedHeaderWrapper.displayName = "AnimatedHeaderWrapper";
+VerticalCollapse.displayName = "VerticalCollapse";
 
-AnimatedHeaderWrapper.propTypes = {
+VerticalCollapse.propTypes = {
   open: PropTypes.bool.isRequired,
   appear: PropTypes.bool,
   children: PropTypes.node.isRequired,
 };
 
-export default AnimatedHeaderWrapper;
+export default VerticalCollapse;

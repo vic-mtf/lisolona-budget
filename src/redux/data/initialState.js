@@ -33,7 +33,9 @@ export const initialState = {
       toolbar: true,
       emojiBar: false,
       recording: false,
-      files: [],
+      files: {
+        // [targetId]: [] list discussion voice notes
+      },
     },
   },
 };

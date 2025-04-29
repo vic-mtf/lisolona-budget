@@ -5,10 +5,11 @@ import { useEffect } from "react";
 import useSmallScreen from "../../../../../../hooks/useSmallScreen";
 import EditorAreaFooter from "./EditorAreaFooter";
 import PropTypes from "prop-types";
-import AnimatedHeaderWrapper from "./AnimatedHeaderWrapper";
+import VerticalCollapse from "./VerticalCollapse";
 import ReplyMessage from "./ReplyMessage";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
+import FilesThumbnailView from "../files-thumbnail-view/FilesThumbnailView";
 
 export default function WritingArea({
   onSend,
@@ -23,6 +24,9 @@ export default function WritingArea({
   const [hasFocus, setHasFocus] = useState(false);
   const [hideToolbar, setHideToolbar] = useState(false);
   const [isSendable, setIsSendable] = useState(false);
+  const filesExist = useSelector(
+    (store) => store.data.chatBox.footer.files[id]?.length > 0
+  );
   const recording = useSelector((store) => store.data.chatBox.footer.recording);
   const matches = useSmallScreen();
   const theme = useTheme();
@@ -49,14 +53,14 @@ export default function WritingArea({
           border: { md: `1px solid ${theme.palette.divider}` },
           borderRadius: { xs: 0, md: 1 },
         }}>
-        <AnimatedHeaderWrapper open={Boolean(replyMessage)} key={id}>
+        <VerticalCollapse open={Boolean(replyMessage)} key={id}>
           <ReplyMessage
             message={replyMessage}
             onScrollToMessage={onScrollToMessage}
             onCancel={onCancelReplyMessage}
           />
           <Divider />
-        </AnimatedHeaderWrapper>
+        </VerticalCollapse>
         <EditorArea
           onFocus={setHasFocus}
           onSendable={setIsSendable}
@@ -67,6 +71,9 @@ export default function WritingArea({
           format={format}
           defaultContent=''
         />
+        <VerticalCollapse open={filesExist} appear={false}>
+          <FilesThumbnailView id={id} />
+        </VerticalCollapse>
         <EditorAreaFooter
           hideToolbar={hideToolbar}
           onToggleToolbar={onToggleToolbar}
