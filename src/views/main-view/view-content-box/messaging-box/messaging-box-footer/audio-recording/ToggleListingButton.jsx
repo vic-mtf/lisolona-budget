@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import PropTypes from "prop-types";
+import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 
 const ToggleListingButton = React.memo(({ waveSurfer }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [getData, setData] = useLocalStoreData();
 
   const togglePlaying = () => {
     if (isPlaying) waveSurfer?.pause();
@@ -13,6 +15,11 @@ const ToggleListingButton = React.memo(({ waveSurfer }) => {
       if (waveSurfer.getDuration() === waveSurfer?.getCurrentTime())
         waveSurfer.setTime(0);
       waveSurfer?.play();
+      const currentWaveSurfer = getData("app.playings.audio");
+      if (currentWaveSurfer !== waveSurfer) {
+        currentWaveSurfer?.pause();
+        setData("app.playings.audio", waveSurfer);
+      }
     }
     setIsPlaying((isPlaying) => !isPlaying);
   };

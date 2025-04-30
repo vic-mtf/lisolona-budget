@@ -8,10 +8,16 @@ import RecordingTimer from "./RecordingTimer";
 import ToggleListingButton from "./ToggleListingButton";
 import ListeningTimer from "./ListeningTimer";
 import ProgressSlider from "./ProgressSlider";
+import recording_audio_aton from "../../../../../../assets/start_recording_ton.mp3";
+import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
+
+const recordingAudio = new Audio(recording_audio_aton);
+recordingAudio.volume = 0.3;
 
 const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
   const containerRef = useRef();
   const timeRef = useRef(0);
+  const [getDate] = useLocalStoreData();
 
   const theme = useTheme();
 
@@ -42,13 +48,16 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
         interact: true,
       });
       waveSurfer.registerPlugin(plugins.record);
+
       plugins.record.startRecording().then(() => {
         setPaused(false);
+        getDate("app.playings.audio")?.pause();
       });
+      recordingAudio.play();
       waveSurferInfo.instantiated = true;
       waveSurferInfo.instance = waveSurfer;
     }
-  }, [plugins, setPaused, theme]);
+  }, [plugins, setPaused, theme, getDate]);
 
   return (
     <Box

@@ -62,8 +62,8 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
           },
         },
         playings: {
-          voices: {},
-          videos: {},
+          audio: null,
+          video: null,
         },
         contacts: {
           status: {},
