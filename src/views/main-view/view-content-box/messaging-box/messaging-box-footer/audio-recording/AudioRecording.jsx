@@ -8,15 +8,13 @@ import {
   DialogTitle,
   Slide,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { updateData } from "../../../../../../redux/data/data";
-import { useRef } from "react";
 import AudioRecordingViewer from "./AudioRecordingViewer";
 import RecordPlugin from "wavesurfer.js/plugins/record";
-import { useMemo } from "react";
 
 const AudioRecording = React.memo(() => {
   const [permission, setPermission] = useState(null);
@@ -29,7 +27,7 @@ const AudioRecording = React.memo(() => {
   const isPromptAllow = permission === "prompt";
   const rootRef = useRef();
 
-  const plugins = useMemo(() => ({ record: null }), []);
+  const waveSurferData = useMemo(() => ({ instance: null, plugins: {} }), []);
 
   useEffect(() => {
     if (show)
@@ -70,7 +68,7 @@ const AudioRecording = React.memo(() => {
             background: (t) =>
               `linear-gradient(transparent, transparent, 40%, ${t.palette.background.paper})`,
           }}>
-          <AudioRecordingViewer plugins={plugins} />
+          <AudioRecordingViewer waveSurferData={waveSurferData} />
         </Box>
       </Slide>
       <Dialog open={show && ["denied", "prompt"].includes(permission)}>

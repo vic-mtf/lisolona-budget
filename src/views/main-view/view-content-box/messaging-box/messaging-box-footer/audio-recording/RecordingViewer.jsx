@@ -1,9 +1,8 @@
 import { Box, useTheme } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/plugins/record";
-import waveSurferInfo from "./waveSurferInfo";
 import RecordingTimer from "./RecordingTimer";
 import ToggleListingButton from "./ToggleListingButton";
 import ListeningTimer from "./ListeningTimer";
@@ -14,17 +13,19 @@ import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 const recordingAudio = new Audio(recording_audio_aton);
 recordingAudio.volume = 0.3;
 
-const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
+const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
+  const [duration, setDuration] = useState(0);
   const containerRef = useRef();
   const timeRef = useRef(0);
   const [getDate] = useLocalStoreData();
-
   const theme = useTheme();
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!waveSurferInfo.instantiated && container) {
-      plugins.record = RecordPlugin.create({
+    const onGetDuration = (duration) => setDuration(Math.floor(duration));
+    let waveSurfer = waveSurferData?.instance;
+    if (!waveSurfer && !waveSurferData?.plugins?.record) {
+      const recordPlugin = RecordPlugin.create({
         renderRecordedAudio: true,
         scrollingWaveform: true,
         continuousWaveform: false,
@@ -32,8 +33,7 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
         scrollingWaveformWindow: 4,
         mimeType: "audio/webm",
       });
-
-      const waveSurfer = WaveSurfer.create({
+      waveSurfer = WaveSurfer.create({
         container,
         waveColor: theme.palette.text.secondary,
         progressColor: theme.palette.primary.main,
@@ -47,17 +47,22 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
         hideScrollbar: true,
         interact: true,
       });
-      waveSurfer.registerPlugin(plugins.record);
 
-      plugins.record.startRecording().then(() => {
+      waveSurfer.registerPlugin(recordPlugin);
+      waveSurferData.instance = waveSurfer;
+      waveSurferData.plugins.record = recordPlugin;
+      recordPlugin.startRecording().then(() => {
         setPaused(false);
         getDate("app.playings.audio")?.pause();
       });
+
       recordingAudio.play();
-      waveSurferInfo.instantiated = true;
-      waveSurferInfo.instance = waveSurfer;
     }
-  }, [plugins, setPaused, theme, getDate]);
+    waveSurfer?.on("ready", onGetDuration);
+    return () => {
+      waveSurfer?.un("ready", onGetDuration);
+    };
+  }, [setPaused, theme, getDate, waveSurferData]);
 
   return (
     <Box
@@ -96,15 +101,29 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
         }),
       }}>
       {paused ? (
-        <ToggleListingButton waveSurfer={waveSurferInfo.instance} />
+        <ToggleListingButton
+          waveSurfer={waveSurferData.instance}
+          duration={duration}
+        />
       ) : (
         <RecordingTimer pause={paused} timeRef={timeRef} />
       )}
       <Box position='relative' flexGrow={1} sx={{ transition: ".2s all" }}>
         <Box ref={containerRef} height={35} y={1}></Box>
-        {paused && <ProgressSlider waveSurfer={waveSurferInfo.instance} />}
+        {paused && (
+          <ProgressSlider
+            waveSurfer={waveSurferData.instance}
+            duration={duration}
+          />
+        )}
       </Box>
-      {paused && <ListeningTimer waveSurfer={waveSurferInfo.instance} />}
+      {paused && (
+        <ListeningTimer
+          waveSurfer={waveSurferData.instance}
+          duration={duration}
+          key={duration}
+        />
+      )}
     </Box>
   );
 });
@@ -112,8 +131,11 @@ const RecordingViewer = React.memo(({ plugins, setPaused, paused }) => {
 RecordingViewer.displayName = "RecordingViewer";
 
 RecordingViewer.propTypes = {
-  plugins: PropTypes.object,
   setPaused: PropTypes.func,
   paused: PropTypes.bool,
+  waveSurferData: PropTypes.shape({
+    instance: PropTypes.object,
+    plugins: PropTypes.object,
+  }),
 };
 export default RecordingViewer;

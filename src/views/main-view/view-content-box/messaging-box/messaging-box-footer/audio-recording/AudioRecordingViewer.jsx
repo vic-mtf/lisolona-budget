@@ -1,5 +1,5 @@
 import { Box, Fab, IconButton } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
@@ -9,11 +9,10 @@ import { useDispatch } from "react-redux";
 import { updateData } from "../../../../../../redux/data/data";
 import RecordingViewer from "./RecordingViewer";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
-import waveSurferInfo from "./waveSurferInfo";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 import store from "../../../../../../redux/store";
 
-const AudioRecordingViewer = React.memo(({ plugins }) => {
+const AudioRecordingViewer = React.memo(({ waveSurferData }) => {
   const [paused, setPaused] = useState(true);
   const dispatch = useDispatch();
   const [getDate, setData] = useLocalStoreData();
@@ -24,12 +23,15 @@ const AudioRecordingViewer = React.memo(({ plugins }) => {
         data: { chatBox: { footer: { recording: false } } },
       })
     );
-    plugins.record?.destroy();
-    waveSurferInfo.instantiated = false;
-    waveSurferInfo.instance = null;
+    const recordPlugin = waveSurferData?.plugins?.record;
+    recordPlugin?.destroy();
+    waveSurferData.instance = null;
+    delete waveSurferData.plugins.record;
   };
+
   const onRecordEnd = async (blob) => {
-    plugins?.record?.un("record-end", onRecordEnd);
+    const recordPlugin = waveSurferData?.plugins?.record;
+    recordPlugin?.record?.un("record-end", onRecordEnd);
     const arrayBuffer = await blob.arrayBuffer();
     const file = new Blob([arrayBuffer], { type: "audio/ogg" });
     const voices = [...getDate("voices")];
@@ -56,8 +58,8 @@ const AudioRecordingViewer = React.memo(({ plugins }) => {
         },
       })
     );
-    waveSurferInfo.instantiated = false;
-    waveSurferInfo.instance = null;
+    waveSurferData.instance = null;
+    delete waveSurferData.plugins.record;
   };
 
   return (
@@ -80,16 +82,17 @@ const AudioRecordingViewer = React.memo(({ plugins }) => {
             height: "100%",
           }}>
           <RecordingViewer
-            plugins={plugins}
             setPaused={setPaused}
             paused={paused}
+            waveSurferData={waveSurferData}
           />
         </Box>
         <div>
           <IconButton
             onClick={() => {
-              if (paused) plugins.record?.resumeRecording();
-              else plugins.record?.pauseRecording();
+              const recordPlugin = waveSurferData?.plugins;
+              if (paused) recordPlugin.record?.resumeRecording();
+              else recordPlugin.record?.pauseRecording();
               setPaused((paused) => !paused);
             }}>
             {paused ? <MicOutlinedIcon /> : <PauseOutlinedIcon />}
@@ -98,9 +101,10 @@ const AudioRecordingViewer = React.memo(({ plugins }) => {
         <Fab
           color='primary'
           onClick={() => {
-            plugins?.record?.on("record-end", onRecordEnd);
-            plugins.record?.stopRecording();
-            waveSurferInfo.instance.plugins.record?.destroy();
+            const recordPlugin = waveSurferData?.plugins?.record;
+            recordPlugin?.on("record-end", onRecordEnd);
+            recordPlugin.stopRecording();
+            recordPlugin?.record?.destroy();
           }}>
           <DoneRoundedIcon />
         </Fab>
@@ -110,8 +114,9 @@ const AudioRecordingViewer = React.memo(({ plugins }) => {
 });
 
 AudioRecordingViewer.propTypes = {
-  plugins: PropTypes.shape({
-    record: PropTypes.object,
+  waveSurferData: PropTypes.shape({
+    instance: PropTypes.object,
+    plugins: PropTypes.object,
   }),
 };
 

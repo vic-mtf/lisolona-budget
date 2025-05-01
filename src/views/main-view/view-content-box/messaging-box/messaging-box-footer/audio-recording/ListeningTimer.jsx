@@ -3,23 +3,16 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import formatTime from "../../../../../../utils/formatTime";
 
-const ListeningTimer = React.memo(({ waveSurfer }) => {
-  const [currentTime, setCurrentTime] = useState(() => {
-    return waveSurfer?.getDuration() || 0;
-  });
+const ListeningTimer = React.memo(({ waveSurfer, duration }) => {
+  const [current, setCurrent] = useState(null);
+  const currentTime = current ?? duration;
 
   useEffect(() => {
-    const onTimeupdate = (time) => setCurrentTime(time);
-
+    const onTimeupdate = (time) => setCurrent(time);
     waveSurfer?.on("timeupdate", onTimeupdate);
     return () => {
       waveSurfer?.un("timeupdate", onTimeupdate);
-      waveSurfer?.setTime(0);
     };
-  }, [waveSurfer]);
-
-  useEffect(() => {
-    waveSurfer?.setTime(100000000);
   }, [waveSurfer]);
 
   return (
@@ -32,5 +25,6 @@ const ListeningTimer = React.memo(({ waveSurfer }) => {
 ListeningTimer.displayName = "ListeningTimer";
 ListeningTimer.propTypes = {
   waveSurfer: PropTypes.object,
+  duration: PropTypes.number,
 };
 export default ListeningTimer;

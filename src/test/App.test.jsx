@@ -2,6 +2,7 @@
 // import src from "../assets/_DSC7640.webp";
 // import HandWave from "./HandWave";
 import { Box } from "@mui/material";
+//import DocReader from "./DocReader";
 //import AudioPlayView from "../components/AudioPlayView";
 
 const AppTest = () => {
@@ -14,7 +15,7 @@ const AppTest = () => {
         justifyContent='center'
         alignItems='center'
         overflow='hidden'>
-        {/* <AudioPlayView /> */}
+        {/* <DocReader /> */}
       </Box>
     </>
   );

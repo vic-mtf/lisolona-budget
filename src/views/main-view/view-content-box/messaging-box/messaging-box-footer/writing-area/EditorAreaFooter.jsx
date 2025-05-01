@@ -10,6 +10,7 @@ import sendData from "./buttons/sendData";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { updateData } from "../../../../../../redux/data/data";
+import AddFilesButton from "./footer-buttons/AddFilesButton";
 
 const EditorAreaFooter = React.memo(
   ({ hideToolbar, isSendable = false, onToggleToolbar }) => {
@@ -17,6 +18,7 @@ const EditorAreaFooter = React.memo(
       (store) => store.data.chatBox.footer.recording
     );
     const dispatch = useDispatch();
+
     return (
       <Box
         display='flex'
@@ -32,27 +34,14 @@ const EditorAreaFooter = React.memo(
           }}
           spacing={1}
           direction='row'>
-          <Box>
+          <div>
             <Tooltip title='fichier' placement='bottom' enterDelay={1200}>
               <div>
-                <ToggleButton
-                  size='small'
-                  color='primary'
-                  value='file'
-                  disabled>
-                  <AttachFileOutlinedIcon
-                    fontSize='small'
-                    sx={{
-                      transition: "transform .2s",
-                      transform: "rotate(45deg)",
-                      "&:hover": { transform: "rotate(0deg)" },
-                    }}
-                  />
-                </ToggleButton>
+                <AddFilesButton />
               </div>
             </Tooltip>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <Tooltip
               title="barre d'outils"
               placement='bottom'
@@ -66,8 +55,8 @@ const EditorAreaFooter = React.memo(
                 <TextFieldsOutlinedIcon fontSize='small' />
               </ToggleButton>
             </Tooltip>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <Tooltip title='Emoji icon' placement='bottom' enterDelay={1200}>
               <div>
                 <ToggleButton
@@ -79,8 +68,8 @@ const EditorAreaFooter = React.memo(
                 </ToggleButton>
               </div>
             </Tooltip>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <Tooltip
               title='Enregistrer un audio'
               placement='bottom'
@@ -102,7 +91,7 @@ const EditorAreaFooter = React.memo(
                 </ToggleButton>
               </div>
             </Tooltip>
-          </Box>
+          </div>
         </Stack>
         <Fab color='primary' onClick={sendData} disabled={!isSendable}>
           <SendOutlinedIcon />

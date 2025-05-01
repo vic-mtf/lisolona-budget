@@ -4,7 +4,7 @@ import {
   CardMedia,
   CardContent,
   Typography,
-} from "@mui/material/";
+} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import pubs from "./pubs";
 import PropTypes from "prop-types";

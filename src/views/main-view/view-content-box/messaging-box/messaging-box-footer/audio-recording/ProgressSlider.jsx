@@ -1,35 +1,32 @@
 import { Box, Slider } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 
-const ProgressSlider = React.memo(({ waveSurfer }) => {
-  const [data, setData] = useState({ duration: 0, currentTime: 0 });
+const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
+  const [currentTime, setCurrentTime] = useState(0);
 
-  // const handlePause = () => {
-  //   if (waveSurfer?.isPlaying) waveSurfer?.pause();
-  // };
+  const step = useMemo(() => calculateOptimalStep(0, duration), [duration]);
 
-  // const handlePlay = () => {
-  //   waveSurfer?.play();
-  // };
+  const manualChange = useMemo(() => ({ isActive: false }), []);
+
+  const handleActiveManualChange = () => {
+    manualChange.isActive = true;
+  };
+
+  const handleStopManualChange = () => {
+    manualChange.isActive = false;
+  };
 
   useEffect(() => {
     const onTimeupdate = (currentTime) => {
-      setData(({ duration }) => ({
-        currentTime,
-        duration: Math.max(duration, waveSurfer?.getDuration()),
-      }));
+      if (manualChange.isActive) return;
+      setCurrentTime(currentTime);
     };
-
     waveSurfer?.on("timeupdate", onTimeupdate);
     return () => {
       waveSurfer?.un("timeupdate", onTimeupdate);
     };
-  }, [waveSurfer]);
-
-  useEffect(() => {
-    waveSurfer?.setTime(10000000);
-  }, [waveSurfer]);
+  }, [waveSurfer, manualChange]);
 
   return (
     <Box
@@ -41,26 +38,21 @@ const ProgressSlider = React.memo(({ waveSurfer }) => {
       left={0}
       justifyContent='center'
       alignItems='center'
+      onMouseDown={handleActiveManualChange}
+      onMouseUp={handleStopManualChange}
+      onMouseLeave={handleStopManualChange}
+      onTouchStart={handleActiveManualChange}
+      onTouchCancel={handleStopManualChange}
+      onTouchEnd={handleStopManualChange}
       sx={{ zIndex: (t) => t.zIndex.tooltip }}>
       <Slider
         min={0}
-        max={data.duration}
-        value={data.currentTime}
-        step={0.00001}
-        slotProps={
-          {
-            // thumb: {
-            //   onMouseDown: handlePause,
-            //   onMouseUp: handlePlay,
-            //   onMouseLeave: handlePlay,
-            //   onTouchStart: handlePause,
-            //   onTouchCancel: handlePlay,
-            //   onTouchEnd: handlePlay,
-            // },
-          }
-        }
-        onChange={(_, currentTime) => {
-          setData(({ duration }) => ({ duration, currentTime }));
+        max={duration}
+        value={currentTime}
+        step={step}
+        onChange={(_, value) => {
+          const currentTime = roundToNearestStep(value, step);
+          setCurrentTime(currentTime);
           waveSurfer?.setTime(currentTime);
         }}
         sx={{
@@ -89,8 +81,27 @@ const ProgressSlider = React.memo(({ waveSurfer }) => {
   );
 });
 
+const calculateOptimalStep = (min, max) => {
+  const range = max - min;
+  const decimalPlaces = 4;
+  const factor = Math.pow(10, decimalPlaces);
+  const rangeInt = Math.round(range * factor);
+  const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+  const commonDivisor = gcd(rangeInt, factor);
+  const optimalStep = commonDivisor / factor;
+  return optimalStep;
+};
+
+const roundToNearestStep = (value, step) => {
+  if (step <= 0) throw new Error("The step must be greater than 0");
+  const decimals = (step.toString().split(".")[1] || "").length;
+  const rounded = Math.round(value / step) * step;
+  return parseFloat(rounded.toFixed(decimals));
+};
+
 ProgressSlider.propTypes = {
   waveSurfer: PropTypes.object,
+  duration: PropTypes.number,
 };
 
 ProgressSlider.displayName = "ProgressSlider";
