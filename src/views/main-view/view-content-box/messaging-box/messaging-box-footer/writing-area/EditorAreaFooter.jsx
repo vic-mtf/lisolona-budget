@@ -4,7 +4,6 @@ import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import { Stack } from "@mui/system";
 import TextFieldsOutlinedIcon from "@mui/icons-material/TextFieldsOutlined";
 import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
-import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
 import sendData from "./buttons/sendData";
 import PropTypes from "prop-types";
@@ -13,11 +12,15 @@ import { updateData } from "../../../../../../redux/data/data";
 import AddFilesButton from "./footer-buttons/AddFilesButton";
 
 const EditorAreaFooter = React.memo(
-  ({ hideToolbar, isSendable = false, onToggleToolbar }) => {
+  ({ hideToolbar, isSendable = false, onToggleToolbar, id, filesExist }) => {
     const disabledMic = useSelector(
       (store) => store.data.chatBox.footer.recording
     );
+    const limitFiles = useSelector(
+      (store) => store.data.chatBox.footer.files[id]?.length === 10
+    );
     const dispatch = useDispatch();
+    console?.log(limitFiles);
 
     return (
       <Box
@@ -37,7 +40,7 @@ const EditorAreaFooter = React.memo(
           <div>
             <Tooltip title='fichier' placement='bottom' enterDelay={1200}>
               <div>
-                <AddFilesButton />
+                <AddFilesButton disabled={limitFiles} />
               </div>
             </Tooltip>
           </div>
@@ -71,7 +74,11 @@ const EditorAreaFooter = React.memo(
           </div>
           <div>
             <Tooltip
-              title='Enregistrer un audio'
+              title={
+                limitFiles
+                  ? "Limite de 10 fichiers atteinte"
+                  : "Enregistrer un audio"
+              }
               placement='bottom'
               enterDelay={1200}>
               <div>
@@ -79,7 +86,7 @@ const EditorAreaFooter = React.memo(
                   size='small'
                   color='primary'
                   value='voice'
-                  disabled={disabledMic}
+                  disabled={disabledMic || limitFiles}
                   onClick={() => {
                     dispatch(
                       updateData({
@@ -93,7 +100,10 @@ const EditorAreaFooter = React.memo(
             </Tooltip>
           </div>
         </Stack>
-        <Fab color='primary' onClick={sendData} disabled={!isSendable}>
+        <Fab
+          color='primary'
+          onClick={sendData}
+          disabled={filesExist ? false : !isSendable}>
           <SendOutlinedIcon />
         </Fab>
       </Box>
@@ -107,6 +117,8 @@ EditorAreaFooter.propTypes = {
   hideToolbar: PropTypes.bool.isRequired,
   isSendable: PropTypes.bool.isRequired,
   onToggleToolbar: PropTypes.func.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  filesExist: PropTypes.bool.isRequired,
 };
 
 export default EditorAreaFooter;

@@ -22,7 +22,7 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
 
   useEffect(() => {
     const container = containerRef.current;
-    const onGetDuration = (duration) => setDuration(Math.floor(duration));
+    const onGetDuration = (duration) => setDuration(duration);
     let waveSurfer = waveSurferData?.instance;
     if (!waveSurfer && !waveSurferData?.plugins?.record) {
       const recordPlugin = RecordPlugin.create({

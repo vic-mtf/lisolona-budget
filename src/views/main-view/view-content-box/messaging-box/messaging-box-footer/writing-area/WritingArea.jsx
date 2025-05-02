@@ -78,6 +78,8 @@ export default function WritingArea({
           hideToolbar={hideToolbar}
           onToggleToolbar={onToggleToolbar}
           isSendable={isSendable}
+          filesExist={filesExist}
+          id={id}
         />
       </Paper>
     </Box>

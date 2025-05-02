@@ -12,8 +12,9 @@ import getFile, {
 } from "../../../../../../../utils/getFile";
 import store from "../../../../../../../redux/store";
 import { updateData } from "../../../../../../../redux/data/data";
+import PropTypes from "prop-types";
 
-const AddFilesButton = () => {
+const AddFilesButton = ({ disabled }) => {
   const notifications = useNotifications();
 
   const handleGetFiles = async () => {
@@ -45,7 +46,7 @@ const AddFilesButton = () => {
       });
       return;
     }
-    console.log(filteredFiles, memoFiles);
+
     const slicedFiles = filteredFiles.slice(0, 10 - memoFiles.length);
     const files = slicedFiles.map((file, index) => ({
       id: (Date.now() + index).toString(16).toLowerCase(),
@@ -53,6 +54,7 @@ const AddFilesButton = () => {
       name: getName(file.name),
       type: getType(file) === "application" ? "doc" : getType(file),
       ext: getExtension(file.name),
+      size: file.size,
     }));
 
     store.dispatch(
@@ -84,6 +86,7 @@ const AddFilesButton = () => {
         color='primary'
         value='file'
         onClick={handleGetFiles}
+        disabled={disabled}
         sx={{
           "&:hover": { "& > *": { transform: "rotate(0deg)" } },
         }}>
@@ -97,6 +100,10 @@ const AddFilesButton = () => {
       </ToggleButton>
     </>
   );
+};
+
+AddFilesButton.propTypes = {
+  disabled: PropTypes.bool,
 };
 
 const texts = {

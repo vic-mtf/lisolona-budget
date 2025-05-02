@@ -11,12 +11,11 @@ const AudioThumbnail = React.memo(
     const containerRef = useRef(null);
     const [duration, setDuration] = useState(0);
     const waveSurferData = useMemo(() => ({ instance: null }), []);
-
     const theme = useTheme();
 
     useLayoutEffect(() => {
       const container = containerRef.current;
-      const onGetDuration = (duration) => setDuration(Math.floor(duration));
+      const onGetDuration = (duration) => setDuration(duration);
       if (!waveSurferData.instance) {
         waveSurferData.instance = WaveSurfer.create({
           url,
@@ -56,7 +55,7 @@ const AudioThumbnail = React.memo(
           duration={duration}
         />
         <Box position='relative' flexGrow={1} sx={{ transition: ".2s all" }}>
-          <Box ref={containerRef} height={35} y={1}></Box>
+          <Box ref={containerRef} height={35} y={1} />
           <ProgressSlider
             waveSurfer={waveSurferData.instance}
             duration={duration}

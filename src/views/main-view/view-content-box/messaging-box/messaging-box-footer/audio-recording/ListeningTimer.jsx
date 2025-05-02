@@ -5,7 +5,7 @@ import formatTime from "../../../../../../utils/formatTime";
 
 const ListeningTimer = React.memo(({ waveSurfer, duration }) => {
   const [current, setCurrent] = useState(null);
-  const currentTime = current ?? duration;
+  const currentTime = current ?? Math.floor(duration);
 
   useEffect(() => {
     const onTimeupdate = (time) => setCurrent(time);

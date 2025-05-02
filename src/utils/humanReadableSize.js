@@ -3,7 +3,7 @@ export default function humanReadableSize(
   unit = 1024,
   fixed = 2
 ) {
-  const units = ["o", "Ko", "Mo", "Go", "To", "Po", "Eo", "Zo", "Yo"];
+  const units = ["o", "K", "M", "G", "T", "P", "E", "Z", "Y"];
   let i = 0;
   while (sizeInBytes >= unit) {
     sizeInBytes /= unit;

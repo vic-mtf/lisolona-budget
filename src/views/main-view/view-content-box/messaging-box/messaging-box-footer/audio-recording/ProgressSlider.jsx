@@ -38,6 +38,7 @@ const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
       left={0}
       justifyContent='center'
       alignItems='center'
+      //bgcolor='red'
       onMouseDown={handleActiveManualChange}
       onMouseUp={handleStopManualChange}
       onMouseLeave={handleStopManualChange}
@@ -45,6 +46,7 @@ const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
       onTouchCancel={handleStopManualChange}
       onTouchEnd={handleStopManualChange}
       sx={{ zIndex: (t) => t.zIndex.tooltip }}>
+      {/* <Box sx={{ height: 100, bgcolor: "orange", width: "100%" }}></Box> */}
       <Slider
         min={0}
         max={duration}
@@ -56,9 +58,7 @@ const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
           waveSurfer?.setTime(currentTime);
         }}
         sx={{
-          position: "absolute",
-          top: 2.5,
-          left: 0,
+          // bgcolor: "pink",
           "& .MuiSlider-rail, & .MuiSlider-track": { color: "transparent" },
           "& .MuiSlider-thumb": {
             transition: "none",

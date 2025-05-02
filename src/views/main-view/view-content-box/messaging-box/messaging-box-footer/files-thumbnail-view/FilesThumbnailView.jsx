@@ -1,4 +1,12 @@
-import { alpha, Box, IconButton, Paper, Zoom } from "@mui/material";
+import {
+  alpha,
+  Box,
+  IconButton,
+  Paper,
+  Zoom,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
@@ -10,6 +18,7 @@ import store from "../../../../../../redux/store";
 import { updateData } from "../../../../../../redux/data/data";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 import AudioThumbnail from "./audio-thumbnail/AudioThumbnail";
+import DocThumbnail from "./doc-thumbnail/DocThumbnail";
 
 const FilesThumbnailView = React.memo(
   React.forwardRef(({ id }, ref) => {
@@ -18,12 +27,18 @@ const FilesThumbnailView = React.memo(
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
     const [getDate, setData] = useLocalStoreData();
+    const theme = useTheme();
+    const isSmall = useMediaQuery(theme.breakpoints.down("md"));
 
     const checkScrollPosition = () => {
       if (containerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+
         setShowLeftBtn(scrollLeft > 0);
-        setShowRightBtn(scrollLeft < scrollWidth - clientWidth);
+        setShowRightBtn(
+          scrollWidth > clientWidth &&
+            scrollWidth - scrollLeft - clientWidth > 2
+        );
       }
     };
     const removeFile = (file) => () => {
@@ -74,13 +89,12 @@ const FilesThumbnailView = React.memo(
           width: "100%",
           height: "100%",
           position: "relative",
-
           "& .Custom-iconButton-bg": {
-            bgcolor: (t) => alpha(t.palette.common.black, 0.5),
+            bgcolor: (t) => alpha(t.palette.common.black, 0.7),
           },
         }}>
         <Zoom
-          in={showLeftBtn}
+          in={isSmall ? false : showLeftBtn}
           unmountOnExit
           appear={false}
           style={{
@@ -137,19 +151,21 @@ const FilesThumbnailView = React.memo(
                         boxShadow: 0,
                         position: "relative",
                         "& .delete-elem-icon": {
-                          display: "none",
+                          pointerEvents: "none",
                           opacity: 0,
                           transition: "opacity 0.2s ease-in-out",
                         },
                         "&:hover ": {
+                          boxShadow: 5,
                           "& .delete-elem-icon": {
-                            display: "initial",
+                            pointerEvents: "auto",
                             opacity: 1,
                           },
                         },
                       }}
                       elevation={5}>
                       {file?.type === "voice" && <AudioThumbnail {...file} />}
+                      {file?.type === "doc" && <DocThumbnail {...file} />}
 
                       <Box
                         className='delete-elem-icon'
@@ -177,7 +193,7 @@ const FilesThumbnailView = React.memo(
           </LayoutGroup>
         </Box>
         <Zoom
-          in={showRightBtn}
+          in={isSmall ? false : showRightBtn}
           unmountOnExit
           appear={false}
           style={{
