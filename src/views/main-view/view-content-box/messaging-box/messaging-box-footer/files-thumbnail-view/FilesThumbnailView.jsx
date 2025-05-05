@@ -17,8 +17,11 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import store from "../../../../../../redux/store";
 import { updateData } from "../../../../../../redux/data/data";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
-import AudioThumbnail from "./audio-thumbnail/AudioThumbnail";
+import VoiceThumbnail from "./voice-thumbnail/VoiceThumbnail";
 import DocThumbnail from "./doc-thumbnail/DocThumbnail";
+import ImageThumbnail from "./image-thumbnail/ImageThumbnail";
+import AudioThumbnail from "./audio-thumbnail/AudioThumbnail";
+import VideoThumbnail from "./video-thumbnail/VideoThumbnail";
 
 const FilesThumbnailView = React.memo(
   React.forwardRef(({ id }, ref) => {
@@ -164,8 +167,11 @@ const FilesThumbnailView = React.memo(
                         },
                       }}
                       elevation={5}>
-                      {file?.type === "voice" && <AudioThumbnail {...file} />}
+                      {file?.type === "voice" && <VoiceThumbnail {...file} />}
+                      {file?.type === "audio" && <AudioThumbnail {...file} />}
                       {file?.type === "doc" && <DocThumbnail {...file} />}
+                      {file?.type === "image" && <ImageThumbnail {...file} />}
+                      {file?.type === "video" && <VideoThumbnail {...file} />}
 
                       <Box
                         className='delete-elem-icon'

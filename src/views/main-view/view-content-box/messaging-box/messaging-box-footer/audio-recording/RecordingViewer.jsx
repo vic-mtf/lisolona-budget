@@ -17,7 +17,7 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
   const [duration, setDuration] = useState(0);
   const containerRef = useRef();
   const timeRef = useRef(0);
-  const [getDate] = useLocalStoreData();
+  const [getData] = useLocalStoreData();
   const theme = useTheme();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
       waveSurferData.plugins.record = recordPlugin;
       recordPlugin.startRecording().then(() => {
         setPaused(false);
-        getDate("app.playings.audio")?.pause();
+        getData("app.playings.audio")?.pause();
       });
 
       recordingAudio.play();
@@ -62,7 +62,7 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
     return () => {
       waveSurfer?.un("ready", onGetDuration);
     };
-  }, [setPaused, theme, getDate, waveSurferData]);
+  }, [setPaused, theme, getData, waveSurferData]);
 
   return (
     <Box

@@ -4,18 +4,8 @@ import PropTypes from "prop-types";
 
 const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
   const [currentTime, setCurrentTime] = useState(0);
-
   const step = useMemo(() => calculateOptimalStep(0, duration), [duration]);
-
   const manualChange = useMemo(() => ({ isActive: false }), []);
-
-  const handleActiveManualChange = () => {
-    manualChange.isActive = true;
-  };
-
-  const handleStopManualChange = () => {
-    manualChange.isActive = false;
-  };
 
   useEffect(() => {
     const onTimeupdate = (currentTime) => {
@@ -38,27 +28,16 @@ const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
       left={0}
       justifyContent='center'
       alignItems='center'
-      //bgcolor='red'
-      onMouseDown={handleActiveManualChange}
-      onMouseUp={handleStopManualChange}
-      onMouseLeave={handleStopManualChange}
-      onTouchStart={handleActiveManualChange}
-      onTouchCancel={handleStopManualChange}
-      onTouchEnd={handleStopManualChange}
       sx={{ zIndex: (t) => t.zIndex.tooltip }}>
-      {/* <Box sx={{ height: 100, bgcolor: "orange", width: "100%" }}></Box> */}
       <Slider
         min={0}
         max={duration}
         value={currentTime}
         step={step}
-        onChange={(_, value) => {
-          const currentTime = roundToNearestStep(value, step);
-          setCurrentTime(currentTime);
-          waveSurfer?.setTime(currentTime);
-        }}
+        onChange={(_, value) =>
+          waveSurfer?.setTime(roundToNearestStep(value, step))
+        }
         sx={{
-          // bgcolor: "pink",
           "& .MuiSlider-rail, & .MuiSlider-track": { color: "transparent" },
           "& .MuiSlider-thumb": {
             transition: "none",
