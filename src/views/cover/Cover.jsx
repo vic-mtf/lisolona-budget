@@ -46,7 +46,7 @@ export default function Cover() {
         callHistory,
       };
       const user = store.getState().user;
-      store.dispatch(updateArraysData({ data, user }));
+      dispatch(updateArraysData({ data, user }));
     } catch (error) {
       console.error(error);
     }
@@ -140,12 +140,7 @@ export default function Cover() {
           )}
         </MuiBox>
       </Stack>
-      <Typography
-        variant='caption'
-        paragraph
-        p={2}
-        fontSize={12}
-        textAlign='center'>
+      <Typography variant='caption' p={2} fontSize={12} textAlign='center'>
         {
           "Direction Archives et Nouvelles Technologie de l'Information et de la Communication ©2022"
         }

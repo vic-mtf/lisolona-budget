@@ -79,6 +79,22 @@ const EditorArea = React.memo(
       };
     }, [editorState, onSend, format]);
 
+    useEffect(() => {
+      const editorData = editorRef?.current;
+      const editor = editorData?.editor;
+      const handleChange = (e) => {
+        const _isSendable = e.currentTarget.innerText?.trim().length > 0;
+        if (isSendable !== _isSendable && typeof onSendable === "function") {
+          setIsSendable(_isSendable);
+          onSendable(_isSendable);
+        }
+      };
+      editor.addEventListener("keyup", handleChange);
+      return () => {
+        editor.removeEventListener("keyup", handleChange);
+      };
+    }, [editorRef, isSendable, onSendable]);
+
     return (
       <>
         <EditorStyledWrapper
@@ -113,14 +129,6 @@ const EditorArea = React.memo(
                 decorator,
               });
               setEditorState(newEditorState);
-              const _isSendable = !isEditorStateEmpty(newEditorState);
-              if (
-                isSendable !== _isSendable &&
-                typeof onSendable === "function"
-              ) {
-                setIsSendable(_isSendable);
-                onSendable(_isSendable);
-              }
             }}
             keyBindingFn={(e) =>
               keyBindingFn(e, editorState, setEditorState, !matches)

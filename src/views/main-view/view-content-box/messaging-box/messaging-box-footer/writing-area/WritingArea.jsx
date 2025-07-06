@@ -34,7 +34,7 @@ export default function WritingArea({
   const onToggleToolbar = useCallback(() => setHideToolbar((v) => !v), []);
 
   useEffect(() => {
-    if (!matches && placeholder && !recording) {
+    if (placeholder && !recording) {
       setHasFocus(true);
       editorRef.current?.focus();
     }
@@ -43,6 +43,17 @@ export default function WritingArea({
       editorRef.current?.blur();
     }
   }, [matches, placeholder, editorRef, recording]);
+
+  useEffect(() => {
+    if (matches && hasFocus)
+      setTimeout(() => {
+        const { editorContainer } = editorRef.current;
+        editorContainer?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 200);
+  }, [matches, hasFocus, editorRef]);
 
   return (
     <Box overflow='hidden' sx={{ p: { md: 1 } }}>

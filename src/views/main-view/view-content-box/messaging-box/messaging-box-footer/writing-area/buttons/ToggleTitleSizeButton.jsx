@@ -6,18 +6,18 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-//import PropTypes from "prop-types";
-//import FormatSizeOutlinedIcon from "@mui/icons-material/FormatSizeOutlined";
-// import ElasticPopper from "../../../../../../../components/ElasticPopper";
 import useLongPress from "../../../../../../../hooks/useLongPress";
-import { useRef } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
 import { useMemo } from "react";
 import TitleOutlinedIcon from "@mui/icons-material/TitleOutlined";
+import { EditorState } from "draft-js";
+import PropTypes from "prop-types";
+import getCurrentBlockType from "../buttons/getCurrentBlockType";
+import { getStateToggleBlockStyle } from "./buttons";
 
-const ToggleTitleSizeButton = () => {
+const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
   const [open, setOpen] = useState(false);
   const anchorElRef = useRef();
   const [block, setBlock] = useState("header-three");
@@ -45,12 +45,34 @@ const ToggleTitleSizeButton = () => {
           },
     [matches, open]
   );
-
+  const selected = useMemo(
+    () =>
+      Boolean(
+        headerBlocks.find(({ id }) => id === getCurrentBlockType(editorState))
+      ),
+    [editorState]
+  );
+  console.log(getCurrentBlockType(editorState));
   return (
     <>
-      <Tooltip title='Title' enterDelay={700} placement='top'>
+      <Tooltip
+        title={
+          <div>
+            <span>Titre</span>
+            <div>Mainternir pour changer le format</div>
+          </div>
+        }
+        enterDelay={700}
+        placement='top'>
         <div style={{ position: "relative" }}>
-          <ToggleButton {...props} value='link' ref={anchorElRef}>
+          <ToggleButton
+            {...props}
+            value='link'
+            ref={anchorElRef}
+            selected={selected}
+            onClick={() =>
+              setEditorState(getStateToggleBlockStyle(editorState, block))
+            }>
             <TitleOutlinedIcon fontSize='small' />
             <ArrowDropDownIcon fontSize='small' />
             <Typography
@@ -67,16 +89,21 @@ const ToggleTitleSizeButton = () => {
         onClose={() => setOpen(false)}
         disableEnforceFocus
         disableAutoFocus
+        disableAutoFocusItem
+        disableRestoreFocus
+        onMouseDown={(event) => event.preventDefault()}
         {...menuNavProps}>
         {headerBlocks.map(({ id, value, label }) => (
           <MenuItem
             key={id}
             onClick={() => {
+              setEditorState(getStateToggleBlockStyle(editorState, id));
               setBlock(id);
               setOpen(false);
             }}
             value={value}
-            selected={block === id}>
+            selected={block === id}
+            onMouseDown={(event) => event.preventDefault()}>
             {label}
           </MenuItem>
         ))}
@@ -118,6 +145,9 @@ const headerBlocks = [
   },
 ];
 
-ToggleTitleSizeButton.propTypes = {};
+ToggleTitleSizeButton.propTypes = {
+  editorState: PropTypes.instanceOf(EditorState).isRequired,
+  setEditorState: PropTypes.func.isRequired,
+};
 
 export default ToggleTitleSizeButton;

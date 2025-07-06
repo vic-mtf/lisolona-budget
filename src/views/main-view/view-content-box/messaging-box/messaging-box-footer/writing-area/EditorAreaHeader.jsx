@@ -74,7 +74,10 @@ export default function EditorAreaHeader({
           <AddLinkButton isLink={isLink} onOpenAddLink={onOpenAddLink} />
         </ToggleButtonGroup>
         <ToggleButtonGroup size='small' disabled={!hasFocus} values={[]}>
-          <ToggleTitleSizeButton />
+          <ToggleTitleSizeButton
+            editorState={editorState}
+            setEditorState={setEditorState}
+          />
         </ToggleButtonGroup>
       </Stack>
     </Box>

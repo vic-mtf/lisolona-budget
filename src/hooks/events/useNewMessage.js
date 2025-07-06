@@ -17,7 +17,7 @@ const useNewMessage = () => {
       )?._id;
       const id = type === "room" ? _id : remoteUser?._id;
       const discussions = [{ updatedAt, messages, id }];
-      console.log("remote discussion => ", id);
+      //console.log("remote discussion => ", id);
       const user = store.getState().user;
       const data = { discussions };
       store.dispatch(updateArraysData({ data, user }));

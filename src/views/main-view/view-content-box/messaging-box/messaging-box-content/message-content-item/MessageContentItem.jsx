@@ -9,6 +9,7 @@ import {
   ListItem,
   alpha,
   Stack,
+  Fade,
 } from "@mui/material";
 import ListAvatar from "../../../../../../components/ListAvatar";
 import getFullName from "../../../../../../utils/getFullName";
@@ -21,15 +22,18 @@ import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 import MessageContentMedia from "./message-content-media/MessageContentMedia";
 
-const MessageContentItem = React.memo(
-  ({
-    message,
-    hideAvatar,
-    hideName,
-    grouped /*, selectable,*/,
-    selected,
-    user,
-  }) => {
+const MessageContentItem = React.forwardRef(
+  (
+    {
+      message,
+      hideAvatar,
+      hideName,
+      grouped /*, selectable,*/,
+      selected,
+      user,
+    },
+    ref
+  ) => {
     const replyMessage = useSelector(
       (store) => store.data.app.actions.messaging.reply[user?.id]
     );
@@ -43,7 +47,7 @@ const MessageContentItem = React.memo(
       [selected, replyMessage, message]
     );
     const longPressProps = useLongPress(() => {
-      alert("Bonjour");
+      //alert("Bonjour");
     });
     const ListItemMessage = useMemo(
       () => (matches ? ListItemButton : ListItem),
@@ -85,86 +89,94 @@ const MessageContentItem = React.memo(
     );
 
     return (
-      <Box
-        sx={{
-          bgcolor: (theme) =>
-            selectedItem
-              ? alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.selectedOpacity
+      <Fade in appear unmountOnExit>
+        <Box
+          component='div'
+          ref={ref}
+          sx={{
+            bgcolor: (theme) =>
+              selectedItem
+                ? alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity
+                  )
+                : "none",
+          }}>
+          <ListItemMessage alignItems='flex-start' {...listItemProps}>
+            <ListItemAvatar
+              sx={{
+                display: "flex",
+                justifyContent: "start",
+              }}>
+              {!hideAvatar ? (
+                <ListAvatar invisible id={sender.id} src={sender.image}>
+                  {name?.charAt(0).toUpperCase()}
+                </ListAvatar>
+              ) : (
+                <Typography
+                  variant='caption'
+                  component='div'
+                  display='flex'
+                  whiteSpace='nowrap'
+                  color='text.secondary'
+                  className='date-item'
+                  justifyContent='end'>
+                  {dayjs(createdAt).format("HH:mm")}
+                </Typography>
+              )}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                !hideName && (
+                  <Stack direction='row' spacing={1} alignItems='flex-end'>
+                    <Typography
+                      textOverflow='ellipsis'
+                      whiteSpace='nowrap'
+                      overflow='hidden'
+                      //fontWeight={550}
+                      variant='body1'>
+                      {name}
+                    </Typography>
+                    <Typography
+                      variant='caption'
+                      component='div'
+                      display='flex'
+                      whiteSpace='nowrap'
+                      color='text.secondary'
+                      justifyContent='end'>
+                      {formatTime({ date: createdAt, showTime: true })}
+                    </Typography>
+                  </Stack>
                 )
-              : "none",
-        }}>
-        <ListItemMessage alignItems='flex-start' {...listItemProps}>
-          <ListItemAvatar
-            sx={{
-              display: "flex",
-              justifyContent: "start",
-            }}>
-            {!hideAvatar ? (
-              <ListAvatar invisible id={sender.id} src={sender.image}>
-                {name?.charAt(0).toUpperCase()}
-              </ListAvatar>
-            ) : (
-              <Typography
-                variant='caption'
-                component='div'
-                display='flex'
-                whiteSpace='nowrap'
-                color='text.secondary'
-                className='date-item'
-                justifyContent='end'>
-                {dayjs(createdAt).format("HH:mm")}
-              </Typography>
-            )}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              !hideName && (
-                <Stack direction='row' spacing={1} alignItems='flex-end'>
-                  <Typography
-                    textOverflow='ellipsis'
-                    whiteSpace='nowrap'
-                    overflow='hidden'
-                    //fontWeight={550}
-                    variant='body1'>
-                    {name}
-                  </Typography>
-                  <Typography
-                    variant='caption'
-                    component='div'
-                    display='flex'
-                    whiteSpace='nowrap'
-                    color='text.secondary'
-                    justifyContent='end'>
-                    {formatTime({ date: createdAt, showTime: true })}
-                  </Typography>
-                </Stack>
-              )
-            }
-            secondary={
-              <>
-                {message.type === "text" && (
-                  <MessageContentText content={message.content} />
-                )}
-                {message.type === "media" && (
-                  <MessageContentMedia
-                    content={message?.content}
-                    subType={message?.subType}
-                    id={message?.clientId || message?.id}
-                  />
-                )}
-              </>
-            }
-            primaryTypographyProps={{ component: "div" }}
-            secondaryTypographyProps={{
-              component: "div",
-              sx: { "& p": { p: 0, m: 0 } },
-            }}
-          />
-          {!matches && <MessageActionItem message={message} />}
-        </ListItemMessage>
-      </Box>
+              }
+              secondary={
+                <>
+                  {message.type === "text" && (
+                    <MessageContentText content={message.content} />
+                  )}
+                  {message.type === "media" && (
+                    <MessageContentMedia
+                      content={message?.content}
+                      subType={message?.subType}
+                      id={message?.clientId || message?.id}
+                    />
+                  )}
+                </>
+              }
+              slotProps={{
+                primary: {
+                  component: "div",
+                },
+                secondary: {
+                  component: "div",
+                  sx: { "& p": { p: 0, m: 0 } },
+                },
+              }}
+            />
+            {!matches && <MessageActionItem message={message} />}
+          </ListItemMessage>
+        </Box>
+      </Fade>
     );
   }
 );
@@ -181,4 +193,4 @@ MessageContentItem.propTypes = {
   user: PropTypes.object,
 };
 
-export default MessageContentItem;
+export default React.memo(MessageContentItem);

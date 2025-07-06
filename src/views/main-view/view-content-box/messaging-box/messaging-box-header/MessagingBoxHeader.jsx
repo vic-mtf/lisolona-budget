@@ -44,13 +44,14 @@ export default function MessagingBoxHeader() {
   );
 
   return (
-    <Box position='relative'>
+    <Box position='sticky' top={0}>
       <AppBar
         sx={{
           top: 0,
           backgroundColor: "transparent",
           boxShadow: 0,
           backdropFilter: "blur(15px)",
+          position: "relative",
         }}
         enableColorOnDark={false}
         position='static'>

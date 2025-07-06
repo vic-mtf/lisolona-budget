@@ -49,6 +49,7 @@ const VirtualizedList = React.memo(
                 rowCount={data.length}
                 rowHeight={rowHeight}
                 rowRenderer={itemContent}
+                scrollToIndex={0}
                 noContentRenderer={MUIList}
                 style={{ overflowX: "hidden" }}
                 containerStyle={containerStyle}

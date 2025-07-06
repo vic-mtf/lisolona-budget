@@ -61,6 +61,7 @@ const MessageList = React.memo(({ user, VListRef, data }) => {
         style={{ flex: 1, paddingTop: 100 }}
         reverse
         shift={VListStateMemo.isPrepend}
+        overscan={10}
         onScroll={(offset) => {
           const { scrollSize, viewportSize } = VListRef.current;
           const size = Math.abs(offset - scrollSize + viewportSize);
