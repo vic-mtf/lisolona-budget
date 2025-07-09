@@ -1,11 +1,11 @@
-import Box from "../../components/Box";
 import _app_logo from "../../assets/group_speak.webp";
 import {
   Stack,
-  Box as MuiBox,
+  Box,
   CircularProgress,
   Divider,
   Typography,
+  Fade,
 } from "@mui/material";
 import _platform_logo from "../../assets/geid_logo_blue_without_title.webp";
 import { useCallback } from "react";
@@ -38,13 +38,7 @@ export default function Cover() {
         callHistory,
       } = response.data || {};
       const { data: calls } = await refresh({ url: "/api/chat/room/call/" });
-      const data = {
-        calls,
-        discussions,
-        contacts,
-        invitations,
-        callHistory,
-      };
+      const data = { calls, discussions, contacts, invitations, callHistory };
       const user = store.getState().user;
       dispatch(updateArraysData({ data, user }));
     } catch (error) {
@@ -55,17 +49,18 @@ export default function Cover() {
 
   return (
     <Box
-      sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        userSelect: "none",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        overflow: "hidden",
-      }}>
+      height='100%'
+      width='100%'
+      display='flex'
+      justifyContent='center'
+      alignItems='center'
+      flexDirection='column'
+      position='absolute'
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      overflow='hidden'>
       <Stack
         display='flex'
         justifyContent='center'
@@ -84,7 +79,7 @@ export default function Cover() {
             }}
           />
         </SwingAnimation>
-        <MuiBox
+        <Box
           display='flex'
           justifyContent='center'
           alignItems='center'
@@ -127,8 +122,8 @@ export default function Cover() {
               Lisolo Na Budget
             </Typography>
           </Stack>
-          {loading && (
-            <MuiBox
+          <Fade unmountOnExit in={loading} appear={false}>
+            <Box
               sx={{ position: "absolute", top: "150%" }}
               display='flex'
               justifyContent='center'
@@ -136,9 +131,9 @@ export default function Cover() {
               color='text.primary'
               flexDirection='column'>
               <CircularProgress size={15} color='inherit' />
-            </MuiBox>
-          )}
-        </MuiBox>
+            </Box>
+          </Fade>
+        </Box>
       </Stack>
       <Typography variant='caption' p={2} fontSize={12} textAlign='center'>
         {

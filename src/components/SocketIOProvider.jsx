@@ -1,11 +1,15 @@
-import { createContext, useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import axiosConfig from "../configs/axios-config.json";
+import PropTypes from "prop-types";
+import { SocketIOContext } from "../hooks/useSocket";
 
 const DEFAULT_OPTIONS = { transports: ["websocket"] };
-const OPENER_SOCKET = window.OPENER_SOCKET;
+const OPENER_SOCKET = window._OPENER_SOCKET;
 const BASE_URL = axiosConfig.baseURL;
+
+const Provider = SocketIOContext.Provider;
 
 export default function SocketIOProvider({
   children,
@@ -23,6 +27,9 @@ export default function SocketIOProvider({
   return <Provider value={socket}>{children}</Provider>;
 }
 
-export const SocketIOContext = createContext(null);
-
-const { Provider } = SocketIOContext;
+SocketIOProvider.propTypes = {
+  children: PropTypes.node,
+  url: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
+  token: PropTypes.string,
+  options: PropTypes.object,
+};

@@ -16,7 +16,7 @@ export default function formatObjectData(
         ];
         configKeys.forEach((k) => !keys.includes(k) && keys.push(k));
         if (
-          configKeys.find((key) => data.hasOwnProperty(key)) &&
+          configKeys.find((key) => Object.hasOwnProperty.call(data, key)) &&
           result[configKey] === undefined
         )
           result[configKey] = getValFromObj(data, configKeys);
@@ -30,7 +30,11 @@ export default function formatObjectData(
 export const getValFromObj = (obj = {}, keys = [], output = null) => {
   let val = null;
   keys?.forEach((key) => {
-    if (val === null && obj?.hasOwnProperty(key))
+    if (
+      val === null &&
+      isPlainObject(obj) &&
+      Object.hasOwnProperty.call(obj, key)
+    )
       val =
         typeof obj[key] === "string"
           ? obj[key].trim() || null
@@ -50,8 +54,8 @@ export const deleteKeysFromObject = (obj, keys) => {
 export const formatUser = (obj) =>
   formatObjectData({
     ...obj,
-    grade: obj.grade?.grade || obj.grade,
-    role: obj?.grade?.role || obj.role,
+    grade: obj.grade?.grade || obj?.grade,
+    role: obj?.grade?.role || obj?.role,
   });
 
 export const userFormatConfig = {

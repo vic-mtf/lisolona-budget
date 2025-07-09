@@ -9,10 +9,9 @@ export default function CopyrightFooter() {
       justifyContent='center'
       alignItems='center'
       spacing={2}
-      direction='row'
-      sx={{}}>
+      direction='row'>
       <Link variant='caption' color='text.primary'>
-        Conditions d'utilisation
+        {"Conditions d'utilisation"}
       </Link>
       <Link variant='caption' color='text.primary'>
         Aide

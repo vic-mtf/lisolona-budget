@@ -1,15 +1,15 @@
-import { Slide, Stack, Button } from "@mui/material";
-import React, { useMemo } from "react";
+import { Slide, CardActions, Button, Box } from "@mui/material";
+import { useMemo } from "react";
 import Account from "./Account";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import Box from "../../../components/Box";
+//import { Link } from "react-router-dom";
 import CheckEmail from "./CheckEmail";
 import CheckPassword from "./CheckPassword";
 import { decrypt } from "../../../utils/crypt";
 import useSignInSendData from "../../../hooks/useSignInSendData";
 import { useLocation } from "react-router-dom";
 import getPathnames from "../../../utils/getPathnames";
+import PropTypes from "prop-types";
 
 export default function Content({ refresh }) {
   const appStoreUser = useSelector((store) => store.app.user);
@@ -31,8 +31,15 @@ export default function Content({ refresh }) {
       flex={1}
       flexDirection='column'
       component='form'
-      onSubmit={handleSendData}>
-      <Box flex={1} position='relative' flexDirection='column'>
+      onSubmit={handleSendData}
+      display='flex'>
+      <Box
+        flex={1}
+        position='relative'
+        flexDirection='column'
+        display='flex'
+        width='100%'
+        height='100%'>
         <TabLevel show={pathNames.includes("userfound")}>
           <Account user={user} refresh={refresh} />
         </TabLevel>
@@ -54,22 +61,13 @@ export default function Content({ refresh }) {
           />
         </TabLevel>
       </Box>
-      <Stack spacing={1} direction='row' display='flex'>
-        <Box flex={1}>
-          {!defaultEmail && (
-            <Button LinkComponent={Link} to='/account/signup'>
-              S'incrire
-            </Button>
-          )}
-        </Box>
-        <Box flex={1}>
-          {(defaultEmail === null || !!defaultEmail) && (
-            <Button type='submit' variant='outlined'>
-              {defaultEmail ? "Connexion" : "Suivant"}
-            </Button>
-          )}
-        </Box>
-      </Stack>
+      <CardActions sx={{ justifyContent: "end" }}>
+        {(defaultEmail === null || !!defaultEmail) && (
+          <Button type='submit' variant='outlined'>
+            {defaultEmail ? "Connexion" : "Suivant"}
+          </Button>
+        )}
+      </CardActions>
     </Box>
   );
 }
@@ -89,4 +87,13 @@ const TabLevel = ({ show, children }) => {
       </Box>
     </Slide>
   );
+};
+
+Content.propTypes = {
+  refresh: PropTypes.func.isRequired,
+};
+
+TabLevel.propTypes = {
+  show: PropTypes.bool,
+  children: PropTypes.node,
 };

@@ -1,8 +1,7 @@
-import { Stack, OutlinedInput, Box as MuiBox, Zoom } from "@mui/material";
+import { Stack, OutlinedInput, Box, Zoom, IconButton } from "@mui/material";
 import { useRef, useMemo, useState, useCallback, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
-import IconButton from "./IconButton";
 
 export default function InputCode({
   length = 6,
@@ -111,7 +110,7 @@ export default function InputCode({
   // }, []);
 
   return (
-    <MuiBox
+    <Box
       display='flex'
       gap={0.5}
       sx={{
@@ -131,7 +130,7 @@ export default function InputCode({
         {inputs}
       </Stack>
       <Zoom appear={false} in={backspace} unmountOnExit>
-        <MuiBox justifyContent='center' alignItems='center' display='flex'>
+        <Box justifyContent='center' alignItems='center' display='flex'>
           <IconButton
             onClick={(event) => {
               event.preventDefault();
@@ -140,9 +139,9 @@ export default function InputCode({
             onMouseDown={(event) => event.preventDefault()}>
             <BackspaceOutlinedIcon />
           </IconButton>
-        </MuiBox>
+        </Box>
       </Zoom>
-    </MuiBox>
+    </Box>
   );
 }
 

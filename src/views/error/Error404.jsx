@@ -1,5 +1,4 @@
-import Box from "../../components/Box";
-import { Divider, Stack, CardContent, Typography } from "@mui/material";
+import { Divider, Stack, CardContent, Typography, Box } from "@mui/material";
 import { makeStyles, createStyles } from "@mui/styles";
 import ErrorFooter from "./ErrorFooter";
 import { useTimer } from "react-timer-hook";
@@ -10,7 +9,13 @@ import Header from "./Header";
 export default function Error404() {
   const classes = useStyles();
   return (
-    <Box className={classes.container}>
+    <Box
+      className={classes.container}
+      display='flex'
+      flex={1}
+      width='100%'
+      height='100%'
+      flexDirection='column'>
       <CardContent>
         <Header />
         <Stack className={classes.messageTitle} spacing={1} direction='row'>
@@ -24,12 +29,13 @@ export default function Error404() {
         </Stack>
         <Stack spacing={1}>
           <Typography>
-            Geid ne trouve pas d'adresse{" "}
+            {"Geid ne trouve pas d'adresse"}{" "}
             <em className={classes.link}>{window.location.toString()}</em>,
             vérifiez et réessayez.
           </Typography>
           <Typography color='text.secondary'>
-            Vous serez redirigé vers vers l'accueil au bout de <RedirectTimer />
+            {"Vous serez redirigé vers vers l'accueil au bout de"}{" "}
+            <RedirectTimer />
             s.
           </Typography>
         </Stack>

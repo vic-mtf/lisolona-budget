@@ -32,6 +32,15 @@ export default function WritingArea({
   const theme = useTheme();
 
   const onToggleToolbar = useCallback(() => setHideToolbar((v) => !v), []);
+  const onScrollIntoView = useCallback(() => {
+    const { editorContainer } = editorRef.current || {};
+    setTimeout(() => {
+      editorContainer?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 200);
+  }, [editorRef]);
 
   useEffect(() => {
     if (placeholder && !recording) {
@@ -45,18 +54,11 @@ export default function WritingArea({
   }, [matches, placeholder, editorRef, recording]);
 
   useEffect(() => {
-    if (matches && hasFocus)
-      setTimeout(() => {
-        const { editorContainer } = editorRef.current;
-        editorContainer?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 200);
-  }, [matches, hasFocus, editorRef]);
+    if (matches && hasFocus) onScrollIntoView();
+  }, [matches, hasFocus, onScrollIntoView]);
 
   return (
-    <Box overflow='hidden' sx={{ p: { md: 1 } }}>
+    <Box overflow='hidden' sx={{ p: { md: 1 } }} onClick={onScrollIntoView}>
       <Paper
         elevation={hasFocus ? 2 : 0}
         sx={{

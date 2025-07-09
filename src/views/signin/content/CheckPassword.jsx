@@ -1,6 +1,6 @@
 import {
   TextField,
-  Box as MuiBox,
+  Box,
   Alert,
   Chip,
   Avatar,
@@ -12,15 +12,21 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
-import Box from "../../../components/Box";
+
+import PropTypes from "prop-types";
 
 export default function CheckPassword({ passwordRef, email, errorMessage }) {
   const [show, setShow] = useState(false);
 
   return (
-    <MuiBox display='flex' flex={1} flexDirection='column'>
-      <Box flex={1}>
-        <MuiBox textAlign='center'>
+    <Box display='flex' flex={1} flexDirection='column'>
+      <Box
+        flex={1}
+        flexDirection='column'
+        display='flex'
+        width='100%'
+        height='100%'>
+        <Box textAlign='center'>
           <Typography color='text.primary' align='center' variant='body1'>
             Bienvenue
           </Typography>
@@ -31,7 +37,7 @@ export default function CheckPassword({ passwordRef, email, errorMessage }) {
             component={ReactRouterLink}
             sx={{ borderRadius: 1 }}
           />
-        </MuiBox>
+        </Box>
         <TextField
           label='Mot de passe'
           defaultValue=''
@@ -43,14 +49,14 @@ export default function CheckPassword({ passwordRef, email, errorMessage }) {
           error={!!errorMessage}
           autoFocus
         />
-        <MuiBox justifyContent='right' display='flex'>
+        <Box justifyContent='right' display='flex'>
           <Button
             type='text'
             LinkComponent={ReactRouterLink}
             to='/account/forgotpassword'>
             Mot de passe oublié ?
           </Button>
-        </MuiBox>
+        </Box>
         <FormControl sx={{ display: "inline-block" }}>
           <FormControlLabel
             value='left'
@@ -72,6 +78,12 @@ export default function CheckPassword({ passwordRef, email, errorMessage }) {
           </Alert>
         )}
       </Box>
-    </MuiBox>
+    </Box>
   );
 }
+
+CheckPassword.propTypes = {
+  passwordRef: PropTypes.object,
+  email: PropTypes.string,
+  errorMessage: PropTypes.string,
+};

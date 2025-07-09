@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { LocalStoreDataContext } from "../components/LocalStoreDataProvider";
+import { useContext, createContext } from "react";
 
+export const LocalStoreDataContext = createContext();
 const useLocalStoreData = () => useContext(LocalStoreDataContext);
 export default useLocalStoreData;

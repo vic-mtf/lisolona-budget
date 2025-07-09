@@ -19,9 +19,12 @@ import useToken from "../../../../hooks/useToken";
 import { useForm } from "react-hook-form";
 import CreateGroup from "./CreateGroup";
 import ContactList from "./ContactList";
+import store from "../../../../redux/store";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 const CreateDiscussionGroup = React.memo(({ onClose }) => {
   const [selectedContacts, setSelectedContacts] = useState([]);
+  const notifications = useNotifications();
   const [tab, setTab] = useState("contacts");
   const Authorization = useToken();
   const [{ loading }, refresh] = useAxios(
@@ -41,11 +44,21 @@ const CreateDiscussionGroup = React.memo(({ onClose }) => {
   } = useForm();
 
   const onSubmit = useCallback(
-    (data) => {
-      refresh;
-      // create group with refresh
+    async ({ title: name, description }) => {
+      const id = store.getState().user.id;
+      const members = [id, ...selectedContacts.map(({ id }) => id)];
+      const data = { name, description, members };
+      try {
+        await refresh({ data });
+        if (typeof onClose === "function") onClose();
+      } catch (error) {
+        console.log(error);
+        notifications.show("Une erreur est survenue, reessayez plus tard", {
+          severity: "error",
+        });
+      }
     },
-    [refresh]
+    [refresh, selectedContacts, notifications, onClose]
   );
 
   return (

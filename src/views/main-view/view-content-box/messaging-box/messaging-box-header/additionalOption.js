@@ -42,7 +42,6 @@ export const groupOptions = [
     label: "Infos Lisanga",
     icon: InfoOutlinedIcon,
     action() {
-      console.log("Bonjour les gens ,Lisanga");
       const key = "app.actions.messaging.info.open";
       store.dispatch(updateData({ data: true, key }));
     },

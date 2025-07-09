@@ -10,7 +10,7 @@ import ToggleButtonGroup from "../../../../../../../components/ToggleButtonGroup
 import useLongPress from "../../../../../../../hooks/useLongPress";
 import { useRef, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-//import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
+import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
 import { useMemo } from "react";
 import TitleOutlinedIcon from "@mui/icons-material/TitleOutlined";
 import { EditorState } from "draft-js";
@@ -23,7 +23,7 @@ const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
   const [open, setOpen] = useState(false);
   const anchorElRef = useRef();
   const [block, setBlock] = useState("header-three");
-
+  const isSmallScreen = useSmallScreen();
   const handleMouseEnter = () => setOpen(true);
   const handleMouseLeave = () => setOpen(false);
   const props = useLongPress(() => {
@@ -37,7 +37,7 @@ const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
       ),
     [editorState]
   );
-  console.log(getCurrentBlockType(editorState));
+
   return (
     <>
       <Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -70,10 +70,10 @@ const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
         <Popper
           open={open}
           anchorEl={anchorElRef.current}
-          placement='right-start'
+          placement={isSmallScreen ? "left-end" : "right-start"}
           transition
           disablePortal
-          style={{ zIndex: 1300 }}>
+          sx={{ zIndex: (t) => t.zIndex.tooltip }}>
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
               <Box
@@ -104,7 +104,11 @@ const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
                       mx: 0.5,
                     }}>
                     {headerBlocks.map(({ name, id, label }) => (
-                      <Tooltip key={id} label={label}>
+                      <Tooltip
+                        key={id}
+                        title={label}
+                        enterDelay={700}
+                        placement='top'>
                         <ToggleButton
                           value={id}
                           onClick={() => {

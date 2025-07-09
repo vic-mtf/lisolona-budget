@@ -20,7 +20,6 @@ const EditorAreaFooter = React.memo(
       (store) => store.data.chatBox.footer.files[id]?.length === 10
     );
     const dispatch = useDispatch();
-    console?.log(limitFiles);
 
     return (
       <Box

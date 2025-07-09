@@ -4,7 +4,7 @@ import LinkDecorator from "./LinkDecorator";
 const findLinkEntities = (name) => (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges((character) => {
     const entityKey = character.getEntity();
-    entityKey && console.log(contentState.getEntity(entityKey).getType());
+
     return (
       entityKey !== null && contentState.getEntity(entityKey).getType() === name
     );

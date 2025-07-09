@@ -1,7 +1,8 @@
 import React from "react";
-import { createContext, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import deepMerge, { getValueByKey, setValueByKey } from "../utils/mergeDeep";
+import { LocalStoreDataContext } from "../hooks/useLocalStoreData";
 
 const LocalStoreDataProvider = React.memo(({ children }) => {
   const data = useMemo(
@@ -94,8 +95,6 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
 
   return <Provider value={[getData, setData]}>{children}</Provider>;
 });
-
-export const LocalStoreDataContext = createContext();
 
 const { Provider } = LocalStoreDataContext;
 

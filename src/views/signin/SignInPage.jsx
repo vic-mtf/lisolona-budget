@@ -1,13 +1,13 @@
 import {
   Card,
-  Box as MuiBox,
+  Box,
   CardContent,
   LinearProgress,
   Fade,
   Backdrop,
   Alert,
+  Dialog,
 } from "@mui/material";
-import Box from "../../components/Box";
 import Content from "./content/Content";
 import Header from "./header/Header";
 import useAxios from "../../hooks/useAxios";
@@ -16,15 +16,21 @@ import Footer from "./footer/Footer";
 import { useSelector } from "react-redux";
 
 import Link from "../../components/Link";
-import Dialog from "../../components/Dialog";
 
 export default function SignInPage() {
   const [{ loading }, refresh] = useAxios("", { manual: true });
   const connected = useSelector((store) => store.user.connected);
 
   return (
-    <Box justifyContent='center' alignItems='center'>
-      <MuiBox
+    <Box
+      justifyContent='center'
+      alignItems='center'
+      display='flex'
+      flex={1}
+      width='100%'
+      height='100%'
+      flexDirection='column'>
+      <Box
         height={460}
         display='flex'
         sx={{
@@ -60,7 +66,7 @@ export default function SignInPage() {
             <Content loading={loading} refresh={refresh} />
           </CardContent>
         </Card>
-      </MuiBox>
+      </Box>
       <Footer />
       <Backdrop
         open={loading}
@@ -70,11 +76,7 @@ export default function SignInPage() {
         }}
       />
       <ErrorNetwork />
-      <Dialog
-        open={connected}
-        PaperProps={{
-          sx: { border: (theme) => `1px solid ${theme.palette.divider}` },
-        }}>
+      <Dialog open={connected}>
         <Alert>
           Vous avez réussi à vous connecter à votre compte et pouvez accéder à
           la plate-forme pour{" "}

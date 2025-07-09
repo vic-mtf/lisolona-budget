@@ -1,15 +1,14 @@
 import { useCallback /*,useLayoutEffect*/ } from "react";
-import { Box, FormLabel, Toolbar, IconButton } from "@mui/material";
+import { Box, FormLabel, Toolbar } from "@mui/material";
 import InputCode from "../../../components/InputCode";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useNavigate } from "react-router-dom";
-import useSnackbar from "../../../hooks/useSnackbar";
 import messages from "./messages";
 import PropTypes from "prop-types";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 const CodeMeeting = ({ values, loading, refetch }) => {
   const navigateTo = useNavigate();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const notifications = useNotifications();
   const handleCompleteCode = useCallback(
     async (code) => {
       if (!loading) {
@@ -22,19 +21,11 @@ const CodeMeeting = ({ values, loading, refetch }) => {
           const status = error?.request?.status;
           const { message, severity } = messages[status] || {};
           if (severity)
-            enqueueSnackbar({
-              message,
-              severity,
-              action: (key) => (
-                <IconButton onClick={() => closeSnackbar(key)}>
-                  <CloseOutlinedIcon />
-                </IconButton>
-              ),
-            });
+            notifications.show(message, { severity, autoHideDuration: 5000 });
         }
       }
     },
-    [closeSnackbar, enqueueSnackbar, refetch, loading, navigateTo]
+    [notifications, refetch, loading, navigateTo]
   );
 
   return (

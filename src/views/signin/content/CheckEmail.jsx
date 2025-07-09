@@ -1,13 +1,7 @@
-import {
-  TextField,
-  Box as MuiBox,
-  Alert,
-  Fade,
-  Typography,
-} from "@mui/material";
-import Box from "../../../components/Box";
+import { TextField, Box, Alert, Fade, Typography } from "@mui/material";
 import Link from "../../../components/Link";
 import { useCheckTokenAccount } from "../../../hooks/useSignInSendData";
+import PropTypes from "prop-types";
 
 export default function CheckEmail({
   email,
@@ -17,15 +11,16 @@ export default function CheckEmail({
   user,
 }) {
   return (
-    <MuiBox display='flex' flex={1} flexDirection='column'>
-      <Box flex={1}>
-        <Typography
-          variant='body2'
-          align='center'
-          color='text.primary'
-          paragraph>
-          Connectez-vous pour accéder à la Geid. Saisissez l'adresse e-mail
-          correspondant à votre compte
+    <Box display='flex' flex={1} flexDirection='column'>
+      <Box
+        flex={1}
+        display='flex'
+        flexDirection='column'
+        width='100%'
+        height='100%'>
+        <Typography variant='body2' align='center' color='text.primary'>
+          {`Connectez-vous pour accéder à la Geid. Saisissez l'adresse e-mail
+          correspondant à votre compte`}
         </Typography>
         <TextField
           label='Adresse électronique'
@@ -42,10 +37,10 @@ export default function CheckEmail({
           </Alert>
         )}
       </Box>
-      <MuiBox my={1}>
+      <Box my={1}>
         <Account refresh={refresh} email={email} user={user} />
-      </MuiBox>
-    </MuiBox>
+      </Box>
+    </Box>
   );
 }
 
@@ -64,4 +59,16 @@ const Account = ({ refresh, user }) => {
       {/*  */}
     </Fade>
   );
+};
+CheckEmail.propTypes = {
+  email: PropTypes.string,
+  errorMessage: PropTypes.string,
+  refresh: PropTypes.func.isRequired,
+  emailRef: PropTypes.object,
+  user: PropTypes.oneOfType([PropTypes.object, PropTypes.instanceOf(null)]),
+};
+
+Account.propTypes = {
+  user: PropTypes.oneOfType([PropTypes.object, PropTypes.instanceOf(null)]),
+  refresh: PropTypes.func.isRequired,
 };
