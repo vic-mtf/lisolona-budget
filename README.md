@@ -1,6 +1,6 @@
 # GEID Lisolo
 
-**GEID Lisolo** est une application web collaborative faisant partie de la plateforme **GEID Budget**. Cette plateforme regroupe plusieurs applications conçues pour répondre à des besoins variés. GEID Lisolo se concentre sur la communication et la collaboration en équipe, permettant d’organiser des réunions en ligne comme sur Slack ou Google Meet, mais avec des fonctionnalités enrichies et un design personnalisé.
+[**GEID Lisolo**](https://geidbudget.com/apps/lisolo/dev/v2/) est une application web collaborative faisant partie de la plateforme **GEID Budget**. Cette plateforme regroupe plusieurs applications conçues pour répondre à des besoins variés. GEID Lisolo se concentre sur la communication et la collaboration en équipe, permettant d’organiser des réunions en ligne comme sur Slack ou Google Meet, mais avec des fonctionnalités enrichies et un design personnalisé.
 
 ---
 
@@ -58,7 +58,7 @@ L’architecture du projet est soigneusement organisée pour une meilleure maint
    pnpm run dev
    ```
 5. Accès à l’application :
-   - [GEID Lisolo v2](https://geidbudget.com/apps/lisolo/dev/v2/)
+   - [http://localhost:3000](http://localhost:3000)
 
 ---
 
