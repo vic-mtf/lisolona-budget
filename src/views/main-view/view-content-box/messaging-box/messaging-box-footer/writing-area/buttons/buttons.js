@@ -16,6 +16,7 @@ const buttons = [
   {
     id: "bold",
     label: "Gras",
+    cmd: "Ctrl+B",
     icon: FormatBoldOutlinedIcon,
     type: "text-format",
     style: "inline",
@@ -26,6 +27,7 @@ const buttons = [
     icon: FormatItalicOutlinedIcon,
     type: "text-format",
     style: "inline",
+    cmd: "Ctrl+I",
   },
   {
     id: "strikethrough",
@@ -33,6 +35,7 @@ const buttons = [
     icon: StrikethroughSOutlinedIcon,
     type: "text-format",
     style: "inline",
+    //cmd: "Ctrl+8",
   },
   {
     id: "underline",
@@ -40,6 +43,7 @@ const buttons = [
     icon: FormatUnderlinedIcon,
     type: "text-format",
     style: "inline",
+    cmd: "Ctrl+U",
   },
   {
     id: "code",
@@ -47,6 +51,7 @@ const buttons = [
     icon: CodeOutlinedIcon,
     type: "code-format",
     style: "inline",
+    //cmd: "Ctrl+K",
   },
   // {
   //   id: "code-block",
@@ -61,6 +66,7 @@ const buttons = [
     icon: FormatQuoteOutlinedIcon,
     type: "quote-format",
     style: "block",
+    //cmd: "Ctrl+Q",
   },
   {
     id: "size",
@@ -68,6 +74,7 @@ const buttons = [
     icon: FormatSizeOutlinedIcon,
     type: "size-format",
     style: "block",
+    //cmd: "Ctrl+T",
   },
   {
     id: "unordered-list-item",
@@ -75,6 +82,7 @@ const buttons = [
     icon: FormatListBulletedOutlinedIcon,
     type: "list-format",
     style: "block",
+    //cmd: "Ctrl+L",
   },
   {
     id: "ordered-list-item",
@@ -82,6 +90,7 @@ const buttons = [
     icon: FormatListNumberedOutlinedIcon,
     type: "list-format",
     style: "block",
+    //cmd: "Ctrl+O",
   },
   // {
   //   id: "superscript ",

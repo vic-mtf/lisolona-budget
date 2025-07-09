@@ -1,5 +1,5 @@
 import React from "react";
-import { ToggleButton, Tooltip } from "@mui/material";
+import { ToggleButton, Tooltip, Box } from "@mui/material";
 import { EditorState } from "draft-js";
 import PropTypes from "prop-types";
 import ToggleButtonGroup from "../../../../../../components/ToggleButtonGroup";
@@ -21,8 +21,12 @@ const ToggleStyleButtons = React.memo(
         if (button.style === "block")
           setEditorState(getStateToggleBlockStyle(editorState, value));
       }}>
-      {buttons.map(({ id, label, icon = "div" }) => (
-        <Tooltip key={id} title={label} enterDelay={700} placement='top'>
+      {buttons.map(({ id, label, icon = "div", cmd }) => (
+        <Tooltip
+          key={id}
+          title={<TooltipTile label={label} cmd={cmd} />}
+          enterDelay={700}
+          placement='top'>
           <div>
             <ToggleButton value={id}>
               {createElement(icon, { fontSize: "small" })}
@@ -34,6 +38,34 @@ const ToggleStyleButtons = React.memo(
   )
 );
 
+const TooltipTile = ({ label, cmd }) => {
+  const commands = cmd?.split("+");
+  return (
+    <div>
+      <div>{label}</div>
+      {Array.isArray(commands) && (
+        <Box
+          sx={{
+            "& kbd": {
+              border: (t) => `1px solid ${t.palette.divider}`,
+              borderRadius: 0.5,
+            },
+          }}>
+          {commands.map((key, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && " + "}
+              {<kbd>{key}</kbd>}
+            </React.Fragment>
+          ))}
+        </Box>
+      )}
+    </div>
+  );
+};
+TooltipTile.propTypes = {
+  label: PropTypes.string,
+  cmd: PropTypes.string,
+};
 ToggleStyleButtons.displayName = "ToggleStyleButtons";
 
 ToggleStyleButtons.propTypes = {

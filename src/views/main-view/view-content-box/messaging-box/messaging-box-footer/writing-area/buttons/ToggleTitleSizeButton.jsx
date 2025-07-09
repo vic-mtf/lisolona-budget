@@ -1,50 +1,35 @@
 import {
-  Drawer,
-  Menu,
-  MenuItem,
+  Fade,
   ToggleButton,
   Tooltip,
   Typography,
+  Popper,
+  Box,
 } from "@mui/material";
+import ToggleButtonGroup from "../../../../../../../components/ToggleButtonGroup";
 import useLongPress from "../../../../../../../hooks/useLongPress";
 import { useRef, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
+//import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
 import { useMemo } from "react";
 import TitleOutlinedIcon from "@mui/icons-material/TitleOutlined";
 import { EditorState } from "draft-js";
 import PropTypes from "prop-types";
 import getCurrentBlockType from "../buttons/getCurrentBlockType";
 import { getStateToggleBlockStyle } from "./buttons";
+import { motion } from "framer-motion";
 
 const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
   const [open, setOpen] = useState(false);
   const anchorElRef = useRef();
   const [block, setBlock] = useState("header-three");
 
+  const handleMouseEnter = () => setOpen(true);
+  const handleMouseLeave = () => setOpen(false);
   const props = useLongPress(() => {
     setOpen(true);
   });
 
-  const matches = useSmallScreen();
-  const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
-  const menuNavProps = useMemo(
-    () =>
-      matches
-        ? { anchor: "bottom" }
-        : {
-            anchorEl: open && anchorElRef.current,
-            anchorOrigin: {
-              vertical: "top",
-              horizontal: "left",
-            },
-            transformOrigin: {
-              vertical: "bottom",
-              horizontal: "right",
-            },
-          },
-    [matches, open]
-  );
   const selected = useMemo(
     () =>
       Boolean(
@@ -55,59 +40,95 @@ const ToggleTitleSizeButton = ({ editorState, setEditorState }) => {
   console.log(getCurrentBlockType(editorState));
   return (
     <>
-      <Tooltip
-        title={
-          <div>
-            <span>Titre</span>
-            <div>Mainternir pour changer le format</div>
-          </div>
-        }
-        enterDelay={700}
-        placement='top'>
-        <div style={{ position: "relative" }}>
-          <ToggleButton
-            {...props}
-            value='link'
-            ref={anchorElRef}
-            selected={selected}
-            onClick={() =>
-              setEditorState(getStateToggleBlockStyle(editorState, block))
-            }>
-            <TitleOutlinedIcon fontSize='small' />
-            <ArrowDropDownIcon fontSize='small' />
-            <Typography
-              sx={{ position: "absolute", bottom: -2, right: 10, fontSize: 10 }}
-              variant='caption'
-              color=''>
-              {headerBlocks.find(({ id }) => id === block).name}
-            </Typography>
-          </ToggleButton>
-        </div>
-      </Tooltip>
-      <MenuNav
-        open={open}
-        onClose={() => setOpen(false)}
-        disableEnforceFocus
-        disableAutoFocus
-        disableAutoFocusItem
-        disableRestoreFocus
-        onMouseDown={(event) => event.preventDefault()}
-        {...menuNavProps}>
-        {headerBlocks.map(({ id, value, label }) => (
-          <MenuItem
-            key={id}
-            onClick={() => {
-              setEditorState(getStateToggleBlockStyle(editorState, id));
-              setBlock(id);
-              setOpen(false);
-            }}
-            value={value}
-            selected={block === id}
-            onMouseDown={(event) => event.preventDefault()}>
-            {label}
-          </MenuItem>
-        ))}
-      </MenuNav>
+      <Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <Tooltip title='Titre' enterDelay={700} placement='top'>
+          <Box>
+            <ToggleButton
+              {...props}
+              value='link'
+              ref={anchorElRef}
+              selected={selected}
+              onClick={() =>
+                setEditorState(getStateToggleBlockStyle(editorState, block))
+              }>
+              <TitleOutlinedIcon fontSize='small' />
+              <ArrowDropDownIcon fontSize='small' />
+              <Typography
+                sx={{
+                  position: "absolute",
+                  bottom: -2,
+                  right: 10,
+                  fontSize: 10,
+                  color: "currentcolor",
+                }}
+                variant='caption'>
+                {headerBlocks.find(({ id }) => id === block).name}
+              </Typography>
+            </ToggleButton>
+          </Box>
+        </Tooltip>
+        <Popper
+          open={open}
+          anchorEl={anchorElRef.current}
+          placement='right-start'
+          transition
+          disablePortal
+          style={{ zIndex: 1300 }}>
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Box
+                sx={{
+                  border: (t) => `.01px solid ${t.palette.divider}`,
+                  backdropFilter: "blur(15px)",
+                  background: "transparent",
+                  position: "relative",
+                  overflow: "hidden",
+                  borderRadius: 1,
+                }}>
+                <Box
+                  component={motion.div}
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: open ? "auto" : 0,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                  }}>
+                  <ToggleButtonGroup
+                    size='small'
+                    value={block}
+                    exclusive
+                    sx={{
+                      mx: 0.5,
+                    }}>
+                    {headerBlocks.map(({ name, id, label }) => (
+                      <Tooltip key={id} label={label}>
+                        <ToggleButton
+                          value={id}
+                          onClick={() => {
+                            setBlock(id);
+                            setEditorState(
+                              getStateToggleBlockStyle(editorState, id)
+                            );
+                          }}>
+                          <Typography
+                            fontWeight='bold'
+                            variant='caption'
+                            mx={0.25}>
+                            {name}
+                          </Typography>
+                        </ToggleButton>
+                      </Tooltip>
+                    ))}
+                  </ToggleButtonGroup>
+                </Box>
+              </Box>
+            </Fade>
+          )}
+        </Popper>
+      </Box>
     </>
   );
 };

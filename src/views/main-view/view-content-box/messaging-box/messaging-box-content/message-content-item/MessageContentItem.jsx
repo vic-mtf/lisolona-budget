@@ -89,7 +89,11 @@ const MessageContentItem = React.forwardRef(
     );
 
     return (
-      <Fade in appear unmountOnExit>
+      <Fade
+        in
+        appear
+        unmountOnExit
+        style={{ width: "100%", overflow: "hidden" }}>
         <Box
           component='div'
           ref={ref}

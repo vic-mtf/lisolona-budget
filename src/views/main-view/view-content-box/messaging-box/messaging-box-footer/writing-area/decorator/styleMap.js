@@ -10,8 +10,6 @@ export const blockStyleFn = (contentBlock) => {
 
 const styleMap = (theme = createTheme()) => {
   return {
-    // BOLD: {},
-    // ITALIC: {},
     CODE: {
       color: theme.palette.warning.main,
       borderRadius: theme.shape.borderRadius,
