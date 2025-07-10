@@ -1,10 +1,5 @@
 import { Box } from "@mui/material";
-import {
-  displays,
-  filterByName,
-  filterByType,
-  sortbyKey,
-} from "./filterCategory";
+import { displays, filterByType, sortbyKey } from "./filterCategory";
 import { useState, useMemo, useCallback } from "react";
 import InputSearch from "../../../../components/InputSearch";
 import { useSelector } from "react-redux";
@@ -14,6 +9,7 @@ import PropTypes from "prop-types";
 import getFullName from "../../../../utils/getFullName";
 import DiscussionItem from "./DiscussionItem";
 import SortButton from "./SortButton";
+import { filterByName } from "../../../../utils/filterByKey";
 
 export default function DiscussionList({
   onClose,

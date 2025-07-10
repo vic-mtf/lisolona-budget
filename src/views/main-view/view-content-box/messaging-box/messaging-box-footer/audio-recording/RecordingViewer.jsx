@@ -7,11 +7,8 @@ import RecordingTimer from "./RecordingTimer";
 import ToggleListingButton from "./ToggleListingButton";
 import ListeningTimer from "./ListeningTimer";
 import ProgressSlider from "./ProgressSlider";
-import recording_audio_aton from "../../../../../../assets/start_recording_ton.mp3";
+import ringtones from "../../../../../../utils/ringtones";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
-
-const recordingAudio = new Audio(recording_audio_aton);
-recordingAudio.volume = 0.3;
 
 const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
   const [duration, setDuration] = useState(0);
@@ -55,8 +52,8 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
         setPaused(false);
         getData("app.playings.audio")?.pause();
       });
-
-      recordingAudio.play();
+      ringtones.start.play();
+      ringtones.start.volume = 0.3;
     }
     waveSurfer?.on("ready", onGetDuration);
     return () => {

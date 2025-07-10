@@ -38,7 +38,15 @@ export default function Cover() {
         callHistory,
       } = response.data || {};
       const { data: calls } = await refresh({ url: "/api/chat/room/call/" });
-      const data = { calls, discussions, contacts, invitations, callHistory };
+      const data = {
+        calls,
+        discussions,
+        contacts,
+        notifications: [
+          ...invitations.map((d) => ({ ...d, variant: "guest" })),
+        ],
+        callHistory,
+      };
       const user = store.getState().user;
       dispatch(updateArraysData({ data, user }));
     } catch (error) {

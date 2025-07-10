@@ -14,7 +14,10 @@ export default function Contacts() {
   const bulkContacts = useSelector((store) => store.data.app.contacts);
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
   const [search, setSearch] = useState("");
-  const contacts = useMemo(() => groupContact(bulkContacts), [bulkContacts]);
+  const contacts = useMemo(
+    () => groupContact(bulkContacts, search),
+    [bulkContacts, search]
+  );
 
   const itemContent = useCallback(
     ({ index, style }) => {
@@ -32,6 +35,7 @@ export default function Contacts() {
               status={data?.status}
               id={id}
               email={data?.email}
+              search={search}
               onClick={() =>
                 store.dispatch(
                   updateData({
@@ -64,7 +68,7 @@ export default function Contacts() {
         </div>
       );
     },
-    [contacts, discussionTarget]
+    [contacts, discussionTarget, search]
   );
 
   return (

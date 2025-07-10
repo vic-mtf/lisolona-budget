@@ -83,6 +83,14 @@ const updateArraysData = (state, actions) => {
           formattedValue.name = getFullName(contactPerson);
         }
       }
+
+      if (key === "notifications") {
+        if (formattedValue.variant === "guest") {
+          formattedValue.from = formatUser(formattedValue.from);
+          formattedValue.to = formatUser(formattedValue.to);
+        }
+      }
+
       if (index > -1) {
         const oldValue = state.app[key][index];
         const updateValue = deepMerge(oldValue, formattedValue);

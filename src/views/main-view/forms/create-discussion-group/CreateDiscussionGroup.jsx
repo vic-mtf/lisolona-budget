@@ -12,18 +12,17 @@ import {
 import PropTypes from "prop-types";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
 import LinearProgressLayer from "../../../../components/LinearProgressLayer";
 import useAxios from "../../../../hooks/useAxios";
 import useToken from "../../../../hooks/useToken";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import CreateGroup from "./CreateGroup";
 import ContactList from "./ContactList";
 import store from "../../../../redux/store";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import NavigationNextButton from "./NavigationNextButton";
 
 const CreateDiscussionGroup = React.memo(({ onClose }) => {
-  const [selectedContacts, setSelectedContacts] = useState([]);
   const notifications = useNotifications();
   const [tab, setTab] = useState("contacts");
   const Authorization = useToken();
@@ -41,24 +40,26 @@ const CreateDiscussionGroup = React.memo(({ onClose }) => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: { members: [] } });
 
   const onSubmit = useCallback(
-    async ({ title: name, description }) => {
-      const id = store.getState().user.id;
-      const members = [id, ...selectedContacts.map(({ id }) => id)];
-      const data = { name, description, members };
-      try {
-        await refresh({ data });
-        if (typeof onClose === "function") onClose();
-      } catch (error) {
-        console.log(error);
-        notifications.show("Une erreur est survenue, reessayez plus tard", {
-          severity: "error",
-        });
+    async ({ title: name, description, members: participants }) => {
+      if (name && description) {
+        const id = store.getState().user.id;
+        const members = [id].concat(participants.map(({ id }) => id));
+        const data = { name, description, members };
+        try {
+          await refresh({ data });
+          if (typeof onClose === "function") onClose();
+        } catch (error) {
+          console.log(error);
+          notifications.show("Une erreur est survenue, reessayez plus tard", {
+            severity: "error",
+          });
+        }
       }
     },
-    [refresh, selectedContacts, notifications, onClose]
+    [refresh, notifications, onClose]
   );
 
   return (
@@ -118,9 +119,21 @@ const CreateDiscussionGroup = React.memo(({ onClose }) => {
               flex={1}
               overflow='hidden'
               flexDirection='column'>
-              <ContactList
-                selectedContacts={selectedContacts}
-                setSelectedContacts={setSelectedContacts}
+              <Controller
+                name='members'
+                control={control}
+                rules={{
+                  validate: (value) =>
+                    (Array.isArray(value) && value.length > 0) ||
+                    "Add at least one participant",
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <ContactList
+                    selectedContacts={value}
+                    setSelectedContacts={onChange}
+                    control={control}
+                  />
+                )}
               />
             </Box>
           </Slide>
@@ -145,13 +158,7 @@ const CreateDiscussionGroup = React.memo(({ onClose }) => {
 
         <DialogActions>
           {tab === "contacts" && (
-            <Button
-              variant='outlined'
-              disabled={!selectedContacts.length}
-              onClick={() => setTab("create")}
-              endIcon={<NavigateNextOutlinedIcon />}>
-              Suivant
-            </Button>
+            <NavigationNextButton control={control} setTab={setTab} />
           )}
           {tab === "create" && (
             <Button

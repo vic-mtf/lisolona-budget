@@ -65,16 +65,6 @@ export function sortbyKey(data = [], sortType = "", reverse = false) {
   });
 }
 
-export function filterByName(item, search) {
-  const keywords = search.trim().toLowerCase().split(/\s+/);
-  const names = getFullName(item)?.toLowerCase()?.split(/\s+/);
-  for (const keyword of keywords)
-    if (
-      names.find((name) => new RegExp(`^${escapeRegExp(keyword)}`).test(name))
-    )
-      return true;
-  return search ? false : true;
-}
 export function filterByType(item, type) {
   return type === "group"
     ? item?.type === "room"

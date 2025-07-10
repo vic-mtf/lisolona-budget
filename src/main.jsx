@@ -9,16 +9,16 @@ import ConfigAppProvider from "./components/ConfigAppProvider";
 import SocketIOProvider from "./components/SocketIOProvider";
 import LocalStoreDataProvider from "./components/LocalStoreDataProvider";
 import InboundUpdateEventDetector from "./components/InboundUpdateEventDetector";
-//import NoticeStackProvider from "./components/NoticeStackProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+const slotProps = { snackbar: { autoHideDuration: 7000 } };
 
 root.render(
   <StrictMode>
     <ReduxProvider store={store}>
       <SocketIOProvider>
         <ConfigAppProvider>
-          <NotificationsProvider>
+          <NotificationsProvider slotProps={slotProps}>
             <LocalStoreDataProvider>
               <App />
               <InboundUpdateEventDetector />

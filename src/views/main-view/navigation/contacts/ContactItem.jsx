@@ -14,84 +14,86 @@ import {
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import PropTypes from "prop-types";
 import AvatarStatus from "../../../../components/AvatarStatus";
+import HighlightWord from "../../../../components/HighlightWord";
 
-const ContactItem = React.memo(
-  ({
-    selected,
-    name,
-    image,
-    id,
-    email,
-    divider,
-    checkable,
-    checked,
-    CheckboxProps,
-    ...otherProps
-  }) => {
-    return (
-      <div>
-        <ListItem
-          disablePadding
-          alignItems='flex-start'
-          secondaryAction={
-            checkable ? (
-              <Checkbox
-                edge='end'
-                checked={checked}
-                inputProps={{ "aria-labelledby": id }}
-                {...CheckboxProps}
-              />
-            ) : (
-              <Tooltip title='Appel'>
-                <IconButton edge='end'>
-                  <CallOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            )
-          }>
-          <ListItemButton selected={selected} {...otherProps}>
-            <ListItemAvatar>
-              <AvatarStatus src={image} alt={name} id={id}>
-                {name?.toUpperCase()?.charAt(0)}
-              </AvatarStatus>
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Stack direction='row' spacing={1}>
-                  <Typography
-                    flexGrow={1}
-                    textOverflow='ellipsis'
-                    whiteSpace='nowrap'
-                    overflow='hidden'
-                    fontWeight={550}>
-                    {name}
-                  </Typography>
-                </Stack>
-              }
-              secondary={
-                <Stack direction='row' spacing={1}>
-                  <Typography
-                    alignItems='center'
-                    flexGrow={1}
-                    textOverflow='ellipsis'
-                    whiteSpace='nowrap'
-                    overflow='hidden'
-                    color='text.secondary'
-                    variant='body2'>
-                    {email}
-                  </Typography>
-                </Stack>
-              }
-              primaryTypographyProps={{ component: "div" }}
-              secondaryTypographyProps={{ component: "div" }}
+const ContactItem = ({
+  selected,
+  name,
+  image,
+  id,
+  email,
+  divider,
+  checkable,
+  checked,
+  search,
+  CheckboxProps,
+  ...otherProps
+}) => {
+  return (
+    <div>
+      <ListItem
+        disablePadding
+        alignItems='flex-start'
+        secondaryAction={
+          checkable ? (
+            <Checkbox
+              edge='end'
+              checked={checked}
+              slotProps={{ input: { "aria-labelledby": id } }}
+              {...CheckboxProps}
             />
-          </ListItemButton>
-        </ListItem>
-        <Divider variant='inset' sx={{ opacity: divider ? 1 : 0 }} />
-      </div>
-    );
-  }
-);
+          ) : (
+            <Tooltip title='Appel'>
+              <IconButton edge='end'>
+                <CallOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )
+        }>
+        <ListItemButton selected={selected} {...otherProps}>
+          <ListItemAvatar>
+            <AvatarStatus src={image} alt={name} id={id}>
+              {name?.toUpperCase()?.charAt(0)}
+            </AvatarStatus>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Stack direction='row' spacing={1}>
+                <Typography
+                  flexGrow={1}
+                  textOverflow='ellipsis'
+                  whiteSpace='nowrap'
+                  overflow='hidden'
+                  fontWeight={550}>
+                  {<HighlightWord word={search} text={name} />}
+                </Typography>
+              </Stack>
+            }
+            secondary={
+              <Stack direction='row' spacing={1}>
+                <Typography
+                  alignItems='center'
+                  flexGrow={1}
+                  textOverflow='ellipsis'
+                  whiteSpace='nowrap'
+                  overflow='hidden'
+                  color='text.secondary'
+                  variant='body2'>
+                  {<HighlightWord word={search} text={email} />}
+                </Typography>
+              </Stack>
+            }
+            slotProps={{
+              primary: { component: "div" },
+              secondary: { component: "div" },
+            }}
+          />
+        </ListItemButton>
+      </ListItem>
+      <Divider variant='inset' sx={{ opacity: divider ? 1 : 0 }} />
+    </div>
+  );
+};
 
 ContactItem.displayName = "ContactItem";
 
@@ -106,6 +108,7 @@ ContactItem.propTypes = {
   CheckboxProps: PropTypes.object,
   image: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
   status: PropTypes.oneOf(["online", "offline", "away"]),
+  search: PropTypes.string,
 };
 
-export default ContactItem;
+export default React.memo(ContactItem);

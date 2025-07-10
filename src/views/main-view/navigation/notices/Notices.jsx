@@ -1,9 +1,11 @@
-import { ListSubheader, Stack, Toolbar, Typography } from "@mui/material";
+import { Stack, Toolbar, Typography } from "@mui/material";
 import { useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import VirtualizedList from "../../../../components/VirtualizedList";
 import GuestItem from "./GuestItem";
 import toggleFullscreen from "../../../../utils/toggleFullscreen";
+import store from "../../../../redux/store";
+import getFullName from "../../../../utils/getFullName";
 
 export default function Notices() {
   const bulkNotifications = useSelector(
@@ -11,14 +13,7 @@ export default function Notices() {
   );
   // const [search, setSearch] = useState("");
   const notifications = useMemo(
-    () => [
-      {
-        id: "efc248455ab",
-        name: "Viael Mongolo",
-        email: "phalphie@outlook.com",
-        createdAt: new Date(),
-      },
-    ],
+    () => groupGuestNotifications(bulkNotifications),
     [bulkNotifications]
   );
 
@@ -28,9 +23,7 @@ export default function Notices() {
       const id = data?.id;
       return (
         <div key={data?.id} style={style}>
-          {data?.type === "label" ? (
-            <ListSubheader sx={{ height: "100%" }}>{data?.label}</ListSubheader>
-          ) : (
+          {data.variant === "guest" && (
             <GuestItem
               name={data?.name}
               image={data?.image}
@@ -38,6 +31,7 @@ export default function Notices() {
               email={data?.email}
               createdAt={data?.createdAt}
               divider={index !== notifications.length - 1}
+              isRemote={data?.isRemote}
             />
           )}
         </div>
@@ -69,3 +63,23 @@ export default function Notices() {
     </>
   );
 }
+
+const groupGuestNotifications = (guests) => {
+  const user = store.getState().user;
+
+  return guests
+    ?.map((guest) => {
+      const isRemote = user?.id !== guest?.from?.id;
+
+      const remoteUser = isRemote ? guest?.from : guest?.to;
+      return {
+        isRemote: user?.id !== guest?.from?.id,
+        name: getFullName(remoteUser),
+        ...guest,
+      };
+    })
+    ?.sort(
+      ({ createdAt: ac, updatedAt: au }, { createdAt: bc, updatedAt: bu }) =>
+        (bu || bc) - (au || ac)
+    );
+};

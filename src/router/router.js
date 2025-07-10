@@ -47,7 +47,9 @@ const router = (connected) => {
       element: createElement(component, props),
       ...otherParams,
     }));
-  return createBrowserRouter(routes, { basename: PUBLIC_URL });
+  return createBrowserRouter(routes, {
+    basename: PUBLIC_URL,
+  });
 };
 
 export default router;

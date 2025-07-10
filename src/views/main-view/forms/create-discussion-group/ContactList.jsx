@@ -17,21 +17,23 @@ import ListAvatar from "../../../../components/ListAvatar";
 const ContactList = ({ selectedContacts, setSelectedContacts }) => {
   const bulkContacts = useSelector((store) => store.data.app.contacts);
   const [search, setSearch] = useState("");
-  const contacts = useMemo(() => groupContact(bulkContacts), [bulkContacts]);
+  const contacts = useMemo(
+    () => groupContact(bulkContacts, search),
+    [bulkContacts, search]
+  );
 
   const itemContent = useCallback(
     ({ index, style }) => {
       const data = contacts[index];
       const id = data?.id;
-      const checked = Boolean(
-        selectedContacts?.find((contact) => contact?.id === id)
-      );
-      const onChange = () =>
-        setSelectedContacts(
-          checked
-            ? (data) => data.filter((contact) => contact.id !== id)
-            : (allData) => [...allData, data]
-        );
+      const checked = selectedContacts?.some((contact) => contact?.id === id);
+
+      const onChange = () => {
+        const filteredContacts = checked
+          ? selectedContacts.filter((contact) => contact.id !== id)
+          : [data].concat(selectedContacts);
+        setSelectedContacts(filteredContacts);
+      };
       return (
         <div key={data?.id} style={style}>
           {data?.type === "label" ? (
@@ -50,12 +52,13 @@ const ContactList = ({ selectedContacts, setSelectedContacts }) => {
               onClick={onChange}
               divider={data?.alpKey === contacts[index - 1]?.alpKey}
               CheckboxProps={{ onChange, checked }}
+              search={search}
             />
           )}
         </div>
       );
     },
-    [contacts, selectedContacts, setSelectedContacts]
+    [contacts, selectedContacts, setSelectedContacts, search]
   );
 
   return (
@@ -90,6 +93,9 @@ const ContactList = ({ selectedContacts, setSelectedContacts }) => {
           placeholder='Recherche de contact'
           value={search}
           onChange={(event) => setSearch(event.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.preventDefault();
+          }}
         />
       </Box>
       <VirtualizedList

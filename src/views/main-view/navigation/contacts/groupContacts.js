@@ -1,6 +1,10 @@
+import { filterByName, filterByKeyword } from "../../../../utils/filterByKey";
 import getFullName from "../../../../utils/getFullName";
 
-export default function groupContact(contacts = []) {
+export default function groupContact(bulkContacts = [], search = "") {
+  const contacts = bulkContacts?.filter(
+    (c) => filterByName(c, search) || filterByKeyword(c, search)
+  );
   const sortedContacts = contacts
     ?.map((contact) => ({
       ...contact,

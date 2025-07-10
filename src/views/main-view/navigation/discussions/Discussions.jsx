@@ -1,9 +1,5 @@
 import { Chip, Stack, Toolbar, Typography } from "@mui/material";
-import filterCategory, {
-  filterByCategory,
-  filterByName,
-  sortbyKey,
-} from "./filterCategory";
+import filterCategory, { filterByCategory, sortbyKey } from "./filterCategory";
 import { createElement, useState, useMemo, useCallback } from "react";
 import InputSearch from "../../../../components/InputSearch";
 import { useSelector } from "react-redux";
@@ -14,6 +10,7 @@ import VirtualizedList from "../../../../components/VirtualizedList";
 import MenuDiscussionItem from "./MenuDiscussionItem";
 import CreateDiscussionGroupButton from "./CreateDiscussionGroupButton.";
 import toggleFullScreen from "../../../../utils/toggleFullscreen";
+import { filterByName } from "../../../../utils/filterByKey";
 
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
@@ -52,6 +49,7 @@ export default function Discussions() {
             type={data?.type}
             message={data?.message || "Nouvelle discussion"}
             status={data?.status}
+            search={search}
             id={id}
             updatedAt={data?.updatedAt}
             onClick={() =>
@@ -79,7 +77,7 @@ export default function Discussions() {
         </div>
       );
     },
-    [discussions, discussionTarget]
+    [discussions, discussionTarget, search]
   );
 
   return (

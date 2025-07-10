@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import useSocket from "../useSocket";
 import store from "../../redux/store";
 import { updateArraysData, updateData } from "../../redux/data/data";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import NoticeSnack from "../../components/NoticeSnack";
+import ringtones from "../../utils/ringtones";
 
 const useNewMessage = () => {
   const socket = useSocket();
@@ -23,23 +25,38 @@ const useNewMessage = () => {
       );
 
       if (discussion?.type === "room" && discussion?.messages?.length === 0) {
-        //when local user create new room
         if (user?.id === createdBy) {
-          const discussionTarget = store
-            .getState()
-            .data.app.discussions.find(({ id }) => id === data?._id);
           setTimeout(() => {
+            const discussionTarget = getDiscussionTarget(data?._id);
             store.dispatch(
               updateData({
                 data: { discussionTarget, targetView: "messages" },
               })
             );
           }, 200);
-          console.log("nouvelle discussion => ", discussion);
         } else {
+          ringtones.alert.play();
           // when remote user create new room
           notifications.show(
-            `You have a new message from ${data?.createdBy?.name}`
+            React.createElement(NoticeSnack, {
+              name: data?.name,
+              id: data?._id,
+              message: `vous avez été ajouté par ${discussion?.createdBy?.fname} dans un Lisanga`,
+            }),
+            {
+              autoHideDuration: 7000,
+              onAction: () => {
+                const discussionTarget = getDiscussionTarget(data?._id);
+                store.dispatch(
+                  updateData({
+                    data: { discussionTarget, targetView: "messages" },
+                  })
+                );
+                notifications.close(data?._id);
+              },
+              actionText: "Ouvrir",
+              key: data?._id,
+            }
           );
         }
       }
@@ -50,4 +67,12 @@ const useNewMessage = () => {
     };
   });
 };
+
+const getDiscussionTarget = (discussionId) => {
+  const discussionTarget = store
+    .getState()
+    .data.app.discussions.find(({ id }) => id === discussionId);
+  return discussionTarget;
+};
+
 export default useNewMessage;

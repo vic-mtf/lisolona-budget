@@ -9,7 +9,7 @@ import {
   Button,
   IconButton,
   ListItem,
-  // ListItemButton,
+  CardActions,
   Stack,
   Tooltip,
 } from "@mui/material";
@@ -19,19 +19,11 @@ import ListAvatar from "../../../../components/ListAvatar";
 import { timeElapses } from "../../../../utils/formatDate";
 // import { LoadingButton } from "@mui/lab";
 import useAxios from "../../../../hooks/useAxios";
+import { useEffect } from "react";
 // import getFullName from "../../../../utils/getFullName";
 
 const GuestItem = React.memo(
-  ({
-    name,
-    image,
-    status,
-    id,
-    //  / email,
-    divider,
-    createdAt,
-    // sender = { name: "sender name" },
-  }) => {
+  ({ name, image, status, id, divider, createdAt, isRemote }) => {
     return (
       <div>
         <ListItem
@@ -57,49 +49,37 @@ const GuestItem = React.memo(
           <ListItemText
             primary={
               <Stack direction='row' spacing={1}>
-                <Typography
-                  flexGrow={1}
-                  textOverflow='ellipsis'
-                  whiteSpace='nowrap'
-                  overflow='hidden'
-                  fontWeight={550}>
-                  {name}
-                </Typography>
-                <Typography
-                  variant='caption'
-                  component='div'
-                  display='flex'
-                  whiteSpace='nowrap'
-                  color='text.secondary'
-                  justifyContent='end'>
-                  {timeElapses({ date: createdAt })}
-                </Typography>
-              </Stack>
-            }
-            secondary={
-              <Stack spacing={1}>
-                <Typography
-                  alignItems='center'
-                  flexGrow={1}
-                  textOverflow='ellipsis'
-                  overflow='hidden'
-                  color='text.secondary'
-                  variant='body2'
-                  display='-webkit-box'
-                  sx={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                  }}>
-                  Cette personne souhaite entrer en contact avec vous
-                </Typography>
-                <Box display='flex' flexDirection='row' gap={1}>
-                  <ButtonActions id={id} />
+                <Box flexGrow={1}>
+                  <Typography component='span' variant='body1'>
+                    {name}
+                  </Typography>{" "}
+                  <Typography
+                    component='span'
+                    color='text.secondary'
+                    variant='body2'>
+                    {isRemote
+                      ? "souhaite entrer en contact avec vous"
+                      : " a reçu votre invitation"}{" "}
+                    —{" "}
+                    <Typography
+                      variant='caption'
+                      component='span'
+                      color='currentColor'>
+                      <Timer createdAt={createdAt} />
+                    </Typography>
+                  </Typography>
                 </Box>
               </Stack>
             }
-            primaryTypographyProps={{ component: "div" }}
-            secondaryTypographyProps={{ component: "div" }}
+            secondary={
+              <div>
+                <ButtonActions id={id} isRemote={isRemote} />
+              </div>
+            }
+            slotProps={{
+              primary: { component: "div" },
+              secondary: { component: "div" },
+            }}
           />
         </ListItem>
         <Divider variant='inset' sx={{ opacity: divider ? 1 : 0 }} />
@@ -108,7 +88,7 @@ const GuestItem = React.memo(
   }
 );
 
-const ButtonActions = ({ id: _id }) => {
+const ButtonActions = ({ id: _id, isRemote }) => {
   const Authorization = useToken();
   const [{ loading }, refetch] = useAxios(
     { method: "POST", headers: { Authorization } },
@@ -123,28 +103,53 @@ const ButtonActions = ({ id: _id }) => {
     }
   };
   return (
-    <>
-      <Button
-        fullWidth
-        sx={{ flex: 1 }}
-        variant='outlined'
-        disabled={loading}
-        onClick={() => handleSubmitResponse("accept")}>
-        Supprimer
-      </Button>
-      <Button
-        fullWidth
-        sx={{ flex: 1 }}
-        variant='contained'
-        disabled={loading}
-        onClick={() => handleSubmitResponse("reject")}>
-        Confitmer
-      </Button>
-    </>
+    <CardActions sx={{ justifyContent: "flex-end", display: "flex" }}>
+      {isRemote ? (
+        <>
+          <Button
+            variant='outlined'
+            disabled={loading}
+            onClick={() => handleSubmitResponse("accept")}>
+            Supprimer
+          </Button>
+          <Button
+            variant='contained'
+            disabled={loading}
+            onClick={() => handleSubmitResponse("reject")}>
+            Confitmer
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            variant='outlined'
+            //variant='contained'
+            disabled={loading}
+            onClick={() => handleSubmitResponse("reject")}>
+            Annuler
+          </Button>
+        </>
+      )}
+    </CardActions>
   );
 };
+
+const Timer = ({ createdAt }) => {
+  const [elapsed, setElapsed] = React.useState(
+    timeElapses({ date: createdAt })
+  );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsed(timeElapses({ date: createdAt }));
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [createdAt]);
+  return elapsed;
+};
+
 ButtonActions.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  isRemote: PropTypes.bool,
 };
 GuestItem.displayName = "GuestItem";
 
@@ -157,7 +162,9 @@ GuestItem.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   email: PropTypes.string,
   divider: PropTypes.bool,
+  checkable: PropTypes.bool,
   status: PropTypes.oneOf(["online", "offline", "away"]),
+  isRemote: PropTypes.bool,
   createdAt: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,

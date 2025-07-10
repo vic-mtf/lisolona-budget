@@ -4,7 +4,7 @@ import { VList } from "virtua";
 import PropTypes from "prop-types";
 import MessageItem from "./MessageItem";
 import groupeMessages from "./groupMessage";
-import useSmallScreen from "../../../../../hooks/useSmallScreen";
+// import useSmallScreen from "../../../../../hooks/useSmallScreen";
 import StickToBottomButton from "./StickToBottomButton";
 import { useCallback } from "react";
 import { useState } from "react";
@@ -22,7 +22,7 @@ const MessageList = React.memo(({ user, VListRef, data }) => {
   const bulkMessages = useSelector(
     (store) => store.data.app.messages[user?.id]
   );
-  const matches = useSmallScreen();
+  // const matches = useSmallScreen();
   const messages = useMemo(() => groupeMessages(bulkMessages), [bulkMessages]);
 
   const onScrollToBottom = useCallback(() => {
