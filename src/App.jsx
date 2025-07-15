@@ -16,18 +16,20 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handleAutoConnection = (event) => {
-      const { data: encryptData } = event;
-      const decryptData = decrypt(encryptData);
-      if (decryptData) {
-        const data = { ...decryptData, connected: true };
-        dispatch(updateUser({ data }));
-      }
-    };
-    SIGN_IN_CHANNEL.addEventListener("message", handleAutoConnection);
-    return () =>
-      SIGN_IN_CHANNEL.removeEventListener("message", handleAutoConnection);
-  }, [dispatch]);
+    if (!connected) {
+      const handleAutoConnection = (event) => {
+        const { data: encryptData } = event;
+        const decryptData = decrypt(encryptData);
+        if (decryptData) {
+          const data = { ...decryptData, connected: true };
+          dispatch(updateUser({ data }));
+        }
+      };
+      SIGN_IN_CHANNEL.addEventListener("message", handleAutoConnection);
+      return () =>
+        SIGN_IN_CHANNEL.removeEventListener("message", handleAutoConnection);
+    }
+  }, [dispatch, connected]);
 
   return (
     <BoxGradient

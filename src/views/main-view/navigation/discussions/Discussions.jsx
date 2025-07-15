@@ -7,14 +7,23 @@ import DiscussionItem from "./DiscussionItem";
 import store from "../../../../redux/store";
 import { updateData } from "../../../../redux/data/data";
 import VirtualizedList from "../../../../components/VirtualizedList";
-import MenuDiscussionItem from "./MenuDiscussionItem";
+import MenuItems from "../../../../components/MenuItems";
 import CreateDiscussionGroupButton from "./CreateDiscussionGroupButton.";
 import toggleFullScreen from "../../../../utils/toggleFullscreen";
 import { filterByName } from "../../../../utils/filterByKey";
+import { getFilteredMenuItems } from "./discussionMenuItems";
+import getCoordContextMenu from "../../../../utils/getCoordContextMenu";
 
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
+  const user = useSelector((store) => store.user);
+  const favorites = useSelector(
+    (store) => store.app.user[user.id]?.discussions?.favorites
+  );
+  const pins = useSelector(
+    (store) => store.app.user[user.id]?.discussions?.pins
+  );
   const [menuItem, setMenuItem] = useState({ contextMenu: null, data: null });
   const [category, setCategory] = useState(filterCategory[0].id);
   const [search, setSearch] = useState("");
@@ -24,22 +33,24 @@ export default function Discussions() {
       sortbyKey(
         bulkDiscussions?.filter(
           (item) =>
-            filterByCategory(item, category) && filterByName(item, search)
+            filterByCategory({ ...item, favorites }, category) &&
+            filterByName(item, search)
         ),
         "update",
-        false
+        false,
+        pins
       ),
-    [bulkDiscussions, category, search]
+    [bulkDiscussions, category, search, favorites, pins]
   );
 
   const itemContent = useCallback(
     ({ index, style }) => {
       const data = discussions[index];
       const id = data?.id;
-      const remote = data.members.find(
+      const remote = data?.members?.find(
         ({ id }) => id !== store.getState().user.id
       );
-      const image = data.type === "room" ? data.image : remote?.image;
+      const image = data?.type === "room" ? data.image : remote?.image;
 
       return (
         <div key={id} style={style}>
@@ -51,6 +62,7 @@ export default function Discussions() {
             status={data?.status}
             search={search}
             id={id}
+            pinned={data?.isPinned}
             updatedAt={data?.updatedAt}
             onClick={() =>
               store.dispatch(
@@ -60,19 +72,14 @@ export default function Discussions() {
               )
             }
             onContextMenu={(event) => {
-              event.preventDefault();
-              const [Touch] = event?.changedTouches || [];
-              const mouseX = (Touch?.clientX || event?.clientX) + 2;
-              const mouseY = (Touch?.clientY || event?.clientY) - 6;
-
-              setMenuItem((item) => ({
-                contextMenu:
-                  item.contextMenu === null ? { mouseX, mouseY } : null,
+              const coords = getCoordContextMenu(event);
+              setMenuItem(({ contextMenu }) => ({
+                contextMenu: contextMenu === null ? coords : null,
                 data,
               }));
             }}
             divider={index !== discussions.length - 1}
-            selected={data.id === discussionTarget?.id}
+            selected={data?.id === discussionTarget?.id}
           />
         </div>
       );
@@ -101,26 +108,32 @@ export default function Discussions() {
           {filterCategory.map(({ id, label, icon, disabled }) => (
             <Chip
               key={id}
-              label={label}
+              label={
+                typeof label === "function"
+                  ? label({ search, favorites })
+                  : label
+              }
               color={category === id ? "primary" : "default"}
               onClick={() => setCategory(id)}
-              icon={createElement(icon)}
+              icon={createElement(typeof icon === "function" ? icon() : icon)}
               disabled={disabled}
               sx={{ flex: 1 }}
             />
           ))}
         </Stack>
       </Stack>
+
       <VirtualizedList
         data={discussions}
         itemContent={itemContent}
         rowHeight={69}
         emptyMessage='Aucune discussion trouvée'
       />
-      <MenuDiscussionItem
+      <MenuItems
         {...menuItem}
         discussionTarget={discussionTarget}
-        onClose={() => setMenuItem({ contextMenu: null, data: null })}
+        onClose={() => setMenuItem(({ data }) => ({ data, contextMenu: null }))}
+        itemContent={getFilteredMenuItems}
       />
     </>
   );

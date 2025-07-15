@@ -11,4 +11,9 @@ const ringtones = {
   start: new Audio(start_ringtone),
 };
 
-export default ringtones;
+export const vibrates = {
+  alert: () => navigator?.vibrate([100, 50, 100]),
+  //start,
+};
+
+export default ringtones; //navigator.vibrate([100, 50, 100]);

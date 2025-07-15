@@ -25,6 +25,15 @@ export const initialState = {
             id: null,
           },
         },
+        blink: {},
+      },
+      notifications: {
+        blink: {},
+        confirmDelete: null,
+      },
+      contacts: {
+        blink: {},
+        confirmDelete: null,
       },
     },
   },

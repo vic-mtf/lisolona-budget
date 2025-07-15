@@ -36,6 +36,7 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
           videos: {},
           documents: {},
         },
+        requests: {},
         ringtones: {
           warning: {
             url: null,

@@ -3,7 +3,6 @@ import { Virtualizer } from "virtua";
 
 const App = () => {
   const [currentGroup, setCurrentGroup] = useState("");
-  console.log(currentGroup);
 
   const flatList = groupedData.flatMap((group) => [
     { type: "header", title: group.title },
@@ -80,7 +79,7 @@ const generateRandomName = () => {
 };
 
 // 📦 Générer et grouper 1000 noms par lettre
-const generateGroupedData = (count = 1000000) => {
+export const generateGroupedData = (count = 1000000) => {
   const groups = {};
 
   for (let i = 0; i < count; i++) {
@@ -103,9 +102,5 @@ const generateGroupedData = (count = 1000000) => {
 
   return groupedData;
 };
-
-// ✅ Exemple d’utilisation
-const groupedData = generateGroupedData(1000);
-console.log(groupedData);
 
 export default App;

@@ -12,7 +12,7 @@ const tabs = [
   {
     label: "Discussions",
     icon: ForumOutlinedIcon,
-    id: "chats",
+    id: "discussions",
     component: Discussions,
   },
   {

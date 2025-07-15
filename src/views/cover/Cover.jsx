@@ -48,6 +48,7 @@ export default function Cover() {
         callHistory,
       };
       const user = store.getState().user;
+
       dispatch(updateArraysData({ data, user }));
     } catch (error) {
       console.error(error);

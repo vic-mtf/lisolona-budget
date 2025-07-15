@@ -18,10 +18,12 @@ export default function SocketIOProvider({
   options = DEFAULT_OPTIONS,
 }) {
   const token = useSelector((store) => store?.user?.token || defaultToken);
+  const loaded = useSelector((store) => store?.data?.app?.loaded);
   const socket = useMemo(
     () =>
-      OPENER_SOCKET || (token ? io(`${url}?token=${token}`, options) : null),
-    [token, url, options]
+      OPENER_SOCKET ||
+      (loaded ? (token ? io(`${url}?token=${token}`, options) : null) : null),
+    [token, url, options, loaded]
   );
 
   return <Provider value={socket}>{children}</Provider>;

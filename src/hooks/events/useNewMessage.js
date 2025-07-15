@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import useSocket from "../useSocket";
 import store from "../../redux/store";
-import { updateArraysData, updateData } from "../../redux/data/data";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import NoticeSnack from "../../components/NoticeSnack";
-import ringtones from "../../utils/ringtones";
+import ringtones, { vibrates } from "../../utils/ringtones";
 
 const useNewMessage = () => {
   const socket = useSocket();
@@ -20,22 +19,25 @@ const useNewMessage = () => {
         level,
       }));
       discussion.createdBy = members.find(({ _id }) => _id === createdBy);
-      store.dispatch(
-        updateArraysData({ data: { discussions: [discussion] }, user })
-      );
+      store.dispatch({
+        type: "data/updateArraysData",
+        payload: { data: { discussions: [discussion] }, user },
+      });
 
       if (discussion?.type === "room" && discussion?.messages?.length === 0) {
         if (user?.id === createdBy) {
           setTimeout(() => {
             const discussionTarget = getDiscussionTarget(data?._id);
-            store.dispatch(
-              updateData({
+            store.dispatch({
+              type: "data/updateData",
+              payload: {
                 data: { discussionTarget, targetView: "messages" },
-              })
-            );
+              },
+            });
           }, 200);
         } else {
           ringtones.alert.play();
+          vibrates.alert();
           // when remote user create new room
           notifications.show(
             React.createElement(NoticeSnack, {
@@ -47,11 +49,12 @@ const useNewMessage = () => {
               autoHideDuration: 7000,
               onAction: () => {
                 const discussionTarget = getDiscussionTarget(data?._id);
-                store.dispatch(
-                  updateData({
+                store.dispatch({
+                  type: "data/updateData",
+                  payload: {
                     data: { discussionTarget, targetView: "messages" },
-                  })
-                );
+                  },
+                });
                 notifications.close(data?._id);
               },
               actionText: "Ouvrir",

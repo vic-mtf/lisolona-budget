@@ -6,7 +6,7 @@ export default function useNavTab() {
   const navigateTo = useNavigate();
 
   const navTabValue = useMemo(
-    () => state?.navTab?.value || "chats",
+    () => state?.navTab?.value || "discussions",
     [state?.navTab?.value]
   );
   const onChangeTabNav = useCallback(

@@ -12,7 +12,7 @@ import getPathnames from "../../../utils/getPathnames";
 import PropTypes from "prop-types";
 
 export default function Content({ refresh }) {
-  const appStoreUser = useSelector((store) => store.app.user);
+  const appStoreUser = useSelector((store) => store.app.user?.data);
   const location = useLocation();
   const user = useMemo(() => decrypt(appStoreUser), [appStoreUser]);
 

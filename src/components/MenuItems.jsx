@@ -1,15 +1,14 @@
 import { Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import { useMemo } from "react";
-import { getFilteredMenuItems } from "./discussionMenuItems";
 import { useNotifications } from "@toolpad/core/useNotifications";
 
-const MenuDiscussionItem = ({
+const MenuItems = ({
   onClose,
   contextMenu = null,
   data,
   discussionTarget,
+  itemContent,
 }) => {
   const notifications = useNotifications();
   const anchorPosition = useMemo(
@@ -28,7 +27,7 @@ const MenuDiscussionItem = ({
       onClose={onClose}
       anchorReference='anchorPosition'
       anchorPosition={anchorPosition}>
-      {getFilteredMenuItems({ ...data, isSelected }).map(
+      {itemContent({ ...data, isSelected }).map(
         ({ id, label, icon, onAction, disabled }) => (
           <MenuItem
             disabled={disabled}
@@ -52,13 +51,12 @@ const MenuDiscussionItem = ({
   );
 };
 
-MenuDiscussionItem.displayName = "MenuDiscussionItem";
-
-MenuDiscussionItem.propTypes = {
+MenuItems.propTypes = {
   onClose: PropTypes.func.isRequired,
   contextMenu: PropTypes.object,
   discussionTarget: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   data: PropTypes.object,
+  itemContent: PropTypes.func.isRequired,
 };
 
-export default React.memo(MenuDiscussionItem);
+export default React.memo(MenuItems);

@@ -8,7 +8,7 @@ const useNewChat = () => {
 
   useEffect(() => {
     const handelGetChat = (data) => {
-      console.log(data);
+      console.log("new chat =>", data);
       //   const [{ createdAt: updatedAt }] = messages;
       //   const localUser = store.getState().user;
 
@@ -22,13 +22,19 @@ const useNewChat = () => {
       //   const user = store.getState().user;
       //   const data = { discussions };
       //   store.dispatch(updateArraysData({ data, user }));
-      console.log(data);
     };
     socket?.on("chats", handelGetChat);
     return () => {
-      socket?.off("direct-chat", handelGetChat);
+      socket?.off("chats", handelGetChat);
     };
   });
 };
 
 export default useNewChat;
+
+// socket?.on("chats", handelGetChat);
+// socket?.on("invitations", handleSignaling);
+// socket?.on("status", toggleStatus);
+// socket?.on("contacts", onGetContact);
+// socket?.on("call-history", getCallHistory);
+// socket?.on("call-status", callStatusChange);

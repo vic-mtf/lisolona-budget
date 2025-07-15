@@ -1,42 +1,40 @@
 import { Stack, Toolbar, Typography } from "@mui/material";
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import VirtualizedList from "../../../../components/VirtualizedList";
 import GuestItem from "./GuestItem";
 import toggleFullscreen from "../../../../utils/toggleFullscreen";
-import store from "../../../../redux/store";
-import getFullName from "../../../../utils/getFullName";
+import VirtualList from "../../../../components/VirtualList";
+import groupNotices from "./groupNotices";
+import ConfirmDeleteGuest from "./ConfirmDeleteGuest";
+import { ItemWrapperFocus } from "../../../../components/BlinkWrapper";
 
 export default function Notices() {
   const bulkNotifications = useSelector(
     (store) => store.data.app.notifications
   );
-  // const [search, setSearch] = useState("");
   const notifications = useMemo(
-    () => groupGuestNotifications(bulkNotifications),
+    () => groupNotices(bulkNotifications),
     [bulkNotifications]
   );
 
-  const itemContent = useCallback(
-    ({ index, style }) => {
-      const data = notifications[index];
-      const id = data?.id;
-      return (
-        <div key={data?.id} style={style}>
-          {data.variant === "guest" && (
-            <GuestItem
-              name={data?.name}
-              image={data?.image}
-              id={id}
-              email={data?.email}
-              createdAt={data?.createdAt}
-              divider={index !== notifications.length - 1}
-              isRemote={data?.isRemote}
-            />
-          )}
-        </div>
-      );
-    },
+  const data = useMemo(
+    () =>
+      notifications?.map(({ id, user, createdAt, isRemote }, index, data) => {
+        return (
+          <div key={id}>
+            <ItemWrapperFocus id={id} location='notifications'>
+              <GuestItem
+                user={user}
+                id={id}
+                createdAt={createdAt}
+                isRemote={isRemote}
+                index={index}
+                data={data}
+              />
+            </ItemWrapperFocus>
+          </div>
+        );
+      }),
     [notifications]
   );
 
@@ -52,34 +50,8 @@ export default function Notices() {
           </Typography>
         </Toolbar>
       </Stack>
-      <VirtualizedList
-        data={notifications}
-        itemContent={itemContent}
-        rowHeight={({ index }) =>
-          notifications[index].type === "label" ? 50 : 136
-        }
-        emptyMessage='Aucune notification trouvée'
-      />
+      <VirtualList data={data} emptyMessage='Aucune notification trouvée' />
+      <ConfirmDeleteGuest />
     </>
   );
 }
-
-const groupGuestNotifications = (guests) => {
-  const user = store.getState().user;
-
-  return guests
-    ?.map((guest) => {
-      const isRemote = user?.id !== guest?.from?.id;
-
-      const remoteUser = isRemote ? guest?.from : guest?.to;
-      return {
-        isRemote: user?.id !== guest?.from?.id,
-        name: getFullName(remoteUser),
-        ...guest,
-      };
-    })
-    ?.sort(
-      ({ createdAt: ac, updatedAt: au }, { createdAt: bc, updatedAt: bu }) =>
-        (bu || bc) - (au || ac)
-    );
-};

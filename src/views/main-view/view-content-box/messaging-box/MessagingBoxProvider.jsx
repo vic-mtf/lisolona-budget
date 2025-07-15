@@ -22,7 +22,7 @@ const MessagingProvider = React.memo(({ children }) => {
   );
   const placeholder = useMemo(
     () =>
-      `Ecrire un message ${
+      `Écrire un message ${
         user?.type === "room" ? "dans #" + user.name : "à @" + getFullName(user)
       }`,
     [user]

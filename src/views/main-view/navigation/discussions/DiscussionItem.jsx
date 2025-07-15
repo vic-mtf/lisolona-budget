@@ -12,6 +12,7 @@ import useLongPress from "../../../../hooks/useLongPress";
 import { useMemo } from "react";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import HighlightWord from "../../../../components/HighlightWord";
+import PushPinIcon from "@mui/icons-material/PushPin";
 
 const DiscussionItem = ({
   selected,
@@ -27,6 +28,7 @@ const DiscussionItem = ({
   search,
   secondaryAction,
   email,
+  pinned,
   description,
   ...otherProps
 }) => {
@@ -92,6 +94,7 @@ const DiscussionItem = ({
                     email || description
                   )}
                 </Typography>
+                {pinned && <PushPinIcon fontSize='small' />}
                 <Badge
                   badgeContent={news}
                   color='primary'
@@ -140,6 +143,7 @@ DiscussionItem.propTypes = {
   ]),
   email: PropTypes.string,
   description: PropTypes.string,
+  pinned: PropTypes.bool,
   search: PropTypes.string,
 };
 

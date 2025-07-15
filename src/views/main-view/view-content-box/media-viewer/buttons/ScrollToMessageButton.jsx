@@ -1,6 +1,7 @@
 import { Tooltip, IconButton } from "@mui/material";
 import PropTypes from "prop-types";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import store from "../../../../../redux/store";
 
 const ScrollToMessageButton = ({ VListRef, messages, data, onClose }) => {
   return (
@@ -14,6 +15,16 @@ const ScrollToMessageButton = ({ VListRef, messages, data, onClose }) => {
                 clientId ? clientId === data?.clientId : id === data?.id
               )
             );
+
+            store.dispatch({
+              type: "data/updateData",
+              payload: {
+                key: `app.actions.messaging.blink.${
+                  data?.id || data?.clientId
+                }`,
+                data: true,
+              },
+            });
           }}>
           <ChatBubbleOutlineOutlinedIcon />
         </IconButton>

@@ -9,7 +9,11 @@ const MuiTheme = createTheme();
 
 const useTheme = (defaultMode) => {
   const autoMode = useAutoMode();
-  const { mode: themeMode, opacity, blur } = useSelector((store) => store.app);
+  const {
+    mode: themeMode,
+    opacity,
+    blur,
+  } = useSelector((store) => store.app.theme);
 
   const mode = useMemo(
     () => defaultMode || (themeMode === "auto" ? autoMode : themeMode),

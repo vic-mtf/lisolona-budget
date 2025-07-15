@@ -55,7 +55,7 @@ export default function DiscussionList({
       const remote = data?.members?.find(
         ({ id }) => id !== store.getState().user.id
       );
-      const image = data?.type === "room" ? data?.image : remote?.image;
+      const image = data?.type === "room" ? data?.image : remote?.image || null;
       const name = getFullName(data);
       const onClick = (event) => {
         if (onClickItem) onClickItem(event, { name, id, ...data });

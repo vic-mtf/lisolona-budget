@@ -15,6 +15,7 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import PropTypes from "prop-types";
 import AvatarStatus from "../../../../components/AvatarStatus";
 import HighlightWord from "../../../../components/HighlightWord";
+import { updateData } from "../../../../redux/data/data";
 
 const ContactItem = ({
   selected,

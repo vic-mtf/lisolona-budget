@@ -119,7 +119,7 @@ export const setSignInData = (data) => {
 
   const encryptUser = encrypt(user);
   SIGN_IN_CHANNEL.postMessage(encryptUser, window.location.origin);
-  store.dispatch(updateApp({ data: { user: encryptUser } }));
+  store.dispatch(updateApp({ data: { user: { data: encryptUser } } }));
   store.dispatch(updateUser({ data: { ...user, connected: true } }));
   window.close();
 };

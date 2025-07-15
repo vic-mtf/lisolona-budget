@@ -1,7 +1,5 @@
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
-import getFullName from "../../../../utils/getFullName";
-import { escapeRegExp } from "lodash";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import UpdateOutlinedIcon from "@mui/icons-material/UpdateOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
@@ -19,17 +17,23 @@ const filterCategory = [
     label: "Non lues",
     id: "unread",
     icon: MarkChatUnreadOutlinedIcon,
+    disabled: false,
   },
   {
     label: "Lisanga",
     id: "room",
     icon: GroupsOutlinedIcon,
+    disabled: false,
   },
   {
-    label: "Favoris",
+    label: ({ favorites = [] }) => {
+      let favoriteLen = favorites?.length;
+      favoriteLen = (favoriteLen > 99 ? "99+" : favoriteLen) || "";
+      return `Favoris ${favoriteLen}`.trim();
+    },
     id: "favorite",
     icon: GradeOutlinedIcon,
-    disabled: true,
+    disabled: false,
   },
 ];
 
@@ -37,10 +41,17 @@ export function filterByCategory(item, currentCategory = "all") {
   if (currentCategory === "unread")
     return currentCategory === item?.message?.status;
   if (currentCategory === "room") return currentCategory === item.type;
+  if (currentCategory === "favorite") return item?.favorites?.includes(item.id);
+
   return true;
 }
 
-export function sortbyKey(data = [], sortType = "", reverse = false) {
+export function sortbyKey(
+  data = [],
+  sortType = "",
+  reverse = false,
+  pins = []
+) {
   const getValue = (obj = {}, key) => {
     const keys = Array.isArray(key) ? key : [key];
     let val = null;
@@ -50,7 +61,7 @@ export function sortbyKey(data = [], sortType = "", reverse = false) {
     return val;
   };
 
-  return [...data].sort((_a, _b) => {
+  const sortedData = [...data].sort((_a, _b) => {
     if (sortType === "name") {
       const a = getValue(_a, ["name", "fistName"]);
       const b = getValue(_b, ["name", "fistName"]);
@@ -63,16 +74,31 @@ export function sortbyKey(data = [], sortType = "", reverse = false) {
       return (a.getTime() - b.getTime()) * (reverse ? 1 : -1);
     }
   });
+  return reorderArrayByIds(sortedData, pins);
 }
 
-export function filterByType(item, type) {
+export const filterByType = (item, type) => {
   return type === "group"
     ? item?.type === "room"
     : type === "all"
     ? true
     : item?.type !== "room";
-}
-export default filterCategory;
+};
+
+export const reorderArrayByIds = (array1, array2) => {
+  if (!Array.isArray(array1) || !Array.isArray(array2)) return [];
+
+  const idSet = new Set(array2);
+  const prioritized = array2
+    .map((id) => {
+      const item = array1?.find((item) => item && item.id === id);
+      return item && { ...item, isPinned: array2.includes(item.id) };
+    })
+    .filter(Boolean);
+  const remaining = array1.filter((item) => !idSet.has(item.id));
+
+  return [...prioritized, ...remaining];
+};
 
 export const displays = [
   { id: "all", label: "Toutes les discussions", icon: ListOutlinedIcon },
@@ -89,3 +115,5 @@ export const orders = [
   { id: "asc", label: "Croissant" },
   { id: "desc", label: "Décroissant" },
 ];
+
+export default filterCategory;

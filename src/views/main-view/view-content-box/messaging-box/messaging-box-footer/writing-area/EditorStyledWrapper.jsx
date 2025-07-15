@@ -49,6 +49,7 @@ const EditorStyledWrapper = styled("div")(({ theme }) => ({
       },
     },
     "& .public-DraftEditorPlaceholder-root": {
+      pointerEvents: "none",
       "& .public-DraftEditorPlaceholder-inner": {
         ...theme.typography.body2,
         color: theme.palette.text.disabled,

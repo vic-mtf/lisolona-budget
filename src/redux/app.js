@@ -13,14 +13,13 @@ const {
 const app = createSlice({
   name: "app",
   initialState: {
-    mode,
+    theme: { mode, opacity: 0.75, blur: 15 },
     lang,
-    opacity: 0.75,
-    blur: 15,
     users: [],
-    user: null,
-    stayConnected: false,
-    data: null,
+    user: {
+      stayConnected: false,
+      data: null,
+    },
   },
   reducers: {
     updateApp(state, actions) {
