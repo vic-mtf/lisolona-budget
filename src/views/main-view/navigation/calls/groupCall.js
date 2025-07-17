@@ -1,5 +1,5 @@
 import store from "../../../../redux/store";
-import formatDate from "../../../../utils/formatDate";
+import formatDate, { formatTime } from "../../../../utils/formatDate";
 import JoinMeeting from "../../forms/join-meeting/JoinMeeting";
 import ScanMeeting from "../../forms/scan-meeting/ScanMeeting";
 import InstantMeeting from "../../forms/instant-meeting/InstantMeeting";
@@ -9,6 +9,9 @@ import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import CastOutlinedIcon from "@mui/icons-material/CastOutlined";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import OnlinePredictionOutlinedIcon from "@mui/icons-material/OnlinePredictionOutlined";
+import CallSplitOutlinedIcon from "@mui/icons-material/CallSplitOutlined";
 
 const groupCall = (calls = [], type = "all") => {
   const groupedCalls = [];
@@ -50,7 +53,7 @@ const groupCall = (calls = [], type = "all") => {
         });
     }
   );
-  return type === "all" ? addLabelInData(groupedCalls) : groupedCalls;
+  return addDateLabel(groupedCalls);
 };
 
 const sortBy = (data, key = "createdAt", treat = (value) => value) =>
@@ -126,21 +129,44 @@ const addLabelInData = (calls = []) => {
   return [...runningList, ...scheduledList, ...othersList];
 };
 
+const addDateLabel = (calls = []) => {
+  const labels = [];
+  const callsWithLabel = [];
+  calls.forEach((call) => {
+    const { createdAt } = call;
+    const date = formatTime({ date: createdAt, sameDayOption: "day" });
+    if (!labels.includes(date)) {
+      labels.push(date);
+      callsWithLabel.push({
+        label: date,
+        id: createdAt,
+        type: "label",
+      });
+    }
+    callsWithLabel.push(call);
+  });
+  return callsWithLabel;
+};
 export const groupTypes = [
   {
     id: "all",
-    label: "Tous",
+    label: "Tous les appels",
     icon: "div",
   },
   {
     id: "scheduled",
     label: "Réunions planifiées",
-    icon: "div",
+    icon: ScheduleOutlinedIcon,
   },
   {
     id: "running",
     label: "Réunion en cours",
-    icon: "vid",
+    icon: OnlinePredictionOutlinedIcon,
+  },
+  {
+    id: "ended",
+    label: "Historique d'appels",
+    icon: CallSplitOutlinedIcon,
   },
 ];
 

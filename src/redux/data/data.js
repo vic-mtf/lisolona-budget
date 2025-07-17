@@ -11,7 +11,6 @@ const data = createSlice({
   reducers: {
     updateData(state, actions) {
       const { data, key } = actions.payload;
-      console.log("updateData", data, key);
       if (Array.isArray(key) || typeof key === "string") {
         (Array.isArray(key) ? key : [key]).forEach((k, index) => {
           const states = setValueByKey(

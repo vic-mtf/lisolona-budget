@@ -1,76 +1,95 @@
 import { Stack, Toolbar, Typography, ListSubheader } from "@mui/material";
 import { useState, useMemo, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import groupCall from "./groupCall";
 import CreateCallButton from "./CreateCallButton";
 import FilterCallButton from "./FilterCallButton";
-import VirtualizedList from "../../../../components/VirtualizedList";
 import RunningCallItem from "./RunningCallItem";
 import ScheduledCallItem from "./ScheduledCallItem";
 import CallItem from "./CallItem";
 import toggleFullscreen from "../../../../utils/toggleFullscreen";
+import VirtualList from "../../../../components/VirtualList";
+import { updateData } from "../../../../redux/data/data";
+import CallDetailsView from "./CallDetailsView";
 
 export default function Calls() {
   const bulkCalls = useSelector((store) => store.data.app.calls);
   const [type, setType] = useState("all");
-
+  const dispatch = useDispatch();
   const calls = useMemo(() => groupCall(bulkCalls, type), [bulkCalls, type]);
 
-  const itemContent = useCallback(
-    ({ index, style }) => {
-      const data = calls[index];
-      const id = data?.id;
-      const participants = data?.participants;
-      const guests = data?.guests;
-
-      return (
-        <div key={id} style={style}>
-          {data?.type === "label" && (
-            <ListSubheader sx={{ height: "100%" }}>{data?.label}</ListSubheader>
-          )}
-
-          {data?.status === "running" && (
-            <RunningCallItem
-              location={data?.location}
-              divider={data?.status === calls[index + 1]?.status}
-              createdAt={data?.createdAt}
-              createdBy={data?.createdBy}
-              incoming={data?.incoming}
-              participants={
-                Array.isArray(participants) && Array.isArray(guests)
-                  ? participants.length + guests.length
-                  : undefined
-              }
-            />
-          )}
-          {data?.status === "scheduled" && (
-            <ScheduledCallItem
-              location={data?.location}
-              divider={data?.status === calls[index + 1]?.status}
-              code={data?.id}
-              title={data?.title}
-              description={data?.description}
-              startedAt={data?.startedAt}
-              endedAt={data?.endedAt}
-            />
-          )}
-
-          {["started", "ended", "failed"].includes(data?.status) && (
-            <CallItem
-              location={data?.location}
-              divider={data?.status === calls[index + 1]?.status}
-              createdAt={data?.createdAt}
-              // createdBy={data?.createdBy}
-              calls={data?.calls?.length + 1}
-              incoming={data?.incoming}
-              failed={data?.status === "failed"}
-              action='accepted'
-            />
-          )}
-        </div>
+  const handleOpenDetails = useCallback(
+    (call) => () => {
+      dispatch(
+        updateData({
+          key: "app.actions.calls.info",
+          data: { call, open: true },
+        })
       );
     },
-    [calls]
+    [dispatch]
+  );
+
+  const data = useMemo(
+    () =>
+      calls.map((call, index, calls) => {
+        const id = call?.id;
+        const participants = call?.participants;
+        const guests = call?.guests;
+
+        return (
+          <div key={id}>
+            {call?.type === "label" && (
+              <ListSubheader sx={{ height: "100%" }}>
+                {call?.label}
+              </ListSubheader>
+            )}
+
+            {call?.status === "running" && (
+              <RunningCallItem
+                location={call?.location}
+                divider={call?.status === calls[index + 1]?.status}
+                createdAt={call?.createdAt}
+                createdBy={call?.createdBy}
+                incoming={call?.incoming}
+                onClickDetail={handleOpenDetails(call)}
+                participants={
+                  Array.isArray(participants) && Array.isArray(guests)
+                    ? participants.length + guests.length
+                    : undefined
+                }
+              />
+            )}
+            {call?.status === "scheduled" && (
+              <ScheduledCallItem
+                location={call?.location}
+                divider={call?.status === calls[index + 1]?.status}
+                code={call?.id}
+                title={call?.title}
+                description={call?.description}
+                startedAt={call?.startedAt}
+                endedAt={call?.endedAt}
+                onClickDetail={handleOpenDetails(call)}
+              />
+            )}
+
+            {["started", "ended", "failed"].includes(call?.status) && (
+              <CallItem
+                location={call?.location}
+                divider={call?.status === calls[index + 1]?.status}
+                createdAt={call?.createdAt}
+                // createdBy={call?.createdBy}
+                calls={call?.calls?.length + 1}
+                incoming={call?.incoming}
+                failed={call?.status === "failed"}
+                action='accepted'
+                onClickDetail={handleOpenDetails(call)}
+              />
+            )}
+          </div>
+        );
+      }),
+    [calls, handleOpenDetails]
   );
 
   return (
@@ -89,13 +108,8 @@ export default function Calls() {
           <FilterCallButton type={type} onChange={(_, type) => setType(type)} />
         </div>
       </Stack>
-      <VirtualizedList
-        data={calls}
-        itemContent={itemContent}
-        rowHeight={({ index }) => (calls[index].type === "label" ? 50 : 69)}
-        emptyMessage='Aucun appel trouvé'
-        key={calls.length}
-      />
+      <VirtualList data={data} emptyMessage='Aucun appel trouvé' />
+      <CallDetailsView />
     </>
   );
 }

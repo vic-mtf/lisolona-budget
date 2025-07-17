@@ -128,6 +128,9 @@ importers:
       react-material-ui-carousel:
         specifier: ^3.4.2
         version: 3.4.2(a34d6522aa2c91b2aa3af3d082af9fae)
+      react-qr-code:
+        specifier: ^2.0.18
+        version: 2.0.18(react@18.3.1)
       react-quick-pinch-zoom:
         specifier: ^4.9.0
         version: 4.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -6148,6 +6151,9 @@ packages:
 
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
+  qr.js@0.0.0:
+    resolution: {integrity: sha512-c4iYnWb+k2E+vYpRimHqSu575b1/wKl4XFeJGpFmrJQz5I88v9aY2czh7s0w36srfCM1sXgC/xpoJz5dJfq+OQ==}
+
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
@@ -6232,6 +6238,11 @@ packages:
 
   react-property@2.0.0:
     resolution: {integrity: sha512-kzmNjIgU32mO4mmH5+iUyrqlpFQhF8K2k7eZ4fdLSOPFrD1XgEuSBv9LDEgxRXTMBqMd8ppT0x6TIzqE5pdGdw==}
+
+  react-qr-code@2.0.18:
+    resolution: {integrity: sha512-v1Jqz7urLMhkO6jkgJuBYhnqvXagzceg3qJUWayuCK/c6LTIonpWbwxR1f1APGd4xrW/QcQEovNrAojbUz65Tg==}
+    peerDependencies:
+      react: '*'
 
   react-quick-pinch-zoom@4.9.0:
     resolution: {integrity: sha512-gCPnZu5+rkYDNvewi/d7A2wgLs7izQNMuC6kjt+KLC1qqHnRU27Ed8AgcEcnWAZKdMr3ZKoKhSvjlZSVZI0fuw==}
@@ -14421,6 +14432,8 @@ snapshots:
 
   q@1.5.1: {}
 
+  qr.js@0.0.0: {}
+
   qs@6.13.0:
     dependencies:
       side-channel: 1.1.0
@@ -14529,6 +14542,12 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   react-property@2.0.0: {}
+
+  react-qr-code@2.0.18(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
+      qr.js: 0.0.0
+      react: 18.3.1
 
   react-quick-pinch-zoom@4.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

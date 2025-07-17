@@ -1,10 +1,4 @@
-import {
-  Box,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  TextField,
-} from "@mui/material";
+import { Box, Toolbar, Typography, TextField } from "@mui/material";
 import ListAvatar from "../../../../components/ListAvatar";
 import PropTypes from "prop-types";
 import DateCalendarMeeting from "./DateCalendarMeeting";
@@ -32,34 +26,28 @@ export default function ScheduledMeetingForm({
       sx={{ ...scrollBarSx, scrollbarGutter: "stable both-edges" }}
       flex={1}
       gap={2.5}>
-      <ListItem
+      <Toolbar
         disableGutters
         sx={{
           position: "sticky",
           top: 0,
           backdropFilter: "blur(10px)",
           zIndex: (theme) => theme.zIndex.appBar,
+          gap: 2,
         }}>
-        <ListItemAvatar>
-          <div>
-            <ListAvatar
-              src={data?.image}
-              alt={data?.name}
-              id={data?.id}
-              invisible>
-              {data?.name?.toUpperCase()?.charAt(0)}
-            </ListAvatar>
-          </div>
-        </ListItemAvatar>
-        <ListItemText
-          primary={data?.name}
-          primaryTypographyProps={{
-            variant: "h6",
-            fontSize: 18,
-            fontWeight: "bold",
-          }}
-        />
-      </ListItem>
+        <div>
+          <ListAvatar
+            src={data?.image}
+            alt={data?.name}
+            id={data?.id}
+            invisible>
+            {data?.name?.toUpperCase()?.charAt(0)}
+          </ListAvatar>
+        </div>
+        <Typography variant='h6' fontWeight='bold' fontSize={18}>
+          {data?.name}
+        </Typography>
+      </Toolbar>
       <Box>
         <TextField
           label='Intitulé'

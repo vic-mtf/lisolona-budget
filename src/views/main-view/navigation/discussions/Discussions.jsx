@@ -1,4 +1,4 @@
-import { Chip, Stack, Toolbar, Typography } from "@mui/material";
+import { Chip, Stack, Toolbar, Typography, Box } from "@mui/material";
 import filterCategory, { filterByCategory, sortbyKey } from "./filterCategory";
 import { createElement, useState, useMemo, useCallback } from "react";
 import InputSearch from "../../../../components/InputSearch";
@@ -104,7 +104,13 @@ export default function Discussions() {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        <Stack direction='row' spacing={0.5}>
+        <Box
+          overflow='hidden'
+          sx={{ overflowX: "auto" }}
+          flexDirection='row'
+          display='flex'
+          gap={1}
+          position='relative'>
           {filterCategory.map(({ id, label, icon, disabled }) => (
             <Chip
               key={id}
@@ -120,7 +126,7 @@ export default function Discussions() {
               sx={{ flex: 1 }}
             />
           ))}
-        </Stack>
+        </Box>
       </Stack>
 
       <VirtualizedList

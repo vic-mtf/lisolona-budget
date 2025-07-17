@@ -5,8 +5,9 @@ import GuestItem from "./GuestItem";
 import toggleFullscreen from "../../../../utils/toggleFullscreen";
 import VirtualList from "../../../../components/VirtualList";
 import groupNotices from "./groupNotices";
-import ConfirmDeleteGuest from "./ConfirmDeleteGuest";
+import DeleteInvitationButton from "./DeleteInvitationButton";
 import { ItemWrapperFocus } from "../../../../components/BlinkWrapper";
+import ConfirmDeleteItem from "../../../../components/ConfirmDeleteItem";
 
 export default function Notices() {
   const bulkNotifications = useSelector(
@@ -51,7 +52,21 @@ export default function Notices() {
         </Toolbar>
       </Stack>
       <VirtualList data={data} emptyMessage='Aucune notification trouvée' />
-      <ConfirmDeleteGuest />
+      <ConfirmDeleteItem
+        location='notifications'
+        title="Supprimer l'invitation"
+        description={({ data }) => (
+          <>
+            {"Voulez-vous vraiment supprimer l'invitation de"}{" "}
+            <Typography color='textPrimary' component='b' fontWeight='bold'>
+              {data?.name}
+            </Typography>
+          </>
+        )}
+        deleteButton={({ data, onClose }) => (
+          <DeleteInvitationButton data={data} onClose={onClose} />
+        )}
+      />
     </>
   );
 }

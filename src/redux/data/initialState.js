@@ -29,11 +29,22 @@ export const initialState = {
       },
       notifications: {
         blink: {},
-        confirmDelete: null,
+        confirmDelete: {
+          open: false,
+        },
       },
       contacts: {
         blink: {},
+        confirmDelete: {
+          open: false,
+        },
+      },
+      calls: {
+        blink: {},
         confirmDelete: null,
+        info: {
+          open: false,
+        },
       },
     },
   },

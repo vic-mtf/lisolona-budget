@@ -24,8 +24,13 @@ const menuItems = [
       const user = store.getState().user;
       const { pins, find } = getDiscussionData(user.id, "pins", data);
 
-      if (find) pins.splice(pins.indexOf(find), 1);
-      else {
+      if (find) {
+        pins.splice(pins.indexOf(find), 1);
+        notifications.show("Discussion dépinglée", {
+          autoHideDuration: 3000,
+          key: "unpined",
+        });
+      } else {
         if (pins.length > 2) {
           notifications.show("Vous ne pouvez épingler que 3 discussions", {
             autoHideDuration: 3000,
@@ -54,7 +59,7 @@ const menuItems = [
     label: (data) => {
       const user = store.getState().user;
       const { find } = getDiscussionData(user.id, "favorites", data);
-      return find ? "Supprimer des favoris" : "Ajouter aux favoris";
+      return find ? "Retirer des favoris" : "Ajouter aux favoris";
     },
     type: "all",
     icon: (data) => {
@@ -62,11 +67,23 @@ const menuItems = [
       const { find } = getDiscussionData(user.id, "favorites", data);
       return find ? GradeIcon : GradeOutlinedIcon;
     },
-    onAction(data) {
+    onAction(data, notifications) {
       const user = store.getState().user;
       const { favorites, find } = getDiscussionData(user.id, "favorites", data);
-      if (find) favorites.splice(favorites.indexOf(find), 1);
-      else favorites.push(data.id);
+      if (find) {
+        favorites.splice(favorites.indexOf(find), 1);
+        notifications.show("Discussion retirée des favoris", {
+          autoHideDuration: 3000,
+          key: "unfavorite",
+        });
+      } else {
+        favorites.push(data.id);
+        notifications.show("Discussion ajoutée aux favoris", {
+          autoHideDuration: 3000,
+          key: "favorite",
+        });
+      }
+
       store.dispatch({
         type: "app/updateApp",
         payload: {

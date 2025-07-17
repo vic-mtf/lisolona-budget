@@ -1,5 +1,11 @@
-import { ListSubheader, Stack, Toolbar, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import {
+  ListSubheader,
+  Stack,
+  Toolbar,
+  Typography,
+  Button,
+} from "@mui/material";
+import React, { useMemo, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import ContactItem from "./ContactItem";
 import groupContact from "./groupContacts";
@@ -10,11 +16,11 @@ import InputSearch from "../../../../components/InputSearch";
 import GuestContactButton from "./GuestContactButton";
 import toggleFullscreen from "../../../../utils/toggleFullscreen";
 import { ItemWrapperFocus } from "../../../../components/BlinkWrapper";
-import { useCallback } from "react";
 import MenuItems from "../../../../components/MenuItems";
 import getCoordContextMenu from "../../../../utils/getCoordContextMenu";
+import ConfirmDeleteItem from "../../../../components/ConfirmDeleteItem";
 import contactMenuItems from "./contactMenuItems";
-import ConfirmDeleteContact from "./ConfirmDeleteContact";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 export default function Contacts() {
   const bulkContacts = useSelector((store) => store.data.app.contacts);
@@ -108,7 +114,29 @@ export default function Contacts() {
         onClose={() => setMenuItem(({ data }) => ({ data, contextMenu: null }))}
         itemContent={() => contactMenuItems}
       />
-      <ConfirmDeleteContact />
+      <ConfirmDeleteItem
+        location='contacts'
+        title='Supprimer le contact'
+        description={({ data }) => (
+          <>
+            Si vous retirez{" "}
+            <Typography color='textPrimary' component='b' fontWeight='bold'>
+              {data?.name}
+            </Typography>{" "}
+            de vos contacts, vous ne pourrez plus lui envoyer de messages.
+            Voulez-vous vraiment supprimer ce contact ?
+          </>
+        )}
+        deleteButton={() => (
+          <Button
+            endIcon={<DeleteOutlineOutlinedIcon />}
+            disabled
+            variant='outlined'
+            color='error'>
+            Supprimer
+          </Button>
+        )}
+      />
     </>
   );
 }

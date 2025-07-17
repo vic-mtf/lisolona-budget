@@ -10,14 +10,14 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import {
   Box,
   Button,
-  IconButton,
+  //IconButton,
   ListItem,
   CardActions,
   Stack,
-  Tooltip,
+  //Tooltip,
   AlertTitle,
 } from "@mui/material";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+//import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import PropTypes from "prop-types";
 import ListAvatar from "../../../../components/ListAvatar";
 import { axios } from "../../../../hooks/useAxios";
@@ -36,13 +36,14 @@ const GuestItem = React.memo(({ id, user, divider, createdAt, isRemote }) => {
       <ListItem
         //   disablePadding
         alignItems='flex-start'
-        secondaryAction={
-          <Tooltip title='Datail'>
-            <IconButton edge='end'>
-              <InfoOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        }>
+        // secondaryAction={
+        //   <Tooltip title='Datail'>
+        //     <IconButton edge='end'>
+        //       <InfoOutlinedIcon />
+        //     </IconButton>
+        //   </Tooltip>
+        // }
+      >
         <ListItemAvatar>
           <ListAvatar src={user?.image} alt={name} id={user?.id} invisible>
             {name?.toUpperCase()?.charAt(0)}
@@ -169,7 +170,7 @@ const GuestActionButtons = ({ id, user, isRemote }) => {
           dispatch(
             updateData({
               key: "app.actions.notifications.confirmDelete",
-              data: { user, id },
+              data: { user, id, open: true },
             })
           );
         }}>

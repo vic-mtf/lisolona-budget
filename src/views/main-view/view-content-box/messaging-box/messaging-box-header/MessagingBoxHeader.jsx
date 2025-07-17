@@ -37,7 +37,7 @@ export default function MessagingBoxHeader() {
     ({ id }) => id !== store.getState().user.id
   );
   const image =
-    user?.type === "room" ? user.image : user?.image || remote?.image;
+    user?.type === "room" ? user?.image : user?.image || remote?.image;
   const Avatar = useMemo(
     () => (user?.type === "room" ? ListAvatar : AvatarStatus),
     [user?.type]

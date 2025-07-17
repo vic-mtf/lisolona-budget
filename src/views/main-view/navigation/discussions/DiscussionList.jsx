@@ -72,6 +72,7 @@ export default function DiscussionList({
             email={data?.email}
             description={data?.description}
             onClick={onClick}
+            search={search}
             divider={index !== discussions.length - 1}
             secondaryAction={
               typeof secondaryAction === "function"
@@ -82,7 +83,7 @@ export default function DiscussionList({
         </div>
       );
     },
-    [discussions, onClose, secondaryAction, onClickItem, closable]
+    [discussions, onClose, secondaryAction, onClickItem, closable, search]
   );
 
   return (

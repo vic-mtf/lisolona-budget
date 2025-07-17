@@ -22,16 +22,18 @@ export default function Account({ user, refresh }) {
       </Typography>
       <ListItemButton onClick={handleCheckAccount}>
         <ListItemAvatar>
-          <ListAvatar src={user.image} invisible id={user?.id}>
+          <ListAvatar src={user?.image} invisible id={user?.id}>
             {getFullName(user)?.toUpperCase()?.charAt(0)}
           </ListAvatar>
         </ListItemAvatar>
         <ListItemText
           primary={getFullName(user)}
-          secondary={user.email}
-          secondaryTypographyProps={{
-            variant: "body2",
-            color: "text.secondary",
+          secondary={user?.email}
+          slotProps={{
+            secondary: {
+              variant: "body2",
+              color: "text.secondary",
+            },
           }}
         />
       </ListItemButton>

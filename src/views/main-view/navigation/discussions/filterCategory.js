@@ -8,7 +8,7 @@ import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
 
 const filterCategory = [
   {
-    label: "Tous",
+    label: "Toutes",
     id: "all",
     icon: "div",
     // icon: ChatOutlinedIcon,
@@ -26,11 +26,7 @@ const filterCategory = [
     disabled: false,
   },
   {
-    label: ({ favorites = [] }) => {
-      let favoriteLen = favorites?.length;
-      favoriteLen = (favoriteLen > 99 ? "99+" : favoriteLen) || "";
-      return `Favoris ${favoriteLen}`.trim();
-    },
+    label: "Favoris",
     id: "favorite",
     icon: GradeOutlinedIcon,
     disabled: false,

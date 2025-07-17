@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Button,
   ListItemIcon,
@@ -27,13 +27,17 @@ export default function FilterCallButton({ type = "all", onChange }) {
         {...chipProps}
         color='inherit'
         endIcon={<ExpandMoreOutlinedIcon />}
+        variant='outlined'
         onClick={(event) => setAnchorEl(event.currentTarget)}
+        startIcon={React.createElement(
+          groupTypes.find(({ id }) => id === type)?.icon
+        )}
       />
       <Menu
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
         anchorEl={anchorEl}>
-        {groupTypes.map(({ id, label }) => (
+        {groupTypes.map(({ id, label, icon }) => (
           <MenuItem
             key={id}
             onClick={(event) => {
@@ -43,6 +47,7 @@ export default function FilterCallButton({ type = "all", onChange }) {
             <ListItemIcon>
               {type === id ? <CheckOutlinedIcon /> : <div />}
             </ListItemIcon>
+            <ListItemIcon>{React.createElement(icon)}</ListItemIcon>
             <ListItemText primary={label} />
           </MenuItem>
         ))}

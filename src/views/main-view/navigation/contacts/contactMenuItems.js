@@ -38,7 +38,7 @@ const menuItems = [
     label: "Appeler",
 
     icon: LocalPhoneOutlinedIcon,
-    onAction(data) {},
+    onAction() {},
   },
   {
     id: "favorite",
@@ -53,11 +53,22 @@ const menuItems = [
       const { find } = getDiscussionData(user.id, "favorites", data);
       return find ? GradeIcon : GradeOutlinedIcon;
     },
-    onAction(data) {
+    onAction(data, notifications) {
       const user = store.getState().user;
       const { favorites, find } = getDiscussionData(user.id, "favorites", data);
-      if (find) favorites.splice(favorites.indexOf(find), 1);
-      else favorites.push(data.id);
+      if (find) {
+        favorites.splice(favorites.indexOf(find), 1);
+        notifications.show("Contact supprimé des favoris", {
+          key: "unfavorite",
+          autoHideDuration: 3000,
+        });
+      } else {
+        favorites.push(data.id);
+        notifications.show("Contact ajouté aux favoris", {
+          key: "favorite",
+          autoHideDuration: 3000,
+        });
+      }
       store.dispatch({
         type: "app/updateApp",
         payload: {
@@ -86,7 +97,7 @@ const menuItems = [
         type: "data/updateData",
         payload: {
           key: "app.actions.contacts.confirmDelete",
-          data: { user, id: user.id },
+          data: { user, id: user.id, open: true },
         },
       });
     },

@@ -4,6 +4,7 @@ import HomePage from "../views/home/Home";
 import TestApp from "../test/App.test";
 import { createElement } from "react";
 import MainView from "../views/main-view/MainView";
+import RouteErrorBoundary from "../components/RouteErrorBoundary";
 
 const PUBLIC_URL = import.meta.env.BASE_URL;
 
@@ -45,6 +46,7 @@ const router = (connected) => {
     .flat()
     .map(({ component, props, ...otherParams }) => ({
       element: createElement(component, props),
+      errorElement: createElement(RouteErrorBoundary),
       ...otherParams,
     }));
   return createBrowserRouter(routes, {
