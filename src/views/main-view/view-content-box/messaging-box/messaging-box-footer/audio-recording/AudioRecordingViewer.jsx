@@ -4,6 +4,7 @@ import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import PropTypes from "prop-types";
+import WaveSurfer from "wavesurfer.js";
 // import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import { useDispatch } from "react-redux";
 import { updateData } from "../../../../../../redux/data/data";
@@ -12,7 +13,7 @@ import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 import store from "../../../../../../redux/store";
 
-const AudioRecordingViewer = React.memo(({ waveSurferData }) => {
+const AudioRecordingViewer = ({ waveSurferData }) => {
   const [paused, setPaused] = useState(true);
   const dispatch = useDispatch();
   const [getDate, setData] = useLocalStoreData();
@@ -111,14 +112,17 @@ const AudioRecordingViewer = React.memo(({ waveSurferData }) => {
       </Box>
     </Box>
   );
-});
+};
 
 AudioRecordingViewer.propTypes = {
   waveSurferData: PropTypes.shape({
-    instance: PropTypes.object,
+    instance: PropTypes.oneOfType([
+      PropTypes.instanceOf(WaveSurfer),
+      PropTypes.instanceOf(WaveSurfer.create),
+      PropTypes.instanceOf(null),
+    ]),
     plugins: PropTypes.object,
   }),
 };
 
-AudioRecordingViewer.displayName = "AudioRecordingViewer";
-export default AudioRecordingViewer;
+export default React.memo(AudioRecordingViewer);

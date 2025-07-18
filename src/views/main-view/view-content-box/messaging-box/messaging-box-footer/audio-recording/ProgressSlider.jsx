@@ -1,9 +1,12 @@
 import { Box, Slider } from "@mui/material";
 import React, { useEffect, useState, useMemo } from "react";
+import WaveSurfer from "wavesurfer.js";
 import PropTypes from "prop-types";
 
-const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
-  const [currentTime, setCurrentTime] = useState(0);
+const ProgressSlider = ({ waveSurfer, duration, disabled }) => {
+  const [currentTime, setCurrentTime] = useState(
+    waveSurfer?.getCurrentTime() || 0
+  );
   const step = useMemo(() => calculateOptimalStep(0, duration), [duration]);
   const manualChange = useMemo(() => ({ isActive: false }), []);
 
@@ -34,6 +37,7 @@ const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
         max={duration}
         value={currentTime}
         step={step}
+        disabled={disabled}
         onChange={(_, value) =>
           waveSurfer?.setTime(roundToNearestStep(value, step))
         }
@@ -58,7 +62,7 @@ const ProgressSlider = React.memo(({ waveSurfer, duration }) => {
       />
     </Box>
   );
-});
+};
 
 const calculateOptimalStep = (min, max) => {
   const range = max - min;
@@ -79,9 +83,13 @@ const roundToNearestStep = (value, step) => {
 };
 
 ProgressSlider.propTypes = {
-  waveSurfer: PropTypes.object,
+  waveSurfer: PropTypes.oneOfType([
+    PropTypes.instanceOf(WaveSurfer),
+    PropTypes.instanceOf(WaveSurfer.create),
+    PropTypes.instanceOf(null),
+  ]),
   duration: PropTypes.number,
+  disabled: PropTypes.bool,
 };
 
-ProgressSlider.displayName = "ProgressSlider";
-export default ProgressSlider;
+export default React.memo(ProgressSlider);

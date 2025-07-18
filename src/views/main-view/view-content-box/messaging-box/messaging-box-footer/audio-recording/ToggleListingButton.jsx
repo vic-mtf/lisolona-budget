@@ -5,7 +5,7 @@ import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import PropTypes from "prop-types";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 
-const ToggleListingButton = React.memo(({ waveSurfer, duration }) => {
+const ToggleListingButton = ({ waveSurfer, duration, disabled }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [getData, setData] = useLocalStoreData();
 
@@ -20,35 +20,35 @@ const ToggleListingButton = React.memo(({ waveSurfer, duration }) => {
           setData("app.playings.audio", waveSurfer);
         }
       }
-      setIsPlaying((isPlaying) => !isPlaying);
+      //setIsPlaying((isPlaying) => !isPlaying);
     }
   };
 
   useEffect(() => {
-    const onTogglePlaying = () => {
-      if (isPlaying !== waveSurfer?.isPlaying())
-        setIsPlaying(waveSurfer?.isPlaying());
+    const onPlaying = () => {
+      if (!isPlaying) setIsPlaying(true);
     };
-    waveSurfer?.on("pause", onTogglePlaying);
-    waveSurfer?.on("play", onTogglePlaying);
+    const onPause = () => {
+      if (isPlaying) setIsPlaying(false);
+    };
+    waveSurfer?.on("pause", onPause);
+    waveSurfer?.on("play", onPlaying);
     return () => {
-      waveSurfer?.un("pause", onTogglePlaying);
-      waveSurfer?.un("play", onTogglePlaying);
+      waveSurfer?.un("pause", onPause);
+      waveSurfer?.un("play", onPlaying);
     };
   }, [waveSurfer, isPlaying]);
 
   return (
-    <IconButton onClick={togglePlaying}>
+    <IconButton onClick={togglePlaying} disabled={disabled}>
       {isPlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
     </IconButton>
   );
-});
-
-ToggleListingButton.displayName = "ToggleListingButton";
+};
 
 ToggleListingButton.propTypes = {
   waveSurfer: PropTypes.object,
   duration: PropTypes.number,
 };
 
-export default ToggleListingButton;
+export default React.memo(ToggleListingButton);

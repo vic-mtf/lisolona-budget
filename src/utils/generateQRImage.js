@@ -1,5 +1,6 @@
 import logoSrcWhite from "../assets/geid_logo_white_without_title.webp";
 import logoSrcBlue from "../assets/geid_logo_blue_without_title.webp";
+
 export default async function generateSVGImage({
   svgElement,
   title,
@@ -14,11 +15,9 @@ export default async function generateSVGImage({
   canvas.width = width;
   canvas.height = height;
 
-  // 🟦 Fond
   ctx.fillStyle = theme.palette.background.default || "#ffffff";
   ctx.fillRect(0, 0, width, height);
 
-  // 🖼️ Logo GEID
   const logoImg = await loadImage(
     theme?.palette?.mode === "light" ? logoSrcBlue : logoSrcWhite
   );
@@ -29,10 +28,8 @@ export default async function generateSVGImage({
   const logoY = 40;
   ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
 
-  // 📏 Centrage vertical : ligne de base pour tous les éléments
   const centerY = logoY + logoHeight / 2;
 
-  // 🟫 Barre verticale (plus haute que le texte)
   const barHeight = logoHeight * 1.2;
   const barWidth = 4;
   const barX = logoX + logoWidth + 20;
@@ -40,22 +37,20 @@ export default async function generateSVGImage({
   ctx.fillStyle = theme.palette.text.primary || "#000";
   ctx.fillRect(barX, barY, barWidth, barHeight);
 
-  // 🟨 Texte "Lisolo" centré à droite de la barre
-  const lisoloFontSize = logoHeight * 0.8;
-  ctx.font = `${lisoloFontSize}px ${theme.typography.fontFamily || "Arial"}`;
+  const fontSize = logoHeight * 0.8;
+  ctx.font = `${fontSize}px ${theme.typography.fontFamily || "Arial"}`;
   ctx.textAlign = "left";
   ctx.fillStyle = theme.palette.text.primary || "#000";
 
   const textX = barX + barWidth + 16;
-  const textY = centerY + lisoloFontSize * 0.35; // aligné avec le logo
+  const textY = centerY + fontSize * 0.35;
   ctx.fillText("Lisolo", textX, textY);
-  // 🧾 Charger le SVG
+
   const svgString = new XMLSerializer().serializeToString(svgElement);
   const blob = new Blob([svgString], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);
   const drawingImg = await loadImage(url);
 
-  // 🔳 Zone du dessin (centrée)
   const qrSize = Math.min(width * 0.6, height * 0.4);
   const qrX = (width - qrSize) / 2;
   const qrY = height / 2 - qrSize / 2;
@@ -64,7 +59,6 @@ export default async function generateSVGImage({
   const titleY = qrY - qrMargin;
   const descY = qrY + qrSize + qrMargin;
 
-  // 🖋️ Titre au-dessus du SVG
   drawWrappedText({
     ctx,
     text: title,
@@ -81,7 +75,6 @@ export default async function generateSVGImage({
     maxHeight: qrY - 160,
   });
 
-  // 📝 Description sous le SVG
   drawWrappedText({
     ctx,
     text: description,
@@ -98,7 +91,6 @@ export default async function generateSVGImage({
     maxHeight: height - descY - 100,
   });
 
-  // 🔲 Dessin SVG avec coins arrondis
   const radius = 40;
   ctx.save();
   ctx.beginPath();
@@ -124,7 +116,7 @@ export default async function generateSVGImage({
   return canvas.toDataURL("image/png");
 }
 
-function loadImage(src) {
+export const loadImage = (src) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -132,7 +124,7 @@ function loadImage(src) {
     img.onerror = reject;
     img.src = src;
   });
-}
+};
 
 function drawWrappedText({
   ctx,

@@ -13,9 +13,11 @@ import getFile, {
 import store from "../../../../../../../redux/store";
 import { updateData } from "../../../../../../../redux/data/data";
 import PropTypes from "prop-types";
+import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
 
 const AddFilesButton = ({ disabled }) => {
   const notifications = useNotifications();
+  const [, setData] = useLocalStoreData();
 
   const handleGetFiles = async () => {
     const joined = (exts) => exts.map((ext) => `.${ext}`).join(",");
@@ -44,18 +46,24 @@ const AddFilesButton = ({ disabled }) => {
         key: "files-limit",
         autoHideDuration: 3000,
       });
-      return;
     }
 
     const slicedFiles = filteredFiles.slice(0, 10 - memoFiles.length);
-    const files = slicedFiles.map((file, index) => ({
-      id: (Date.now() + index).toString(16).toLowerCase(),
-      url: window.URL.createObjectURL(file).toString(),
-      name: getName(file.name),
-      type: getType(file) === "application" ? "doc" : getType(file),
-      ext: getExtension(file.name),
-      size: file.size,
-    }));
+    const files = slicedFiles.map((file, index) => {
+      const id = (Date.now() + index).toString(16).toLowerCase();
+      const type = getType(file) === "application" ? "document" : getType(file);
+      setData(`app.uploads.${type}s${id}`, file);
+
+      return {
+        id,
+        url: window.URL.createObjectURL(file).toString(),
+        name: getName(file.name),
+        type: type === "document" ? "doc" : type,
+        ext: getExtension(file.name),
+        size: file.size,
+      };
+    });
+    console.log("files", files);
 
     store.dispatch(
       updateData({
@@ -109,7 +117,7 @@ AddFilesButton.propTypes = {
 const texts = {
   errors: {
     filesLimit: "Vous ne pouvez pas télécharger plus de 10 fichiers",
-    existFile: "Vous avez déja ajouté ce fichier",
+    existFile: "Vous avez déjà ajouté ce fichier",
     existFiles: "Vous avez deja ajouté ces fichiers",
   },
 };

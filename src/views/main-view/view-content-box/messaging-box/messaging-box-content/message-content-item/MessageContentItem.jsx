@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 import MessageContentMedia from "./message-content-media/MessageContentMedia";
 import { ItemWrapperFocus } from "../../../../../../components/BlinkWrapper";
+import MessageContentVoice from "./message-content-voice/MessageContentVoice";
 
 const MessageContentItem = React.forwardRef(
   (
@@ -163,6 +164,12 @@ const MessageContentItem = React.forwardRef(
                         content={message?.content}
                         subType={message?.subType}
                         id={message?.clientId || message?.id}
+                      />
+                    )}
+                    {message.type === "voice" && (
+                      <MessageContentVoice
+                        id={message?.clientId || message?.id}
+                        content={message?.content}
                       />
                     )}
                   </>

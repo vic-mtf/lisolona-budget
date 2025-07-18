@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 
-const RecordingTimer = React.memo(({ pause, timeRef }) => {
+const RecordingTimer = ({ pause, timeRef }) => {
   const [elapsedTime, setElapsedTime] = useState(timeRef?.current || 0);
   const [startTime, setStartTime] = useState(null);
 
@@ -61,11 +61,11 @@ const RecordingTimer = React.memo(({ pause, timeRef }) => {
       </Typography>
     </>
   );
-});
+};
 
-RecordingTimer.displayName = "RecordingTimer";
 RecordingTimer.propTypes = {
   pause: PropTypes.bool,
   timeRef: PropTypes.object,
 };
-export default RecordingTimer;
+
+export default React.memo(RecordingTimer);

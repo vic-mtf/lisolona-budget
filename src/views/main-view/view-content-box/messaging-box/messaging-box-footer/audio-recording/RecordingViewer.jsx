@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
@@ -9,13 +9,14 @@ import ListeningTimer from "./ListeningTimer";
 import ProgressSlider from "./ProgressSlider";
 import ringtones from "../../../../../../utils/ringtones";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
+import useWaveSurferStyle from "../../../../../../hooks/useWaveSurferStyle";
 
-const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
+const RecordingViewer = ({ setPaused, paused, waveSurferData }) => {
   const [duration, setDuration] = useState(0);
   const containerRef = useRef();
   const timeRef = useRef(0);
   const [getData] = useLocalStoreData();
-  const theme = useTheme();
+  const waveSurferStyle = useWaveSurferStyle();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -32,17 +33,7 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
       });
       waveSurfer = WaveSurfer.create({
         container,
-        waveColor: theme.palette.text.secondary,
-        progressColor: theme.palette.primary.main,
-        height: 35,
-        barHeight: 1,
-        barGap: 3,
-        barWidth: 4,
-        barRadius: 100,
-        cursorWidth: 0,
-        autoCenter: true,
-        hideScrollbar: true,
-        interact: true,
+        ...waveSurferStyle,
       });
 
       waveSurfer.registerPlugin(recordPlugin);
@@ -59,7 +50,7 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
     return () => {
       waveSurfer?.un("ready", onGetDuration);
     };
-  }, [setPaused, theme, getData, waveSurferData]);
+  }, [setPaused, getData, waveSurferData, waveSurferStyle]);
 
   return (
     <Box
@@ -123,16 +114,18 @@ const RecordingViewer = React.memo(({ setPaused, paused, waveSurferData }) => {
       )}
     </Box>
   );
-});
-
-RecordingViewer.displayName = "RecordingViewer";
+};
 
 RecordingViewer.propTypes = {
   setPaused: PropTypes.func,
   paused: PropTypes.bool,
   waveSurferData: PropTypes.shape({
-    instance: PropTypes.object,
+    instance: PropTypes.oneOfType([
+      PropTypes.instanceOf(WaveSurfer),
+      PropTypes.instanceOf(WaveSurfer.create),
+      PropTypes.instanceOf(null),
+    ]),
     plugins: PropTypes.object,
   }),
 };
-export default RecordingViewer;
+export default React.memo(RecordingViewer);

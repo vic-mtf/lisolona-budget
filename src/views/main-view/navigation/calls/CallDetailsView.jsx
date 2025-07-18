@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+// import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import React, { useCallback, useMemo, useRef } from "react";
 import formatDate, { timeElapses } from "../../../../utils/formatDate";
@@ -351,7 +351,7 @@ const ParticipantItem = ({ user }) => {
 ParticipantItem.propTypes = {
   user: PropTypes.object,
 };
-const getButtonProps = ({ status, room }) => {
+const getButtonProps = ({ status, room } = {}) => {
   if (room) {
     if (status === "ended" || status === "running")
       return {

@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 
-const VerticalCollapse = React.memo(({ open, appear, children }) => {
+const VerticalCollapse = ({ open, appear, children }) => {
   const rendered = useMemo(() => ({ value: false }), []);
 
   useLayoutEffect(() => {
@@ -25,9 +25,7 @@ const VerticalCollapse = React.memo(({ open, appear, children }) => {
       )}
     </AnimatePresence>
   );
-});
-
-VerticalCollapse.displayName = "VerticalCollapse";
+};
 
 VerticalCollapse.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -35,4 +33,4 @@ VerticalCollapse.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default VerticalCollapse;
+export default React.memo(VerticalCollapse);

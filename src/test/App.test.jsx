@@ -1,14 +1,17 @@
 import { Box } from "@mui/material";
+import WaveLoader from "../components/WaveLoader";
 
 const App = () => {
   return (
     <div style={{ position: "relative", height: "600px", overflowY: "auto" }}>
       <Box
         sx={{
-          backgroundColor: "red",
           height: 400,
-          aspectRatio: 9 / 16,
-        }}></Box>
+        }}>
+        <div>
+          <WaveLoader />
+        </div>
+      </Box>
     </div>
   );
 };

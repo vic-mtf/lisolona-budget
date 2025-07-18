@@ -22,7 +22,7 @@ import {
   isEditorStateEmpty,
   listenSendData,
 } from "./buttons/sendData";
-import VerticalCollapse from "./VerticalCollapse";
+import VerticalCollapse from "../../../../../../components/VerticalCollapse";
 import { useSelector } from "react-redux";
 
 const EditorArea = React.memo(
@@ -67,8 +67,9 @@ const EditorArea = React.memo(
     useEffect(() => {
       const onSelectLink = ({ detail: { data } }) =>
         selectLink(data, editorState, setEditorState);
-      const onSendData = () =>
+      const onSendData = () => {
         listenSendData(editorState, setEditorState, onSend, format, null);
+      };
 
       EVENT_CHANGE_DATA.addEventListener(_SELECT_LINK_EVENT, onSelectLink);
       EVENT_CHANGE_DATA.addEventListener(_SEND_DATA_EVENT, onSendData);

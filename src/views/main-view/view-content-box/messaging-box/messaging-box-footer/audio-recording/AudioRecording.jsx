@@ -16,7 +16,7 @@ import { updateData } from "../../../../../../redux/data/data";
 import AudioRecordingViewer from "./AudioRecordingViewer";
 import RecordPlugin from "wavesurfer.js/plugins/record";
 
-const AudioRecording = React.memo(() => {
+const AudioRecording = () => {
   const [permission, setPermission] = useState(null);
   const show = useSelector((store) => store.data.chatBox.footer.recording);
   const targetId = useSelector((store) => store.data.discussionTarget?.id);
@@ -104,7 +104,6 @@ const AudioRecording = React.memo(() => {
       </Dialog>
     </>
   );
-});
+};
 
-AudioRecording.displayName = "AudioRecording";
-export default AudioRecording;
+export default React.memo(AudioRecording);

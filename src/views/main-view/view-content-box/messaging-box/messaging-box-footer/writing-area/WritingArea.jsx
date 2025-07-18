@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import useSmallScreen from "../../../../../../hooks/useSmallScreen";
 import EditorAreaFooter from "./EditorAreaFooter";
 import PropTypes from "prop-types";
-import VerticalCollapse from "./VerticalCollapse";
+import VerticalCollapse from "../../../../../../components/VerticalCollapse";
 import ReplyMessage from "./ReplyMessage";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";

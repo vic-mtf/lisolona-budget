@@ -26,8 +26,8 @@ export default function MessagingBoxFooter() {
   }, []);
 
   const handleSendMessage = useCallback(
-    ({ editorContent: content }) => {
-      const updatedAt = new Date().toISOString();
+    ({ editorContent: content, ...props }) => {
+      const updatedAt = new Date().toJSON();
       const sender = store.getState().user;
       const message = {
         content,
@@ -48,7 +48,9 @@ export default function MessagingBoxFooter() {
       const discussions = [{ updatedAt, messages, id: user?.id }];
       const data = { discussions };
       store.dispatch(updateArraysData({ data, user: store.getState().user }));
+
       if (replyMessage) onCancelReplyMessage();
+
       socket?.emit(
         `${user?.type}-message`,
         { to: user?.id, type: user?.type, ...message },
@@ -56,6 +58,8 @@ export default function MessagingBoxFooter() {
           console.log(response); // ok
         }
       );
+
+      console.log("props =>", props);
     },
     [replyMessage, onCancelReplyMessage, user, socket]
   );

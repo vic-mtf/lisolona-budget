@@ -1,12 +1,4 @@
-import {
-  alpha,
-  Box,
-  IconButton,
-  Paper,
-  Zoom,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { alpha, Box, IconButton, Paper, Zoom } from "@mui/material";
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
@@ -22,6 +14,7 @@ import DocThumbnail from "./doc-thumbnail/DocThumbnail";
 import ImageThumbnail from "./image-thumbnail/ImageThumbnail";
 import AudioThumbnail from "./audio-thumbnail/AudioThumbnail";
 import VideoThumbnail from "./video-thumbnail/VideoThumbnail";
+import useSmallScreen from "../../../../../../hooks/useSmallScreen";
 
 const FilesThumbnailView = React.memo(
   React.forwardRef(({ id }, ref) => {
@@ -30,8 +23,7 @@ const FilesThumbnailView = React.memo(
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
     const [getDate, setData] = useLocalStoreData();
-    const theme = useTheme();
-    const isSmall = useMediaQuery(theme.breakpoints.down("md"));
+    const matches = useSmallScreen();
 
     const checkScrollPosition = () => {
       if (containerRef.current) {
@@ -97,7 +89,7 @@ const FilesThumbnailView = React.memo(
           },
         }}>
         <Zoom
-          in={isSmall ? false : showLeftBtn}
+          in={matches ? false : showLeftBtn}
           unmountOnExit
           appear={false}
           style={{
@@ -199,7 +191,7 @@ const FilesThumbnailView = React.memo(
           </LayoutGroup>
         </Box>
         <Zoom
-          in={isSmall ? false : showRightBtn}
+          in={matches ? false : showRightBtn}
           unmountOnExit
           appear={false}
           style={{
