@@ -7,10 +7,11 @@ const ProgressSlider = ({ waveSurfer, duration, disabled }) => {
   const [currentTime, setCurrentTime] = useState(
     waveSurfer?.getCurrentTime() || 0
   );
-  const step = useMemo(() => calculateOptimalStep(0, duration), [duration]);
+  //const step = useMemo(() => calculateOptimalStep(0, duration), [duration]);
   const manualChange = useMemo(() => ({ isActive: false }), []);
 
   useEffect(() => {
+    if (disabled) return;
     const onTimeupdate = (currentTime) => {
       if (manualChange.isActive) return;
       setCurrentTime(currentTime);
@@ -19,7 +20,9 @@ const ProgressSlider = ({ waveSurfer, duration, disabled }) => {
     return () => {
       waveSurfer?.un("timeupdate", onTimeupdate);
     };
-  }, [waveSurfer, manualChange]);
+  }, [waveSurfer, manualChange, disabled]);
+
+  const factor = duration > 10 ? 1 : 10;
 
   return (
     <Box
@@ -34,13 +37,11 @@ const ProgressSlider = ({ waveSurfer, duration, disabled }) => {
       sx={{ zIndex: (t) => t.zIndex.tooltip }}>
       <Slider
         min={0}
-        max={duration}
-        value={currentTime}
-        step={step}
+        max={duration * factor}
+        value={currentTime * factor}
+        // step={duration / 1000}
         disabled={disabled}
-        onChange={(_, value) =>
-          waveSurfer?.setTime(roundToNearestStep(value, step))
-        }
+        onChange={(_, value) => waveSurfer?.setTime(value / factor)}
         sx={{
           "& .MuiSlider-rail, & .MuiSlider-track": { color: "transparent" },
           "& .MuiSlider-thumb": {

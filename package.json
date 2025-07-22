@@ -29,6 +29,7 @@
     "draftjs-to-html": "^0.9.1",
     "draftjs-to-markdown": "^0.6.0",
     "faker": "^5.5.3",
+    "fft.js": "^4.0.4",
     "framer-motion": "^11.18.2",
     "html-react-parser": "^3.0.16",
     "html-to-text": "^9.0.5",

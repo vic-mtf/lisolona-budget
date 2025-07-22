@@ -9,12 +9,13 @@ const ListeningTimer = React.memo(({ waveSurfer, duration, disabled }) => {
   const currentTime = current ?? Math.floor(duration);
 
   useEffect(() => {
+    if (disabled) return;
     const onTimeupdate = (time) => setCurrent(time);
     waveSurfer?.on("timeupdate", onTimeupdate);
     return () => {
       waveSurfer?.un("timeupdate", onTimeupdate);
     };
-  }, [waveSurfer]);
+  }, [waveSurfer, disabled]);
 
   return (
     <Typography

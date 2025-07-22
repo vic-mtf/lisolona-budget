@@ -8,59 +8,50 @@ import {
   DialogTitle,
   Slide,
 } from "@mui/material";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { updateData } from "../../../../../../redux/data/data";
 import AudioRecordingViewer from "./AudioRecordingViewer";
-import RecordPlugin from "wavesurfer.js/plugins/record";
 
 const AudioRecording = () => {
   const [permission, setPermission] = useState(null);
-  const show = useSelector((store) => store.data.chatBox.footer.recording);
+  const recording = useSelector((store) => store.data.chatBox.footer.recording);
   const targetId = useSelector((store) => store.data.discussionTarget?.id);
   const reply = useSelector(
     (store) => store.data.app.actions.messaging.reply[targetId]
   );
   const dispatch = useDispatch();
   const isPromptAllow = permission === "prompt";
-  const rootRef = useRef();
+  const openAlert = ["denied", "prompt"].includes(permission);
 
-  const waveSurferData = useMemo(() => ({ instance: null, plugins: {} }), []);
-
-  useEffect(() => {
-    if (show)
-      navigator.permissions.query({ name: "microphone" }).then((permission) => {
-        setPermission(permission.state);
-        if (permission.state === "prompt") {
-          const tempoStreamRecording = RecordPlugin.create();
-          tempoStreamRecording.startRecording().then(() => {
-            tempoStreamRecording.destroy();
-          });
-        }
-        permission.onchange = (e) => setPermission(e.target.state);
-      });
-    //rootRef.current?.focus();
-  }, [show]);
+  useLayoutEffect(() => {
+    let permission;
+    const onChange = (e) => setPermission(e.target.state);
+    const getPermission = async () => {
+      permission = await navigator.permissions.query({ name: "microphone" });
+      setPermission(permission.state);
+      permission?.addEventListener("change", onChange);
+    };
+    if (!permission) getPermission();
+  }, [recording]);
 
   return (
     <>
       <Slide
-        in={permission === "granted" && show}
+        in={permission === "granted" && recording}
         direction='up'
         unmountOnExit
         appear={false}>
         <Box
           height={`calc(100% - ${reply ? 50 : 0}px)`}
-          //translate='.2s height'
           width='100%'
           display='flex'
           position='absolute'
           component='div'
           tabIndex={1}
           autoFocus
-          ref={rootRef}
           bottom={0}
           left={0}
           sx={{
@@ -68,12 +59,12 @@ const AudioRecording = () => {
             background: (t) =>
               `linear-gradient(transparent, transparent, 40%, ${t.palette.background.paper})`,
           }}>
-          <AudioRecordingViewer waveSurferData={waveSurferData} />
+          <AudioRecordingViewer />
         </Box>
       </Slide>
-      <Dialog open={show && ["denied", "prompt"].includes(permission)}>
+      <Dialog open={recording && openAlert}>
         <DialogTitle display='flex' alignItems='center' gap={1} component='div'>
-          {isPromptAllow ? (
+          {["prompt", "granted"].includes(permission) ? (
             <ArrowUpwardOutlinedIcon sx={{ transform: "rotate(-45deg)" }} />
           ) : (
             <BlockOutlinedIcon />
@@ -90,12 +81,21 @@ const AudioRecording = () => {
           </DialogContentText>
           <DialogActions>
             <Button
-              onClick={() => {
-                dispatch(
-                  updateData({
-                    data: { chatBox: { footer: { recording: false } } },
-                  })
-                );
+              onClick={async () => {
+                let stream;
+                try {
+                  stream = await navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                  });
+                } catch (err) {
+                  console.log("err", err);
+                  dispatch(
+                    updateData({
+                      data: { chatBox: { footer: { recording: false } } },
+                    })
+                  );
+                }
+                stream?.getTracks()?.forEach((track) => track.stop());
               }}>
               {"D'accord, j'ai compris"}
             </Button>

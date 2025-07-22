@@ -25,6 +25,7 @@ const ToggleListingButton = ({ waveSurfer, duration, disabled }) => {
   };
 
   useEffect(() => {
+    if (disabled) return;
     const onPlaying = () => {
       if (!isPlaying) setIsPlaying(true);
     };
@@ -37,7 +38,7 @@ const ToggleListingButton = ({ waveSurfer, duration, disabled }) => {
       waveSurfer?.un("pause", onPause);
       waveSurfer?.un("play", onPlaying);
     };
-  }, [waveSurfer, isPlaying]);
+  }, [waveSurfer, isPlaying, disabled]);
 
   return (
     <IconButton onClick={togglePlaying} disabled={disabled}>
@@ -49,6 +50,7 @@ const ToggleListingButton = ({ waveSurfer, duration, disabled }) => {
 ToggleListingButton.propTypes = {
   waveSurfer: PropTypes.object,
   duration: PropTypes.number,
+  disabled: PropTypes.bool,
 };
 
 export default React.memo(ToggleListingButton);
