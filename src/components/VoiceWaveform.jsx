@@ -14,15 +14,17 @@ const VoiceWaveform = ({
   currentTime,
   barWidth = 4,
   gap = 4,
-  barHeightRatio = 0.9,
+  barHeightRatio = 0.8,
   barRadius = 2,
   width = 400,
-  height = 60,
+  height = 50,
   minBarHeight = 4,
   amplitudeThreshold = 0,
   onGetDuration,
+  onGetRawData,
+  rawData: rd,
 }) => {
-  const [rawData, setRawData] = useState([]);
+  const [rawData, setRawData] = useState(rd || []);
   const [duration, setDuration] = useState(0);
   const canvasRef = useRef(null);
   const theme = useTheme();
@@ -43,7 +45,7 @@ const VoiceWaveform = ({
         }
         const average = sum / blockSize;
 
-        const softwareGain = 10;
+        const softwareGain = 5;
         const amplified = Math.min(average * softwareGain, 1);
         const normalized = Math.pow(amplified, 0.8);
         const isSignificant = normalized >= amplitudeThreshold;
@@ -86,6 +88,7 @@ const VoiceWaveform = ({
         setDuration(audioBuffer.duration);
         const rawData = audioBuffer.getChannelData(0);
         setRawData(rawData);
+        if (typeof onGetRawData === "function") onGetRawData(rawData);
       } catch (e) {
         console.error("Erreur décodage audio :", e);
       }
@@ -111,9 +114,8 @@ const VoiceWaveform = ({
         console.warn("Format audio non pris en charge");
       }
     };
-
-    loadAudio();
-  }, [audioFileOrBuffer, onGetDuration]);
+    if (!Array.isArray(rd)) loadAudio();
+  }, [audioFileOrBuffer, onGetDuration, rd, onGetRawData]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -207,6 +209,7 @@ VoiceWaveform.propTypes = {
   amplitudeThreshold: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
+  onGetRawData: PropTypes.func,
   onGetDuration: PropTypes.func,
 };
 

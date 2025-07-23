@@ -1,35 +1,13 @@
-import React, { useMemo, useLayoutEffect, useRef, useState } from "react";
+import React from "react";
 import { Box } from "@mui/material";
-import WaveSurfer from "wavesurfer.js";
 import PropTypes from "prop-types";
-import ListeningTimer from "../../audio-recording/ListeningTimer";
-import ProgressSlider from "../../audio-recording/ProgressSlider";
-import ToggleListingButton from "../../audio-recording/ToggleListingButton";
-import useWaveSurferStyle from "../../../../../../../hooks/useWaveSurferStyle";
+import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
+import VoiceListenerView from "../../../../../../../components/VoiceListenerView";
 
-const VoiceThumbnail = React.forwardRef(({ src: url }, ref) => {
-  const containerRef = useRef(null);
-  const [duration, setDuration] = useState(0);
-  const waveSurferData = useMemo(() => ({ instance: null }), []);
-  const waveSurferStyle = useWaveSurferStyle();
-
-  useLayoutEffect(() => {
-    const container = containerRef.current;
-    const onGetDuration = (duration) => setDuration(duration);
-    if (!waveSurferData.instance) {
-      waveSurferData.instance = WaveSurfer.create({
-        url,
-        container,
-        ...waveSurferStyle,
-      });
-      waveSurferData.instance.on("ready", onGetDuration);
-    }
-    return () => {
-      waveSurferData.instance?.destroy();
-      waveSurferData.instance = null;
-    };
-  }, [url, waveSurferData, waveSurferStyle]);
-
+const VoiceThumbnail = React.forwardRef(({ src, id }, ref) => {
+  const key = `app.uploads.voices.${id}`;
+  const [getData, setData] = useLocalStoreData();
+  const voice = getData(key);
   return (
     <Box
       display='flex'
@@ -40,20 +18,11 @@ const VoiceThumbnail = React.forwardRef(({ src: url }, ref) => {
       height={60}
       alignItems='center'
       px={1}>
-      <ToggleListingButton
-        waveSurfer={waveSurferData.instance}
-        duration={duration}
-      />
-      <Box position='relative' flexGrow={1} sx={{ transition: ".2s all" }}>
-        <Box ref={containerRef} height={35} y={1} />
-        <ProgressSlider
-          waveSurfer={waveSurferData.instance}
-          duration={duration}
-        />
-      </Box>
-      <ListeningTimer
-        waveSurfer={waveSurferData.instance}
-        duration={duration}
+      <VoiceListenerView
+        src={src}
+        file={voice?.file}
+        rawData={voice?.rawData}
+        onGetRawData={(rawData) => setData(key, { rawData, ...voice })}
       />
     </Box>
   );

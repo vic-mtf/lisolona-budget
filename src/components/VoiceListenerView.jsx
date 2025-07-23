@@ -7,13 +7,21 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import useLocalStoreData from "../hooks/useLocalStoreData";
 
-const VoiceListenerView = ({ file, src, audioRef, disabled }) => {
+const VoiceListenerView = ({
+  file,
+  src,
+  audioRef,
+  disabled,
+  onGetRawData,
+  rawData,
+}) => {
   const [playing, setPlaying] = useState(false);
   const audio = useMemo(() => audioRef?.current || new Audio(), [audioRef]);
   const [getData, setData] = useLocalStoreData();
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const playerRef = useRef(null);
+  const holdRef = useRef(false);
 
   const value = useMemo(() => {
     const v = mapValueWithSnap(
@@ -28,22 +36,34 @@ const VoiceListenerView = ({ file, src, audioRef, disabled }) => {
   }, [currentTime, duration]);
 
   const startHold = () => {
-    if (playing && !audio.paused) audio.pause();
+    if (playing && !audio.paused) {
+      audio.pause();
+      holdRef.current = true;
+    }
   };
   const endHold = () => {
-    if (playing && audio.paused) audio.play();
+    if (holdRef.current) {
+      audio.play();
+      holdRef.current = false;
+    }
   };
 
   useEffect(() => {
     if (audio.src !== src) audio.src = src;
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
     const onFinish = () => setPlaying(false);
+    const onTogglePlay = (e) => {
+      if (!holdRef.current) setPlaying(!e.target.paused);
+    };
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("ended", onFinish);
-    audio.currentTime = currentTime;
+    audio.addEventListener("pause", onTogglePlay);
+    audio.addEventListener("play", onTogglePlay);
     return () => {
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("ended", onFinish);
+      audio.removeEventListener("pause", onTogglePlay);
+      audio.removeEventListener("play", onTogglePlay);
     };
   }, [audio, src, currentTime]);
 
@@ -60,9 +80,10 @@ const VoiceListenerView = ({ file, src, audioRef, disabled }) => {
       <IconButton
         onClick={() => {
           setPlaying((playing) => {
-            if (!playing && currentTime === duration) {
-              audio.currentTime = 0;
+            if (!playing) {
+              if (currentTime === duration) audio.currentTime = 0;
               getData("app.playings.audio")?.pause();
+              console.log(getData("app.playings.audio"));
               setData("app.playings.audio", audio);
             }
             return !playing;
@@ -80,6 +101,8 @@ const VoiceListenerView = ({ file, src, audioRef, disabled }) => {
         gap={1}>
         <VoiceWaveform
           onGetDuration={setDuration}
+          rawData={rawData}
+          onGetRawData={onGetRawData}
           currentTime={currentTime}
           audioFileOrBuffer={file}
         />
@@ -112,7 +135,9 @@ const VoiceListenerView = ({ file, src, audioRef, disabled }) => {
                 duration,
                 duration < 10 ? 0.96 : 0.985
               );
-              setCurrentTime(Math.max(0, Math.min(duration, v)));
+              const currenTime = Math.max(0, Math.min(duration, v));
+              setCurrentTime(currenTime);
+              audio.currentTime = currenTime;
             }}
             sx={{
               "& .MuiSlider-rail, & .MuiSlider-track": { color: "transparent" },
@@ -138,7 +163,6 @@ const VoiceListenerView = ({ file, src, audioRef, disabled }) => {
       <Typography
         variant='body1'
         component='div'
-        ml={1}
         sx={{
           color: disabled ? (t) => t.palette.text.disabled : "currentcolor",
         }}>
@@ -160,6 +184,13 @@ VoiceListenerView.propTypes = {
     PropTypes.instanceOf(File),
     PropTypes.instanceOf(ArrayBuffer),
     PropTypes.instanceOf(Blob),
+  ]),
+  onGetRawData: PropTypes.func,
+  rawData: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.instanceOf(Uint8Array),
+    PropTypes.instanceOf(Uint16Array),
+    PropTypes.instanceOf(Uint32Array),
   ]),
 };
 

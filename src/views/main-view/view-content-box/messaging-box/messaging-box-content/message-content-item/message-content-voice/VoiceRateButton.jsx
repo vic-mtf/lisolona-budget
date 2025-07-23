@@ -3,10 +3,12 @@ import { IconButton, Typography } from "@mui/material";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
-const VoiceRateButton = ({ waveSurfer, disabled }) => {
-  const [rate, setRate] = React.useState(waveSurfer?.getPlaybackRate() || 1);
+const VoiceRateButton = ({ audioRef, disabled }) => {
+  const [rate, setRate] = React.useState(audioRef.current?.playbackRate || 1);
   useEffect(() => {
-    waveSurfer?.setPlaybackRate(rate);
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.playbackRate = rate;
   });
   return (
     <IconButton
@@ -22,7 +24,7 @@ const VoiceRateButton = ({ waveSurfer, disabled }) => {
 };
 
 VoiceRateButton.propTypes = {
-  waveSurfer: PropTypes.object,
+  audioRef: PropTypes.object,
   disabled: PropTypes.bool,
 };
 

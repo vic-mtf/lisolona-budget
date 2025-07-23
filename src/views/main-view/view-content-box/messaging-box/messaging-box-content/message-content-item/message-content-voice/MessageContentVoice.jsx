@@ -6,107 +6,43 @@ import ListeningTimer from "../../../messaging-box-footer/audio-recording/Listen
 import ProgressSlider from "../../../messaging-box-footer/audio-recording/ProgressSlider";
 import ToggleListingButton from "../../../messaging-box-footer/audio-recording/ToggleListingButton";
 import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
-import { axios } from "../../../../../../../hooks/useAxios";
+import useAxios, { axios } from "../../../../../../../hooks/useAxios";
 import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
 import VoiceRateButton from "./VoiceRateButton";
 import WaveLoader from "../../../../../../../components/WaveLoader";
 import SendLoadingButton from "./SendLoadingButton";
 import useWaveSurferStyle from "../../../../../../../hooks/useWaveSurferStyle";
 import { useMemo } from "react";
-import { useCallback } from "react";
+import VoiceListenerView from "../../../../../../../components/VoiceListenerView";
+import { useLayoutEffect } from "react";
 
-const MessageContentVoice = React.forwardRef(({ content: src, id }, ref) => {
+const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
   const [getData, setData] = useLocalStoreData();
   const key = useMemo(() => `app.uploads.voices.${id}`, [id]);
-  const voiceData = getData(key);
-
-  const [{ loading, ready, waveSurfer, duration }, setUpdateData] = useState({
-    loading: voiceData ? false : true,
-    ready: voiceData ? true : false,
-    waveSurfer: voiceData ? voiceData.waveSurfer : null,
-    duration: voiceData ? voiceData.duration : null,
-  });
-  const waveSurferStyle = useWaveSurferStyle();
-  const [sending, setSending] = useState(Boolean(voiceData?.axios));
-  const containerRef = useRef(null);
-
-  const updateData = useCallback(
-    (data) => {
-      setData(key, { ...getData(key), ...data, id });
-    },
-    [getData, setData, key, id]
+  const voice = getData(key);
+  const audioRef = useRef(null);
+  const [{ loading, data }] = useAxios(
+    { url: content, responseType: "blob" },
+    {
+      manual: Boolean(voice?.file),
+    }
   );
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const mediaElement = waveSurfer?.getMediaElement();
-    const onGetDuration = (duration) => {
-      setUpdateData((prev) => ({ ...prev, duration, ready: true }));
-      updateData({ duration });
-    };
+  const src = useMemo(() => {
+    if (voice && !voice?.src && data) voice.src = URL.createObjectURL(data);
+    return voice?.src || null;
+  }, [voice, data]);
 
-    const onFinish = () => {
-      if (mediaElement && document.body.contains(mediaElement))
-        document.body.removeChild(mediaElement);
-      waveSurfer?.un("finish", onFinish);
-    };
+  const file = useMemo(() => {
+    if (voice && !voice?.file && data) voice.file = data;
+    return voice?.file || null;
+  }, [voice, data]);
 
-    if (loading && !voiceData?.loading) {
-      updateData({ loading: true, WaveSurfer: null });
+  console.log(file, src);
 
-      axios
-        .get(src, { responseType: "blob" })
-        .then((response) => {
-          if (response.statusText === "OK") {
-            const file = response.data;
-            const voice = {
-              file,
-              url: URL.createObjectURL(file),
-              waveSurfer: null,
-              duration: 0,
-              loading: false,
-              container: document.createElement("div"),
-            };
-            updateData(voice);
-            setUpdateData((prev) => ({ ...prev, loading: false }));
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setUpdateData((prev) => ({ ...prev, loading: false }));
-          setData(key, null);
-        });
-    } else if (voiceData?.container && !voiceData?.waveSurfer) {
-      voiceData.waveSurfer = WaveSurfer.create({
-        url: voiceData.url,
-        container: voiceData?.container,
-        ...waveSurferStyle,
-      });
-      setUpdateData((prev) => ({ ...prev, waveSurfer: voiceData.waveSurfer }));
-      updateData({});
-    }
-    waveSurfer?.on("ready", onGetDuration);
-    waveSurfer?.on("finish", onFinish);
-    waveSurfer?.on("pause", onFinish);
-    if (voiceData?.container && container?.children.length === 0) {
-      container.appendChild(voiceData.container);
-      if (mediaElement) document.body.appendChild(mediaElement);
-    }
-    return () => {
-      console.log("Bonjour le monde");
-      waveSurfer?.un("ready", onGetDuration);
-    };
-  }, [
-    src,
-    getData,
-    setData,
-    loading,
-    voiceData,
-    waveSurfer,
-    waveSurferStyle,
-    key,
-    updateData,
-  ]);
+  useLayoutEffect(() => {
+    if (!voice && loading) setData(key, { id });
+  }, [loading, voice, key, id, setData]);
 
   return (
     <Box
@@ -116,60 +52,34 @@ const MessageContentVoice = React.forwardRef(({ content: src, id }, ref) => {
       ref={ref}
       height={50}
       alignItems='center'
+      maxWidth={400}
       mt={1}
       px={1}>
-      {sending ? (
-        <SendLoadingButton id={id} setSending={setSending} />
+      {loading ? (
+        <>
+          <WaveLoader flexGrow={1} />
+        </>
       ) : (
-        <ToggleListingButton
-          waveSurfer={waveSurfer}
-          duration={duration}
-          disabled={!ready}
+        <VoiceListenerView
+          audioRef={audioRef}
+          disabled={loading}
+          src={src}
+          file={file}
+          rawData={voice?.rawData}
+          onGetRawData={(rawData) => setData(key, { rawData, ...voice, id })}
         />
       )}
-      <Box
-        position='relative'
-        flexGrow={1}
-        maxWidth={180}
-        sx={{
-          transition: ".2s all",
-          position: "relative",
-        }}>
-        <Box
-          sx={{
-            opacity: ready ? 1 : 0,
-            height: 35,
-            y: 1,
-            transition: "opacity .5s ease-in-out",
-          }}>
-          <div ref={containerRef} />
-          <ProgressSlider waveSurfer={waveSurfer} duration={duration} />
-        </Box>
-        {!ready && (
-          <WaveLoader
-            position='absolute'
-            top={0}
-            left={0}
-            display='flex'
-            height={35}
-          />
-        )}
-      </Box>
-      <ListeningTimer
-        waveSurfer={waveSurfer}
-        duration={duration}
-        disabled={!ready}
-      />
+
       <Divider
         orientation='vertical'
         flexItem
         variant='middle'
         sx={{ borderWidth: 1.5 }}
       />
-      {sending ? (
+      {loading ? (
         <MicNoneOutlinedIcon />
       ) : (
-        <VoiceRateButton waveSurfer={waveSurfer} disabled={!ready} />
+        <VoiceRateButton audioRef={audioRef} />
       )}
     </Box>
   );

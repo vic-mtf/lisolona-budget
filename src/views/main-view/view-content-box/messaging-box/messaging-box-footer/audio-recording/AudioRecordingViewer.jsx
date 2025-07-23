@@ -39,17 +39,17 @@ const AudioRecordingViewer = () => {
     const data = store.getState().data;
     const targetId = data.discussionTarget?.id;
     const files = [...(data.chatBox.footer.files[targetId] || [])];
-
+    const id = Date.now().toString(16);
     const voiceData = {
       createdAt: new Date().toJSON(),
-      id: Date.now().toString(16),
+      id,
       type: "voice",
       src,
     };
 
     files.unshift(voiceData);
 
-    setData("app.uploads.voices", { ...voiceData, file });
+    setData(`app.uploads.voices.${id}`, { ...voiceData, file });
     dispatch(
       updateData({
         data: {
@@ -94,9 +94,7 @@ const AudioRecordingViewer = () => {
   }, [stream, voiceMemo, onRecordStop]);
 
   useEffect(() => {
-    stream?.getAudioTracks().forEach((track) => {
-      track.enabled = !paused;
-    });
+    stream?.getAudioTracks().forEach((track) => (track.enabled = !paused));
   }, [stream, paused]);
 
   return (
