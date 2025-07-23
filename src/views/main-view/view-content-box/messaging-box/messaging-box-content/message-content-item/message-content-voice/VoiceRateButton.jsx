@@ -3,20 +3,21 @@ import { IconButton, Typography } from "@mui/material";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
-const VoiceRateButton = ({ audioRef, disabled }) => {
-  const [rate, setRate] = React.useState(audioRef.current?.playbackRate || 1);
+const VoiceRateButton = ({ audio, disabled }) => {
+  const [rate, setRate] = React.useState(audio?.playbackRate || 1);
+
   useEffect(() => {
-    const audio = audioRef.current;
     if (!audio) return;
     audio.playbackRate = rate;
-  });
+  }, [audio, rate]);
+
   return (
     <IconButton
       disabled={disabled}
       onClick={() => {
         setRate((rate) => (rate === 1 ? 1.5 : rate === 1.5 ? 2 : 1));
       }}>
-      <Typography height={20} minWidth={20} sx={{ color: "currentcolor" }}>
+      <Typography width={25} sx={{ color: "currentcolor" }}>
         {rate}x
       </Typography>
     </IconButton>
@@ -24,8 +25,8 @@ const VoiceRateButton = ({ audioRef, disabled }) => {
 };
 
 VoiceRateButton.propTypes = {
-  audioRef: PropTypes.object,
   disabled: PropTypes.bool,
+  audio: PropTypes.object,
 };
 
 export default React.memo(VoiceRateButton);

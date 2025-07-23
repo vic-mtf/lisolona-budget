@@ -24,6 +24,7 @@ import {
 } from "./buttons/sendData";
 import VerticalCollapse from "../../../../../../components/VerticalCollapse";
 import { useSelector } from "react-redux";
+import store from "../../../../../../redux/store";
 
 const EditorArea = React.memo(
   ({
@@ -68,7 +69,11 @@ const EditorArea = React.memo(
       const onSelectLink = ({ detail: { data } }) =>
         selectLink(data, editorState, setEditorState);
       const onSendData = () => {
-        listenSendData(editorState, setEditorState, onSend, format, null);
+        const targetId = store.getState().data.discussionTarget?.id;
+        const files = [
+          ...(store.getState().data.chatBox.footer.files[targetId] || []),
+        ];
+        listenSendData(editorState, setEditorState, onSend, format, files);
       };
 
       EVENT_CHANGE_DATA.addEventListener(_SELECT_LINK_EVENT, onSelectLink);

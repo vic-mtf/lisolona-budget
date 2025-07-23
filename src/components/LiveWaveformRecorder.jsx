@@ -144,7 +144,7 @@ const LiveWaveformRecorder = ({
 
     return () => {
       cancelAnimationFrame(animationRef.current);
-      audioCtx?.close();
+      if (audioCtx?.state && audioCtx?.state !== "closed") audioCtx.close();
       isRunning = false;
     };
   }, [

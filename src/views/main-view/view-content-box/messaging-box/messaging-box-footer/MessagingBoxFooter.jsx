@@ -10,6 +10,7 @@ import store from "../../../../../redux/store";
 import { updateArraysData, updateData } from "../../../../../redux/data/data";
 import useSocket from "../../../../../hooks/useSocket";
 import AudioRecording from "./audio-recording/AudioRecording";
+import useSendFiles from "../../../../../hooks/useSendFiles";
 
 export default function MessagingBoxFooter() {
   const socket = useSocket();
@@ -18,6 +19,7 @@ export default function MessagingBoxFooter() {
   const replyMessage = useSelector(
     (store) => store.data.app.actions.messaging.reply[user?.id]
   );
+  const onSendFiles = useSendFiles();
 
   const onCancelReplyMessage = useCallback(() => {
     const id = store.getState().data.discussionTarget.id;
@@ -26,9 +28,10 @@ export default function MessagingBoxFooter() {
   }, []);
 
   const handleSendMessage = useCallback(
-    ({ editorContent: content, ...props }) => {
+    ({ editorContent: content, data: files }) => {
       const updatedAt = new Date().toJSON();
       const sender = store.getState().user;
+      const messages = [];
       const message = {
         content,
         date: updatedAt,
@@ -36,32 +39,23 @@ export default function MessagingBoxFooter() {
         type: "text",
         status: "sending",
       };
-      const messages = [
-        {
-          sender,
-          createdAt: updatedAt,
-          updatedAt,
-          ...message,
-        },
-      ];
-
+      if (content) {
+        socket?.emit(
+          `${user?.type}-message`,
+          { to: user?.id, type: user?.type, ...message },
+          (response) => {
+            console.trace(response); // ok
+          }
+        );
+        messages.push(message);
+      }
+      if (files?.length) messages.push(...onSendFiles(files));
       const discussions = [{ updatedAt, messages, id: user?.id }];
       const data = { discussions };
       store.dispatch(updateArraysData({ data, user: store.getState().user }));
-
       if (replyMessage) onCancelReplyMessage();
-
-      socket?.emit(
-        `${user?.type}-message`,
-        { to: user?.id, type: user?.type, ...message },
-        (response) => {
-          console.log(response); // ok
-        }
-      );
-
-      console.log("props =>", props);
     },
-    [replyMessage, onCancelReplyMessage, user, socket]
+    [replyMessage, onCancelReplyMessage, user, socket, onSendFiles]
   );
 
   return (

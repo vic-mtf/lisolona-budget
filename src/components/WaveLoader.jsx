@@ -1,15 +1,34 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
+import useElementSize from "../hooks/useElementSize"; // ou useElementSize
+
+const BAR_WIDTH = 4;
+const GAP = 4;
 
 const WaveLoader = React.forwardRef((props, ref) => {
+  const [parentRef, size] = useElementSize();
+  const { width = 0 } = size;
+
+  const barCount = useMemo(() => {
+    return Math.floor(width / (BAR_WIDTH + GAP));
+  }, [width]);
+
   return (
     <Box
-      ref={ref}
+      ref={(node) => {
+        [parentRef, ref].forEach((r) => {
+          if (typeof r === "function") r(node);
+          else if (r && Object.prototype.hasOwnProperty.call(r, "current"))
+            r.current = node;
+        });
+      }}
       {...props}
       sx={{
         display: "flex",
-        gap: 0.5,
+        gap: `${GAP}px`,
         alignItems: "center",
+        height: "100%",
+        width: "100%",
         "@keyframes wave": {
           "0%": {
             transform: "scaleY(1)",
@@ -25,11 +44,11 @@ const WaveLoader = React.forwardRef((props, ref) => {
           },
         },
       }}>
-      {[...Array(20)].map((_, i) => (
+      {Array.from({ length: barCount }).map((_, i) => (
         <Box
           key={i}
           sx={{
-            width: 4,
+            width: `${BAR_WIDTH}px`,
             height: `${10 + Math.random() * 10}px`,
             backgroundColor: (t) => t.palette.action.disabled,
             borderRadius: 1,
@@ -43,5 +62,4 @@ const WaveLoader = React.forwardRef((props, ref) => {
 });
 
 WaveLoader.displayName = "WaveLoader";
-
 export default WaveLoader;

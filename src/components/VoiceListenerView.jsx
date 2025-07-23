@@ -10,16 +10,19 @@ import useLocalStoreData from "../hooks/useLocalStoreData";
 const VoiceListenerView = ({
   file,
   src,
-  audioRef,
+  audio: aux,
   disabled,
   onGetRawData,
+  duration: d,
   rawData,
+  uploading,
+  uploadingProgressButton,
 }) => {
-  const [playing, setPlaying] = useState(false);
-  const audio = useMemo(() => audioRef?.current || new Audio(), [audioRef]);
+  const [playing, setPlaying] = useState(aux && !aux.paused);
+  const audio = useMemo(() => aux || new Audio(), [aux]);
   const [getData, setData] = useLocalStoreData();
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(d || 0);
+  const [currentTime, setCurrentTime] = useState(audio.currentTime || 0);
   const playerRef = useRef(null);
   const holdRef = useRef(false);
 
@@ -71,27 +74,35 @@ const VoiceListenerView = ({
     if (playing && audio.paused) audio.play();
     if (!playing && !audio.paused) audio.pause();
     return () => {
-      if (playing && !audio.paused) audio.pause();
+      if (playing && !audio.paused && !aux) {
+        audio.pause();
+        audio.remove();
+      }
     };
-  }, [audio, playing]);
+  }, [audio, playing, aux]);
 
   return (
     <>
-      <IconButton
-        onClick={() => {
-          setPlaying((playing) => {
-            if (!playing) {
-              if (currentTime === duration) audio.currentTime = 0;
-              getData("app.playings.audio")?.pause();
-              console.log(getData("app.playings.audio"));
-              setData("app.playings.audio", audio);
-            }
-            return !playing;
-          });
-          playerRef.current ??= true;
-        }}>
-        {playing ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
-      </IconButton>
+      <div style={{ position: "relative" }}>
+        {uploading ? (
+          uploadingProgressButton
+        ) : (
+          <IconButton
+            onClick={() => {
+              setPlaying((playing) => {
+                if (!playing) {
+                  if (currentTime === duration) audio.currentTime = 0;
+                  getData("app.playings.audio")?.pause();
+                  setData("app.playings.audio", audio);
+                }
+                return !playing;
+              });
+              playerRef.current ??= true;
+            }}>
+            {playing ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
+          </IconButton>
+        )}
+      </div>
       <Box
         height='100%'
         width='100%'
@@ -100,11 +111,14 @@ const VoiceListenerView = ({
         flexDirection='row'
         gap={1}>
         <VoiceWaveform
-          onGetDuration={setDuration}
           rawData={rawData}
-          onGetRawData={onGetRawData}
+          onGetRawData={(data) => {
+            if (duration !== data.duration) setDuration(data.duration);
+            if (typeof onGetRawData === "function") onGetRawData(data);
+          }}
           currentTime={currentTime}
           audioFileOrBuffer={file}
+          duration={duration}
         />
         <Box
           position='absolute'
@@ -174,12 +188,11 @@ const VoiceListenerView = ({
   );
 };
 
-VoiceListenerView.displayName = "VoiceListenerView";
-
 VoiceListenerView.propTypes = {
   src: PropTypes.string,
-  audioRef: PropTypes.object,
+  audio: PropTypes.instanceOf(Audio),
   disabled: PropTypes.bool,
+  duration: PropTypes.number,
   file: PropTypes.oneOfType([
     PropTypes.instanceOf(File),
     PropTypes.instanceOf(ArrayBuffer),
@@ -191,7 +204,15 @@ VoiceListenerView.propTypes = {
     PropTypes.instanceOf(Uint8Array),
     PropTypes.instanceOf(Uint16Array),
     PropTypes.instanceOf(Uint32Array),
+    PropTypes.instanceOf(Float32Array),
+    PropTypes.instanceOf(Float64Array),
+    PropTypes.instanceOf(Int8Array),
+    PropTypes.instanceOf(Int16Array),
+    PropTypes.instanceOf(Int32Array),
+    PropTypes.instanceOf(Uint8ClampedArray),
   ]),
+  uploading: PropTypes.bool,
+  uploadingProgressButton: PropTypes.node,
 };
 
 function mapValueWithSnap(
@@ -209,4 +230,5 @@ function mapValueWithSnap(
   if (ratio >= snapThreshold) return outMax;
   return mapped;
 }
+
 export default React.memo(VoiceListenerView);

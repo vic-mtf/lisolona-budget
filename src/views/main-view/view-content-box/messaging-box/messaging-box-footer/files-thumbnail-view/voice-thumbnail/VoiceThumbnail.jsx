@@ -8,6 +8,7 @@ const VoiceThumbnail = React.forwardRef(({ src, id }, ref) => {
   const key = `app.uploads.voices.${id}`;
   const [getData, setData] = useLocalStoreData();
   const voice = getData(key);
+
   return (
     <Box
       display='flex'
@@ -22,7 +23,9 @@ const VoiceThumbnail = React.forwardRef(({ src, id }, ref) => {
         src={src}
         file={voice?.file}
         rawData={voice?.rawData}
-        onGetRawData={(rawData) => setData(key, { rawData, ...voice })}
+        onGetRawData={({ rawData, duration }) =>
+          setData(key, { ...voice, rawData, duration })
+        }
       />
     </Box>
   );

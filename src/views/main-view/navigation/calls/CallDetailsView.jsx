@@ -58,8 +58,6 @@ const CallDetailsView = () => {
   const isExistingCall = ["running", "scheduled"].includes(call?.status);
   const buttonActionProps = useMemo(() => getButtonProps(call), [call]);
 
-  console.log(call);
-
   return (
     <Dialog open={open} fullScreen={matches}>
       <Box
@@ -172,7 +170,7 @@ const CallDetailsView = () => {
                   description: `GEID | Lisolo connecte, forme et propulse les talents en leur offrant des outils numériques accessibles et puissants, au service d’une communauté engagée dans l’innovation et le partage.`,
                   theme,
                 }).then((blob) => {
-                  console.log(blob);
+                  //console.log(blob);
                 });
             }}>
             {buttonActionProps.text}

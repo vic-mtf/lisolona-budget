@@ -1,10 +1,4 @@
-import React, {
-  useLayoutEffect,
-  useState,
-  useMemo,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useLayoutEffect, useState, useMemo, useRef } from "react";
 import { useTheme, Box } from "@mui/material";
 import PropTypes from "prop-types";
 import useElementSize from "../hooks/useElementSize";
@@ -20,12 +14,12 @@ const VoiceWaveform = ({
   height = 50,
   minBarHeight = 4,
   amplitudeThreshold = 0,
-  onGetDuration,
   onGetRawData,
+  duration: d,
   rawData: rd,
 }) => {
   const [rawData, setRawData] = useState(rd || []);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(d || 0);
   const canvasRef = useRef(null);
   const theme = useTheme();
 
@@ -83,12 +77,13 @@ const VoiceWaveform = ({
         const audioCtx = new (window.AudioContext ||
           window.webkitAudioContext)();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-        if (typeof onGetDuration === "function")
-          onGetDuration(audioBuffer.duration);
-        setDuration(audioBuffer.duration);
+        const duration = audioBuffer.duration;
+        setDuration(duration);
         const rawData = audioBuffer.getChannelData(0);
         setRawData(rawData);
-        if (typeof onGetRawData === "function") onGetRawData(rawData);
+        if (typeof onGetRawData === "function")
+          onGetRawData({ rawData, duration });
+        if (audioCtx?.state && audioCtx?.state !== "closed") audioCtx.close();
       } catch (e) {
         console.error("Erreur décodage audio :", e);
       }
@@ -115,9 +110,9 @@ const VoiceWaveform = ({
       }
     };
     if (!Array.isArray(rd)) loadAudio();
-  }, [audioFileOrBuffer, onGetDuration, rd, onGetRawData]);
+  }, [audioFileOrBuffer, rd, onGetRawData]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !waveformData.length) return;
 
@@ -211,6 +206,19 @@ VoiceWaveform.propTypes = {
   height: PropTypes.number,
   onGetRawData: PropTypes.func,
   onGetDuration: PropTypes.func,
+  rawData: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.instanceOf(Uint8Array),
+    PropTypes.instanceOf(Uint16Array),
+    PropTypes.instanceOf(Uint32Array),
+    PropTypes.instanceOf(Float32Array),
+    PropTypes.instanceOf(Float64Array),
+    PropTypes.instanceOf(Int8Array),
+    PropTypes.instanceOf(Int16Array),
+    PropTypes.instanceOf(Int32Array),
+    PropTypes.instanceOf(Uint8ClampedArray),
+  ]),
+  duration: PropTypes.number,
 };
 
 VoiceWaveformWrapper.displayName = "VoiceWaveform";

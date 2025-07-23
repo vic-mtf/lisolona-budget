@@ -88,7 +88,7 @@ const AudioRecording = () => {
                     audio: true,
                   });
                 } catch (err) {
-                  console.log("err", err);
+                  console.error("err", err);
                   dispatch(
                     updateData({
                       data: { chatBox: { footer: { recording: false } } },

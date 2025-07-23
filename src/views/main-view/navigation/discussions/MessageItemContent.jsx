@@ -13,6 +13,7 @@ import getFullName from "../../../../utils/getFullName";
 
 const MessageItemContent = React.memo(({ message, type }) => {
   const id = useSelector((store) => store.user.id);
+  console.log("render", message);
   const sender = useMemo(() => message?.sender, [message?.sender]);
   let senderName = useMemo(
     () =>
@@ -26,7 +27,12 @@ const MessageItemContent = React.memo(({ message, type }) => {
     [id, sender, type]
   );
 
-  const Icon = messageIconTypes[message?.subType?.toLowerCase() || "document"];
+  const Icon =
+    messageIconTypes[
+      message?.type === "voice"
+        ? "voice"
+        : message?.subType?.toLowerCase() || "document"
+    ];
   if (!message || typeof message === "string")
     return message || "Nouvelle discussion";
 

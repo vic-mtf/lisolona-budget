@@ -92,7 +92,6 @@ const menuItems = [
     icon: RemoveCircleOutlineIcon,
     disabled: false,
     onAction(user) {
-      console.log(user);
       store.dispatch({
         type: "data/updateData",
         payload: {
