@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import { useMemo, useState } from "react";
 import { colorFromId } from "../utils/color";
 import SignalBadge from "./SignalBadge";
+import { useLayoutEffect } from "react";
+import useLocalStoreData from "../hooks/useLocalStoreData";
+import { axios } from "../hooks/useAxios";
 
 const ListAvatar = ({
   src,
@@ -14,8 +17,23 @@ const ListAvatar = ({
   sx,
   ...otherProps
 }) => {
-  const [opacity, setOpacity] = useState(0);
   const style = useMemo(() => colorFromId(id), [id]);
+  const [getData, setData] = useLocalStoreData();
+  const key = `app.downloads.images.${id}`;
+  const [url, setUrl] = useState(() => getData(key));
+
+  useLayoutEffect(() => {
+    const downloadImage = async () => {
+      const response = await axios.get(src, { responseType: "blob" });
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      const uri = URL.createObjectURL(blob);
+      setUrl(uri);
+      setData(key, uri);
+    };
+    if (src && !url) downloadImage();
+  }, [src, url, setData, key]);
 
   return (
     <SignalBadge
@@ -25,13 +43,13 @@ const ListAvatar = ({
       invisible={active ? false : invisible}
       sx={{ position: "relative", ...SignalBadgeProps?.sx }}
       {...SignalBadgeProps}>
-      {!opacity && <Avatar sx={{ ...style, ...sx }} {...otherProps} key={id} />}
+      {!url && <Avatar sx={{ ...style, ...sx }} {...otherProps} key={id} />}
       {src && (
         <Avatar
-          src={src}
+          src={url}
           sx={{
-            opacity,
-            ...(!opacity && {
+            opacity: url ? 1 : 0,
+            ...(!url && {
               position: "absolute",
               top: 0,
               left: 0,
@@ -48,12 +66,7 @@ const ListAvatar = ({
               }),
             ...sx,
           }}
-          slotProps={{
-            img: {
-              loading: "lazy",
-              onLoad: () => setOpacity(1),
-            },
-          }}
+          slotProps={{ img: { loading: "lazy" } }}
           {...otherProps}
         />
       )}

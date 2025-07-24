@@ -4,21 +4,29 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import PropTypes from "prop-types";
 import { useLayoutEffect } from "react";
+import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
 
-const UploadingProgressVoiceButton = ({ request, setRequest }) => {
-  const [progressing, setProgressing] = React.useState(request?.loading);
+const UploadingProgressVoiceButton = ({ voice, setUploading, dataKey }) => {
+  const [getData, setData] = useLocalStoreData();
+  const [progressing, setProgressing] = React.useState(voice?.request?.loading);
 
   useLayoutEffect(() => {
+    const request = getData(dataKey)?.request || voice?.request;
     if (request)
       request.onLoaded = (success) => {
-        console.log("request.onLoaded => ", success);
-        if (success) setRequest(null);
-        else setProgressing(false);
+        if (success) {
+          voice.request = null;
+          setUploading(false);
+        } else {
+          setProgressing(false);
+          voice.request.loading = false;
+        }
+        console.log("success =>", success);
       };
     return () => {
       if (request) request.onLoaded = null;
     };
-  }, [request, setRequest]);
+  });
 
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -38,13 +46,15 @@ const UploadingProgressVoiceButton = ({ request, setRequest }) => {
       <Box>
         <IconButton
           sx={{ ...(progressing && { borderRadius: "50%" }) }}
-          onClick={() =>
+          onClick={() => {
             setProgressing((progressing) => {
+              const request = voice?.request;
               if (progressing) request?.cancel();
               else request?.sendVoice();
-              return !progressing;
-            })
-          }>
+              request.loading = !progressing;
+              return request.loading;
+            });
+          }}>
           {progressing ? <CloseOutlinedIcon /> : <FileUploadOutlinedIcon />}
         </IconButton>
       </Box>
@@ -55,7 +65,8 @@ const UploadingProgressVoiceButton = ({ request, setRequest }) => {
 UploadingProgressVoiceButton.displayName = "UploadingProgressVoiceButton";
 
 UploadingProgressVoiceButton.propTypes = {
-  request: PropTypes.object,
-  setRequest: PropTypes.func,
+  setUploading: PropTypes.func,
+  voice: PropTypes.object,
+  dataKey: PropTypes.string,
 };
 export default UploadingProgressVoiceButton;

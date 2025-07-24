@@ -4,7 +4,8 @@ import { Box, CircularProgress, Fade } from "@mui/material";
 
 import VideoControls from "./video-controls/VideoControls";
 
-const VideoContent = React.memo(({ src }) => {
+const VideoContent = React.memo(({ content }) => {
+  const src = new URL(content, import.meta.env.VITE_SERVER_BASE_URL);
   const [loading, setLoading] = useState(true);
   const videoRef = useRef();
   const mediaContainerRef = useRef();
@@ -69,7 +70,7 @@ const VideoContent = React.memo(({ src }) => {
 });
 VideoContent.displayName = "VideoContent";
 VideoContent.propTypes = {
-  src: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
+  content: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
   mode: PropTypes.oneOf(["normal", "zoom"]),
 };
 

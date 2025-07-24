@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useLayoutEffect } from "react";
+import { List } from "@mui/material";
 import { useSelector } from "react-redux";
 import { VList } from "virtua";
 import PropTypes from "prop-types";
@@ -9,7 +10,7 @@ import StickToBottomButton from "./StickToBottomButton";
 import { useCallback } from "react";
 import { useState } from "react";
 
-const MessageList = React.memo(({ user, VListRef, data }) => {
+const MessageList = ({ user, VListRef, data }) => {
   const [shouldStickToBottom, setShouldStickToBottom] = useState(false);
   const VListStateMemo = useMemo(
     () => ({
@@ -38,8 +39,9 @@ const MessageList = React.memo(({ user, VListRef, data }) => {
   useEffect(() => {
     const message = messages[messages.length - 1];
     if (!VListRef.current) return;
-    if (VListStateMemo.autoScrollToBottom || message?.status === "sending")
+    if (VListStateMemo.autoScrollToBottom || message?.status === "sending") {
       onScrollToBottom();
+    }
   }, [VListStateMemo, VListRef, onScrollToBottom, messages]);
 
   return (
@@ -56,7 +58,8 @@ const MessageList = React.memo(({ user, VListRef, data }) => {
         onScrollToBottom={onScrollToBottom}
         shouldStickToBottom={shouldStickToBottom}
       />
-      <VList
+      <List
+        component={VList}
         ref={VListRef}
         style={{ flex: 1, paddingTop: 100 }}
         reverse
@@ -82,7 +85,7 @@ const MessageList = React.memo(({ user, VListRef, data }) => {
           const variant = message?.variant;
           const date = message?.date;
           const grouped = message?.sender?.id === nextMessage?.sender?.id;
-          const id = message?.id || message?.clientId || message?.date;
+          const id = message?.clientId || message?.id || message?.date;
           return (
             <MessageItem
               key={id}
@@ -96,12 +99,10 @@ const MessageList = React.memo(({ user, VListRef, data }) => {
             />
           );
         })}
-      </VList>
+      </List>
     </div>
   );
-});
-
-MessageList.displayName = "MessageList";
+};
 
 MessageList.propTypes = {
   user: PropTypes.object,
@@ -109,4 +110,4 @@ MessageList.propTypes = {
   VListRef: PropTypes.object,
 };
 
-export default MessageList;
+export default React.memo(MessageList);

@@ -35,11 +35,13 @@ const AudioRecordingViewer = () => {
   };
 
   const onRecordStop = useCallback(() => {
+    const storeData = store.getState();
     const { file, src } = voiceMemo;
-    const data = store.getState().data;
+    const data = storeData.data;
     const targetId = data.discussionTarget?.id;
     const files = [...(data.chatBox.footer.files[targetId] || [])];
-    const id = Date.now().toString(16);
+    const randomId = Math.random().toString(16);
+    const id = Date.now().toString(16) + storeData.user.id + randomId;
     const voiceData = {
       createdAt: new Date().toJSON(),
       id,

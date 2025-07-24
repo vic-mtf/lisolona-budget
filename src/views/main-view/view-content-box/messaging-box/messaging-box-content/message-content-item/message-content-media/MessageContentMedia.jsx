@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
 import { updateData } from "../../../../../../../redux/data/data";
 import store from "../../../../../../../redux/store";
+import ImageLikeSkeleton from "../../../../../../../components/ImageLikeSkeleton";
+import ImageContent from "./image-content/ImageContent";
 
 const MessageContentMedia = React.memo(({ content, id, subType }) => {
   const url = new URL(content, import.meta.env.VITE_SERVER_BASE_URL);
@@ -50,24 +52,27 @@ const MessageContentMedia = React.memo(({ content, id, subType }) => {
           },
         }}>
         <Box width={280} height={280} minHeight={200} minWidth={200}>
-          <Box
-            component={type}
-            src={url}
-            srcSet={url}
-            loading='eager'
-            ref={mediaTagRef}
-            muted
-            preload='metadata'
-            sx={{
-              objectFit: "cover",
-              p: 0,
-              m: 0,
-              transition: "opacity .2s ease-in-out",
-              display: "flex",
-              height: "100%",
-              width: "100%",
-            }}
-          />
+          {type === "img" && <ImageContent content={content} id={id} />}
+          {type === "video" && (
+            <Box
+              component={type}
+              src={url}
+              srcSet={url}
+              loading='eager'
+              ref={mediaTagRef}
+              muted
+              preload='metadata'
+              sx={{
+                objectFit: "cover",
+                p: 0,
+                m: 0,
+                transition: "opacity .2s ease-in-out",
+                display: "flex",
+                height: "100%",
+                width: "100%",
+              }}
+            />
+          )}
         </Box>
 
         <Box

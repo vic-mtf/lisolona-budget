@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 
 export const sortMessageByDate = (messages = [], reverse) => {
   return [...messages].sort((a, b) => {
-    const dateA = new Date(a.createdAt);
-    const dateB = new Date(b.createdAt);
+    const dateA = new Date(a.createdAt || a.date || a.updatedAt);
+    const dateB = new Date(b.createdAt || a.date || a.updatedAt);
     return (reverse ? -1 : 1) * (dateA - dateB);
   });
 };

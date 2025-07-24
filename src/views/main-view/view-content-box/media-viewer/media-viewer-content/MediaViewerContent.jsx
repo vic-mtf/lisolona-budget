@@ -131,7 +131,7 @@ const MediaViewerContent = React.memo(({ zoom }) => {
             in={index === i}
             appear={false}
             direction={directions[index === i ? "enter" : "exit"]}
-            //   unmountOnExit
+            unmountOnExit
             timeout={300}
             style={{
               zIndex: index === i ? 1 : 0,
@@ -144,7 +144,8 @@ const MediaViewerContent = React.memo(({ zoom }) => {
               alignItems='center'
               overflow='hidden'>
               <Box
-                src={new URL(content, import.meta.env.VITE_SERVER_BASE_URL)}
+                content={content}
+                id={clientId || id}
                 mode={zoom ? "zoom" : "normal"}
                 component={subType === "IMAGE" ? ImageContent : VideoContent}
               />

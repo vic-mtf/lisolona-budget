@@ -26,6 +26,7 @@ const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
   }, [id, getData]);
 
   const voice = getData(key);
+
   const audio = useMemo(() => voice?.audio || new Audio(), [voice]);
   const [uploading, setUploading] = useState(Boolean(voice?.request));
   const [{ loading, data }] = useAxios(
@@ -121,8 +122,9 @@ const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
               uploading={uploading}
               uploadingProgressButton={
                 <UploadingProgressVoiceButton
-                  request={voice?.request}
-                  setRequest={setUploading}
+                  voice={voice}
+                  setUploading={setUploading}
+                  dataKey={key}
                 />
               }
             />

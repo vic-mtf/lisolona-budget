@@ -13,7 +13,6 @@ import getFullName from "../../../../utils/getFullName";
 
 const MessageItemContent = React.memo(({ message, type }) => {
   const id = useSelector((store) => store.user.id);
-  console.log("render", message);
   const sender = useMemo(() => message?.sender, [message?.sender]);
   let senderName = useMemo(
     () =>

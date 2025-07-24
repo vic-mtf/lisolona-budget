@@ -13,7 +13,7 @@ const useNewMessage = () => {
     const handleNewMessage = ({ createdBy, ...data }) => {
       const discussion = { ...data };
       const user = store.getState().user;
-
+      console.log("new message => ", discussion);
       const members = discussion?.members?.map(({ _id, role: level }) => ({
         ..._id,
         level,

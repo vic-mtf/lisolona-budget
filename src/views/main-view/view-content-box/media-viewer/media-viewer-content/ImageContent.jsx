@@ -1,8 +1,28 @@
 import PropTypes from "prop-types";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import ZoomViewerContent from "./ZoomViewerContent";
+import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
+import useAxios from "../../../../../hooks/useAxios";
+import { useState } from "react";
+import { useLayoutEffect } from "react";
 
-const ImageContent = ({ src, mode = "normal" }) => {
+const ImageContent = ({ content, mode = "normal", id }) => {
+  const [getData, setData] = useLocalStoreData();
+  const key = `app.downloads.images.${id}`;
+  const [url, setUrl] = useState(() => getData(key)?.src);
+  const [{ data, loading }] = useAxios(
+    { url: content, responseType: "blob" },
+    { manual: Boolean(url) }
+  );
+
+  useLayoutEffect(() => {
+    if (data && !url) {
+      const src = URL.createObjectURL(data);
+      setData(key, { src });
+      setUrl(src);
+    }
+  }, [data, url, setData, key]);
+
   return (
     <Box
       position='absolute'
@@ -16,23 +36,28 @@ const ImageContent = ({ src, mode = "normal" }) => {
       overflow='hidden'
       component={ZoomViewerContent}
       mode={mode}>
-      <img
-        src={src}
-        loading='lazy'
-        draggable={false}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-        }}
-      />
+      {loading ? (
+        <CircularProgress color='inherit' />
+      ) : (
+        <img
+          src={url}
+          loading='lazy'
+          draggable={false}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+          }}
+        />
+      )}
     </Box>
   );
 };
 
 ImageContent.propTypes = {
-  src: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
+  content: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
   mode: PropTypes.oneOf(["normal", "zoom"]),
+  id: PropTypes.string.isRequired,
 };
 
 export default ImageContent;

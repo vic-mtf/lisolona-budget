@@ -20,6 +20,7 @@ const MessagingProvider = React.memo(({ children }) => {
     () => store.getState().data.app.contacts.find(({ id }) => id === user?.id),
     [user?.id]
   );
+
   const placeholder = useMemo(
     () =>
       `Écrire un message ${

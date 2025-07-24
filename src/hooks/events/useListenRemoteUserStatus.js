@@ -7,15 +7,15 @@ const useListenRemoteUserStatus = (userId) => {
   const [getData, setData] = useLocalStoreData();
   const [status, setStatus] = useState(
     getData((data) => {
-      const value = data?.app?.contacts?.status;
-      return value ? value[userId] : null;
+      const values = data?.app?.contacts?.status;
+      return values ? values[userId] : null;
     })
   );
   const socket = useSocket();
 
   useEffect(() => {
     const updateStatus = (status, id) =>
-      setData("app.contacts.status." + id, status);
+      setData(`app.contacts.status.${id}`, status);
     const status = getData((data) => data.app.contacts.status[userId]);
 
     if (userId && !status) {
