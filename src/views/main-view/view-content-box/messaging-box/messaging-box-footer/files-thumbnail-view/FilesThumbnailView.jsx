@@ -164,7 +164,6 @@ const FilesThumbnailView = React.memo(
                       {file?.type === "doc" && <DocThumbnail {...file} />}
                       {file?.type === "image" && <ImageThumbnail {...file} />}
                       {file?.type === "video" && <VideoThumbnail {...file} />}
-
                       <Box
                         className='delete-elem-icon'
                         sx={{

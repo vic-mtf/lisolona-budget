@@ -14,6 +14,7 @@ import store from "../../../../../../../redux/store";
 import { updateData } from "../../../../../../../redux/data/data";
 import PropTypes from "prop-types";
 import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
+import getRandomId from "../../../../../../../utils/getRandomId";
 
 const AddFilesButton = ({ disabled }) => {
   const notifications = useNotifications();
@@ -28,8 +29,10 @@ const AddFilesButton = ({ disabled }) => {
       ...supportedDocumentExtensions,
     ]);
     const rawFiles = await getFile({ multiple: true, accept });
-    const id = store.getState().data.discussionTarget.id;
-    const memoFiles = store.getState().data.chatBox.footer.files[id] || [];
+    const storeData = store.getState();
+    const sender = storeData.user;
+    const id = storeData.data.discussionTarget.id;
+    const memoFiles = storeData.data.chatBox.footer.files[id] || [];
     let countExistFile = 0;
 
     const filteredFiles = rawFiles.filter((file) => {
@@ -40,30 +43,35 @@ const AddFilesButton = ({ disabled }) => {
       return !found;
     });
 
-    if (rawFiles.length + memoFiles.length > 10) {
+    if (rawFiles.length + memoFiles.length > 10)
       notifications.show(texts.errors.filesLimit, {
         severity: "error",
         key: "files-limit",
         autoHideDuration: 3000,
       });
-    }
 
     const slicedFiles = filteredFiles.slice(0, 10 - memoFiles.length);
-    const files = slicedFiles.map((file, index) => {
-      const id = (Date.now() + index).toString(16).toLowerCase();
-      const type = getType(file) === "application" ? "document" : getType(file);
-      setData(`app.uploads.${type}s${id}`, file);
+
+    const files = slicedFiles.map((file, i) => {
+      const id = getRandomId(sender.id + i);
+      const type = getType(file) === "application" ? "doc" : getType(file);
+      const name = getName(file.name);
+      const ext = getExtension(file.name);
+      const src = window.URL.createObjectURL(file);
+
+      const fileData = { id, type, src, name, ext };
+
+      setData(`app.uploads.${type}s.${id}`, { ...fileData, file });
 
       return {
         id,
-        url: window.URL.createObjectURL(file).toString(),
-        name: getName(file.name),
-        type: type === "document" ? "doc" : type,
-        ext: getExtension(file.name),
+        name,
+        type,
+        ext,
         size: file.size,
+        url: src.toString(),
       };
     });
-    console.log("files", files);
 
     store.dispatch(
       updateData({

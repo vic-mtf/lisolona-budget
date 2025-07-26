@@ -6,8 +6,19 @@ const HighlightWord = ({ text = "", word = "" }) => {
   const safeWord = String(word).trim();
 
   if (!safeWord) {
-    return <span style={{ whiteSpace: "pre-wrap" }}>{safeText}</span>;
+    return (
+      <span
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "block",
+        }}>
+        {safeText}
+      </span>
+    );
   }
+
   const keywords = [...new Set([safeWord, ...safeWord.split(/\s+/)])];
   const escapedWords = keywords.map((w) =>
     w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
@@ -16,12 +27,22 @@ const HighlightWord = ({ text = "", word = "" }) => {
   const parts = safeText.split(regex);
 
   return (
-    <span style={{ whiteSpace: "pre-wrap" }}>
+    <span
+      style={{
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "block",
+      }}>
       {parts.map((part, index) =>
         keywords.some((k) => part.toLowerCase() === k.toLowerCase()) ? (
           <Box
             component='b'
-            sx={{ color: "text.primary", fontWeight: 900 }}
+            sx={{
+              color: "text.primary",
+              fontWeight: 900,
+              display: "inline",
+            }}
             key={index}>
             {part}
           </Box>

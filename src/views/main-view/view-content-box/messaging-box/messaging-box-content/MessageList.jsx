@@ -25,6 +25,7 @@ const MessageList = ({ user, VListRef, data }) => {
   );
   // const matches = useSmallScreen();
   const messages = useMemo(() => groupeMessages(bulkMessages), [bulkMessages]);
+  //console.log(messages);
 
   const onScrollToBottom = useCallback(() => {
     VListRef.current.scrollToIndex(messages.length - 1, {

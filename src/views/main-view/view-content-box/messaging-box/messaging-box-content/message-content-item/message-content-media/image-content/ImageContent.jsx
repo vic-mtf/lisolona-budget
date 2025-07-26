@@ -1,13 +1,22 @@
 import useLocalStoreData from "../../../../../../../../hooks/useLocalStoreData";
 import { Box } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ImageLikeSkeleton from "../../../../../../../../components/ImageLikeSkeleton";
 import useAxios from "../../../../../../../../hooks/useAxios";
 import PropTypes from "prop-types";
 
 const ImageContent = ({ content, id }) => {
   const [getData, setData] = useLocalStoreData();
-  const key = `app.downloads.images.${id}`;
+  const { key } = useMemo(() => {
+    const downloadKey = `app.downloads.images.${id}`;
+    const uploadKey = `app.uploads.images.${id}`;
+    const isUpload = Boolean(getData(uploadKey));
+    return {
+      key: isUpload ? uploadKey : downloadKey,
+      isUpload,
+    };
+  }, [id, getData]);
+  // const key = `app.downloads.images.${id}`;
   const [url, setUrl] = useState(() => getData(key)?.src);
   const [{ data, loading }] = useAxios(
     { url: content, responseType: "blob" },

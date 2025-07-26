@@ -17,99 +17,107 @@ const useSendFiles = () => {
       const messages = [];
       const date = new Date();
       const to = discussionTarget?.id;
-      files.forEach((file) => {
+      let key;
+      let fileType = null;
+      let subtype = null;
+
+      files.forEach(({ type, ...file }) => {
         const formData = new FormData();
-        date.setSeconds(date.getSeconds() + 1);
-        switch (file.type) {
-          case "voice": {
-            const key = `app.uploads.voices.${file?.id}`;
-            const voice = getData(key);
-            let error;
+        date.setMilliseconds(date.getMilliseconds() + 200);
 
-            const message = {
-              type: discussionTarget?.type,
-              subtype: "audio",
-              to,
-              date,
-              createdAt: date.toJSON(),
-              fileType: file.type,
-              clientId: file.id,
-              file: voice?.file,
-              sender,
-              sending: true,
-            };
-            const localKeys = ["sender", "sending", "createdAt"];
-
-            Object.keys(message).forEach((key) => {
-              if (message[key] !== undefined && !localKeys.includes(key))
-                formData.append(key, message[key]);
-            });
-
-            message.type = "voice";
-            messages.subtype = "AUDIO";
-
-            const sendVoice = async () => {
-              const controller = new AbortController();
-              setData(key, {
-                ...voice,
-                request: {
-                  loading: true,
-                  sendVoice,
-                  cancel() {
-                    controller.abort();
-                  },
-                },
-              });
-
-              try {
-                await axios({
-                  signal: controller.signal,
-                  headers: { Authorization },
-                  method: "POST",
-                  url: "/api/chat/file",
-                  data: formData,
-                  onDownloadProgress(e) {
-                    const onDownloadProgress =
-                      getData(key).request?.onDownloadProgress;
-                    if (typeof onDownloadProgress === "function")
-                      onDownloadProgress(e);
-                  },
-                  onUploadProgress(e) {
-                    const onUploadProgress =
-                      getData(key).request?.onUploadProgress;
-                    if (typeof onUploadProgress === "function")
-                      onUploadProgress(e);
-                  },
-                });
-                error = null;
-              } catch (err) {
-                console.error(err);
-                error = err;
-              }
-
-              const data = getData(key);
-              const onLoaded = data?.request?.onLoaded;
-
-              if (typeof onLoaded === "function") onLoaded(!error);
-
-              setData(key, {
-                ...data,
-                request: error
-                  ? { ...data?.request, error, loading: false }
-                  : null,
-              });
-            };
-            sendVoice();
-            messages.push(message);
-            delete message?.file;
-            delete message?.date;
-            delete message?.fileType;
-            delete message?.to;
-            break;
-          }
-          default:
-            console.log("default");
+        /////////////////////////////////
+        if (type === "voice") {
+          key = `app.uploads.voices.${file?.id}`;
+          fileType = "voice";
+          subtype = "audio";
+        } else {
+          key = `app.uploads.${type}s.${file?.id}`;
+          if (["video", "image", "audio"].includes(type)) fileType = "media";
+          subtype = type !== "doc" && type;
+          fileType ??= type;
         }
+        /////////////////////////////////
+
+        const fileData = getData(key);
+
+        let error;
+
+        const message = {
+          type: discussionTarget?.type,
+          subtype,
+          to,
+          date,
+          createdAt: date.toJSON(),
+          fileType,
+          clientId: file.id,
+          sender,
+          sending: true,
+          file: fileData?.file,
+        };
+
+        const localKeys = ["sender", "sending", "createdAt"];
+        const remoteKeys = ["file", "date", "fileType", "to"];
+
+        Object.keys(message).forEach((key) => {
+          if (message[key] !== undefined && !localKeys.includes(key))
+            formData.append(key, message[key]);
+        });
+
+        message.type = fileType;
+        messages.subtype = subtype;
+
+        const sendFile = async () => {
+          const controller = new AbortController();
+
+          setData(key, {
+            ...fileData,
+            request: {
+              loading: true,
+              sendFile,
+              cancel() {
+                controller.abort();
+              },
+            },
+          });
+
+          try {
+            await axios({
+              signal: controller.signal,
+              headers: { Authorization },
+              method: "POST",
+              url: "/api/chat/file",
+              data: formData,
+              onDownloadProgress(e) {
+                const onDownloadProgress =
+                  getData(key).request?.onDownloadProgress;
+                if (typeof onDownloadProgress === "function")
+                  onDownloadProgress(e);
+              },
+              onUploadProgress(e) {
+                const onUploadProgress = getData(key).request?.onUploadProgress;
+                if (typeof onUploadProgress === "function") onUploadProgress(e);
+              },
+            });
+            error = null;
+          } catch (err) {
+            console.error(err);
+            error = err;
+          }
+
+          const data = getData(key);
+          const onLoaded = data?.request?.onLoaded;
+
+          if (typeof onLoaded === "function") onLoaded(!error);
+
+          setData(key, {
+            ...data,
+            request: error ? { ...data?.request, error, loading: false } : null,
+          });
+        };
+
+        sendFile();
+        remoteKeys.forEach((key) => delete message[key]);
+        messages.push(message);
       });
       dispatch({
         type: "data/updateData",
@@ -125,25 +133,9 @@ const useSendFiles = () => {
         },
       });
       return messages;
-      // dispatch({
-      //   type: "data/updateArraysData",
-      //   payload: {
-      //     data: { discussions: [{ updatedAt, messages, id: to }] },
-      //     user: sender,
-      //   },
-      // });
     },
     [getData, setData, Authorization, discussionTarget, dispatch, sender]
   );
   return onSendFiles;
 };
 export default useSendFiles;
-
-// type: direct
-// subtype
-// audio
-// to : 654ca53526899bfaf496d5b0
-// date :  Wed Jul 23 2025 17:17:43 GMT 0200 (heure d’été d’Europe centrale)
-// fileType : voice
-// clientId :19837dca207
-// file

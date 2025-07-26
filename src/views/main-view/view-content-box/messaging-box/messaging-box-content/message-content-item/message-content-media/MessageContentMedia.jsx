@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
 import { updateData } from "../../../../../../../redux/data/data";
 import store from "../../../../../../../redux/store";
-import ImageLikeSkeleton from "../../../../../../../components/ImageLikeSkeleton";
 import ImageContent from "./image-content/ImageContent";
 
 const MessageContentMedia = React.memo(({ content, id, subType }) => {
@@ -82,7 +81,7 @@ const MessageContentMedia = React.memo(({ content, id, subType }) => {
           justifyContent='center'
           position='absolute'
           alignItems='center'
-          sx={{ bgcolor: "transparent", backdropFilter: "blur(0.6px)" }}>
+          sx={{ bgcolor: "transparent" }}>
           {type === "video" && (
             <motion.div
               className='box'

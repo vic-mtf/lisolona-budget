@@ -7,7 +7,7 @@ import { useLayoutEffect } from "react";
 import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
 
 const UploadingProgressVoiceButton = ({ voice, setUploading, dataKey }) => {
-  const [getData, setData] = useLocalStoreData();
+  const [getData] = useLocalStoreData();
   const [progressing, setProgressing] = React.useState(voice?.request?.loading);
 
   useLayoutEffect(() => {
@@ -50,7 +50,7 @@ const UploadingProgressVoiceButton = ({ voice, setUploading, dataKey }) => {
             setProgressing((progressing) => {
               const request = voice?.request;
               if (progressing) request?.cancel();
-              else request?.sendVoice();
+              else request?.sendFile();
               request.loading = !progressing;
               return request.loading;
             });

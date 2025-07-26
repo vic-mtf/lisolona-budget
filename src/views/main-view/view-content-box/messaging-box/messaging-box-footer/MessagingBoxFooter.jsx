@@ -9,6 +9,7 @@ import { updateArraysData, updateData } from "../../../../../redux/data/data";
 import useSocket from "../../../../../hooks/useSocket";
 import AudioRecording from "./audio-recording/AudioRecording";
 import useSendFiles from "../../../../../hooks/useSendFiles";
+import getRandomId from "../../../../../utils/getRandomId";
 
 export default function MessagingBoxFooter() {
   const socket = useSocket();
@@ -32,12 +33,11 @@ export default function MessagingBoxFooter() {
   const handleSendMessage = useCallback(
     ({ editorContent: content, data: files }) => {
       const updatedAt = new Date().toJSON();
-      const randomId = Math.random().toString(16);
       const messages = [];
       const message = {
         content,
         date: updatedAt,
-        clientId: Date.now().toString(16) + sender.id + randomId,
+        clientId: getRandomId(sender.id),
         type: "text",
         status: "sending",
         sender,

@@ -14,6 +14,8 @@ import { useEffect } from "react";
 import LiveWaveformRecorder from "../../../../../../components/LiveWaveformRecorder";
 import AudioRecordingIndicator from "./AudioRecordingIndicator";
 import VoiceListenerView from "../../../../../../components/VoiceListenerView";
+import ringtones from "../../../../../../utils/ringtones";
+import getRandomId from "../../../../../../utils/getRandomId";
 
 const AudioRecordingViewer = () => {
   const [stream, setStream] = useState();
@@ -36,12 +38,13 @@ const AudioRecordingViewer = () => {
 
   const onRecordStop = useCallback(() => {
     const storeData = store.getState();
+    const sender = storeData.user;
     const { file, src } = voiceMemo;
     const data = storeData.data;
     const targetId = data.discussionTarget?.id;
     const files = [...(data.chatBox.footer.files[targetId] || [])];
-    const randomId = Math.random().toString(16);
-    const id = Date.now().toString(16) + storeData.user.id + randomId;
+    const id = getRandomId(sender.id);
+
     const voiceData = {
       createdAt: new Date().toJSON(),
       id,
@@ -86,12 +89,19 @@ const AudioRecordingViewer = () => {
       setSrc(voiceMemo.src);
     };
 
+    const onRecordStart = () => {
+      ringtones.start.play();
+      ringtones.start.volume = 0.3;
+    };
+
     mediaRecorder?.addEventListener("stop", onRecordStop);
     mediaRecorder?.addEventListener("dataavailable", onDataAvailable);
+    mediaRecorder?.addEventListener("start", onRecordStart);
     return () => {
       stream?.getTracks().forEach((track) => track.stop());
       mediaRecorder?.removeEventListener("stop", onRecordStop);
       mediaRecorder?.removeEventListener("dataavailable", onDataAvailable);
+      mediaRecorder?.removeEventListener("start", onRecordStart);
     };
   }, [stream, voiceMemo, onRecordStop]);
 
