@@ -1,16 +1,16 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { MessagingContext } from "../../../messaging-box/MessagingBoxProvider";
 import { Typography } from "@mui/material";
 import getFullName from "../../../../../../utils/getFullName";
 import { formatTime } from "../../../../../../utils/formatDate";
+import useMessagingContext from "../../../../../../hooks/useMessagingContext";
 
 const FullScreenHeader = () => {
   const userId = useSelector((store) => store.user.id);
   const messageId = useSelector(
     (store) => store.data.app.actions.messaging.medias.viewer.id
   );
-  const [{ user }] = useContext(MessagingContext);
+  const [{ user }] = useMessagingContext();
   const bulkMessages = useSelector(
     (store) => store.data.app.messages[user?.id]
   );

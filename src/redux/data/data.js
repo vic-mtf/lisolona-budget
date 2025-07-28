@@ -29,11 +29,27 @@ const data = createSlice({
         });
       }
     },
+    updateMessage(state, actions) {
+      const { data, id, targetId } = actions.payload;
+      const messages = [...(state.app.messages[targetId] || [])];
+      const i = messages?.findIndex((d) => (d?.clientId || d?.id) === id);
+
+      if (i > -1) {
+        const oldMessage = messages[i];
+        messages[i] = deepMerge(oldMessage, data);
+        state.app.messages[targetId] = messages;
+      }
+    },
     updateArraysData: upArrData,
+
     deleteInArrayDataItemById: delInArrayData,
   },
 });
 
-export const { updateData, updateArraysData, deleteInArrayDataItemById } =
-  data.actions;
+export const {
+  updateData,
+  updateArraysData,
+  deleteInArrayDataItemById,
+  updateMessage,
+} = data.actions;
 export default data.reducer;

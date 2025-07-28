@@ -1,15 +1,13 @@
-import React, { createElement, useContext } from "react";
+import React, { createElement } from "react";
 import PropTypes from "prop-types";
 import { Box, IconButton, Paper, Stack, Tooltip } from "@mui/material";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import messageActions from "./messageActions";
 import { useSelector } from "react-redux";
-import { MessagingContext } from "../../../MessagingBoxProvider";
-import useAxios from "../../../../../../../hooks/useAxios";
-import useToken from "../../../../../../../hooks/useToken";
+import useMessagingContext from "../../../../../../../hooks/useMessagingContext";
 
 const MessageActionItem = React.memo(({ message }) => {
-  const messagingData = useContext(MessagingContext);
+  const messagingData = useMessagingContext();
   const userId = useSelector((store) => store.user.id);
   const target = userId === message?.sender?.id ? "local" : "remote";
   // const Authorization = useToken();

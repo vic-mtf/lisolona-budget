@@ -1,15 +1,21 @@
 import PropTypes from "prop-types";
 import { Box, CircularProgress } from "@mui/material";
 import ZoomViewerContent from "./ZoomViewerContent";
-import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
+import useLocalStoreData, {
+  useSmartKey,
+} from "../../../../../hooks/useLocalStoreData";
 import useAxios from "../../../../../hooks/useAxios";
-import { useState } from "react";
-import { useLayoutEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 
 const ImageContent = ({ content, mode = "normal", id }) => {
   const [getData, setData] = useLocalStoreData();
-  const key = `app.downloads.images.${id}`;
+
+  const { key } = useSmartKey({
+    baseKey: `app.key.images.${id}`,
+    paths: { key: ["downloads", "uploads"] },
+  });
   const [url, setUrl] = useState(() => getData(key)?.src);
+  // console.log("url => ", url);
   const [{ data, loading }] = useAxios(
     { url: content, responseType: "blob" },
     { manual: Boolean(url) }

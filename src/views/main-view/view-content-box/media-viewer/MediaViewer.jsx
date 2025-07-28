@@ -5,8 +5,9 @@ import { useSelector } from "react-redux";
 import store from "../../../../redux/store";
 import { updateData } from "../../../../redux/data/data";
 import MediaViewerContent from "./media-viewer-content/MediaViewerContent";
+import { MuiModalTransition } from "../../../../components/MuiDialogTransition";
 
-const MediaView = React.memo(() => {
+const MediaViewer = React.memo(() => {
   const [zoom, setZoom] = useState(false);
   const open = useSelector(
     (store) => store.data.app.actions.messaging.medias.viewer.open
@@ -22,6 +23,11 @@ const MediaView = React.memo(() => {
       open={open}
       onClose={handleClose}
       component='div'
+      slotProps={{
+        backdrop: {
+          TransitionComponent: MuiModalTransition,
+        },
+      }}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -40,5 +46,5 @@ const MediaView = React.memo(() => {
   );
 });
 
-MediaView.displayName = "MediaView";
-export default MediaView;
+MediaViewer.displayName = "MediaViewer";
+export default MediaViewer;

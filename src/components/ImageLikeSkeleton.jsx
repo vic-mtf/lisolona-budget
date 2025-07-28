@@ -1,6 +1,6 @@
 import { Skeleton, Box } from "@mui/material";
 import PropTypes from "prop-types";
-import imgSrc from "../assets/log-image.jpg";
+//import imgSrc from "../assets/log-image.jpg";
 
 const ImageLikeSkeleton = ({ borderRadius = 2 }) => {
   return (

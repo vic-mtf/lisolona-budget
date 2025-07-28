@@ -1,12 +1,11 @@
-import React, { createContext } from "react";
+import React from "react";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { useRef } from "react";
 import getFullName from "../../../../utils/getFullName";
 import store from "../../../../redux/store";
-
-export const MessagingContext = createContext(null);
+import { MessagingContext } from "../../../../hooks/useMessagingContext";
 
 const MessagingProvider = React.memo(({ children }) => {
   const remoteUser = useSelector((store) => store.data.discussionTarget);

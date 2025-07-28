@@ -1,15 +1,15 @@
-import { useContext, useCallback } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Paper } from "@mui/material";
 import PropTypes from "prop-types";
 import { isNumber } from "lodash";
 import WritingArea from "./writing-area/WritingArea";
-import { MessagingContext } from "../MessagingBoxProvider";
 import { updateArraysData, updateData } from "../../../../../redux/data/data";
 import useSocket from "../../../../../hooks/useSocket";
 import AudioRecording from "./audio-recording/AudioRecording";
 import useSendFiles from "../../../../../hooks/useSendFiles";
 import getRandomId from "../../../../../utils/getRandomId";
+import useMessagingContext from "../../../../../hooks/useMessagingContext";
 
 export default function MessagingBoxFooter() {
   const socket = useSocket();
@@ -17,7 +17,7 @@ export default function MessagingBoxFooter() {
   const dispatch = useDispatch();
 
   const [{ user, editorRef, placeholder, VListRef, data }] =
-    useContext(MessagingContext);
+    useMessagingContext();
 
   const replyMessage = useSelector(
     (store) => store.data.app.actions.messaging.reply[user?.id]
@@ -32,28 +32,34 @@ export default function MessagingBoxFooter() {
 
   const handleSendMessage = useCallback(
     ({ editorContent: content, data: files }) => {
-      const updatedAt = new Date().toJSON();
+      const date = new Date();
+      const createdAt = date.toJSON();
       const messages = [];
+
       const message = {
         content,
-        date: updatedAt,
+        date,
         clientId: getRandomId(sender.id),
         type: "text",
+        to: user?.id,
         status: "sending",
-        sender,
       };
+
       if (content) {
-        socket?.emit(
-          `${user?.type}-message`,
-          { to: user?.id, type: user?.type, ...message },
-          (response) => {
-            console.trace(response); // ok
-          }
-        );
-        messages.push(message);
+        socket?.emit(`${user?.type}-message`, message);
+        const localMessage = {
+          sender,
+          content,
+          createdAt,
+          updatedAt: createdAt,
+          clientId: message.clientId,
+          type: message.type,
+        };
+        messages.push(localMessage);
       }
 
-      if (files?.length) messages.unshift(...onSendFiles(files));
+      if (files?.length) messages.unshift(...onSendFiles({ files }));
+      const [{ updatedAt }] = messages;
       const discussions = [{ updatedAt, messages, id: user?.id }];
       const data = { discussions };
       dispatch(updateArraysData({ data, user: sender }));

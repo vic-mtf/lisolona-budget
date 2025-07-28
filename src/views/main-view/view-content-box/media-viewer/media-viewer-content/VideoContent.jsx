@@ -3,9 +3,20 @@ import PropTypes from "prop-types";
 import { Box, CircularProgress, Fade } from "@mui/material";
 
 import VideoControls from "./video-controls/VideoControls";
+import useLocalStoreData, {
+  useSmartKey,
+} from "../../../../../hooks/useLocalStoreData";
 
-const VideoContent = React.memo(({ content }) => {
-  const src = new URL(content, import.meta.env.VITE_SERVER_BASE_URL);
+const VideoContent = ({ content, id }) => {
+  const { key } = useSmartKey({
+    baseKey: `app.key.videos.${id}`,
+    paths: { key: ["downloads", "uploads"] },
+  });
+  const [getData] = useLocalStoreData(key);
+  const [url] = useState(
+    () =>
+      getData("src") || new URL(content, import.meta.env.VITE_SERVER_BASE_URL)
+  );
   const [loading, setLoading] = useState(true);
   const videoRef = useRef();
   const mediaContainerRef = useRef();
@@ -40,11 +51,12 @@ const VideoContent = React.memo(({ content }) => {
         },
       }}>
       <video
-        src={src}
+        src={url}
         loading='lazy'
         draggable={false}
         onLoadedData={() => setLoading(false)}
         preload='preload'
+        disablePictureInPicture
         ref={videoRef}
         autoPlay
         style={{
@@ -67,11 +79,13 @@ const VideoContent = React.memo(({ content }) => {
       />
     </Box>
   );
-});
+};
+
 VideoContent.displayName = "VideoContent";
 VideoContent.propTypes = {
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
   mode: PropTypes.oneOf(["normal", "zoom"]),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default VideoContent;
+export default React.memo(VideoContent);

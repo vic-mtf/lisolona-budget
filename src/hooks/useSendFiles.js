@@ -4,6 +4,7 @@ import useLocalStoreData from "./useLocalStoreData";
 import useToken from "./useToken";
 import { axios } from "./useAxios";
 import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
 
 const useSendFiles = () => {
   const [getData, setData] = useLocalStoreData();
@@ -13,17 +14,18 @@ const useSendFiles = () => {
   const Authorization = useToken();
 
   const onSendFiles = useCallback(
-    (files = []) => {
+    ({ files = [] }) => {
       const messages = [];
-      const date = new Date();
       const to = discussionTarget?.id;
+      const date = new Date();
       let key;
       let fileType = null;
       let subtype = null;
+      let updatedAt = dayjs(date);
 
-      files.forEach(({ type, ...file }) => {
+      files.reverse().forEach(({ type, ...file }) => {
         const formData = new FormData();
-        date.setMilliseconds(date.getMilliseconds() + 200);
+        updatedAt = updatedAt.add(1, "second");
 
         /////////////////////////////////
         if (type === "voice") {
@@ -40,22 +42,34 @@ const useSendFiles = () => {
 
         const fileData = getData(key);
 
-        let error;
-
         const message = {
           type: discussionTarget?.type,
           subtype,
           to,
-          date,
-          createdAt: date.toJSON(),
+          date: updatedAt.toDate(),
+          createdAt: updatedAt.toJSON(),
+          updatedAt: updatedAt.toJSON(),
           fileType,
           clientId: file.id,
           sender,
-          sending: true,
+          status: "sending",
           file: fileData?.file,
+          request: {
+            loading: true,
+            uploadProgress: 0,
+            downloadProgress: 0,
+            error: null,
+          },
         };
 
-        const localKeys = ["sender", "sending", "createdAt"];
+        const localKeys = [
+          "sender",
+          "sending",
+          "createdAt",
+          "updatedAt",
+          "request",
+          "status",
+        ];
         const remoteKeys = ["file", "date", "fileType", "to"];
 
         Object.keys(message).forEach((key) => {
@@ -66,19 +80,24 @@ const useSendFiles = () => {
         message.type = fileType;
         messages.subtype = subtype;
 
+        const updateMessage = (data) => {
+          dispatch({
+            type: "data/updateMessage",
+            payload: { data, id: file.id, targetId: to },
+          });
+        };
+
         const sendFile = async () => {
+          let error;
           const controller = new AbortController();
 
-          setData(key, {
-            ...fileData,
-            request: {
-              loading: true,
-              sendFile,
-              cancel() {
-                controller.abort();
-              },
-            },
-          });
+          const abort = () => {
+            updateMessage({ request: { loading: false } });
+            controller.abort();
+          };
+
+          setData(key, { ...fileData, request: { abort, sendFile } });
+          updateMessage({ request: { loading: true, status: "sending" } });
 
           try {
             await axios({
@@ -87,38 +106,31 @@ const useSendFiles = () => {
               method: "POST",
               url: "/api/chat/file",
               data: formData,
-              onDownloadProgress(e) {
-                const onDownloadProgress =
-                  getData(key).request?.onDownloadProgress;
-                if (typeof onDownloadProgress === "function")
-                  onDownloadProgress(e);
+              onDownloadProgress({ total, loaded }) {
+                const downloadProgress = loaded / total;
+                updateMessage({ request: { downloadProgress, loading: true } });
               },
-              onUploadProgress(e) {
-                const onUploadProgress = getData(key).request?.onUploadProgress;
-                if (typeof onUploadProgress === "function") onUploadProgress(e);
+              onUploadProgress({ total, loaded }) {
+                const uploadProgress = loaded / total;
+                updateMessage({ request: { uploadProgress, loading: true } });
               },
             });
             error = null;
           } catch (err) {
             console.error(err);
-            error = err;
+            error = err?.toString();
           }
 
-          const data = getData(key);
-          const onLoaded = data?.request?.onLoaded;
-
-          if (typeof onLoaded === "function") onLoaded(!error);
-
-          setData(key, {
-            ...data,
-            request: error ? { ...data?.request, error, loading: false } : null,
+          updateMessage({
+            status: error ? "sending" : "sended",
+            request: { loading: false, error },
           });
         };
-
         sendFile();
         remoteKeys.forEach((key) => delete message[key]);
         messages.push(message);
       });
+
       dispatch({
         type: "data/updateData",
         payload: {

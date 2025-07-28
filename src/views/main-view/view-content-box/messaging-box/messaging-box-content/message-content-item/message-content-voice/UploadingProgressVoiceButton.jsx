@@ -1,36 +1,17 @@
-import React from "react";
 import { Box, CircularProgress, IconButton } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import PropTypes from "prop-types";
-import { useLayoutEffect } from "react";
 import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
+import { useSelectorMessage } from "../../../../../../../hooks/useMessagingContext";
 
-const UploadingProgressVoiceButton = ({ voice, setUploading, dataKey }) => {
-  const [getData] = useLocalStoreData();
-  const [progressing, setProgressing] = React.useState(voice?.request?.loading);
-
-  useLayoutEffect(() => {
-    const request = getData(dataKey)?.request || voice?.request;
-    if (request)
-      request.onLoaded = (success) => {
-        if (success) {
-          voice.request = null;
-          setUploading(false);
-        } else {
-          setProgressing(false);
-          voice.request.loading = false;
-        }
-        console.log("success =>", success);
-      };
-    return () => {
-      if (request) request.onLoaded = null;
-    };
-  });
+const UploadingProgressVoiceButton = ({ id, dataKey }) => {
+  const loading = useSelectorMessage(id, "request.loading");
+  const [getData] = useLocalStoreData(dataKey);
 
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
-      {progressing && (
+      {loading && (
         <CircularProgress
           variant='indeterminate'
           color='inherit'
@@ -45,17 +26,13 @@ const UploadingProgressVoiceButton = ({ voice, setUploading, dataKey }) => {
       )}
       <Box>
         <IconButton
-          sx={{ ...(progressing && { borderRadius: "50%" }) }}
+          sx={{ ...(loading && { borderRadius: "50%" }) }}
           onClick={() => {
-            setProgressing((progressing) => {
-              const request = voice?.request;
-              if (progressing) request?.cancel();
-              else request?.sendFile();
-              request.loading = !progressing;
-              return request.loading;
-            });
+            const request = getData("request");
+            if (loading) request?.abort();
+            else request?.sendFile();
           }}>
-          {progressing ? <CloseOutlinedIcon /> : <FileUploadOutlinedIcon />}
+          {loading ? <CloseOutlinedIcon /> : <FileUploadOutlinedIcon />}
         </IconButton>
       </Box>
     </Box>
@@ -65,8 +42,7 @@ const UploadingProgressVoiceButton = ({ voice, setUploading, dataKey }) => {
 UploadingProgressVoiceButton.displayName = "UploadingProgressVoiceButton";
 
 UploadingProgressVoiceButton.propTypes = {
-  setUploading: PropTypes.func,
-  voice: PropTypes.object,
   dataKey: PropTypes.string,
+  id: PropTypes.string,
 };
 export default UploadingProgressVoiceButton;

@@ -1,12 +1,5 @@
 import { Box, IconButton, Slide } from "@mui/material";
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useContext,
-  useEffect,
-} from "react";
-import { MessagingContext } from "../../messaging-box/MessagingBoxProvider";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { updateData } from "../../../../../redux/data/data";
 import store from "../../../../../redux/store";
@@ -16,13 +9,14 @@ import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlin
 import ImageContent from "./ImageContent";
 import PropTypes from "prop-types";
 import VideoContent from "./VideoContent";
+import useMessagingContext from "../../../../../hooks/useMessagingContext";
 
 const MediaViewerContent = React.memo(({ zoom }) => {
   const messageId = useSelector(
     (store) => store.data.app.actions.messaging.medias.viewer.id
   );
 
-  const [{ user }] = useContext(MessagingContext);
+  const [{ user }] = useMessagingContext();
   const bulkMessages = useSelector(
     (store) => store.data.app.messages[user?.id]
   );
@@ -37,6 +31,7 @@ const MediaViewerContent = React.memo(({ zoom }) => {
     )
   );
   const directions = useMemo(() => ({ enter: "left", exit: "right" }), []);
+
   const handleChange = useCallback(
     (dir = 1) => {
       directions.enter = dir < 1 ? "left" : "right";
@@ -147,9 +142,12 @@ const MediaViewerContent = React.memo(({ zoom }) => {
                 content={content}
                 id={clientId || id}
                 mode={zoom ? "zoom" : "normal"}
-                component={subType === "IMAGE" ? ImageContent : VideoContent}
+                component={
+                  subType?.toLowerCase() === "image"
+                    ? ImageContent
+                    : VideoContent
+                }
               />
-              {}
             </Box>
           </Slide>
         ))}
@@ -157,8 +155,10 @@ const MediaViewerContent = React.memo(({ zoom }) => {
     </Box>
   );
 });
+
 MediaViewerContent.propTypes = {
   zoom: PropTypes.bool,
 };
+
 MediaViewerContent.displayName = "MediaViewerContent";
 export default MediaViewerContent;

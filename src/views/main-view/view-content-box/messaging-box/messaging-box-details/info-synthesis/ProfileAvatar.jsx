@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import store from "../../../../../../redux/store";
-import { MessagingContext } from "../../MessagingBoxProvider";
 import {
   alpha,
   Avatar,
@@ -18,9 +17,10 @@ import { useMemo } from "react";
 import ListAvatar from "../../../../../../components/ListAvatar";
 import capStr from "../../../../../../utils/capStr";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import useMessagingContext from "../../../../../../hooks/useMessagingContext";
 
 const ProfileAvatar = React.memo(() => {
-  const [{ user, contact }] = useContext(MessagingContext);
+  const [{ user, contact }] = useMessagingContext();
   const localUser = useMemo(() => store.getState().user, []);
   const userAsMember = user?.members?.find(({ id }) => id === localUser?.id);
   const image = user?.image || contact?.image;

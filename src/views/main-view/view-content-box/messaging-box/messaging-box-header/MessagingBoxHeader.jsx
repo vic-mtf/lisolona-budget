@@ -26,11 +26,10 @@ import { useMemo } from "react";
 import ListAvatar from "../../../../../components/ListAvatar";
 import GroupStatusState from "./GroupStatusState";
 import ContactStatusState from "./ContactStatusState";
-import { useContext } from "react";
-import { MessagingContext } from "../MessagingBoxProvider";
+import useMessagingContext from "../../../../../hooks/useMessagingContext";
 
 export default function MessagingBoxHeader() {
-  const [{ user }] = useContext(MessagingContext);
+  const [{ user }] = useMessagingContext();
   const name = getFullName(user);
   const matches = useSmallScreen();
   const remote = user?.members?.find(

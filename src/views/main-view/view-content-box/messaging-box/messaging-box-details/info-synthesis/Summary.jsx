@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import store from "../../../../../../redux/store";
-import { MessagingContext } from "../../MessagingBoxProvider";
 import {
   Box,
   List,
@@ -20,9 +19,10 @@ import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
 import ListAvatar from "../../../../../../components/ListAvatar";
 import capStr from "../../../../../../utils/capStr";
+import useMessagingContext from "../../../../../../hooks/useMessagingContext";
 
 const Summary = React.memo(() => {
-  const [{ user, contact }] = useContext(MessagingContext);
+  const [{ user, contact }] = useMessagingContext();
   const localUser = useMemo(() => store.getState().user, []);
   const isLocalUser = localUser?.id === user?.createdBy?.id;
   const creatorName = getFullName(user?.createdBy);

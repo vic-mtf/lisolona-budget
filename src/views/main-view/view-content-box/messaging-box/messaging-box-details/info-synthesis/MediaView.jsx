@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { MessagingContext } from "../../MessagingBoxProvider";
+import React, { useMemo } from "react";
 import {
   Box,
   CardActionArea,
@@ -13,13 +12,39 @@ import {
 import { useSelector } from "react-redux";
 import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
 import { Stack } from "@mui/system";
+import useMessagingContext from "../../../../../../hooks/useMessagingContext";
+import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 
 const MediaView = React.memo(() => {
-  const [{ user }] = useContext(MessagingContext);
-  // const localUser = useMemo(() => store.getState().user, []);
-  const medias = useSelector((store) =>
+  const [{ user }] = useMessagingContext();
+  const [getData] = useLocalStoreData();
+  const bulkMedias = useSelector((store) =>
     store.data.app.messages[user?.id]?.filter(({ type }) => type === "media")
   );
+
+  const medias = useMemo(() => {
+    const downloads = getData("app.downloads");
+    const uploads = getData("app.uploads");
+    const files = {};
+
+    Object.keys(downloads).forEach((key) => {
+      Object.keys(downloads[key]).forEach((k) => {
+        const download = downloads[key][k];
+        const upload = uploads[key][k];
+        if (files[k] === undefined) {
+          if (download !== undefined) files[k] = download;
+          if (upload !== undefined) files[k] = upload;
+        }
+      });
+    });
+
+    return bulkMedias?.map((d) => {
+      const file = files[d?.clientId || d?.id];
+      const src = new URL(d?.content, import.meta.env.VITE_SERVER_BASE_URL);
+      const url = file?.src || src;
+      return { ...d, url };
+    });
+  }, [bulkMedias, getData]);
 
   return (
     <Box position='relative'>
@@ -27,7 +52,7 @@ const MediaView = React.memo(() => {
         <ListItemButton>
           <ListItemText
             primary='Medias & Documents'
-            primaryTypographyProps={{ color: "text.secondary" }}
+            slotProps={{ primary: { color: "text.secondary" } }}
           />
           <ListItemIcon sx={{ justifyContent: "end" }}>
             <Typography
@@ -44,11 +69,7 @@ const MediaView = React.memo(() => {
         {medias?.length > 0 && (
           <Box px={2}>
             <ImageList sx={{ m: 0, p: 0, mt: 1 }} cols={4}>
-              {medias?.slice(0, 4)?.map(({ id, content, subType }) => {
-                const url = new URL(
-                  content,
-                  import.meta.env.VITE_SERVER_BASE_URL
-                );
+              {medias?.slice(0, 4)?.map(({ id, clientId, subType, url }) => {
                 const props =
                   subType === "IMAGE"
                     ? { srcSet: url, src: url, loading: "lazy" }
@@ -56,7 +77,7 @@ const MediaView = React.memo(() => {
 
                 return (
                   <ImageListItem
-                    key={id}
+                    key={clientId || id}
                     sx={{
                       bgcolor: (theme) => theme.palette.divider,
                       borderRadius: (theme) => theme.shape.borderRadius / 4,

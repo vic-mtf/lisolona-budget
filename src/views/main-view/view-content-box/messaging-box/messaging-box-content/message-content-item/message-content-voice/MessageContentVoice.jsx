@@ -3,32 +3,28 @@ import { Box, Divider, Fade } from "@mui/material";
 import PropTypes from "prop-types";
 import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 import useAxios from "../../../../../../../hooks/useAxios";
-import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
+import useLocalStoreData, {
+  useSmartKey,
+} from "../../../../../../../hooks/useLocalStoreData";
 import VoiceRateButton from "./VoiceRateButton";
 import WaveLoader from "../../../../../../../components/WaveLoader";
 import { useMemo } from "react";
 import VoiceListenerView from "../../../../../../../components/VoiceListenerView";
 import { useLayoutEffect } from "react";
 import UploadingProgressVoiceButton from "./UploadingProgressVoiceButton";
-import { useState } from "react";
+import { useSelectorMessage } from "../../../../../../../hooks/useMessagingContext";
 
 const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
-  const [getData, setData] = useLocalStoreData();
+  const { key } = useSmartKey({
+    baseKey: `app.key.voices.${id}`,
+    paths: { key: ["downloads", "uploads"] },
+  });
+  const status = useSelectorMessage(id, "status");
+  const [getData, setData] = useLocalStoreData(key);
 
-  const { key } = useMemo(() => {
-    const downloadKey = `app.downloads.voices.${id}`;
-    const uploadKey = `app.uploads.voices.${id}`;
-    const isUpload = Boolean(getData(uploadKey));
-    return {
-      key: isUpload ? uploadKey : downloadKey,
-      isUpload,
-    };
-  }, [id, getData]);
-
-  const voice = getData(key);
-
+  const voice = getData();
   const audio = useMemo(() => voice?.audio || new Audio(), [voice]);
-  const [uploading, setUploading] = useState(Boolean(voice?.request));
+
   const [{ loading, data }] = useAxios(
     { url: content, responseType: "blob" },
     {
@@ -47,7 +43,7 @@ const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
   }, [voice, data]);
 
   useLayoutEffect(() => {
-    if (!voice && loading) setData(key, { id, audio });
+    if (!voice && loading) setData({ id, audio });
   }, [loading, voice, key, id, setData, audio]);
 
   return (
@@ -117,15 +113,11 @@ const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
               duration={voice?.duration}
               onGetRawData={({ rawData, duration }) => {
                 audio.setAttribute("id", id);
-                setData(key, { rawData, ...voice, id, duration, audio });
+                setData({ rawData, ...voice, id, duration, audio });
               }}
-              uploading={uploading}
+              uploading={status === "sending"}
               uploadingProgressButton={
-                <UploadingProgressVoiceButton
-                  voice={voice}
-                  setUploading={setUploading}
-                  dataKey={key}
-                />
+                <UploadingProgressVoiceButton id={id} dataKey={key} />
               }
             />
             <Divider

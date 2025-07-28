@@ -52,7 +52,7 @@ const CreateDiscussionGroup = React.memo(({ onClose }) => {
           await refresh({ data });
           if (typeof onClose === "function") onClose();
         } catch (error) {
-          console.log(error);
+          console.error(error);
           notifications.show("Une erreur est survenue, reessayez plus tard", {
             severity: "error",
           });
