@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 import MessageContentMedia from "./message-content-media/MessageContentMedia";
 import { ItemWrapperFocus } from "../../../../../../components/BlinkWrapper";
 import MessageContentVoice from "./message-content-voice/MessageContentVoice";
+import MessageContentDoc from "./message-content-doc/MessageContentDoc";
 
 const MessageContentItem = React.forwardRef(
   (
@@ -168,6 +169,12 @@ const MessageContentItem = React.forwardRef(
                     )}
                     {message.type === "voice" && (
                       <MessageContentVoice
+                        id={message?.clientId || message?.id}
+                        content={message?.content}
+                      />
+                    )}
+                    {message.type === "doc" && (
+                      <MessageContentDoc
                         id={message?.clientId || message?.id}
                         content={message?.content}
                       />

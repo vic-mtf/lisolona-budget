@@ -46,9 +46,29 @@ const ImageContent = ({ content, id, onClick }) => {
           height: "100%",
           zIndex: 1,
         }}>
-        {loading || !url ? (
+        <Fade
+          in={loading && !url}
+          unmountOnExit
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+          }}>
           <ImageLikeSkeleton />
-        ) : (
+        </Fade>
+
+        <Fade
+          in={!loading && !!url}
+          unmountOnExit
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+          }}>
           <Box
             component='img'
             src={url}
@@ -58,13 +78,12 @@ const ImageContent = ({ content, id, onClick }) => {
               objectFit: "cover",
               p: 0,
               m: 0,
-              transition: "opacity .2s ease-in-out",
               display: "flex",
               height: "100%",
               width: "100%",
             }}
           />
-        )}
+        </Fade>
       </CardActionArea>
       <Fade
         style={{

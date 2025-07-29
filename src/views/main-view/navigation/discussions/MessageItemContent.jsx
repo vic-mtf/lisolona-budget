@@ -25,13 +25,11 @@ const MessageItemContent = React.memo(({ message, type }) => {
         : "",
     [id, sender, type]
   );
+  const fType = message?.type || "doc";
+  const sType = fType === "media" && message?.subType?.toLowerCase();
 
-  const Icon =
-    messageIconTypes[
-      message?.type === "voice"
-        ? "voice"
-        : message?.subType?.toLowerCase() || "document"
-    ];
+  const Icon = messageIconTypes[fType === "media" ? sType : fType];
+
   if (!message || typeof message === "string")
     return message || "Nouvelle discussion";
 
@@ -70,7 +68,7 @@ MessageItemContent.displayName = "MessageItemContent";
 export default MessageItemContent;
 
 const messageIconTypes = {
-  document: InsertDriveFileOutlinedIcon,
+  doc: InsertDriveFileOutlinedIcon,
   image: InsertPhotoOutlinedIcon,
   video: VideocamOutlinedIcon,
   audio: AudioFileOutlinedIcon,

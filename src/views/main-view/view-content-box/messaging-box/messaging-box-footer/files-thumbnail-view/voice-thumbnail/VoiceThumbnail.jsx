@@ -6,8 +6,8 @@ import VoiceListenerView from "../../../../../../../components/VoiceListenerView
 
 const VoiceThumbnail = React.forwardRef(({ src, id }, ref) => {
   const key = `app.uploads.voices.${id}`;
-  const [getData, setData] = useLocalStoreData();
-  const voice = getData(key);
+  const [getData, setData] = useLocalStoreData(key);
+  const voice = getData();
 
   return (
     <Box
@@ -23,9 +23,7 @@ const VoiceThumbnail = React.forwardRef(({ src, id }, ref) => {
         src={src}
         file={voice?.file}
         rawData={voice?.rawData}
-        onGetRawData={({ rawData, duration }) =>
-          setData(key, { ...voice, rawData, duration })
-        }
+        onGetRawData={({ rawData, duration }) => setData({ rawData, duration })}
       />
     </Box>
   );

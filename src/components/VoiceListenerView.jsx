@@ -6,6 +6,7 @@ import formatTime from "../utils/formatTime";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import useLocalStoreData from "../hooks/useLocalStoreData";
+import mapValueWithSnap from "../utils/mapValueWithSnap";
 
 const VoiceListenerView = ({
   file,
@@ -214,21 +215,5 @@ VoiceListenerView.propTypes = {
   uploading: PropTypes.bool,
   uploadingProgressButton: PropTypes.node,
 };
-
-function mapValueWithSnap(
-  value,
-  inMin,
-  inMax,
-  outMin,
-  outMax,
-  snapThreshold = 0.98
-) {
-  if (!value || !inMin === !inMax) return inMin || 0;
-  value = Math.max(inMin, Math.min(value, inMax));
-  let mapped = ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-  let ratio = (value - inMin) / (inMax - inMin);
-  if (ratio >= snapThreshold) return outMax;
-  return mapped;
-}
 
 export default React.memo(VoiceListenerView);

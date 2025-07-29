@@ -1,10 +1,4 @@
-import {
-  Box,
-  IconButton,
-  CardActionArea,
-  Typography,
-  Fade,
-} from "@mui/material";
+import { Box, CardActionArea, Typography, Fade } from "@mui/material";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { motion } from "framer-motion";
 import useLocalStoreData, {
@@ -71,14 +65,14 @@ const VideoContent = ({ content, id, onClick }) => {
           objectFit: "cover",
           p: 0,
           m: 0,
-          //transition: "opacity .2s ease-in-out",
           display: "flex",
           height: "100%",
           width: "100%",
+          opacity: metadata ? 1 : 0,
           transition: (t) =>
             t.transitions.create("opacity", {
               easing: t.transitions.easing.easeInOut,
-              duration: t.transitions.duration.enteringScreen,
+              duration: t.transitions.duration.complex,
             }),
         }}
       />
@@ -103,7 +97,6 @@ const VideoContent = ({ content, id, onClick }) => {
               position: "absolute",
               top: 0,
               left: 0,
-              // zIndex: 1,
             }}>
             <Box
               component={motion.div}
@@ -116,10 +109,7 @@ const VideoContent = ({ content, id, onClick }) => {
               justifyContent='center'
               alignItems='center'
               onClick={onClick}
-              color='white'
-
-              //transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
+              color='white'>
               <PlayArrowOutlinedIcon fontSize='large' />
             </Box>
           </CardActionArea>
@@ -167,18 +157,22 @@ const VideoContent = ({ content, id, onClick }) => {
           <VideoContentLoading keysPath={key} id={id} />
         </Box>
       </Fade>
-      {!metadata && (
-        <Box
-          position='absolute'
-          top={0}
-          left={0}
-          right={0}
-          zIndex={100000}
-          height='100%'
-          width='100%'>
-          <VideoSkeleton />
-        </Box>
-      )}
+
+      <Fade
+        in={!metadata}
+        unmountOnExit
+        appear={false}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100000,
+          height: "100%",
+          width: "100%",
+        }}>
+        <VideoSkeleton />
+      </Fade>
     </>
   );
 };

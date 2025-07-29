@@ -5,12 +5,12 @@ import { updateData } from "../../../../../../../redux/data/data";
 import ImageContent from "./image-content/ImageContent";
 import { useDispatch } from "react-redux";
 import VideoContent from "./video-content/VideoContent";
+import AudioContent from "./audio-content/AudioContent";
 
 const MessageContentMedia = React.memo(({ content, id, subType }) => {
-  //const url = new URL(content, import.meta.env.VITE_SERVER_BASE_URL);
-  // const mediaTagRef = useRef();
-  const type = subType?.toLowerCase() === "image" ? "img" : "video";
+  const type = subType?.toLowerCase();
   const dispatch = useDispatch();
+
   const handleClick = () => {
     const key = [
       "app.actions.messaging.medias.viewer.open",
@@ -19,7 +19,9 @@ const MessageContentMedia = React.memo(({ content, id, subType }) => {
     dispatch(updateData({ data: [true, id], key }));
   };
 
-  return (
+  return type === "audio" ? (
+    <AudioContent content={content} id={id} />
+  ) : (
     <Box
       position='relative'
       sx={{
@@ -30,7 +32,6 @@ const MessageContentMedia = React.memo(({ content, id, subType }) => {
         display: "inline-flex",
         p: 0,
         m: 0,
-        aspectRatio: 1,
         border: (theme) => `.1px solid ${alpha(theme.palette.divider, 0.02)}`,
         "&::before": {
           content: '""',
@@ -45,21 +46,20 @@ const MessageContentMedia = React.memo(({ content, id, subType }) => {
           zIndex: 1,
         },
       }}>
-      <>
-        <Box
-          width={280}
-          height={280}
-          minHeight={200}
-          minWidth={200}
-          component='div'>
-          {type === "img" && (
-            <ImageContent content={content} id={id} onClick={handleClick} />
-          )}
-          {type === "video" && (
-            <VideoContent content={content} id={id} onClick={handleClick} />
-          )}
-        </Box>
-      </>
+      <Box
+        width={300}
+        height={300}
+        minHeight={200}
+        sx={{ aspectRatio: 1 }}
+        minWidth={200}
+        component='div'>
+        {type === "image" && (
+          <ImageContent content={content} id={id} onClick={handleClick} />
+        )}
+        {type === "video" && (
+          <VideoContent content={content} id={id} onClick={handleClick} />
+        )}
+      </Box>
     </Box>
   );
 });
