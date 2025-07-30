@@ -95,106 +95,106 @@ const MessageContentItem = React.forwardRef(
       <ItemWrapperFocus
         id={message?.id || message?.clientId}
         location='messaging'>
-        <Fade in appear unmountOnExit style={{ width: "100%" }}>
-          <Box
-            component='div'
-            ref={ref}
-            sx={{
-              bgcolor: (theme) =>
-                selectedItem
-                  ? alpha(
-                      theme.palette.primary.main,
-                      theme.palette.action.selectedOpacity
-                    )
-                  : "none",
-            }}>
-            <ListItemMessage alignItems='flex-start' {...listItemProps}>
-              <ListItemAvatar
-                sx={{
-                  display: "flex",
-                  justifyContent: "start",
-                }}>
-                {!hideAvatar ? (
-                  <ListAvatar invisible id={sender.id} src={sender.image}>
-                    {name?.charAt(0).toUpperCase()}
-                  </ListAvatar>
-                ) : (
-                  <Typography
-                    variant='caption'
-                    component='div'
-                    display='flex'
-                    whiteSpace='nowrap'
-                    color='text.secondary'
-                    className='date-item'
-                    justifyContent='end'>
-                    {dayjs(createdAt).format("HH:mm")}
-                  </Typography>
-                )}
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  !hideName && (
-                    <Stack direction='row' spacing={1} alignItems='flex-end'>
-                      <Typography
-                        textOverflow='ellipsis'
-                        whiteSpace='nowrap'
-                        overflow='hidden'
-                        //fontWeight={550}
-                        variant='body1'>
-                        {name}
-                      </Typography>
-                      <Typography
-                        variant='caption'
-                        component='div'
-                        display='flex'
-                        whiteSpace='nowrap'
-                        color='text.secondary'
-                        justifyContent='end'>
-                        {formatTime({ date: createdAt, showTime: true })}
-                      </Typography>
-                    </Stack>
+        {/* <Fade in appear={false} unmountOnExit style={{ width: "100%" }}> */}
+        <Box
+          component='div'
+          ref={ref}
+          sx={{
+            bgcolor: (theme) =>
+              selectedItem
+                ? alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity
                   )
-                }
-                secondary={
-                  <>
-                    {message.type === "text" && (
-                      <MessageContentText content={message.content} />
-                    )}
-                    {message.type === "media" && (
-                      <MessageContentMedia
-                        content={message?.content}
-                        subType={message?.subType}
-                        id={message?.clientId || message?.id}
-                      />
-                    )}
-                    {message.type === "voice" && (
-                      <MessageContentVoice
-                        id={message?.clientId || message?.id}
-                        content={message?.content}
-                      />
-                    )}
-                    {message.type === "doc" && (
-                      <MessageContentDoc
-                        id={message?.clientId || message?.id}
-                        content={message?.content}
-                      />
-                    )}
-                  </>
-                }
-                slotProps={{
-                  primary: {
-                    component: "div",
-                  },
-                  secondary: {
-                    component: "div",
-                    sx: { "& p": { p: 0, m: 0 } },
-                  },
-                }}
-              />
-              {!matches && <MessageActionItem message={message} />}
-            </ListItemMessage>
-          </Box>
-        </Fade>
+                : "none",
+          }}>
+          <ListItemMessage alignItems='flex-start' {...listItemProps}>
+            <ListItemAvatar
+              sx={{
+                display: "flex",
+                justifyContent: "start",
+              }}>
+              {!hideAvatar ? (
+                <ListAvatar invisible id={sender.id} src={sender.image}>
+                  {name?.charAt(0).toUpperCase()}
+                </ListAvatar>
+              ) : (
+                <Typography
+                  variant='caption'
+                  component='div'
+                  display='flex'
+                  whiteSpace='nowrap'
+                  color='text.secondary'
+                  className='date-item'
+                  justifyContent='end'>
+                  {dayjs(createdAt).format("HH:mm")}
+                </Typography>
+              )}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                !hideName && (
+                  <Stack direction='row' spacing={1} alignItems='flex-end'>
+                    <Typography
+                      textOverflow='ellipsis'
+                      whiteSpace='nowrap'
+                      overflow='hidden'
+                      //fontWeight={550}
+                      variant='body1'>
+                      {name}
+                    </Typography>
+                    <Typography
+                      variant='caption'
+                      component='div'
+                      display='flex'
+                      whiteSpace='nowrap'
+                      color='text.secondary'
+                      justifyContent='end'>
+                      {formatTime({ date: createdAt, showTime: true })}
+                    </Typography>
+                  </Stack>
+                )
+              }
+              secondary={
+                <>
+                  {message.type === "text" && (
+                    <MessageContentText content={message.content} />
+                  )}
+                  {message.type === "media" && (
+                    <MessageContentMedia
+                      content={message?.content}
+                      subType={message?.subType}
+                      id={message?.clientId || message?.id}
+                    />
+                  )}
+                  {message.type === "voice" && (
+                    <MessageContentVoice
+                      id={message?.clientId || message?.id}
+                      content={message?.content}
+                    />
+                  )}
+                  {message.type === "doc" && (
+                    <MessageContentDoc
+                      id={message?.clientId || message?.id}
+                      content={message?.content}
+                    />
+                  )}
+                </>
+              }
+              slotProps={{
+                primary: {
+                  component: "div",
+                },
+                secondary: {
+                  component: "div",
+                  sx: { "& p": { p: 0, m: 0 } },
+                },
+              }}
+            />
+            {!matches && <MessageActionItem message={message} />}
+          </ListItemMessage>
+        </Box>
+        {/* </Fade> */}
       </ItemWrapperFocus>
     );
   }

@@ -38,8 +38,6 @@ const VideoContent = ({ content, id, onClick }) => {
     }
   }, [data, getData, setData]);
 
-  console.log(metadata);
-
   return (
     <>
       <Box
@@ -126,8 +124,8 @@ const VideoContent = ({ content, id, onClick }) => {
           px={1}
           color='white'
           // zIndex={100000}
-          sx={{ zIndex: (t) => t.zIndex.fab }}>
-          <Typography variant='body1'>
+          sx={{ zIndex: 100000 }}>
+          <Typography variant='body1' color='white'>
             {formatTime({ currentTime: metadata?.duration })}
           </Typography>
         </Box>

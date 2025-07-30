@@ -7,6 +7,8 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import useLocalStoreData from "../hooks/useLocalStoreData";
 import mapValueWithSnap from "../utils/mapValueWithSnap";
+import { useDispatch } from "react-redux";
+import { updateData } from "../redux/data/data";
 
 const VoiceListenerView = ({
   file,
@@ -18,6 +20,8 @@ const VoiceListenerView = ({
   rawData,
   uploading,
   uploadingProgressButton,
+  id = null,
+  targetId = null,
 }) => {
   const [playing, setPlaying] = useState(aux && !aux.paused);
   const audio = useMemo(() => aux || new Audio(), [aux]);
@@ -26,6 +30,7 @@ const VoiceListenerView = ({
   const [currentTime, setCurrentTime] = useState(audio.currentTime || 0);
   const playerRef = useRef(null);
   const holdRef = useRef(false);
+  const dispatch = useDispatch();
 
   const value = useMemo(() => {
     const v = mapValueWithSnap(
@@ -54,6 +59,8 @@ const VoiceListenerView = ({
 
   useEffect(() => {
     if (audio.src !== src) audio.src = src;
+    audio.dataset.targetId = targetId;
+    audio.dataset.id = id;
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
     const onFinish = () => setPlaying(false);
     const onTogglePlay = (e) => {
@@ -69,7 +76,7 @@ const VoiceListenerView = ({
       audio.removeEventListener("pause", onTogglePlay);
       audio.removeEventListener("play", onTogglePlay);
     };
-  }, [audio, src, currentTime]);
+  }, [audio, src, currentTime, targetId, id]);
 
   useEffect(() => {
     if (playing && audio.paused) audio.play();
@@ -95,6 +102,11 @@ const VoiceListenerView = ({
                   if (currentTime === duration) audio.currentTime = 0;
                   getData("app.playings.audio")?.pause();
                   setData("app.playings.audio", audio);
+                  const key = [
+                    "app.actions.messaging.medias.playings.targetId",
+                    "app.actions.messaging.medias.playings.id",
+                  ];
+                  dispatch(updateData({ data: [targetId, id], key }));
                 }
                 return !playing;
               });
@@ -214,6 +226,8 @@ VoiceListenerView.propTypes = {
   ]),
   uploading: PropTypes.bool,
   uploadingProgressButton: PropTypes.node,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  targetId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default React.memo(VoiceListenerView);

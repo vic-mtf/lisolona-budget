@@ -12,13 +12,16 @@ import { useMemo } from "react";
 import VoiceListenerView from "../../../../../../../components/VoiceListenerView";
 import { useLayoutEffect } from "react";
 import UploadingProgressVoiceButton from "./UploadingProgressVoiceButton";
-import { useSelectorMessage } from "../../../../../../../hooks/useMessagingContext";
+import useMessagingContext, {
+  useSelectorMessage,
+} from "../../../../../../../hooks/useMessagingContext";
 
 const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
   const { key } = useSmartKey({
     baseKey: `app.key.voices.${id}`,
     paths: { key: ["downloads", "uploads"] },
   });
+  const [{ user }] = useMessagingContext();
   const status = useSelectorMessage(id, "status");
   const [getData, setData] = useLocalStoreData(key);
 
@@ -111,6 +114,8 @@ const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
               file={file}
               rawData={voice?.rawData}
               duration={voice?.duration}
+              id={id}
+              targetId={user?.id}
               onGetRawData={({ rawData, duration }) => {
                 audio.setAttribute("id", id);
                 setData({ rawData, ...voice, id, duration, audio });

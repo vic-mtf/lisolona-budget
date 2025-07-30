@@ -4,12 +4,14 @@ import useLocalStoreData, {
   useSmartKey,
 } from "../../../../../../../../hooks/useLocalStoreData";
 import useAxios from "../../../../../../../../hooks/useAxios";
-import { LinearProgress, Box, Fade, IconButton } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import AudioListenerView from "../../../../../../../../components/AudioListenerView";
-import AudioFileOutlinedIcon from "@mui/icons-material/AudioFileOutlined";
 import { useState } from "react";
 import UploadingProgressVoiceButton from "../../message-content-voice/UploadingProgressVoiceButton";
-import { useSelectorMessage } from "../../../../../../../../hooks/useMessagingContext";
+import useMessagingContext, {
+  useSelectorMessage,
+} from "../../../../../../../../hooks/useMessagingContext";
+import AudioPlayerSkeleton from "../../../../../../../../components/AudioPlayerSkeleton";
 
 const AudioContent = ({ content, id }) => {
   const { key } = useSmartKey({
@@ -18,6 +20,7 @@ const AudioContent = ({ content, id }) => {
   });
   const [getData, setData] = useLocalStoreData(key);
   const [src, setSrc] = useState(() => getData("src"), [getData]);
+  const [{ user }] = useMessagingContext();
   const status = useSelectorMessage(id, "status");
 
   const [{ data }] = useAxios(
@@ -56,21 +59,7 @@ const AudioContent = ({ content, id }) => {
           alignItems='center'
           gap={2}
           width='100%'>
-          <IconButton disabled>
-            <AudioFileOutlinedIcon />
-          </IconButton>
-
-          <LinearProgress
-            color='inherit'
-            variant='indeterminate'
-            sx={{
-              borderRadius: 0.5,
-              width: "100%",
-              // "& .MuiLinearProgress-bar": {
-              //   bgcolor: (t) => t.palette.primary.main,
-              // },
-            }}
-          />
+          <AudioPlayerSkeleton />
         </Box>
       </Fade>
       <Fade
@@ -88,6 +77,7 @@ const AudioContent = ({ content, id }) => {
         <AudioListenerView
           url={src}
           id={id}
+          targetId={user?.id}
           rateButton
           uploadButton={
             status === "sending" && (

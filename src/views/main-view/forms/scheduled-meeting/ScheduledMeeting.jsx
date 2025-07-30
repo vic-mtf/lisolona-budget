@@ -71,7 +71,7 @@ export default function ScheduledMeeting({ onClose, room = null }) {
           title: fields.title,
           description: fields.description,
         });
-        console.log(call);
+        // console.log(call);
       } catch (err) {
         console.error(err);
       }

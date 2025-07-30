@@ -4,7 +4,7 @@ import NavigationContent from "./NavigationContent";
 import NavDrawer from "../../../components/NavDrawer";
 import { useSelector } from "react-redux";
 import useSmallScreen from "../../../hooks/useSmallScreen";
-import OutsideVoiceViewer from "../view-content-box/messaging-box/messaging-box-content/message-content-item/message-content-voice/OutsideVoiceViewer";
+import OutsideVoiceViewer from "./OutsideVoiceViewer";
 
 export default function Navigation() {
   const matches = useSmallScreen();
@@ -77,7 +77,7 @@ export default function Navigation() {
               }}>
               <NavigationContent />
             </Box>
-            {/* <OutsideVoiceViewer /> */}
+            <OutsideVoiceViewer />
           </Box>
         </Stack>
       </NavDrawer>

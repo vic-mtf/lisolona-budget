@@ -8,10 +8,8 @@ const useNewChat = () => {
 
   useEffect(() => {
     const handelGetChat = (data) => {
-      console.log("new chat =>", data);
       //   const [{ createdAt: updatedAt }] = messages;
       //   const localUser = store.getState().user;
-
       //   // _id is member object and not a string
       //   const remoteUser = members?.find(
       //     ({ _id: user }) => user?._id !== localUser?.id

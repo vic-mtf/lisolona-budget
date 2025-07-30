@@ -3,6 +3,7 @@ import { Box, alpha } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { updateData } from "../redux/data/data";
+import { useCallback } from "react";
 
 const BlinkWrapper = ({ children, blinked = false, onBlinkEnd }) => {
   const [active, setActive] = useState(false);
@@ -19,8 +20,6 @@ const BlinkWrapper = ({ children, blinked = false, onBlinkEnd }) => {
       return () => clearTimeout(timer);
     }
   }, [blinked, onBlinkEnd]);
-
-  if (!blinked) return <>{children}</>;
 
   return (
     <Box
@@ -45,17 +44,18 @@ const BlinkWrapper = ({ children, blinked = false, onBlinkEnd }) => {
 const ItemWrapper = ({ children, id, location: lc }) => {
   const blinked = useSelector((store) => store.data.app.actions[lc]?.blink[id]);
   const dispatch = useDispatch();
+  const onBlinkEnd = useCallback(
+    () =>
+      dispatch(
+        updateData({
+          key: `app.actions.${lc}.blink.${id}`,
+          data: false,
+        })
+      ),
+    [id, lc, dispatch]
+  );
   return (
-    <BlinkWrapper
-      blinked={blinked}
-      onBlinkEnd={() =>
-        dispatch(
-          updateData({
-            key: `app.actions.${lc}.blink.${id}`,
-            data: false,
-          })
-        )
-      }>
+    <BlinkWrapper blinked={blinked} onBlinkEnd={onBlinkEnd}>
       {children}
     </BlinkWrapper>
   );

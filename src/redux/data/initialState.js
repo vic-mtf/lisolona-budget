@@ -24,8 +24,13 @@ export const initialState = {
             open: false,
             id: null,
           },
+          playings: {
+            targetId: null,
+            id: null,
+          },
         },
         blink: {},
+        scrollTo: null,
       },
       notifications: {
         blink: {},

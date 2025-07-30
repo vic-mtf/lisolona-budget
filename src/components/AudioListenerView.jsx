@@ -12,9 +12,11 @@ import useLocalStoreData, { useSmartKey } from "../hooks/useLocalStoreData";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import VoiceRateButton from "../views/main-view/view-content-box/messaging-box/messaging-box-content/message-content-item/message-content-voice/VoiceRateButton";
+import { updateData } from "../redux/data/data";
+import { useDispatch } from "react-redux";
 
 const AudioListenerView = React.forwardRef(
-  ({ url, id, autoClose, uploadButton, rateButton }, ref) => {
+  ({ url, id, autoClose, uploadButton, rateButton, targetId }, ref) => {
     const { key } = useSmartKey({
       baseKey: `app.key.audios.${id}`,
       paths: { key: ["downloads", "uploads"] },
@@ -34,7 +36,8 @@ const AudioListenerView = React.forwardRef(
 
       if (src !== audio.src) {
         audio.src = src;
-        audio.id = id;
+        audio.dataset.id = id;
+        audio.dataset.targetId = targetId;
         audio.load();
       }
       return () => {
@@ -43,7 +46,7 @@ const AudioListenerView = React.forwardRef(
           audio.currentTime = 0;
         }
       };
-    }, [url, getData, setData, audio, src, id, autoClose]);
+    }, [url, getData, setData, audio, src, id, autoClose, targetId]);
 
     return (
       <Box
@@ -51,11 +54,13 @@ const AudioListenerView = React.forwardRef(
         ref={ref}
         flexDirection='row'
         gap={2}
-        height={60}
+        height={50}
         alignItems='center'
         width='100%'
         px={1}>
-        {uploadButton || <ToggleListingButton audio={audio} />}
+        {uploadButton || (
+          <ToggleListingButton audio={audio} id={id} targetId={targetId} />
+        )}
         <Box
           position='relative'
           flexGrow={1}
@@ -151,9 +156,10 @@ const ListeningTimer = ({ audio, duration }) => {
   );
 };
 
-const ToggleListingButton = ({ audio }) => {
+const ToggleListingButton = ({ audio, id = null, targetId = null }) => {
   const [paused, setPaused] = useState(true);
   const [getData, setData] = useLocalStoreData();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!audio) return;
@@ -177,6 +183,11 @@ const ToggleListingButton = ({ audio }) => {
           if (playingAudio !== audio) {
             getData("app.playings.audio")?.pause();
             setData("app.playings.audio", audio);
+            const key = [
+              "app.actions.messaging.medias.playings.targetId",
+              "app.actions.messaging.medias.playings.id",
+            ];
+            dispatch(updateData({ data: [targetId, id], key }));
           }
           audio?.play();
         } else audio?.pause();
@@ -198,6 +209,8 @@ ProgressSlider.propTypes = {
 
 ToggleListingButton.propTypes = {
   audio: PropTypes.instanceOf(Audio),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  targetId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 AudioListenerView.displayName = "AudioListenerView";
@@ -208,6 +221,7 @@ AudioListenerView.propTypes = {
   autoClose: PropTypes.bool,
   uploadButton: PropTypes.node,
   rateButton: PropTypes.bool,
+  targetId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default React.memo(AudioListenerView);

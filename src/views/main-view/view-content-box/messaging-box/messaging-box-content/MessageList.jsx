@@ -9,6 +9,8 @@ import groupeMessages from "./groupMessage";
 import StickToBottomButton from "./StickToBottomButton";
 import { useCallback } from "react";
 import { useState } from "react";
+import store from "../../../../../redux/store";
+import { updateData } from "../../../../../redux/data/data";
 
 const MessageList = ({ user, VListRef, data }) => {
   const [shouldStickToBottom, setShouldStickToBottom] = useState(false);
@@ -24,30 +26,37 @@ const MessageList = ({ user, VListRef, data }) => {
   const bulkMessages = useSelector(
     (store) => store.data.app.messages[user?.id]
   );
-  // const matches = useSmallScreen();
   const messages = useMemo(() => groupeMessages(bulkMessages), [bulkMessages]);
-  //console.log(messages);
-
-  const onScrollToBottom = useCallback(() => {
-    VListRef.current.scrollToIndex(messages.length - 1, {
-      align: "end",
-    });
-  }, [messages.length, VListRef]);
+  const onScrollToBottom = useCallback(
+    (index) => {
+      const scrollTo = index > -1 ? index : messages.length - 1;
+      const vList = VListRef.current;
+      vList?.scrollToIndex(scrollTo, { align: "end" });
+    },
+    [messages.length, VListRef]
+  );
 
   useLayoutEffect(() => {
-    // if (data.messages?.length === messages.length)
-    //   VListStateMemo.autoScrollToBottom = false;
     data.messages = messages;
   }, [messages, data, VListStateMemo]);
 
   useEffect(() => {
+    const scrollTo = store.getState().data.app.actions.messaging.scrollTo;
+    const index = messages.findIndex(
+      ({ id, clientId }) => id === scrollTo || clientId === scrollTo
+    );
     if (!VListRef.current) return;
     const { clientId } = messages[messages.length - 1] || {};
     const { lastMessageId } = VListStateMemo || {};
     VListStateMemo.autoScrollToBottom = clientId !== lastMessageId;
     VListStateMemo.lastMessageId = clientId;
 
-    if (VListStateMemo.autoScrollToBottom) onScrollToBottom();
+    if (scrollTo)
+      store.dispatch(
+        updateData({ data: null, key: "app.actions.messaging.scrollTo" })
+      );
+
+    if (VListStateMemo.autoScrollToBottom) onScrollToBottom(index);
   }, [VListStateMemo, VListRef, onScrollToBottom, messages]);
 
   return (
