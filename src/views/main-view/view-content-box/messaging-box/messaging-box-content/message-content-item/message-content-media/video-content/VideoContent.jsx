@@ -21,7 +21,7 @@ const VideoContent = ({ content, id, onClick }) => {
   const [getData, setData] = useLocalStoreData(key);
   const status = useSelectorMessage(id, "status");
   const [metadata, setMetadata] = useState(() => getData("metadata"));
-  const [{ data }] = useAxios(
+  const [{ data, loading }] = useAxios(
     { url: content, responseType: "blob" },
     { manual: Boolean(getData("src")) }
   );
@@ -38,6 +38,8 @@ const VideoContent = ({ content, id, onClick }) => {
     }
   }, [data, getData, setData]);
 
+  console.log(metadata);
+
   return (
     <>
       <Box
@@ -50,16 +52,14 @@ const VideoContent = ({ content, id, onClick }) => {
         muted
         preload='metadata'
         onCanPlay={(e) => {
-          const video = e.target;
-          const poster = getPosterImage(video);
-          setMetadata({ ...metadata, poster });
-          setData({ metadata });
-        }}
-        onLoadedMetadata={(e) => {
-          const video = e.target;
-          const duration = video.duration;
-          setMetadata({ ...metadata, duration });
-          setData({ duration });
+          if (!metadata?.poster) {
+            const video = e.target;
+            const duration = video.duration;
+            video.currentTime = 1;
+            const poster = getPosterImage(video);
+            setMetadata({ ...metadata, poster, duration });
+            setData({ metadata });
+          }
         }}
         sx={{
           objectFit: "cover",
@@ -68,6 +68,7 @@ const VideoContent = ({ content, id, onClick }) => {
           display: "flex",
           height: "100%",
           width: "100%",
+          zIndex: 0,
           opacity: metadata ? 1 : 0,
           transition: (t) =>
             t.transitions.create("opacity", {
@@ -124,6 +125,7 @@ const VideoContent = ({ content, id, onClick }) => {
           p={0.5}
           px={1}
           color='white'
+          // zIndex={100000}
           sx={{ zIndex: (t) => t.zIndex.fab }}>
           <Typography variant='body1'>
             {formatTime({ currentTime: metadata?.duration })}
@@ -159,7 +161,7 @@ const VideoContent = ({ content, id, onClick }) => {
       </Fade>
 
       <Fade
-        in={!metadata}
+        in={loading}
         unmountOnExit
         appear={false}
         style={{

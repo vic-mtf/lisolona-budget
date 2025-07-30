@@ -13,6 +13,7 @@ import toggleFullScreen from "../../../../utils/toggleFullscreen";
 import { filterByName } from "../../../../utils/filterByKey";
 import { getFilteredMenuItems } from "./discussionMenuItems";
 import getCoordContextMenu from "../../../../utils/getCoordContextMenu";
+import useSmallScreen from "../../../../hooks/useSmallScreen";
 
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
@@ -42,6 +43,8 @@ export default function Discussions() {
       ),
     [bulkDiscussions, category, search, favorites, pins]
   );
+
+  const matches = useSmallScreen();
 
   const itemContent = useCallback(
     ({ index, style }) => {
@@ -106,7 +109,14 @@ export default function Discussions() {
         />
         <Box
           overflow='hidden'
-          sx={{ overflowX: "auto" }}
+          sx={{
+            overflowX: "auto",
+            ...(matches && {
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              "&::-webkit-scrollbar": { display: "none" },
+            }),
+          }}
           flexDirection='row'
           display='flex'
           gap={1}

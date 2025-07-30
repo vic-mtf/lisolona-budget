@@ -43,7 +43,7 @@ const VideoSkeleton = React.forwardRef(
             justifyContent: "center",
             borderRadius: 1,
             overflow: "hidden",
-            backgroundColor: (t) => alpha(t.palette.common.white, 0.2),
+            // backgroundColor: (t) => alpha(t.palette.common.white, 0.2),
           }}>
           <PlayArrowOutlinedIcon fontSize='large' />
         </Box>

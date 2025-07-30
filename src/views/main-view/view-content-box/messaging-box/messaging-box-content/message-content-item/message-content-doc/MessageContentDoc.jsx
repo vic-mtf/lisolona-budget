@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useMemo } from "react";
-import { Box, Typography, Avatar, Tooltip } from "@mui/material";
+import { Box, Typography, Avatar, Tooltip, IconButton } from "@mui/material";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import humanReadableSize from "../../../../../../../utils/humanReadableSize";
 import PropTypes from "prop-types";
@@ -10,22 +10,23 @@ import { useSelectorMessage } from "../../../../../../../hooks/useMessagingConte
 import useLocalStoreData, {
   useSmartKey,
 } from "../../../../../../../hooks/useLocalStoreData";
-import UploadingProgressVoiceButton from "../message-content-voice/UploadingProgressVoiceButton";
 import { getExtension } from "../../../../../../../utils/getFile";
 import { axios } from "../../../../../../../hooks/useAxios";
+import DownloadButton from "./DownloadButton";
+import { useEffect } from "react";
 
-//import.meta.env.BASE_URL + "/pdf.worker.min.js";
+PdfLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const MessageContentDoc = React.forwardRef(({ content, id }, ref) => {
   const { key } = useSmartKey({
     baseKey: `app.key.docs.${id}`,
     paths: { key: ["downloads", "uploads"] },
   });
-
+  const loading = useSelectorMessage(id, "request.loading");
   const [getData, setData] = useLocalStoreData(key);
-  const [src] = useState(() => getData("src"), [getData]);
+  const [src, setSrc] = useState(() => getData("src"), [getData]);
   const status = useSelectorMessage(id, "status");
-  const [numPages, setNumPages] = useState(0);
+  const [numPages, setNumPages] = useState(getData("numPages") || 0);
   const [size, setSize] = useState(
     () => getData("file.size") || getData("size"),
     [getData]
@@ -45,12 +46,14 @@ const MessageContentDoc = React.forwardRef(({ content, id }, ref) => {
   }, [getData, content]);
 
   const isLoaded = Boolean(src && status !== "sending");
+  const loadingFile = status === "sending" || loading;
 
-  useLayoutEffect(() => {
-    PdfLib.GlobalWorkerOptions.workerSrc = workerSrc;
-    if (ext?.toLowerCase() === "pdf" && src)
+  useEffect(() => {
+    if (ext?.toLowerCase() === "pdf" && !getData("numPages") && src)
       PdfLib.getDocument(src).promise.then(async (pdfDoc) => {
-        setNumPages(pdfDoc._pdfInfo?.numPages);
+        const numPages = pdfDoc._pdfInfo?.numPages;
+        setNumPages(numPages);
+        setData({ numPages });
       });
 
     if (!size && url) {
@@ -60,7 +63,7 @@ const MessageContentDoc = React.forwardRef(({ content, id }, ref) => {
         setData({ size });
       });
     }
-  }, [ext, src, size, url, setData]);
+  }, [ext, src, size, url, setData, getData]);
 
   return (
     <Box
@@ -83,27 +86,32 @@ const MessageContentDoc = React.forwardRef(({ content, id }, ref) => {
       }}>
       <Box height='100%' sx={{ aspectRatio: 1 }}>
         <div style={{ height: "100%", aspectRatio: 1, position: "relative" }}>
-          <Avatar
-            className='DocThumbnail'
-            sx={{
-              width: "100%",
-              height: "100%",
-              opacity: status === "sending" ? 0.2 : 1,
-              transition: (t) =>
-                t.transitions.create("opacity", {
-                  duration: t.transitions.duration.standard,
-                  easing: t.transitions.easing.easeInOut,
-                }),
-            }}
-            src={iconDoc[ext?.toLowerCase()]}>
-            <DescriptionOutlinedIcon />
-          </Avatar>
+          <IconButton
+            disabled={loadingFile}
+            sx={{ p: 0 }}
+            onClick={() => {
+              if (src) window.open(src, "_blank");
+            }}>
+            <Avatar
+              className='DocThumbnail'
+              sx={{
+                opacity: loadingFile ? 0.2 : 1,
+                transition: (t) =>
+                  t.transitions.create("opacity", {
+                    duration: t.transitions.duration.standard,
+                    easing: t.transitions.easing.easeInOut,
+                  }),
+              }}
+              src={iconDoc[ext?.toLowerCase()]}>
+              <DescriptionOutlinedIcon />
+            </Avatar>
+          </IconButton>
           {!isLoaded && (
             <Box
               className='UploadingProgressWrapper'
               sx={{
                 position: "absolute",
-                opacity: status === "sending" ? 1 : 0,
+                opacity: loadingFile ? 1 : 0,
                 top: 0,
                 left: 0,
                 width: "100%",
@@ -113,7 +121,12 @@ const MessageContentDoc = React.forwardRef(({ content, id }, ref) => {
                 justifyContent: "center",
                 zIndex: 1,
               }}>
-              <UploadingProgressVoiceButton id={id} dataKey={key} />
+              <DownloadButton
+                id={id}
+                dataKey={key}
+                setSrc={setSrc}
+                downloaded={!src}
+              />
             </Box>
           )}
         </div>
@@ -143,11 +156,26 @@ const MessageContentDoc = React.forwardRef(({ content, id }, ref) => {
           )}
           {bull}
           {humanReadableSize(size)}
+          {loading && status !== "sending" && <Progress id={id} />}
         </Typography>
       </Box>
     </Box>
   );
 });
+
+const Progress = ({ id }) => {
+  const downloadProgress = useSelectorMessage(id, "request.downloadProgress");
+  return (
+    <>
+      {bull}
+      {parseInt((downloadProgress || 0) * 100)}%
+    </>
+  );
+};
+
+Progress.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
 
 const bull = (
   <span

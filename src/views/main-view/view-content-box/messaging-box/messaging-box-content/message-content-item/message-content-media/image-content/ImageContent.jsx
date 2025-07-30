@@ -67,7 +67,8 @@ const ImageContent = ({ content, id, onClick }) => {
             top: 0,
             left: 0,
             width: "100%",
-            height: "100%",
+            objectFit: "cover",
+            aspectRatio: 1,
           }}>
           <Box
             component='img'
@@ -75,10 +76,6 @@ const ImageContent = ({ content, id, onClick }) => {
             srcSet={url}
             loading='lazy'
             sx={{
-              objectFit: "cover",
-              p: 0,
-              m: 0,
-              display: "flex",
               height: "100%",
               width: "100%",
             }}

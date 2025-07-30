@@ -14,7 +14,7 @@ import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import VoiceRateButton from "../views/main-view/view-content-box/messaging-box/messaging-box-content/message-content-item/message-content-voice/VoiceRateButton";
 
 const AudioListenerView = React.forwardRef(
-  ({ url, id, autoClose, uploadButton }, ref) => {
+  ({ url, id, autoClose, uploadButton, rateButton }, ref) => {
     const { key } = useSmartKey({
       baseKey: `app.key.audios.${id}`,
       paths: { key: ["downloads", "uploads"] },
@@ -65,13 +65,18 @@ const AudioListenerView = React.forwardRef(
           <ProgressSlider audio={audio} duration={duration} />
         </Box>
         <ListeningTimer audio={audio} duration={duration} />
-        <Divider
-          orientation='vertical'
-          flexItem
-          variant='middle'
-          sx={{ borderWidth: 1.5 }}
-        />
-        <VoiceRateButton audio={audio} />
+
+        {rateButton && (
+          <>
+            <Divider
+              orientation='vertical'
+              flexItem
+              variant='middle'
+              sx={{ borderWidth: 1.5 }}
+            />
+            <VoiceRateButton audio={audio} />
+          </>
+        )}
       </Box>
     );
   }
@@ -202,6 +207,7 @@ AudioListenerView.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   autoClose: PropTypes.bool,
   uploadButton: PropTypes.node,
+  rateButton: PropTypes.bool,
 };
 
 export default React.memo(AudioListenerView);

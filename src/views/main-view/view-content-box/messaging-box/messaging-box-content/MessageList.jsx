@@ -17,6 +17,7 @@ const MessageList = ({ user, VListRef, data }) => {
       isPrepend: false,
       autoScrollToBottom: true,
       isFirstRender: true,
+      lastMessageId: null,
     }),
     []
   );
@@ -34,15 +35,19 @@ const MessageList = ({ user, VListRef, data }) => {
   }, [messages.length, VListRef]);
 
   useLayoutEffect(() => {
+    // if (data.messages?.length === messages.length)
+    //   VListStateMemo.autoScrollToBottom = false;
     data.messages = messages;
-  }, [messages, data]);
+  }, [messages, data, VListStateMemo]);
 
   useEffect(() => {
-    const message = messages[messages.length - 1];
     if (!VListRef.current) return;
-    if (VListStateMemo.autoScrollToBottom || message?.status === "sending") {
-      onScrollToBottom();
-    }
+    const { clientId } = messages[messages.length - 1] || {};
+    const { lastMessageId } = VListStateMemo || {};
+    VListStateMemo.autoScrollToBottom = clientId !== lastMessageId;
+    VListStateMemo.lastMessageId = clientId;
+
+    if (VListStateMemo.autoScrollToBottom) onScrollToBottom();
   }, [VListStateMemo, VListRef, onScrollToBottom, messages]);
 
   return (
@@ -87,6 +92,7 @@ const MessageList = ({ user, VListRef, data }) => {
           const date = message?.date;
           const grouped = message?.sender?.id === nextMessage?.sender?.id;
           const id = message?.clientId || message?.id || message?.date;
+
           return (
             <MessageItem
               key={id}

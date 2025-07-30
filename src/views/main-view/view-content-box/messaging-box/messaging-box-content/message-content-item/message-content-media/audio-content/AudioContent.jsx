@@ -88,6 +88,7 @@ const AudioContent = ({ content, id }) => {
         <AudioListenerView
           url={src}
           id={id}
+          rateButton
           uploadButton={
             status === "sending" && (
               <UploadingProgressVoiceButton id={id} dataKey={key} />
