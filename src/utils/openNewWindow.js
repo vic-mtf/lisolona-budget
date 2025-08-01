@@ -22,7 +22,7 @@ export default function openNewWindow(args = _args) {
   const options = Object.keys(otherProps)
     .map((key) => `${key}=${otherProps[key]}`)
     .join(", ");
-  const uri = `${import.meta.env.BASE_URL}${url}`.trim();
+  const uri = new URL(url, window.location.origin).toString();
   const wd = window.open(uri, target, options);
   window.addEventListener("beforeunload", () => {
     if (!wd.closed) wd.close();

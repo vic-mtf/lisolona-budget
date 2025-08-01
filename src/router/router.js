@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import SignInPage from "../views/signin/SignInPage";
+//import SignInPage from "../views/signin/SignInPage";
 import HomePage from "../views/home/Home";
 import TestApp from "../test/App.test";
 import { createElement } from "react";
@@ -19,10 +19,6 @@ const UNPROTECTED_ROUTES = [
   {
     component: HomePage,
     path: "/*",
-  },
-  {
-    component: SignInPage,
-    path: "/account/signin/*",
   },
 ];
 
