@@ -11,7 +11,7 @@ import formatTime from "../utils/formatTime";
 import useLocalStoreData, { useSmartKey } from "../hooks/useLocalStoreData";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
-import VoiceRateButton from "../views/main-view/view-content-box/messaging-box/messaging-box-content/message-content-item/message-content-voice/VoiceRateButton";
+import VoiceRateButton from "../views/main/view-content-box/messaging-box/messaging-box-content/message-content-item/message-content-voice/VoiceRateButton";
 import { updateData } from "../redux/data/data";
 import { useDispatch } from "react-redux";
 

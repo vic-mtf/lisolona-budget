@@ -9,11 +9,17 @@ import scrollBarSx from "./utils/scrollBarSx";
 import { Box, Fade } from "@mui/material";
 import Cover from "./views/cover/Cover";
 import { SIGN_IN_CHANNEL } from "./utils/broadcastChannel";
+import ErrorNetwork from "./components/ErrorNetwork";
+import { useMemo } from "react";
 
 function App() {
   const connected = useSelector((store) => store.user.connected);
   const loaded = useSelector((store) => store.data.app.loaded);
   const dispatch = useDispatch();
+
+  const isConference = useMemo(() => {
+    return window.location.pathname.includes("/conference") && !window.opener;
+  }, []);
 
   useEffect(() => {
     if (!connected) {
@@ -51,16 +57,17 @@ function App() {
           display: (connected ? loaded : true) ? "flex" : "none",
         },
       }}>
-      <Fade in={!loaded && connected} unmountOnExit>
+      <Fade in={!loaded && connected && !isConference} unmountOnExit>
         <Box>
           <Cover />
         </Box>
       </Fade>
       <Fade
-        in={connected ? loaded : true}
+        in={connected ? isConference || loaded : true}
         unmountOnExit
         key={connected ? "connected" : "disconnected"}>
         <Box id='router-container'>
+          <ErrorNetwork />
           <RouterProvider router={router(connected)} />
         </Box>
       </Fade>

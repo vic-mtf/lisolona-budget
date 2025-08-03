@@ -1,0 +1,58 @@
+const initialState = {
+  room: {
+    name: null,
+    description: null,
+    type: null,
+    status: null,
+    createdAt: null,
+    updatedAt: null,
+    startedAt: null,
+    endedAt: null,
+    AGORA_DATA: {
+      channel: null,
+      token: null,
+      uid: null,
+      screenUid: null,
+    },
+  },
+  setup: {
+    loading: true,
+    devices: {
+      speaker: {
+        deviceId: null,
+        volume: 1,
+        label: null,
+      },
+      screen: {
+        deviceId: null,
+        enabled: false,
+        label: null,
+      },
+      camera: {
+        deviceId: null,
+        enabled: false,
+        label: null,
+        permission: null,
+      },
+      microphone: {
+        deviceId: null,
+        enabled: false,
+        label: null,
+        permission: null,
+      },
+      microphones: [],
+      cameras: [],
+      speakers: [],
+      screens: [],
+    },
+  },
+
+  meeting: {
+    nav: {
+      open: false,
+      index: 0,
+    },
+  },
+};
+
+export default initialState;

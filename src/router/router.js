@@ -3,14 +3,15 @@ import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../views/home/Home";
 import TestApp from "../test/App.test";
 import { createElement } from "react";
-import MainView from "../views/main-view/MainView";
+import Main from "../views/main/Main";
 import RouteErrorBoundary from "../components/RouteErrorBoundary";
+import Conference from "../views/conference/Conference";
 
 const PUBLIC_URL = import.meta.env.BASE_URL;
 
 const PROTECTED_ROUTES = [
   {
-    component: MainView,
+    component: Main,
     path: "/*",
   },
 ];
@@ -32,6 +33,12 @@ const DEV_ROUTES = [
 ];
 
 const PRODUCTION_ROUTES = [];
+
+if (!window.opener)
+  PUBLIC_ROUTES.push({
+    path: "/conference/*",
+    component: Conference,
+  });
 
 const router = (connected) => {
   const routes = [

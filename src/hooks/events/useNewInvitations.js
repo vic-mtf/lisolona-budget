@@ -6,7 +6,7 @@ import { isPlainObject } from "lodash";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import NoticeSnack from "../../components/NoticeSnack";
 import getFullName from "../../utils/getFullName";
-import { NAVIGATE_EVENT_NAME } from "../../views/main-view/navigation/NavTab";
+import { NAVIGATE_EVENT_NAME } from "../../views/main/navigation/NavTab";
 
 const useNewInvitations = () => {
   const socket = useSocket();

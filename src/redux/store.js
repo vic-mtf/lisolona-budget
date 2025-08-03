@@ -11,12 +11,10 @@ import persistStore from "redux-persist/es/persistStore";
 import app from "./app";
 import user from "./user";
 import data from "./data/data";
-import status from "./status";
-import meeting from "./meeting";
-import conference from "./conference";
+import conference from "./conference/conference";
 
 const store = configureStore({
-  reducer: { app, user, data, status, meeting, conference },
+  reducer: { app, user, data, conference },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -15,6 +15,9 @@ html {
   background: #eee5;
   margin: 0;
   overflow: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: none;
 }
 body {
   margin: 0;
