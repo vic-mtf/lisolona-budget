@@ -4,7 +4,19 @@ import PropTypes from "prop-types";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 
 const SplitButton = React.forwardRef(
-  ({ onClick, active, disabled, onExpand, icon, activeIcon, error }, ref) => {
+  (
+    {
+      onClick,
+      active,
+      disabled,
+      onExpand,
+      icon,
+      activeIcon,
+      error,
+      disabledMoreButton,
+    },
+    ref
+  ) => {
     return (
       <Box
         ref={ref}
@@ -29,7 +41,7 @@ const SplitButton = React.forwardRef(
         </Fab>
         <Box>
           <CustomIconButton
-            disabled={error || disabled}
+            disabled={error || disabled || disabledMoreButton}
             onClick={onExpand}
             size='small'>
             <ExpandMoreOutlinedIcon />
@@ -75,6 +87,7 @@ SplitButton.propTypes = {
   icon: PropTypes.node,
   activeIcon: PropTypes.node,
   error: PropTypes.bool,
+  disabledMoreButton: PropTypes.bool,
 };
 
 export default React.memo(SplitButton);

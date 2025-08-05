@@ -14,20 +14,37 @@ const getDevices = async () => {
   const microphones = devices.filter(filter("audioinput")).map(serialize);
   const speakers = devices.filter(filter("audiooutput")).map(serialize);
   const screens = devices.filter(filter("videoinput")).map(serialize);
-  console.log(cameras, microphones, speakers, screens);
   return { cameras, microphones, speakers, screens };
 };
 
-navigator.mediaDevices?.addEventListener("devicechange", async () => {
-  const { cameras, microphones, speakers, screens } = await getDevices();
-  const key = [
-    "setup.devices.cameras",
-    "setup.devices.microphones",
-    "setup.devices.speakers",
-    "setup.devices.screens",
-  ];
-  const data = [cameras, microphones, speakers, screens];
-  store.dispatch(updateConferenceData({ data, key }));
-});
+export const stopStream = (stream, type = "all") => {
+  if (!stream) return;
+  stream.getTracks().forEach((track) => {
+    if (
+      type === "all" ||
+      (type === "audio" && track.kind === "audio") ||
+      (type === "video" && track.kind === "video")
+    ) {
+      track.stop();
+    }
+  });
+};
+
+if (navigator.mediaDevices.ondevicechange === null)
+  navigator.mediaDevices.ondevicechange = async () => {
+    const { cameras, microphones, speakers, screens } = await getDevices();
+    const key = [
+      "setup.devices.cameras",
+      "setup.devices.microphones",
+      "setup.devices.speakers",
+      "setup.devices.screens",
+    ];
+    console.log("cameras", cameras);
+    console.log("microphones", microphones);
+    console.log("speakers", speakers);
+    console.log("screens", screens);
+    const data = [cameras, microphones, speakers, screens];
+    store.dispatch(updateConferenceData({ data, key }));
+  };
 
 export default getDevices;

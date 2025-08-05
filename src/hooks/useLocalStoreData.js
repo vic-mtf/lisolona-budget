@@ -24,7 +24,9 @@ const useLocalStoreData = (keySearch) => {
       if (keySearch) {
         setData(keySearch, {
           ...getData(keySearch),
-          ...(typeof key === "string" ? { [key]: value } : key),
+          ...(typeof key === "string"
+            ? { ...getData(keySearch)?.[key], [key]: value }
+            : key),
         });
       } else setData(key, value);
     },

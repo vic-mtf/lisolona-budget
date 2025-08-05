@@ -18,6 +18,10 @@ const initialState = {
   setup: {
     loading: true,
     devices: {
+      alertPermission: {
+        open: false,
+        deviceType: null,
+      },
       speaker: {
         deviceId: null,
         volume: 1,

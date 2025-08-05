@@ -1,9 +1,14 @@
-import React from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import SplitButton from "../SplitButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
-import { useState, useMemo, useRef } from "react";
 import useSmallScreen from "../../../../../hooks/useSmallScreen";
 import {
   Menu,
@@ -13,36 +18,109 @@ import {
   ListItemText,
   Divider,
   MenuItem,
+  LinearProgress,
+  Box,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import useAudioVolume from "../../../../../hooks/useAudioVolume";
+import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
+import { updateConferenceData } from "../../../../../redux/conference/conference";
+import { stopStream } from "../../../../../utils/getDevices";
 
 const MicButton = () => {
   const [open, setOpen] = useState(false);
+  const [getData, setData] = useLocalStoreData("conference.setup.devices");
+  const dispatch = useDispatch();
+  const enabled = useSelector(
+    (state) => state.conference.setup.devices.microphone.enabled
+  );
+  const deviceId = useSelector(
+    (state) => state.conference.setup.devices.microphone.deviceId
+  );
+  const getStream = useCallback(() => {
+    const keys = ["microphone.stream", "microphoneAndCamera.stream"];
+    if (deviceId)
+      for (let i = 0; i < keys.length; i++)
+        if (getData(keys[i])) return getData(keys[i]);
+    return null;
+  }, [getData, deviceId]);
+
   const anchorElRef = useRef(null);
   const matches = useSmallScreen();
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
   const microphones = useSelector(
     (state) => state.conference.setup.devices.microphones
   );
-  const deviceId = useSelector(
-    (state) => state.conference.setup.devices.microphone.deviceId
-  );
+
   const permission = useSelector(
     (state) => state.conference.setup.devices.microphone.permission
   );
-  const enabled = useSelector(
-    (state) => state.conference.setup.devices.microphone.enabled
+
+  const handleChangeCamera = useCallback(
+    async (device) => {
+      const stream = getStream();
+      if (device.deviceId === deviceId) return;
+      stopStream(stream, "audio");
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: device.deviceId },
+      });
+      setData("microphone", { stream: newStream });
+
+      const key = [
+        "setup.devices.microphone.deviceId",
+        "setup.devices.microphone.enabled",
+        "setup.devices.microphone.label",
+      ];
+      const data = [device.deviceId, true, device?.label];
+      dispatch(updateConferenceData({ key, data }));
+      setOpen(false);
+    },
+    [getStream, setData, dispatch, deviceId]
   );
+
+  useEffect(() => {
+    const stream = getStream();
+    if (stream) {
+      const [audioTrack] = stream.getAudioTracks();
+      if (audioTrack && audioTrack?.enabled !== enabled)
+        audioTrack.enabled = enabled;
+    }
+  }, [enabled, getStream]);
 
   return (
     <>
+      {!matches && (
+        <ListItem disableGutters disablePadding sx={{ maxWidth: 50 }}>
+          <Box width='100%'>
+            <VolumeBar deviceId={deviceId} />
+          </Box>
+        </ListItem>
+      )}
       <SplitButton
         icon={<MicOffOutlinedIcon />}
         activeIcon={<MicNoneOutlinedIcon />}
         active={enabled}
-        disabled={permission !== "granted"}
-        error={permission === "denied"}
-        onClick={() => null}
+        disabled={permission === "denied"}
+        error={permission !== "granted"}
+        disabledMoreButton={microphones.length === 0}
+        onClick={() => {
+          const stream = getStream();
+          if (stream) {
+            const key = "setup.devices.microphone.enabled";
+            dispatch(updateConferenceData({ key, data: !enabled }));
+          } else {
+            dispatch(
+              updateConferenceData({
+                key: [
+                  "setup.devices.alertPermission.open",
+                  "setup.devices.alertPermission.deviceType",
+                ],
+                data: [true, "microphone"],
+              })
+            );
+          }
+        }}
         ref={anchorElRef}
         onExpand={() => setOpen((open) => !open)}
       />
@@ -54,7 +132,12 @@ const MicButton = () => {
           : { anchorEl: anchorElRef.current })}>
         {matches && (
           <>
-            <ListItem>
+            <ListItem
+              secondaryAction={
+                <Box width={100}>
+                  <VolumeBar deviceId={deviceId} />
+                </Box>
+              }>
               <ListItemIcon>
                 <MicNoneOutlinedIcon />
               </ListItemIcon>
@@ -65,7 +148,9 @@ const MicButton = () => {
         )}
 
         {microphones.map((microphone) => (
-          <MenuItem key={microphone.deviceId}>
+          <MenuItem
+            key={microphone.deviceId}
+            onClick={() => handleChangeCamera(microphone)}>
             <ListItemIcon>
               {microphone.deviceId === deviceId ? (
                 <CheckOutlinedIcon />
@@ -81,4 +166,39 @@ const MicButton = () => {
   );
 };
 
+const VolumeBar = ({ deviceId }) => {
+  const [getData] = useLocalStoreData("conference.setup.devices");
+
+  const stream = useMemo(() => {
+    const keys = ["microphone.stream", "microphoneAndCamera.stream"];
+    if (deviceId)
+      for (let i = 0; i < keys.length; i++)
+        if (getData(keys[i])) return getData(keys[i]);
+    return null;
+  }, [deviceId, getData]);
+
+  const volume = useAudioVolume(stream);
+
+  return (
+    <LinearProgress
+      value={volume}
+      variant='determinate'
+      color='inherit'
+      sx={{
+        width: "100%",
+        height: 10,
+        borderRadius: 6,
+        overflow: "hidden",
+        position: "relative",
+        "& .MuiLinearProgress-bar": {
+          transitionDuration: "50ms",
+        },
+      }}
+    />
+  );
+};
+
+VolumeBar.propTypes = {
+  deviceId: PropTypes.string,
+};
 export default React.memo(MicButton);
