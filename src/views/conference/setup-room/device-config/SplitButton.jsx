@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton, Box, Fab, alpha } from "@mui/material";
+import { IconButton, Box, Fab, alpha, Tooltip } from "@mui/material";
 import PropTypes from "prop-types";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 
@@ -14,6 +14,9 @@ const SplitButton = React.forwardRef(
       activeIcon,
       error,
       disabledMoreButton,
+      disabledTitle,
+      activeTitle,
+      inactiveTitle,
     },
     ref
   ) => {
@@ -30,15 +33,23 @@ const SplitButton = React.forwardRef(
         sx={{
           border: (t) => `1px solid ${t.palette.divider}`,
         }}>
-        <Fab
-          variant='extended'
-          disabled={disabled}
-          size='small'
-          sx={{ aspectRatio: 1 }}
-          color={error ? "error" : active ? "primary" : "default"}
-          onClick={onClick}>
-          {active ? activeIcon || icon : icon}
-        </Fab>
+        <Tooltip
+          title={
+            (disabled ? disabledTitle : active ? activeTitle : inactiveTitle) ||
+            ""
+          }>
+          <div>
+            <Fab
+              variant='extended'
+              disabled={disabled}
+              size='small'
+              sx={{ aspectRatio: 1 }}
+              color={error ? "error" : active ? "primary" : "default"}
+              onClick={onClick}>
+              {active ? activeIcon || icon : icon}
+            </Fab>
+          </div>
+        </Tooltip>
         <Box>
           <CustomIconButton
             disabled={error || disabled || disabledMoreButton}
@@ -88,6 +99,9 @@ SplitButton.propTypes = {
   activeIcon: PropTypes.node,
   error: PropTypes.bool,
   disabledMoreButton: PropTypes.bool,
+  disabledTitle: PropTypes.string,
+  activeTitle: PropTypes.string,
+  inactiveTitle: PropTypes.string,
 };
 
 export default React.memo(SplitButton);

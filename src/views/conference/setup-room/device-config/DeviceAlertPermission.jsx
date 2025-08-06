@@ -15,6 +15,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import getDevices from "../../../../utils/getDevices";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import { streamSegmenter } from "../../../../utils/StreamSegmenter";
 
 const DeviceAlertPermission = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");
@@ -45,69 +46,77 @@ const DeviceAlertPermission = () => {
     [dispatch]
   );
 
+  const showErrorMessage = useCallback(
+    (name, type) => {
+      const message = mediaStreamErrorMessages(type)[name || "UnknownError"];
+      notifications.show(
+        <span style={{ display: "inline-flex", maxWidth: 400 }}>
+          {message}
+        </span>,
+        {
+          severity: "error",
+        }
+      );
+    },
+    [notifications]
+  );
+
   const createStream = useCallback(
-    async (type = "all", constraints) => {
-      console.log(type);
-      try {
-        const isAudio = type === "all" || type === "microphone";
-        const isVideo = type === "all" || type === "camera";
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: isVideo ? constraints?.video || true : false,
-          audio: isAudio ? constraints?.audio || true : false,
-        });
-        const streamType = type === "all" ? "microphoneAndCamera" : type;
-        setData(streamType, { stream });
+    async (type, constraints) => {
+      if (["microphone", "camera"].includes(type))
+        try {
+          const isAudio = type === "microphone";
+          const isVideo = type === "camera";
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: isVideo ? constraints?.video || true : false,
+            audio: isAudio ? constraints?.audio || true : false,
+          });
+          if (isVideo) {
+            const processedStream = await streamSegmenter.initStream(stream);
+            setData(type, { stream, processedStream });
+          } else setData(type, { stream });
 
-        const { microphones, cameras, speakers, screens } = await getDevices();
-        const defaultDevices = {
-          microphone: microphones[0],
-          camera: cameras[0],
-          speaker: speakers[0],
-          screen: screens[0],
-        };
+          const { microphones, cameras, speakers, screens } =
+            await getDevices();
+          const defaultDevices = {
+            microphone: microphones[0],
+            camera: cameras[0],
+            speaker: speakers[0],
+            screen: screens[0],
+          };
 
-        const key = ["setup.devices.screens"];
-        const data = [screens];
+          const key = ["setup.devices.screens"];
+          const data = [screens];
 
-        if (isAudio) {
-          key.push(
-            "setup.devices.microphones",
-            "setup.devices.speakers",
-            "setup.devices.microphone.enabled"
-          );
-          data.push(microphones, speakers, true);
-        }
-        if (isVideo) {
-          key.push("setup.devices.cameras", "setup.devices.camera.enabled");
-          data.push(cameras, true);
-        }
-
-        Object.keys(defaultDevices).forEach((k) => {
-          const obj = defaultDevices[k];
-          if (obj)
-            Object.keys(obj).forEach((j) => {
-              key.push(`setup.devices.${k}.${j}`);
-              data.push(obj[j]);
-            });
-        });
-        dispatch(updateConferenceData({ data, key }));
-      } catch (error) {
-        console.error(error);
-        const message =
-          mediaStreamErrorMessages(type)[error.name || "UnknownError"];
-        notifications.show(
-          <span style={{ display: "inline-flex", maxWidth: 400 }}>
-            {message}
-          </span>,
-
-          {
-            severity: "error",
+          if (isAudio) {
+            key.push(
+              "setup.devices.microphones",
+              "setup.devices.speakers",
+              "setup.devices.microphone.enabled"
+            );
+            data.push(microphones, speakers, true);
           }
-        );
-      }
+          if (isVideo) {
+            key.push("setup.devices.cameras", "setup.devices.camera.enabled");
+            data.push(cameras, true);
+          }
+
+          Object.keys(defaultDevices).forEach((k) => {
+            const obj = defaultDevices[k];
+            if (obj)
+              Object.keys(obj).forEach((j) => {
+                key.push(`setup.devices.${k}.${j}`);
+                data.push(obj[j]);
+              });
+          });
+          dispatch(updateConferenceData({ data, key }));
+        } catch (error) {
+          console.error(error);
+          showErrorMessage(error.name, type);
+        }
       onClose();
     },
-    [setData, dispatch, onClose, notifications]
+    [setData, dispatch, onClose, showErrorMessage]
   );
 
   const message = useMemo(
@@ -122,11 +131,7 @@ const DeviceAlertPermission = () => {
 
   useEffect(() => {
     const getStream = () => {
-      const keys = [
-        "microphone.stream",
-        "microphoneAndCamera.stream",
-        "camera.stream",
-      ];
+      const keys = ["microphone.stream", "camera.stream"];
       for (let i = 0; i < keys.length; i++)
         if (getData(keys[i])) return getData(keys[i]);
       return null;
@@ -157,8 +162,6 @@ const DeviceAlertPermission = () => {
         );
         setData("camera", { stream: null });
       }
-      if (!isMicroGranted && !isCameraGranted)
-        setData("microphoneAndCamera", { stream: null });
     }
   }, [microPer, cameraPer, createStream, getData, dispatch, setData]);
 
@@ -190,20 +193,23 @@ const DeviceAlertPermission = () => {
             onClick={async () => {
               if (clickableRef.current) {
                 clickableRef.current = false;
-                if (deviceType === "all") {
+                try {
                   const stream = await navigator.mediaDevices.getUserMedia({
-                    audio: true,
-                    video: true,
+                    audio:
+                      deviceType === "all" ? true : deviceType === "microphone",
+                    video:
+                      deviceType === "all" ? true : deviceType === "camera",
                   });
                   stream.getTracks().forEach((track) => {
                     track.stop();
                   });
-                  await Promise.all([
-                    createStream("microphone"),
-                    createStream("camera"),
-                  ]);
-                } else await createStream(deviceType);
+                } catch (err) {
+                  console.error(err);
+                  showErrorMessage(err.name, deviceType);
+                }
+
                 clickableRef.current = true;
+                onClose();
               }
             }}>
             {message}

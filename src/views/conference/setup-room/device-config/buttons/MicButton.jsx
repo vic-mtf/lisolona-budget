@@ -38,13 +38,10 @@ const MicButton = () => {
   const deviceId = useSelector(
     (state) => state.conference.setup.devices.microphone.deviceId
   );
-  const getStream = useCallback(() => {
-    const keys = ["microphone.stream", "microphoneAndCamera.stream"];
-    if (deviceId)
-      for (let i = 0; i < keys.length; i++)
-        if (getData(keys[i])) return getData(keys[i]);
-    return null;
-  }, [getData, deviceId]);
+  const getStream = useCallback(
+    () => (deviceId ? getData("microphone.stream") : null),
+    [getData, deviceId]
+  );
 
   const anchorElRef = useRef(null);
   const matches = useSmallScreen();
@@ -104,6 +101,11 @@ const MicButton = () => {
         disabled={permission === "denied"}
         error={permission !== "granted"}
         disabledMoreButton={microphones.length === 0}
+        disabledTitle={
+          "Vous avez refusé l'accès au micro. Voir les paramètres de votre navigateur pour activer l'accès."
+        }
+        activeTitle={"Micro activé"}
+        inactiveTitle={"Micro désactivé"}
         onClick={() => {
           const stream = getStream();
           if (stream) {
@@ -169,13 +171,10 @@ const MicButton = () => {
 const VolumeBar = ({ deviceId }) => {
   const [getData] = useLocalStoreData("conference.setup.devices");
 
-  const stream = useMemo(() => {
-    const keys = ["microphone.stream", "microphoneAndCamera.stream"];
-    if (deviceId)
-      for (let i = 0; i < keys.length; i++)
-        if (getData(keys[i])) return getData(keys[i]);
-    return null;
-  }, [deviceId, getData]);
+  const stream = useMemo(
+    () => (deviceId ? getData("microphone.stream") : null),
+    [deviceId, getData]
+  );
 
   const volume = useAudioVolume(stream);
 

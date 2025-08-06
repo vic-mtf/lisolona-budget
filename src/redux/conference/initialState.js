@@ -44,6 +44,17 @@ const initialState = {
         label: null,
         permission: null,
       },
+      processedCameraStream: {
+        filter: null,
+        blurred: false,
+        background: {
+          enabled: false,
+          url: null,
+          loaded: false,
+          uploadProgress: 0,
+          downloadProgress: 0,
+        },
+      },
       microphones: [],
       cameras: [],
       speakers: [],

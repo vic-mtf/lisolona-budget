@@ -1,36 +1,48 @@
-import { Box, Typography, alpha, Button, Fade } from "@mui/material";
+import {
+  Box,
+  Typography,
+  alpha,
+  Button,
+  Fade,
+  ImageListItemBar,
+  IconButton,
+  Tooltip,
+  Alert,
+} from "@mui/material";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import { updateConferenceData } from "../../../../redux/conference/conference";
+import LensBlurOutlinedIcon from "@mui/icons-material/LensBlurOutlined";
+import BlurOffOutlinedIcon from "@mui/icons-material/BlurOffOutlined";
 
 const CameraMirrorVideo = () => {
   const enabled = useSelector(
-    (state) => state.conference.setup.devices.camera.enabled
+    (store) => store.conference.setup.devices.camera.enabled
   );
   const deviceId = useSelector(
-    (state) => state.conference.setup.devices.camera.deviceId
+    (store) => store.conference.setup.devices.camera.deviceId
   );
   const cameraPer = useSelector(
-    (state) => state.conference.setup.devices.camera.permission
+    (store) => store.conference.setup.devices.camera.permission
   );
-  const loading = useSelector((state) => state.conference.setup.loading);
+  const loading = useSelector((store) => store.conference.setup.loading);
 
   const [getData] = useLocalStoreData("conference.setup.devices");
   const videoRef = useRef(null);
 
   useEffect(() => {
     const getStream = () => {
-      const keys = ["camera.stream", "microphoneAndCamera.stream"];
+      const keys = ["camera.processedStream", "camera.stream"];
       for (let i = 0; i < keys.length; i++)
         if (getData(keys[i])) return getData(keys[i]);
-      return enabled || null;
+      return null;
     };
     if (deviceId) {
       const video = videoRef.current;
       const stream = getStream();
-      if (stream && stream !== video.srcObject) {
+      if (enabled && stream && stream !== video.srcObject) {
         video.srcObject = null;
         video.srcObject = stream;
         video.play();
@@ -81,18 +93,57 @@ const CameraMirrorVideo = () => {
         </Typography>
       )}
       <DevicePermission />
+      <ToolbarSide />
     </Box>
+  );
+};
+const ToolbarSide = () => {
+  const blur = useSelector(
+    (store) => store.conference.setup.devices.processedCameraStream.blurred
+  );
+  const dispatch = useDispatch();
+  return (
+    <>
+      <ImageListItemBar
+        sx={{
+          p: 0.5,
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
+        }}
+        title='Vous'
+        position='top'
+        actionIcon={
+          <Tooltip
+            title={blur ? "Supprimer le floutage" : "Flouter l'arrière-plan"}>
+            <IconButton
+              sx={{ color: "white" }}
+              onClick={() => {
+                dispatch(
+                  updateConferenceData({
+                    key: "setup.devices.processedCameraStream.blurred",
+                    data: !blur,
+                  })
+                );
+              }}>
+              {blur ? <BlurOffOutlinedIcon /> : <LensBlurOutlinedIcon />}
+            </IconButton>
+          </Tooltip>
+        }
+        actionPosition='right'
+      />
+    </>
   );
 };
 
 const DevicePermission = () => {
   const cameraPer = useSelector(
-    (state) => state.conference.setup.devices.camera.permission
+    (store) => store.conference.setup.devices.camera.permission
   );
   const microPer = useSelector(
-    (state) => state.conference.setup.devices.microphone.permission
+    (store) => store.conference.setup.devices.microphone.permission
   );
   const isPrompt = cameraPer === "prompt" && microPer === "prompt";
+  const isDenied = cameraPer === "denied";
   const dispatch = useDispatch();
 
   return (
@@ -118,21 +169,33 @@ const DevicePermission = () => {
           Voulez-vous être vu et entendu ? Lisolo utilise le micro et la caméra
           de votre appareil pour rendre vos échanges plus immersifs
         </Typography>
-        <Button
-          variant='contained'
-          onClick={() => {
-            dispatch(
-              updateConferenceData({
-                key: [
-                  "setup.devices.alertPermission.open",
-                  "setup.devices.alertPermission.deviceType",
-                ],
-                data: [true, isPrompt ? "all" : "camera"],
-              })
-            );
-          }}>
-          {isPrompt ? "Activer la caméra et le micro" : "Activer la caméra"}
-        </Button>
+        {!isDenied ? (
+          <Button
+            variant='contained'
+            onClick={() => {
+              dispatch(
+                updateConferenceData({
+                  key: [
+                    "setup.devices.alertPermission.open",
+                    "setup.devices.alertPermission.deviceType",
+                  ],
+                  data: [true, isPrompt ? "all" : "camera"],
+                })
+              );
+            }}>
+            {isPrompt ? "Activer la caméra et le micro" : "Activer la caméra"}
+          </Button>
+        ) : (
+          <Alert severity='error'>
+            <Typography variant='caption' color='currentColor'>
+              {`Vous avez refusé l'accès ${
+                microPer === "denied"
+                  ? "au micro et à la caméra"
+                  : "à la caméra"
+              }. Voir les paramètres de votre navigateur pour activer l'accès.`}
+            </Typography>
+          </Alert>
+        )}
       </Box>
     </Fade>
   );

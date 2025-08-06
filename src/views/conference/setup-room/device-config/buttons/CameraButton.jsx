@@ -19,6 +19,7 @@ import { updateConferenceData } from "../../../../../redux/conference/conference
 import { stopStream } from "../../../../../utils/getDevices";
 import { useCallback } from "react";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import { streamSegmenter } from "../../../../../utils/StreamSegmenter";
 
 const CameraButton = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");
@@ -40,25 +41,20 @@ const CameraButton = () => {
     (state) => state.conference.setup.devices.camera.enabled
   );
 
-  const getStream = useCallback(() => {
-    const keys = ["camera.stream", "microphoneAndCamera.stream"];
-    for (let i = 0; i < keys.length; i++)
-      if (getData(keys[i])) return getData(keys[i]);
-    return null;
-  }, [getData]);
-
   const matches = useSmallScreen();
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
   const handleChangeCamera = useCallback(
     async (device) => {
-      const stream = getStream();
+      const stream = getData("camera.stream");
       if (device.deviceId !== deviceId) {
         stopStream(stream, "video");
         try {
           const newStream = await navigator.mediaDevices.getUserMedia({
             video: { deviceId: { exact: device.deviceId } },
           });
-          setData("camera", { stream: newStream });
+          streamSegmenter.stop();
+          const processedStream = await streamSegmenter.initStream(newStream);
+          setData("camera", { stream: newStream, processedStream });
         } catch (error) {
           console.error(error);
           notifications.show(`Caméra "${device.label}" n'est pas disponible`, {
@@ -75,16 +71,16 @@ const CameraButton = () => {
       dispatch(updateConferenceData({ key, data }));
       setOpen(false);
     },
-    [getStream, setData, dispatch, deviceId, notifications]
+    [getData, setData, dispatch, deviceId, notifications]
   );
 
   useEffect(() => {
-    const stream = getStream();
+    const stream = getData("camera.stream");
     if (!stream) return;
     const [videoTrack] = stream.getVideoTracks();
     if (videoTrack && videoTrack.enabled !== enabled)
       videoTrack.enabled = enabled;
-  }, [enabled, getStream]);
+  }, [enabled, getData]);
 
   return (
     <>
@@ -95,8 +91,13 @@ const CameraButton = () => {
         disabled={permission === "denied"}
         error={permission !== "granted"}
         disabledMoreButton={cameras.length === 0}
+        disabledTitle={
+          "Vous avez refusé l'accès à la caméra. Voir les paramètres de votre navigateur pour activer l'accès."
+        }
+        activeTitle={"Caméra activée"}
+        inactiveTitle={"Caméra désactivée"}
         onClick={() => {
-          const stream = getStream();
+          const stream = getData("camera.stream");
           if (stream) {
             const key = "setup.devices.camera.enabled";
             dispatch(updateConferenceData({ key, data: !enabled }));

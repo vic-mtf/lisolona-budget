@@ -88,11 +88,9 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
             },
             camera: {
               stream: null,
+              processedStream: null,
             },
             microphone: {
-              stream: null,
-            },
-            microphoneAndCamera: {
               stream: null,
             },
           },

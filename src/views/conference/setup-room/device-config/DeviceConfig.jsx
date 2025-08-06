@@ -6,6 +6,7 @@ import MicButton from "./buttons/MicButton";
 import CameraButton from "./buttons/CameraButton";
 import SpeakerButton from "./buttons/SpeakerButton";
 import CameraMirrorVideo from "./CameraMirorVideo";
+import SettingButton from "./buttons/SettingButton";
 
 const DeviceConfig = () => {
   return (
@@ -25,9 +26,7 @@ const DeviceConfig = () => {
           <MicButton />
           <CameraButton />
           <SpeakerButton />
-          <CustomIconButton>
-            <SettingsOutlinedIcon />
-          </CustomIconButton>
+          <SettingButton />
         </Toolbar>
       </Box>
     </Box>
