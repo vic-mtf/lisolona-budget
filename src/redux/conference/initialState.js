@@ -49,7 +49,7 @@ const initialState = {
         blurred: false,
         background: {
           enabled: false,
-          url: null,
+          id: null,
           loaded: false,
           uploadProgress: 0,
           downloadProgress: 0,

@@ -43,7 +43,7 @@ const SplitButton = React.forwardRef(
               variant='extended'
               disabled={disabled}
               size='small'
-              sx={{ aspectRatio: 1 }}
+              sx={{ p: 0, aspectRatio: 1 }}
               color={error ? "error" : active ? "primary" : "default"}
               onClick={onClick}>
               {active ? activeIcon || icon : icon}

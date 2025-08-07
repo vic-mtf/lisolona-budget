@@ -46,8 +46,11 @@ const ToggleFilterButton = () => {
   );
 
   return (
-    <Box>
-      <ListSubheader sx={{ bgcolor: "transparent" }}>Filtres</ListSubheader>
+    <Box mx={1}>
+      <ListSubheader
+        sx={{ bgcolor: "transparent", position: "relative", px: 0 }}>
+        Filtres
+      </ListSubheader>
       <StyledToggleButtonGroup
         value={filter}
         sx={{ mx: { xs: 0, md: 2 } }}

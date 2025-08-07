@@ -1,15 +1,21 @@
 import { alpha } from "@mui/material";
 
 const scrollBarSx = {
+  overflowY: "overlay",
   [`&::-webkit-scrollbar`]: {
-    width: 6,
-    height: 6,
+    width: { xs: 0, md: 6 },
+    height: { xs: 0, md: 6 },
+    position: "absolute",
+    right: 0,
+    overflowY: "overlay",
   },
   [`&::-webkit-scrollbar-thumb`]: { backgroundColor: "transparent" },
-  // [`&::-webkit-scrollbar-button`]: {
-  //     bgcolor: 'red',
-  //     cursor: 'pointer',
-  // },
+
+  [`&::-webkit-scrollbar-button`]: {
+    // bgcolor: "red",
+    // cursor: "pointer",
+    display: "none",
+  },
   [`&:hover`]: {
     [`&::-webkit-scrollbar-thumb`]: {
       backgroundColor: (theme) =>

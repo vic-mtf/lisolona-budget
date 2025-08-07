@@ -12,11 +12,12 @@ const CamerasList = () => {
   );
   const camera = useSelector((store) => store.conference.setup.devices.camera);
 
-  console.log(camera);
-
   return (
-    <Box sx={{ mt: 1 }}>
-      <ListSubheader sx={{ bgcolor: "transparent" }}>Caméra</ListSubheader>
+    <Box sx={{ mt: 1, mx: 1 }}>
+      <ListSubheader
+        sx={{ bgcolor: "transparent", position: "relative", px: 0 }}>
+        Caméra
+      </ListSubheader>
       <TextField
         value={camera?.deviceId || ""}
         onChange={(e) => {

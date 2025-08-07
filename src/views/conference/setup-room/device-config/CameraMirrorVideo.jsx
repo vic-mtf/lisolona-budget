@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import { updateConferenceData } from "../../../../redux/conference/conference";
 import LensBlurOutlinedIcon from "@mui/icons-material/LensBlurOutlined";
 import BlurOffOutlinedIcon from "@mui/icons-material/BlurOffOutlined";
+import LayersClearOutlinedIcon from "@mui/icons-material/LayersClearOutlined";
 import PropTypes from "prop-types";
 
 const CameraMirrorVideo = () => {
@@ -66,7 +67,7 @@ const CameraMirrorVideo = () => {
         ref={videoRef}
         sx={{
           aspectRatio: { xs: 9 / 16, md: 16 / 9 },
-          bgcolor: (t) => alpha(t.palette.common.black, 0.5),
+          bgcolor: (t) => alpha(t.palette.common.black, 0.9),
           width: "100%",
           height: "100%",
           display: "flex",
@@ -103,7 +104,12 @@ export const ToolbarSide = ({ size, name }) => {
   const blur = useSelector(
     (store) => store.conference.setup.devices.processedCameraStream.blurred
   );
+  const background = useSelector(
+    (store) => store.conference.setup.devices.processedCameraStream.background
+  );
+
   const dispatch = useDispatch();
+
   return (
     <>
       <ImageListItemBar
@@ -116,22 +122,41 @@ export const ToolbarSide = ({ size, name }) => {
         position='top'
         actionIcon={
           <Tooltip
-            title={blur ? "Supprimer le floutage" : "Flouter l'arrière-plan"}>
+            title={
+              background.enabled
+                ? "Supprimer l'arrière-plan"
+                : blur
+                ? "Supprimer le floutage"
+                : "Flouter l'arrière-plan"
+            }>
             <IconButton
               sx={{ color: "white" }}
               size={size}
               onClick={() => {
-                dispatch(
-                  updateConferenceData({
-                    key: "setup.devices.processedCameraStream.blurred",
-                    data: !blur,
-                  })
-                );
+                let key;
+                let data;
+                if (background.enabled) {
+                  key = [
+                    "setup.devices.processedCameraStream.background.enabled",
+                    "setup.devices.processedCameraStream.background.id",
+                  ];
+                  data = [false, null];
+                } else {
+                  key = "setup.devices.processedCameraStream.blurred";
+                  data = !blur;
+                }
+                dispatch(updateConferenceData({ key, data }));
               }}>
-              {blur ? (
-                <BlurOffOutlinedIcon fontSize={size} />
+              {background.enabled ? (
+                <LayersClearOutlinedIcon fontSize={size} />
               ) : (
-                <LensBlurOutlinedIcon fontSize={size} />
+                <>
+                  {blur ? (
+                    <BlurOffOutlinedIcon fontSize={size} />
+                  ) : (
+                    <LensBlurOutlinedIcon fontSize={size} />
+                  )}
+                </>
               )}
             </IconButton>
           </Tooltip>

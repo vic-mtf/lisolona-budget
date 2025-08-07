@@ -2,6 +2,7 @@ import { Box, TextField, MenuItem } from "@mui/material";
 import { streamSegmenter } from "../../../../../../utils/StreamSegmenter";
 import { useState } from "react";
 import ListSubheader from "@mui/material/ListSubheader";
+import Typography from "@mui/material/Typography";
 
 const ResolutionSwitcher = () => {
   const [resolution, setResolution] = useState(
@@ -14,8 +15,9 @@ const ResolutionSwitcher = () => {
   );
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <ListSubheader sx={{ bgcolor: "transparent" }}>
+    <Box sx={{ mt: 2, mx: 1 }}>
+      <ListSubheader
+        sx={{ bgcolor: "transparent", position: "relative", px: 0 }}>
         {"Résolution maximale à l'envoi"}
       </ListSubheader>
       <TextField
@@ -39,6 +41,10 @@ const ResolutionSwitcher = () => {
           );
         })}
       </TextField>
+      <Typography variant='body2' color='text.secondary' mt={1}>
+        La résolution à la réception est ajustée dynamiquement en fonction des
+        conditions réseau
+      </Typography>
     </Box>
   );
 };

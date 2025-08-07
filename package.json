@@ -17,6 +17,7 @@
     "@react-spring/web": "^9.7.5",
     "@reduxjs/toolkit": "^1.9.7",
     "@tensorflow-models/body-segmentation": "^1.0.2",
+    "@timephy/rnnoise-wasm": "^1.0.0",
     "@toolpad/core": "^0.14.0",
     "@yudiel/react-qr-scanner": "^2.2.1",
     "agora-rtc-react": "^2.4.0",

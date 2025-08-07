@@ -117,13 +117,13 @@ class StreamSegmenter {
         if (
           styles.has("blur") ||
           styles.has("removeBackground") ||
-          styles.has("replaceBackground")
+          (styles.has("replaceBackground") && this.#backgroundImage)
         ) {
           segmenter = await this.#getSegmenter();
           segmentation = await segmenter.segmentPeople(this.#video);
         }
 
-        if (styles.has("blur")) {
+        if (styles.has("blur") && !styles.has("replaceBackground")) {
           await bodySegmentation.drawBokehEffect(
             this.#canvas,
             this.#video,

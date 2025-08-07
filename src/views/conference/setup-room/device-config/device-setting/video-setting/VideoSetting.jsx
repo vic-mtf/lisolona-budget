@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { alpha, Box } from "@mui/material";
+import { alpha, Box, Typography } from "@mui/material";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 import { useEffect } from "react";
 import EnhanceImageButton from "./EnhanceImageButton";
@@ -8,18 +8,27 @@ import ToggleFilterButton from "./ToggleFilterButton";
 import ReplaceBackground from "./ReplaceBackground";
 import CamerasList from "./CamerasList";
 import ResolutionSwitcher from "./ResolutionSwitcher";
+import scrollBarSx from "../../../../../../utils/scrollBarSx";
 
 const VideoSetting = () => {
-  const [getData, setData] = useLocalStoreData("conference.setup.devices");
+  const [getData] = useLocalStoreData("conference.setup.devices");
   const videoRef = useRef();
   useEffect(() => {
+    const video = videoRef.current;
     const stream = getData("camera.processedStream");
-    if (stream) {
+    if (stream && video) {
       videoRef.current.srcObject = stream;
     }
   });
   return (
-    <Box sx={{ overflow: "auto" }}>
+    <Box
+      sx={{
+        position: "relative",
+        height: "100%",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}>
       <Box
         justifyContent='center'
         alignItems='center'
@@ -54,7 +63,7 @@ const VideoSetting = () => {
             sx={{
               aspectRatio: 16 / 9,
               //   width: "100%",
-              bgcolor: (t) => alpha(t.palette.common.black, 0.5),
+              bgcolor: (t) => alpha(t.palette.common.black, 0.9),
               width: "100%",
               height: "100%",
               display: "flex",
@@ -67,11 +76,20 @@ const VideoSetting = () => {
           <ToolbarSide size='small' />
         </Box>
       </Box>
-      <Box sx={{ px: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          overflowY: "auto",
+          flex: 1,
+          ...scrollBarSx,
+        }}>
         <EnhanceImageButton />
         <ToggleFilterButton />
         <CamerasList />
         <ResolutionSwitcher />
+
         <ReplaceBackground />
       </Box>
     </Box>

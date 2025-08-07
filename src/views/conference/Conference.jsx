@@ -46,9 +46,13 @@ const ListerStreamSegmenter = () => {
     (store) => store.conference.setup.devices.processedCameraStream.enhanced
   );
 
-  useEffect(() => {
-    // streamSegmenter.resetStyles();
+  const background = useSelector(
+    (store) =>
+      store.conference.setup.devices.processedCameraStream.background.enabled
+  );
 
+  useEffect(() => {
+    if (background) streamSegmenter.enableStyle("replaceBackground");
     if (blurred) streamSegmenter.enableStyle("blur");
     if (enhanced) streamSegmenter.enableStyle("enhance");
     if (filter) {
@@ -59,7 +63,7 @@ const ListerStreamSegmenter = () => {
     return () => {
       streamSegmenter.resetStyles();
     };
-  }, [filter, blurred, enhanced]);
+  }, [filter, blurred, enhanced, background]);
 };
 
 export default Conference;

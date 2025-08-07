@@ -20,6 +20,7 @@ const EnhanceImageButton = () => {
   return (
     <ListItem
       disableGutters
+      sx={{ mx: 1 }}
       secondaryAction={
         <Box display='flex' alignItems='center'>
           <FormControlLabel
@@ -48,7 +49,9 @@ const EnhanceImageButton = () => {
         //sx={{ width: 100, bgcolor: "background.paper" }}
         primary='Booster la lumière'
         secondary='une meilleure visibilité, même en conditions de faible éclairage.'
-        slotProps={{ secondary: { maxWidth: 320 } }}
+        slotProps={{
+          secondary: { maxWidth: "90%" },
+        }}
       />
     </ListItem>
   );
