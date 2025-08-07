@@ -68,7 +68,13 @@ const DeviceAlertPermission = () => {
           const isAudio = type === "microphone";
           const isVideo = type === "camera";
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: isVideo ? constraints?.video || true : false,
+            video: isVideo
+              ? constraints?.video || {
+                  width: { max: 1280 },
+                  height: { max: 720 },
+                  frameRate: { max: 30, min: 15 },
+                }
+              : false,
             audio: isAudio ? constraints?.audio || true : false,
           });
           if (isVideo) {
@@ -198,7 +204,13 @@ const DeviceAlertPermission = () => {
                     audio:
                       deviceType === "all" ? true : deviceType === "microphone",
                     video:
-                      deviceType === "all" ? true : deviceType === "camera",
+                      deviceType === "all"
+                        ? true
+                        : deviceType === "camera" && {
+                            width: { max: 1280 },
+                            height: { max: 720 },
+                            frameRate: { max: 30, min: 15 },
+                          },
                   });
                   stream.getTracks().forEach((track) => {
                     track.stop();

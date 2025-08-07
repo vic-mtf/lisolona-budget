@@ -50,7 +50,12 @@ const CameraButton = () => {
         stopStream(stream, "video");
         try {
           const newStream = await navigator.mediaDevices.getUserMedia({
-            video: { deviceId: { exact: device.deviceId } },
+            video: {
+              deviceId: { exact: device.deviceId },
+              width: { max: 1280 },
+              height: { max: 720 },
+              frameRate: { max: 30, min: 15 },
+            },
           });
           streamSegmenter.stop();
           const processedStream = await streamSegmenter.initStream(newStream);

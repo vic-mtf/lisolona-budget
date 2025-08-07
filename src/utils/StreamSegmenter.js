@@ -18,12 +18,18 @@ class StreamSegmenter {
   #video;
   #canvas;
   #context;
+  #finalCanvas;
+  #finalContext;
   #segmenter;
   #animationId;
   #readyCallback;
   #backgroundImage;
   #activeStyles = new Set();
   #filterType = "grayscale";
+  #resolution = {
+    width: 0,
+    height: 0,
+  };
   #blurConfig = {
     foregroundThreshold: 0.7,
     blurAmount: 5,
@@ -40,10 +46,14 @@ class StreamSegmenter {
   constructor() {
     this.#canvas = document.createElement("canvas");
     this.#video = document.createElement("video");
+    this.#finalCanvas = document.createElement("canvas");
     this.#video.autoplay = true;
     this.#video.playsInline = true;
     this.#video.muted = true;
-    this.#context = this.#canvas.getContext("2d");
+    this.#context = this.#canvas.getContext("2d", { willReadFrequently: true });
+    this.#finalContext = this.#finalCanvas.getContext("2d", {
+      willReadFrequently: true,
+    });
   }
 
   async #getSegmenter() {
@@ -58,6 +68,12 @@ class StreamSegmenter {
       this.#video.onloadedmetadata = () => {
         this.#canvas.width = this.#video.videoWidth;
         this.#canvas.height = this.#video.videoHeight;
+
+        this.#resolution.width = this.#video.videoWidth;
+        this.#resolution.height = this.#video.videoHeight;
+
+        this.#finalCanvas.width = this.#resolution.width;
+        this.#finalCanvas.height = this.#resolution.height;
         this.isReady = true;
         if (typeof this.#readyCallback === "function")
           this.#readyCallback(this.getProcessedStream());
@@ -80,11 +96,12 @@ class StreamSegmenter {
   }
 
   getProcessedStream() {
-    return this.#canvas.captureStream();
+    return this.#finalCanvas.captureStream();
   }
 
   #startRenderLoop() {
     const loop = async () => {
+      const styles = this.#activeStyles;
       this.#context.drawImage(
         this.#video,
         0,
@@ -93,17 +110,20 @@ class StreamSegmenter {
         this.#canvas.height
       );
 
-      if (this.#activeStyles.size > 0) {
+      if (styles.size > 0) {
         let segmenter;
         let segmentation;
+
         if (
-          !(this.#activeStyles.size === 1 && this.#activeStyles.has("filter"))
+          styles.has("blur") ||
+          styles.has("removeBackground") ||
+          styles.has("replaceBackground")
         ) {
           segmenter = await this.#getSegmenter();
           segmentation = await segmenter.segmentPeople(this.#video);
         }
 
-        if (this.#activeStyles.has("blur")) {
+        if (styles.has("blur")) {
           await bodySegmentation.drawBokehEffect(
             this.#canvas,
             this.#video,
@@ -115,7 +135,7 @@ class StreamSegmenter {
           );
         }
 
-        if (this.#activeStyles.has("removeBackground")) {
+        if (styles.has("removeBackground")) {
           const mask = await bodySegmentation.toBinaryMask(segmentation);
           const imageData = this.#context.getImageData(
             0,
@@ -126,20 +146,28 @@ class StreamSegmenter {
 
           for (let i = 3; i < imageData.data.length; i += 4)
             if (mask.data[i] === 255) imageData.data[i] = 0;
-
           await bodySegmentation.drawMask(this.#canvas, imageData);
         }
 
-        if (
-          this.#activeStyles.has("replaceBackground") &&
-          this.#backgroundImage
-        )
+        if (styles.has("replaceBackground") && this.#backgroundImage)
           await this.#applyBackgroundReplacement(segmentation);
 
-        if (this.#activeStyles.has("filter")) this.#applyFilter(segmentation);
-        if (this.#activeStyles.has("enhance"))
-          await this.#enhanceImage(segmentation);
+        if (this.#activeStyles.has("filter")) this.#applyFilter();
+        if (this.#activeStyles.has("enhance")) await this.#enhanceImage();
       }
+
+      const { offsetX, offsetY, drawWidth, drawHeight } = this.#getImageSize(
+        this.#finalCanvas,
+        this.#canvas
+      );
+
+      this.#finalContext.drawImage(
+        this.#canvas,
+        offsetX,
+        offsetY,
+        drawWidth,
+        drawHeight
+      );
 
       this.#animationId = requestAnimationFrame(loop);
     };
@@ -185,25 +213,54 @@ class StreamSegmenter {
     );
 
     for (let i = 0; i < imageData.data.length; i += 4) {
-      const r = imageData.data[i];
-      const g = imageData.data[i + 1];
-      const b = imageData.data[i + 2];
+      let r = imageData.data[i];
+      let g = imageData.data[i + 1];
+      let b = imageData.data[i + 2];
 
       switch (this.#filterType) {
         case "grayscale": {
+          // Noir et blanc
           const avg = (r + g + b) / 3;
-          imageData.data[i] =
-            imageData.data[i + 1] =
-            imageData.data[i + 2] =
-              avg;
+          r = g = b = avg;
           break;
         }
-        case "sepia":
-          imageData.data[i] = r * 0.393 + g * 0.769 + b * 0.189;
-          imageData.data[i + 1] = r * 0.349 + g * 0.686 + b * 0.168;
-          imageData.data[i + 2] = r * 0.272 + g * 0.534 + b * 0.131;
+
+        case "night": {
+          // Nuit
+          r = r * 0.3;
+          g = g * 0.3;
+          b = b * 0.6 + 20;
           break;
+        }
+
+        case "sunny": {
+          // Ensoleillé
+          r = Math.min(255, r + 30);
+          g = Math.min(255, g + 20);
+          b = Math.max(0, b - 10);
+          break;
+        }
+
+        case "cool": {
+          // Froid
+          r = Math.max(0, r - 20);
+          g = Math.max(0, g - 10);
+          b = Math.min(255, b + 30);
+          break;
+        }
+
+        case "warm": {
+          // Chaud
+          r = Math.min(255, r + 40);
+          g = Math.min(255, g + 20);
+          b = Math.max(0, b - 20);
+          break;
+        }
       }
+
+      imageData.data[i] = r;
+      imageData.data[i + 1] = g;
+      imageData.data[i + 2] = b;
     }
 
     this.#context.putImageData(imageData, 0, 0);
@@ -277,9 +334,39 @@ class StreamSegmenter {
 
     return { offsetX, offsetY, drawWidth, drawHeight };
   }
+  getCurrentResolution() {
+    return {
+      width: this.#resolution.width,
+      height: this.#resolution.height,
+    };
+  }
+  setResolution(width, height) {
+    if (typeof width === "number" && typeof height === "number") {
+      this.#resolution.width = width;
+      this.#resolution.height = height;
+      this.#finalCanvas.width = width;
+      this.#finalCanvas.height = height;
+    }
+  }
 
-  async #enhanceImage(segmentation) {
-    const mask = await bodySegmentation.toBinaryMask(segmentation);
+  setResolutionFactor(factor) {
+    if (this.#video.videoWidth && this.#video.videoHeight) {
+      this.#resolution.width = Math.round(this.#video.videoWidth * factor);
+      this.#resolution.height = Math.round(this.#video.videoHeight * factor);
+      this.#finalCanvas.width = this.#resolution.width;
+      this.#finalCanvas.height = this.#resolution.height;
+    }
+  }
+  resetResolution() {
+    if (this.#video.videoWidth && this.#video.videoHeight) {
+      this.#finalCanvas.width = this.#video.videoWidth;
+      this.#finalCanvas.height = this.#video.videoHeight;
+      this.#resolution.width = this.#video.videoWidth;
+      this.#resolution.height = this.#video.videoHeight;
+    }
+  }
+
+  async #enhanceImage() {
     const { brightness, contrast, gamma } = this.#enhanceConfig;
     const imageData = this.#context.getImageData(
       0,
@@ -290,26 +377,24 @@ class StreamSegmenter {
     const data = imageData.data;
     const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 
-    for (let i = 0; i < data.length; i += 4)
-      if (mask.data[i] !== 255) {
-        data[i] = data[i] + brightness; // R
-        data[i + 1] = data[i + 1] + brightness; // G
-        data[i + 2] = data[i + 2] + brightness; // B
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = data[i] + brightness; // R
+      data[i + 1] = data[i + 1] + brightness; // G
+      data[i + 2] = data[i + 2] + brightness; // B
 
-        data[i] = factor * (data[i] - 128) + 128;
-        data[i + 1] = factor * (data[i + 1] - 128) + 128;
-        data[i + 2] = factor * (data[i + 2] - 128) + 128;
+      data[i] = factor * (data[i] - 128) + 128;
+      data[i + 1] = factor * (data[i + 1] - 128) + 128;
+      data[i + 2] = factor * (data[i + 2] - 128) + 128;
 
-        data[i] = 255 * Math.pow(data[i] / 255, 1 / gamma);
-        data[i + 1] = 255 * Math.pow(data[i + 1] / 255, 1 / gamma);
-        data[i + 2] = 255 * Math.pow(data[i + 2] / 255, 1 / gamma);
+      data[i] = 255 * Math.pow(data[i] / 255, 1 / gamma);
+      data[i + 1] = 255 * Math.pow(data[i + 1] / 255, 1 / gamma);
+      data[i + 2] = 255 * Math.pow(data[i + 2] / 255, 1 / gamma);
 
-        data[i] = Math.min(255, Math.max(0, data[i]));
-        data[i + 1] = Math.min(255, Math.max(0, data[i + 1]));
-        data[i + 2] = Math.min(255, Math.max(0, data[i + 2]));
-      }
-
-    await bodySegmentation.drawMask(this.#canvas, imageData);
+      data[i] = Math.min(255, Math.max(0, data[i]));
+      data[i + 1] = Math.min(255, Math.max(0, data[i + 1]));
+      data[i + 2] = Math.min(255, Math.max(0, data[i + 2]));
+    }
+    this.#context.putImageData(imageData, 0, 0);
   }
 }
 

@@ -54,6 +54,7 @@ const initialState = {
           uploadProgress: 0,
           downloadProgress: 0,
         },
+        enhanced: false,
       },
       microphones: [],
       cameras: [],

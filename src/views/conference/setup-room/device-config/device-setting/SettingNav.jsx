@@ -41,7 +41,7 @@ const SettingNav = ({ tab, setTab }) => {
 };
 
 SettingNav.propTypes = {
-  tab: PropTypes.string.isRequired,
+  tab: PropTypes.string,
   setTab: PropTypes.func.isRequired,
 };
 

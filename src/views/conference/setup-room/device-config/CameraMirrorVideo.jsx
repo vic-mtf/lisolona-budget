@@ -16,6 +16,7 @@ import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import { updateConferenceData } from "../../../../redux/conference/conference";
 import LensBlurOutlinedIcon from "@mui/icons-material/LensBlurOutlined";
 import BlurOffOutlinedIcon from "@mui/icons-material/BlurOffOutlined";
+import PropTypes from "prop-types";
 
 const CameraMirrorVideo = () => {
   const enabled = useSelector(
@@ -93,11 +94,12 @@ const CameraMirrorVideo = () => {
         </Typography>
       )}
       <DevicePermission />
-      <ToolbarSide />
+      <ToolbarSide name='Vous' />
     </Box>
   );
 };
-const ToolbarSide = () => {
+
+export const ToolbarSide = ({ size, name }) => {
   const blur = useSelector(
     (store) => store.conference.setup.devices.processedCameraStream.blurred
   );
@@ -110,13 +112,14 @@ const ToolbarSide = () => {
           background:
             "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
         }}
-        title='Vous'
+        subtitle={name}
         position='top'
         actionIcon={
           <Tooltip
             title={blur ? "Supprimer le floutage" : "Flouter l'arrière-plan"}>
             <IconButton
               sx={{ color: "white" }}
+              size={size}
               onClick={() => {
                 dispatch(
                   updateConferenceData({
@@ -125,7 +128,11 @@ const ToolbarSide = () => {
                   })
                 );
               }}>
-              {blur ? <BlurOffOutlinedIcon /> : <LensBlurOutlinedIcon />}
+              {blur ? (
+                <BlurOffOutlinedIcon fontSize={size} />
+              ) : (
+                <LensBlurOutlinedIcon fontSize={size} />
+              )}
             </IconButton>
           </Tooltip>
         }
@@ -134,7 +141,10 @@ const ToolbarSide = () => {
     </>
   );
 };
-
+ToolbarSide.propTypes = {
+  size: PropTypes.oneOf(["small", "medium", "large"]),
+  name: PropTypes.string,
+};
 const DevicePermission = () => {
   const cameraPer = useSelector(
     (store) => store.conference.setup.devices.camera.permission

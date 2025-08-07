@@ -5,7 +5,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MicButton from "./buttons/MicButton";
 import CameraButton from "./buttons/CameraButton";
 import SpeakerButton from "./buttons/SpeakerButton";
-import CameraMirrorVideo from "./CameraMirorVideo";
+import CameraMirrorVideo from "./CameraMirrorVideo";
 import SettingButton from "./buttons/SettingButton";
 
 const DeviceConfig = () => {
