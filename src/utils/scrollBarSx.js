@@ -1,13 +1,12 @@
 import { alpha } from "@mui/material";
 
 const scrollBarSx = {
-  overflowY: "overlay",
   [`&::-webkit-scrollbar`]: {
     width: { xs: 0, md: 6 },
     height: { xs: 0, md: 6 },
     position: "absolute",
     right: 0,
-    overflowY: "overlay",
+    // overflowY: "overlay",
   },
   [`&::-webkit-scrollbar-thumb`]: { backgroundColor: "transparent" },
 

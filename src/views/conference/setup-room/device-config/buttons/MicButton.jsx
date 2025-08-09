@@ -18,15 +18,14 @@ import {
   ListItemText,
   Divider,
   MenuItem,
-  LinearProgress,
   Box,
 } from "@mui/material";
-import PropTypes from "prop-types";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import useAudioVolume from "../../../../../hooks/useAudioVolume";
 import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
 import { updateConferenceData } from "../../../../../redux/conference/conference";
 import { stopStream } from "../../../../../utils/getDevices";
+import VolumeBar from "../VolumeBar";
+import { noiseSuppressor } from "../../../../../utils/NoiseSuppressor";
 
 const MicButton = () => {
   const [open, setOpen] = useState(false);
@@ -54,7 +53,7 @@ const MicButton = () => {
     (state) => state.conference.setup.devices.microphone.permission
   );
 
-  const handleChangeCamera = useCallback(
+  const handleChangeMicrophone = useCallback(
     async (device) => {
       const stream = getStream();
       if (device.deviceId === deviceId) return;
@@ -62,8 +61,9 @@ const MicButton = () => {
       const newStream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: device.deviceId },
       });
-      setData("microphone", { stream: newStream });
-
+      const processedStream = await noiseSuppressor.initStream(newStream);
+      setData("microphone", { stream: newStream, processedStream });
+      //noiseSuppressor.toggleProcessing(false);
       const key = [
         "setup.devices.microphone.deviceId",
         "setup.devices.microphone.enabled",
@@ -152,7 +152,7 @@ const MicButton = () => {
         {microphones.map((microphone) => (
           <MenuItem
             key={microphone.deviceId}
-            onClick={() => handleChangeCamera(microphone)}>
+            onClick={() => handleChangeMicrophone(microphone)}>
             <ListItemIcon>
               {microphone.deviceId === deviceId ? (
                 <CheckOutlinedIcon />
@@ -168,36 +168,4 @@ const MicButton = () => {
   );
 };
 
-const VolumeBar = ({ deviceId }) => {
-  const [getData] = useLocalStoreData("conference.setup.devices");
-
-  const stream = useMemo(
-    () => (deviceId ? getData("microphone.stream") : null),
-    [deviceId, getData]
-  );
-
-  const volume = useAudioVolume(stream);
-
-  return (
-    <LinearProgress
-      value={volume}
-      variant='determinate'
-      color='inherit'
-      sx={{
-        width: "100%",
-        height: 10,
-        borderRadius: 6,
-        overflow: "hidden",
-        position: "relative",
-        "& .MuiLinearProgress-bar": {
-          transitionDuration: "50ms",
-        },
-      }}
-    />
-  );
-};
-
-VolumeBar.propTypes = {
-  deviceId: PropTypes.string,
-};
 export default React.memo(MicButton);

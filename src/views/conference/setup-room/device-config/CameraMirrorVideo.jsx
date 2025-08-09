@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import { updateConferenceData } from "../../../../redux/conference/conference";
 import LensBlurOutlinedIcon from "@mui/icons-material/LensBlurOutlined";
@@ -29,7 +29,7 @@ const CameraMirrorVideo = () => {
   const cameraPer = useSelector(
     (store) => store.conference.setup.devices.camera.permission
   );
-  const loading = useSelector((store) => store.conference.setup.loading);
+  //const loading = useSelector((store) => store.conference.setup.loading);
 
   const [getData] = useLocalStoreData("conference.setup.devices");
   const videoRef = useRef(null);
@@ -166,10 +166,12 @@ export const ToolbarSide = ({ size, name }) => {
     </>
   );
 };
+
 ToolbarSide.propTypes = {
   size: PropTypes.oneOf(["small", "medium", "large"]),
   name: PropTypes.string,
 };
+
 const DevicePermission = () => {
   const cameraPer = useSelector(
     (store) => store.conference.setup.devices.camera.permission

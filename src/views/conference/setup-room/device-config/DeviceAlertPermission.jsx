@@ -16,6 +16,7 @@ import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import getDevices from "../../../../utils/getDevices";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import { streamSegmenter } from "../../../../utils/StreamSegmenter";
+import { noiseSuppressor } from "../../../../utils/NoiseSuppressor";
 
 const DeviceAlertPermission = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");
@@ -80,7 +81,13 @@ const DeviceAlertPermission = () => {
           if (isVideo) {
             const processedStream = await streamSegmenter.initStream(stream);
             setData(type, { stream, processedStream });
-          } else setData(type, { stream });
+          }
+
+          if (isAudio) {
+            const processedStream = await noiseSuppressor.initStream(stream);
+            setData(type, { stream, processedStream });
+            // noiseSuppressor.toggleProcessing(false);
+          }
 
           const { microphones, cameras, speakers, screens } =
             await getDevices();

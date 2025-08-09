@@ -3,6 +3,7 @@ import { useLayoutEffect, useEffect } from "react";
 import SetupRoom from "./setup-room/SetupRoom";
 import { useSelector } from "react-redux";
 import { streamSegmenter } from "../../utils/StreamSegmenter";
+import { noiseSuppressor } from "../../utils/NoiseSuppressor";
 
 const Conference = () => {
   useLayoutEffect(() => {
@@ -30,12 +31,12 @@ const Conference = () => {
         }}>
         <SetupRoom />
       </Box>
-      <ListerStreamSegmenter />
+      <ListerStream />
     </>
   );
 };
 
-const ListerStreamSegmenter = () => {
+const ListerStream = () => {
   const filter = useSelector(
     (store) => store.conference.setup.devices.processedCameraStream.filter
   );
@@ -45,10 +46,13 @@ const ListerStreamSegmenter = () => {
   const enhanced = useSelector(
     (store) => store.conference.setup.devices.processedCameraStream.enhanced
   );
-
   const background = useSelector(
     (store) =>
       store.conference.setup.devices.processedCameraStream.background.enabled
+  );
+  const suppressor = useSelector(
+    (store) =>
+      store.conference.setup.devices.processedMicrophoneStream.noiseSuppressor
   );
 
   useEffect(() => {
@@ -60,10 +64,12 @@ const ListerStreamSegmenter = () => {
       streamSegmenter.setFilterType(filter);
     }
 
+    noiseSuppressor.toggleProcessing(suppressor);
+
     return () => {
       streamSegmenter.resetStyles();
     };
-  }, [filter, blurred, enhanced, background]);
+  }, [filter, blurred, enhanced, background, suppressor]);
 };
 
 export default Conference;

@@ -12,47 +12,47 @@ class NoiseSuppressor {
   #onStreamReady = null;
 
   constructor(onStreamReady) {
-    if (typeof onStreamReady === "function") {
-      this.#onStreamReady = onStreamReady;
-    }
+    this.setOnStreamReady(onStreamReady);
   }
 
   async initStream(stream) {
     await this.#initAudioContext();
 
     this.#originalStream = stream;
-    this.#node = new AudioWorkletNode(this.#ctx, NoiseSuppressorWorklet_Name);
     this.#source = this.#ctx.createMediaStreamSource(stream);
+    this.#node = new AudioWorkletNode(this.#ctx, NoiseSuppressorWorklet_Name);
     this.#destination = this.#ctx.createMediaStreamDestination();
 
-    this.#source.connect(this.#node).connect(this.#destination);
+    // Connexion sans traitement par défaut
+    this.#source.connect(this.#destination);
     this.#processedStream = this.#destination.stream;
-    this.#isActive = true;
 
-    if (typeof this.#onStreamReady === "function")
+    if (typeof this.#onStreamReady === "function") 
       this.#onStreamReady(this.#processedStream);
+    
 
     return this.#processedStream;
   }
+
   toggleProcessing(enable) {
     if (!this.#source || !this.#node || !this.#destination) return;
 
     this.#source.disconnect();
     this.#node.disconnect();
 
-    if (enable) {
+    if (enable && !this.#isActive) {
       this.#source.connect(this.#node).connect(this.#destination);
       this.#isActive = true;
-    } else {
+    } else if (!enable && this.#isActive) {
       this.#source.connect(this.#destination);
       this.#isActive = false;
     }
   }
 
   updateConfig(config = {}) {
-    if (this.#node?.port) {
+    if (this.#node?.port) 
       this.#node.port.postMessage({ type: "config", payload: config });
-    }
+    
   }
 
   isProcessingActive() {
@@ -73,8 +73,14 @@ class NoiseSuppressor {
   getOriginalStream() {
     return this.#originalStream;
   }
+
+  setOnStreamReady(callback) {
+    if (typeof callback === "function") 
+      this.#onStreamReady = callback(this.#processedStream);
+     else 
+      console.warn("setOnStreamReady: callback must be a function");
+    
+  }
 }
 
 export const noiseSuppressor = new NoiseSuppressor();
-
-export default noiseSuppressor;

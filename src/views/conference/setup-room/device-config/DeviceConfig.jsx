@@ -1,6 +1,4 @@
 import { Box, Toolbar, Divider, Paper } from "@mui/material";
-import { CustomIconButton } from "./SplitButton";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 import MicButton from "./buttons/MicButton";
 import CameraButton from "./buttons/CameraButton";

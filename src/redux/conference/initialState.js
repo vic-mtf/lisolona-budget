@@ -56,6 +56,9 @@ const initialState = {
         },
         enhanced: false,
       },
+      processedMicrophoneStream: {
+        noiseSuppressor: false,
+      },
       microphones: [],
       cameras: [],
       speakers: [],
