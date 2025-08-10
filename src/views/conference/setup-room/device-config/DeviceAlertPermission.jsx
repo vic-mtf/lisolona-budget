@@ -149,23 +149,13 @@ const DeviceAlertPermission = () => {
         if (getData(keys[i])) return getData(keys[i]);
       return null;
     };
-    if (microPer && cameraPer) {
-      const stream = getStream();
+    if (cameraPer) {
+      const stream = getStream("camera.stream");
       const isVideoTrack = stream?.getVideoTracks()?.length > 0;
-      const isMicroTrack = stream?.getAudioTracks()?.length > 0;
-      if (microPer === "granted" && !isMicroTrack) createStream("microphone");
+
       if (cameraPer === "granted" && !isVideoTrack) createStream("camera");
-      const isMicroGranted = microPer === "granted";
       const isCameraGranted = cameraPer === "granted";
-      if (!isMicroGranted) {
-        dispatch(
-          updateConferenceData({
-            key: "setup.devices.microphone.enabled",
-            data: false,
-          })
-        );
-        setData("microphone", { stream: null });
-      }
+
       if (!isCameraGranted) {
         dispatch(
           updateConferenceData({
@@ -176,7 +166,25 @@ const DeviceAlertPermission = () => {
         setData("camera", { stream: null });
       }
     }
-  }, [microPer, cameraPer, createStream, getData, dispatch, setData]);
+  }, [cameraPer, createStream, getData, dispatch, setData]);
+
+  useEffect(() => {
+    if (microPer) {
+      const stream = getData("microphone.stream");
+      const isMicroTrack = stream?.getAudioTracks()?.length > 0;
+      if (microPer === "granted" && !isMicroTrack) createStream("microphone");
+      const isMicroGranted = microPer === "granted";
+      if (!isMicroGranted) {
+        dispatch(
+          updateConferenceData({
+            key: "setup.devices.microphone.enabled",
+            data: false,
+          })
+        );
+        setData("microphone", { stream: null });
+      }
+    }
+  }, [microPer, createStream, getData, dispatch, setData]);
 
   return (
     <Dialog open={open} onClose={onClose}>

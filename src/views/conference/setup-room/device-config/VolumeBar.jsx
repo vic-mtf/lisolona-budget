@@ -15,7 +15,6 @@ const VolumeBar = ({ deviceId, rawStream }) => {
     [deviceId, getData]
   );
 
-  console.log("Stream:", stream);
   const volume = useAudioVolume(stream);
   const rawVolume = useAudioVolume(rawStream);
 

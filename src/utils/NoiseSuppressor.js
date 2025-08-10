@@ -22,14 +22,14 @@ class NoiseSuppressor {
     this.#source = this.#ctx.createMediaStreamSource(stream);
     this.#node = new AudioWorkletNode(this.#ctx, NoiseSuppressorWorklet_Name);
     this.#destination = this.#ctx.createMediaStreamDestination();
+    let source = this.#source;
+    if (this.#isActive) source = source.connect(this.#node);
+    source.connect(this.#destination);
 
-    // Connexion sans traitement par défaut
-    this.#source.connect(this.#destination);
     this.#processedStream = this.#destination.stream;
 
-    if (typeof this.#onStreamReady === "function") 
+    if (typeof this.#onStreamReady === "function")
       this.#onStreamReady(this.#processedStream);
-    
 
     return this.#processedStream;
   }
@@ -50,9 +50,8 @@ class NoiseSuppressor {
   }
 
   updateConfig(config = {}) {
-    if (this.#node?.port) 
+    if (this.#node?.port)
       this.#node.port.postMessage({ type: "config", payload: config });
-    
   }
 
   isProcessingActive() {
@@ -75,11 +74,8 @@ class NoiseSuppressor {
   }
 
   setOnStreamReady(callback) {
-    if (typeof callback === "function") 
+    if (typeof callback === "function")
       this.#onStreamReady = callback(this.#processedStream);
-     else 
-      console.warn("setOnStreamReady: callback must be a function");
-    
   }
 }
 

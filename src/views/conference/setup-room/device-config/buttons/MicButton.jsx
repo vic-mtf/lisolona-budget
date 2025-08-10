@@ -137,7 +137,7 @@ const MicButton = () => {
             <ListItem
               secondaryAction={
                 <Box width={100}>
-                  <VolumeBar deviceId={deviceId} />
+                  <VolumeBar deviceId={enabled && deviceId} />
                 </Box>
               }>
               <ListItemIcon>

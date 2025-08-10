@@ -1,5 +1,7 @@
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import MemoryProcesses from "./MemoryProcesses";
+import NetworkDiagnostic from "./NetworkDiagnostic";
+import scrollBarSx from "../../../../../../utils/scrollBarSx";
 
 const Diagnostic = () => {
   return (
@@ -7,8 +9,9 @@ const Diagnostic = () => {
       display='flex'
       flex={1}
       overflow='hidden'
-      sx={{ overflowY: "auto", p: 2 }}
+      sx={{ overflowY: "auto", ...scrollBarSx }}
       flexDirection='column'>
+      <NetworkDiagnostic />
       <MemoryProcesses />
     </Box>
   );

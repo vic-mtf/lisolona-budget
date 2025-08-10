@@ -12,6 +12,11 @@ export const initialState = {
     notifications: [],
     calls: [],
     messages: {},
+    setting: {
+      network: {
+        rttData: [],
+      },
+    },
     actions: {
       messaging: {
         info: {
