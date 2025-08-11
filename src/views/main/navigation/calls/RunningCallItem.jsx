@@ -25,6 +25,7 @@ const RunningCallItem = ({
   incoming,
   participants,
   onClickDetail,
+  onCallAction,
   ...otherProps
 }) => {
   const name = getFullName(location);
@@ -43,7 +44,7 @@ const RunningCallItem = ({
         sx={{ flexGrow: 1 }}
         disablePadding
         {...otherProps}>
-        <ListItemButton>
+        <ListItemButton onClick={onCallAction}>
           <ListItemAvatar>
             <ListAvatar
               src={location?.image}
@@ -117,6 +118,7 @@ RunningCallItem.propTypes = {
   divider: PropTypes.bool,
   createdBy: PropTypes.object,
   onClickDetail: PropTypes.func,
+  onCallAction: PropTypes.func,
   createdAt: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.instanceOf(Date),

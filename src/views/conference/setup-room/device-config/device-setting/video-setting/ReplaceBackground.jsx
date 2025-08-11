@@ -208,6 +208,7 @@ const ImageItem = React.forwardRef(
             zIndex={1}
             sx={{
               borderRadius: 2,
+              color: "white",
               bgcolor: (t) => alpha(t.palette.common.black, 0.5),
             }}>
             <Box position='relative'>
@@ -217,6 +218,7 @@ const ImageItem = React.forwardRef(
                   position: "absolute",
                   top: 0,
                   borderRadius: 5,
+                  color: "currentColor",
                   left: 0,
                   zIndex: (t) => t.zIndex.tooltip,
                 }}>

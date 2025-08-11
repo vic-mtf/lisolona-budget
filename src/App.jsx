@@ -18,7 +18,10 @@ function App() {
   const dispatch = useDispatch();
 
   const isConference = useMemo(() => {
-    return window.location.pathname.includes("/conference") && !window.opener;
+    const isValidConference = /\/conference\/\w+/.test(
+      window.location.pathname
+    );
+    return isValidConference;
   }, []);
 
   useEffect(() => {

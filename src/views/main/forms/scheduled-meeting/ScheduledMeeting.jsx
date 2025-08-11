@@ -110,7 +110,7 @@ export default function ScheduledMeeting({ onClose, room = null }) {
           </Typography>
         </Toolbar>
         <Box
-          overflow='auto'
+          overflowY='auto'
           position='relative'
           minHeight={{ md: 250 }}
           flex={1}
@@ -118,7 +118,7 @@ export default function ScheduledMeeting({ onClose, room = null }) {
           <Box
             overflow='hidden'
             position='relative'
-            minHeight={{ md: 600, xs: "100%" }}
+            minHeight={{ md: 500, lg: 550, xl: 700, xs: "100%" }}
             flex={1}
             width={{ md: 450 }}
             sx={{

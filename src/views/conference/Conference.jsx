@@ -63,7 +63,6 @@ const ListerStream = () => {
       streamSegmenter.enableStyle("filter");
       streamSegmenter.setFilterType(filter);
     }
-
     noiseSuppressor.toggleProcessing(suppressor);
 
     return () => {

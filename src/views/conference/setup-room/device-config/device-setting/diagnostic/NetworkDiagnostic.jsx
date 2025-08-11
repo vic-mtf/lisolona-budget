@@ -77,7 +77,7 @@ ChartJS.register(
 
 const TimeChart = () => {
   const rttData = useSelector(
-    (state) => state.data.app.setting.network.rttData
+    (store) => store.data.app.setting.network.rttData
   );
   const labels = useMemo(
     () =>

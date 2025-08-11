@@ -35,7 +35,7 @@ export default function InstantMeeting({ onClose }) {
           <Box
             overflow='hidden'
             position='relative'
-            minHeight={{ md: 600, xs: "100%" }}
+            minHeight={{ md: 500, lg: 550, xl: 700, xs: "100%" }}
             flex={1}
             width={{ md: 450 }}
             sx={{

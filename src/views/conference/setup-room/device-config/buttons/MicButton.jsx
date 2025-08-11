@@ -32,30 +32,26 @@ const MicButton = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");
   const dispatch = useDispatch();
   const enabled = useSelector(
-    (state) => state.conference.setup.devices.microphone.enabled
+    (store) => store.conference.setup.devices.microphone.enabled
   );
   const deviceId = useSelector(
-    (state) => state.conference.setup.devices.microphone.deviceId
-  );
-  const getStream = useCallback(
-    () => (deviceId ? getData("microphone.stream") : null),
-    [getData, deviceId]
+    (store) => store.conference.setup.devices.microphone.deviceId
   );
 
   const anchorElRef = useRef(null);
   const matches = useSmallScreen();
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
   const microphones = useSelector(
-    (state) => state.conference.setup.devices.microphones
+    (store) => store.conference.setup.devices.microphones
   );
 
   const permission = useSelector(
-    (state) => state.conference.setup.devices.microphone.permission
+    (store) => store.conference.setup.devices.microphone.permission
   );
 
   const handleChangeMicrophone = useCallback(
     async (device) => {
-      const stream = getStream();
+      const stream = getData("microphone.stream");
       if (device.deviceId === deviceId) return;
       stopStream(stream, "audio");
       const newStream = await navigator.mediaDevices.getUserMedia({
@@ -73,17 +69,17 @@ const MicButton = () => {
       dispatch(updateConferenceData({ key, data }));
       setOpen(false);
     },
-    [getStream, setData, dispatch, deviceId]
+    [getData, setData, dispatch, deviceId]
   );
 
   useEffect(() => {
-    const stream = getStream();
+    const stream = getData("microphone.stream");
     if (stream) {
       const [audioTrack] = stream.getAudioTracks();
       if (audioTrack && audioTrack?.enabled !== enabled)
         audioTrack.enabled = enabled;
     }
-  }, [enabled, getStream]);
+  }, [enabled, getData]);
 
   return (
     <>
@@ -107,7 +103,7 @@ const MicButton = () => {
         activeTitle={"Micro activé"}
         inactiveTitle={"Micro désactivé"}
         onClick={() => {
-          const stream = getStream();
+          const stream = getData("microphone.stream");
           if (stream) {
             const key = "setup.devices.microphone.enabled";
             dispatch(updateConferenceData({ key, data: !enabled }));

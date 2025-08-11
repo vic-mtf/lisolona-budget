@@ -30,6 +30,16 @@ export default function Calls() {
     [dispatch]
   );
 
+  const handleCallAction = useCallback(
+    (call) => () => {
+      console.log("call", call);
+      const url = import.meta.env.BASE_URL + `/conference/${call.id}`;
+      const subWin = window.open(url, "_blank");
+      subWin.name = "GEED-CONFERENCE";
+    },
+    []
+  );
+
   const data = useMemo(
     () =>
       calls.map((call, index, calls) => {
@@ -40,7 +50,7 @@ export default function Calls() {
         return (
           <div key={id}>
             {call?.type === "label" && (
-              <ListSubheader sx={{ height: "100%" }}>
+              <ListSubheader sx={{ height: "100%" }} disableSticky>
                 {call?.label}
               </ListSubheader>
             )}
@@ -53,6 +63,7 @@ export default function Calls() {
                 createdBy={call?.createdBy}
                 incoming={call?.incoming}
                 onClickDetail={handleOpenDetails(call)}
+                onCallAction={handleCallAction(call)}
                 participants={
                   Array.isArray(participants) && Array.isArray(guests)
                     ? participants.length + guests.length
@@ -69,6 +80,7 @@ export default function Calls() {
                 description={call?.description}
                 startedAt={call?.startedAt}
                 endedAt={call?.endedAt}
+                // onCallAction={handleCallAction(call)}
                 onClickDetail={handleOpenDetails(call)}
               />
             )}
@@ -79,6 +91,7 @@ export default function Calls() {
                 divider={call?.status === calls[index + 1]?.status}
                 createdAt={call?.createdAt}
                 // createdBy={call?.createdBy}
+                onCallAction={handleCallAction(call)}
                 calls={call?.calls?.length + 1}
                 incoming={call?.incoming}
                 failed={call?.status === "failed"}
@@ -89,7 +102,7 @@ export default function Calls() {
           </div>
         );
       }),
-    [calls, handleOpenDetails]
+    [calls, handleOpenDetails, handleCallAction]
   );
 
   return (
@@ -109,7 +122,7 @@ export default function Calls() {
         </div>
       </Stack>
       <VirtualList data={data} emptyMessage='Aucun appel trouvé' />
-      <CallDetailsView />
+      <CallDetailsView onCallAction={handleCallAction} />
     </>
   );
 }

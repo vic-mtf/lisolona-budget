@@ -39,7 +39,7 @@ import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import CoPresentOutlinedIcon from "@mui/icons-material/CoPresentOutlined";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 
-const CallDetailsView = () => {
+const CallDetailsView = ({ onCallAction }) => {
   const { open, call } = useSelector(
     (store) => store.data.app.actions.calls.info
   );
@@ -81,7 +81,7 @@ const CallDetailsView = () => {
           </Typography>
         </Toolbar>
         <Box
-          overflow='auto'
+          overflowY='auto'
           position='relative'
           minHeight={{ md: 250 }}
           flex={1}
@@ -89,7 +89,7 @@ const CallDetailsView = () => {
           <Box
             overflow='hidden'
             position='relative'
-            minHeight={{ md: 600, xs: "100%" }}
+            minHeight={{ md: 500, lg: 550, xl: 700, xs: "100%" }}
             flex={1}
             width={{ md: 450 }}
             sx={{
@@ -162,16 +162,8 @@ const CallDetailsView = () => {
             endIcon={React.createElement(buttonActionProps.Icon)}
             //type='submit'
             onClick={() => {
-              const svgElement = qrCodeRef.current;
-              if (svgElement)
-                generateQRImage({
-                  svgElement,
-                  title: `Les jeunes entrepreneurs d’Afrique francophone`,
-                  description: `GEID | Lisolo connecte, forme et propulse les talents en leur offrant des outils numériques accessibles et puissants, au service d’une communauté engagée dans l’innovation et le partage.`,
-                  theme,
-                }).then((blob) => {
-                  //console.log(blob);
-                });
+              onCallAction(call);
+              onClose();
             }}>
             {buttonActionProps.text}
           </Button>
@@ -181,6 +173,17 @@ const CallDetailsView = () => {
     </Dialog>
   );
 };
+// const svgElement = qrCodeRef.current;
+// if (svgElement)
+//   generateQRImage({
+//     svgElement,
+//     title: `Les jeunes entrepreneurs d’Afrique francophone`,
+//     description: `GEID | Lisolo connecte, forme et propulse les talents en leur offrant des outils numériques accessibles et puissants, au service d’une communauté engagée dans l’innovation et le partage.`,
+//     theme,
+//   }).then((blob) => {
+//     window.open(URL.createObjectURL(blob), "_blank");
+//     console.log(blob);
+//   });
 
 const secondaryText = (call) => {
   if (call?.status === "running")
@@ -202,7 +205,7 @@ const secondaryText = (call) => {
 };
 
 const MoreInfos = ({ call, isExistingCall }) => {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((store) => store.user);
   const [expanded, setExpanded] = React.useState(
     !isExistingCall
       ? call?.description
@@ -371,6 +374,7 @@ const getButtonProps = ({ status, room } = {}) => {
 
 CallDetailsView.propTypes = {
   onClose: PropTypes.func,
+  onCallAction: PropTypes.func,
   room: PropTypes.object,
 };
 export default React.memo(CallDetailsView);

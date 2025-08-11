@@ -13,7 +13,7 @@ import { updateConferenceData } from "../../../../../../redux/conference/confere
 
 const EnhanceImageButton = () => {
   const enhanced = useSelector(
-    (state) => state.conference.setup.devices.processedCameraStream.enhanced
+    (store) => store.conference.setup.devices.processedCameraStream.enhanced
   );
   const dispatch = useDispatch();
 

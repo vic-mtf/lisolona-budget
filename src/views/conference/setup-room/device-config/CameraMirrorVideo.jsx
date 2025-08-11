@@ -200,9 +200,10 @@ const DevicePermission = () => {
         justifyContent: "center",
         alignItems: "center",
         gap: "20px",
+        color: "white",
       }}>
       <Box>
-        <Typography align='center'>
+        <Typography align='center' color='currentColor'>
           Voulez-vous être vu et entendu ? Lisolo utilise le micro et la caméra
           de votre appareil pour rendre vos échanges plus immersifs
         </Typography>

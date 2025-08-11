@@ -23,7 +23,12 @@ const UNPROTECTED_ROUTES = [
   },
 ];
 
-const PUBLIC_ROUTES = [];
+const PUBLIC_ROUTES = [
+  {
+    path: "/conference/:code",
+    component: Conference,
+  },
+];
 
 const DEV_ROUTES = [
   {
@@ -34,11 +39,7 @@ const DEV_ROUTES = [
 
 const PRODUCTION_ROUTES = [];
 
-if (!window.opener)
-  PUBLIC_ROUTES.push({
-    path: "/conference/*",
-    component: Conference,
-  });
+if (window.opener) PUBLIC_ROUTES.push();
 
 const router = (connected) => {
   const routes = [

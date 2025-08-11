@@ -6,13 +6,17 @@ import React, { useMemo } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import useAudioVolume from "../../../../hooks/useAudioVolume";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const VolumeBar = ({ deviceId, rawStream }) => {
+const VolumeBar = ({ rawStream }) => {
   const [getData] = useLocalStoreData("conference.setup.devices");
+  const enabled = useSelector(
+    (store) => store.conference.setup.devices.microphone.enabled
+  );
 
   const stream = useMemo(
-    () => (deviceId ? getData("microphone.processedStream") : null),
-    [deviceId, getData]
+    () => (enabled ? getData("microphone.processedStream") : null),
+    [enabled, getData]
   );
 
   const volume = useAudioVolume(stream);

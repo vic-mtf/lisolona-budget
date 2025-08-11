@@ -4,6 +4,7 @@ import { initialState } from "./initialState";
 import upArrData from "./updateArraysData";
 import delInArrayData from "./deleteItemById";
 import { isArray } from "lodash";
+import { MAX_POINTS } from "../../hooks/events/useNetworkStat";
 
 const data = createSlice({
   name: "data",
@@ -29,6 +30,12 @@ const data = createSlice({
         });
       }
     },
+    addRTTData(state, actions) {
+      const { data } = actions.payload;
+      let rttData = [...state.app.setting.network.rttData, data];
+      if (rttData.length > MAX_POINTS - 10) rttData = rttData.slice(1);
+      state.app.setting.network.rttData = rttData;
+    },
     updateMessage(state, actions) {
       const { data, id, targetId } = actions.payload;
       const messages = [...(state.app.messages[targetId] || [])];
@@ -51,5 +58,6 @@ export const {
   updateArraysData,
   deleteInArrayDataItemById,
   updateMessage,
+  addRTTData,
 } = data.actions;
 export default data.reducer;

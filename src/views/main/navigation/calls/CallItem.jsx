@@ -29,6 +29,7 @@ const CallItem = ({
   calls,
   action,
   onClickDetail,
+  onCallAction,
   ...otherProps
 }) => {
   const name = getFullName(location);
@@ -38,7 +39,7 @@ const CallItem = ({
       <ListItem
         secondaryAction={
           <Tooltip title='Appel'>
-            <IconButton edge='end'>
+            <IconButton edge='end' onClick={onCallAction}>
               <CallOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -141,6 +142,7 @@ CallItem.propTypes = {
   action: PropTypes.oneOf(["missed", "rejected", "accepted"]),
   calls: PropTypes.number,
   onClickDetail: PropTypes.func,
+  onCallAction: PropTypes.func,
   createdAt: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.instanceOf(Date),

@@ -7,19 +7,20 @@ import { useDispatch } from "react-redux";
 import { updateConferenceData } from "../../../redux/conference/conference";
 import { useEffect } from "react";
 import DeviceAlertPermission from "./device-config/DeviceAlertPermission";
+import useSocket from "../../../hooks/useSocket";
 
 const SetupRoom = () => {
   const matches = useSmallScreen();
   const dispatch = useDispatch();
+  const socket = useSocket();
 
   useEffect(() => {
     const getPermission = async () => {
-      const mic = await navigator.permissions.query({
-        name: "microphone",
-      });
-      const camera = await navigator.permissions.query({
-        name: "camera",
-      });
+      const [mic, camera] = await Promise.all([
+        navigator.permissions.query({ name: "microphone" }),
+        navigator.permissions.query({ name: "camera" }),
+      ]);
+
       const key = [
         "setup.devices.microphone.permission",
         "setup.devices.camera.permission",
@@ -35,6 +36,10 @@ const SetupRoom = () => {
     };
     getPermission();
   }, [dispatch]);
+
+  useEffect(() => {
+    socket?.emit("rtt-ping", performance.now());
+  }, [socket]);
 
   return (
     <>

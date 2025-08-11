@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
 export default function useToken() {
-  const token = useSelector((state) => state.user.token);
+  const token = useSelector((store) => store.user.token);
   return token ? `Bearer ${token}` : null;
 }

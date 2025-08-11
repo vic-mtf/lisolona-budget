@@ -28,17 +28,17 @@ const CameraButton = () => {
   const [open, setOpen] = useState(false);
   const anchorElRef = useRef(null);
   const permission = useSelector(
-    (state) => state.conference.setup.devices.camera.permission
+    (store) => store.conference.setup.devices.camera.permission
   );
   const deviceId = useSelector(
-    (state) => state.conference.setup.devices.camera.deviceId
+    (store) => store.conference.setup.devices.camera.deviceId
   );
   const cameras = useSelector(
-    (state) => state.conference.setup.devices.cameras
+    (store) => store.conference.setup.devices.cameras
   );
 
   const enabled = useSelector(
-    (state) => state.conference.setup.devices.camera.enabled
+    (store) => store.conference.setup.devices.camera.enabled
   );
 
   const matches = useSmallScreen();

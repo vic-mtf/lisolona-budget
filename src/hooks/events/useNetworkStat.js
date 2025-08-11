@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import useSocket from "../useSocket";
 import store from "../../redux/store";
 import dayjs from "dayjs";
@@ -13,32 +13,24 @@ const useNetworkStat = () => {
       clearTimeout(timerRef.current);
       const currentRTT = performance.now();
       const currentHour = dayjs().format("HH:mm");
-      const newValue = Math.abs(currentRTT - previousRTT);
+      const newValue = Math.min(Math.abs(currentRTT - previousRTT), 600);
       const labelToAdd = lastHoursRef.current.includes(currentHour)
         ? ""
         : currentHour;
       if (labelToAdd !== "") lastHoursRef.current.push(currentHour);
 
-      const dataPoint = {
-        x: labelToAdd,
-        y: newValue,
-      };
-      let rttData = [
-        ...store.getState().data.app.setting.network.rttData,
-        dataPoint,
-      ];
-      if (rttData.length > MAX_POINTS - 10) rttData = rttData.slice(1);
+      const dataPoint = { time: labelToAdd, delay: newValue };
+
       store.dispatch({
-        type: "data/updateApp",
+        type: "data/addRTTData",
         payload: {
-          key: "app.setting.network.rttData",
-          data: rttData,
+          data: dataPoint,
         },
       });
 
       timerRef.current = setTimeout(
         () => socket?.emit("rtt-ping", performance.now()),
-        1000
+        2000
       );
     };
     socket?.on("rtt-pong", handleRTTPong);
@@ -88,4 +80,4 @@ export const useNetworkStatDemo = () => {
 
 export const MAX_POINTS = 180;
 
-export default React.memo(useNetworkStat);
+export default useNetworkStat;

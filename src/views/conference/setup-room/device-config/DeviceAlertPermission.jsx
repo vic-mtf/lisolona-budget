@@ -143,14 +143,8 @@ const DeviceAlertPermission = () => {
   );
 
   useEffect(() => {
-    const getStream = () => {
-      const keys = ["microphone.stream", "camera.stream"];
-      for (let i = 0; i < keys.length; i++)
-        if (getData(keys[i])) return getData(keys[i]);
-      return null;
-    };
     if (cameraPer) {
-      const stream = getStream("camera.stream");
+      const stream = getData("camera.stream");
       const isVideoTrack = stream?.getVideoTracks()?.length > 0;
 
       if (cameraPer === "granted" && !isVideoTrack) createStream("camera");

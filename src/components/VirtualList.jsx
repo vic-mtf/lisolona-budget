@@ -29,6 +29,8 @@ const VirtualList = ({ data, emptyMessage }) => {
           top: 0,
           left: 0,
         },
+        zIndex: (theme) => theme.zIndex.appBar,
+        //bgcolor: "red",
       }}>
       <Zoom unmountOnExit in={data.length === 0} appear={false}>
         <Stack>
