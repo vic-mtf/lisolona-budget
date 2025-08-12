@@ -21,11 +21,14 @@ import { options } from "../../../navigation/calls/groupCall";
 import { useMemo } from "react";
 import useSmallScreen from "../../../../../hooks/useSmallScreen";
 import ScheduledMeeting from "../../../forms/scheduled-meeting/ScheduledMeeting";
+import { useDispatch } from "react-redux";
+import { updateConferenceData } from "../../../../../redux/conference/conference";
 
 export default function StartCallButton({ user }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const matches = useSmallScreen();
+  const dispatch = useDispatch();
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
   const menuNavProps = useMemo(
     () =>
@@ -54,9 +57,24 @@ export default function StartCallButton({ user }) {
         }>
         <IconButton
           sx={{ position: "relative" }}
-          onClick={(event) =>
-            user?.type === "room" ? setAnchorEl(event.currentTarget) : null
-          }>
+          onClick={(event) => {
+            if (user?.type === "room") setAnchorEl(event.currentTarget);
+            else {
+              const callTarget = user?.members?.find(
+                ({ id }) => id === user?.id
+              );
+              window.open(
+                import.meta.env.BASE_URL + "/conference/create",
+                "_blank"
+              );
+              dispatch(
+                updateConferenceData({
+                  key: "callTarget",
+                  data: callTarget,
+                })
+              );
+            }
+          }}>
           {user?.type === "room" ? (
             <AddIcCallOutlinedIcon />
           ) : (
@@ -85,7 +103,7 @@ export default function StartCallButton({ user }) {
             key={id}
             disabled={disabled}
             onClick={(event) => {
-              if (typeof action === "function") action(event);
+              if (typeof action === "function") action(event, user);
               if (typeof actions[id] === "function") actions[id](event);
               setAnchorEl(null);
             }}>

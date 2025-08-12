@@ -1,5 +1,7 @@
 export const SIGN_IN_CHANNEL = new BroadcastChannel("_GEID_SIGN_IN_CONNECTION");
 
+export const CALL_CHANNEL = new BroadcastChannel("_GEID_CALL_CONNECTION");
+
 export const CONNECTED_EVENT_CHANNEL = new BroadcastChannel(
   "_GEID_CONNECTED_EVENT_CONNECTION"
 );

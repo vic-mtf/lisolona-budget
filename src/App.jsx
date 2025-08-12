@@ -16,6 +16,7 @@ function App() {
   const connected = useSelector((store) => store.user.connected);
   const loaded = useSelector((store) => store.data.app.loaded);
   const dispatch = useDispatch();
+  console.log("App loaded:", loaded);
 
   const isConference = useMemo(() => {
     const isValidConference = /\/conference\/\w+/.test(

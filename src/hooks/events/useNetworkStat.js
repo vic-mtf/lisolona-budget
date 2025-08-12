@@ -30,7 +30,7 @@ const useNetworkStat = () => {
 
       timerRef.current = setTimeout(
         () => socket?.emit("rtt-ping", performance.now()),
-        2000
+        1000
       );
     };
     socket?.on("rtt-pong", handleRTTPong);

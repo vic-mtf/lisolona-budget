@@ -29,21 +29,15 @@ const CameraMirrorVideo = () => {
   const cameraPer = useSelector(
     (store) => store.conference.setup.devices.camera.permission
   );
-  //const loading = useSelector((store) => store.conference.setup.loading);
+  const loading = useSelector((store) => store.conference.setup.loading);
 
   const [getData] = useLocalStoreData("conference.setup.devices");
   const videoRef = useRef(null);
 
   useEffect(() => {
-    const getStream = () => {
-      const keys = ["camera.processedStream", "camera.stream"];
-      for (let i = 0; i < keys.length; i++)
-        if (getData(keys[i])) return getData(keys[i]);
-      return null;
-    };
     if (deviceId) {
       const video = videoRef.current;
-      const stream = getStream();
+      const stream = getData("camera.processedStream"); //|| getData("camera.stream");
       if (enabled && stream && stream !== video.srcObject) {
         video.srcObject = null;
         video.srcObject = stream;
@@ -77,23 +71,32 @@ const CameraMirrorVideo = () => {
           transform: "scaleX(-1)",
         }}
       />
-      {!enabled && cameraPer === "granted" && (
-        <Typography
-          position='absolute'
-          top={0}
-          height='100%'
-          width='100%'
-          sx={{ color: (t) => t.palette.grey[500] }}
-          display='flex'
-          alignItems='center'
-          justifyContent='center'
-          gap={1}
-          flexDirection='column'
-          zIndex={1}>
-          <VideocamOffOutlinedIcon fontSize='large' />
-          <span>Votre caméra est désactivée</span>
-        </Typography>
-      )}
+      <Box
+        position='absolute'
+        top={0}
+        height='100%'
+        width='100%'
+        sx={{ color: (t) => t.palette.grey[400] }}
+        display='flex'
+        alignItems='center'
+        justifyContent='center'
+        gap={1}
+        flexDirection='column'
+        zIndex={0}>
+        {!enabled && cameraPer === "granted" && !loading && (
+          <Typography color='currentColor' m='auto'>
+            <div style={{ textAlign: "center" }}>
+              <VideocamOffOutlinedIcon fontSize='large' />
+            </div>
+            <span>Votre caméra est désactivée</span>
+          </Typography>
+        )}
+        {!cameraPer && loading && (
+          <Typography color='currentColor'>
+            <span>Détection de la caméra...</span>
+          </Typography>
+        )}
+      </Box>
       <DevicePermission />
       <ToolbarSide name='Vous' />
     </Box>
@@ -101,6 +104,7 @@ const CameraMirrorVideo = () => {
 };
 
 export const ToolbarSide = ({ size, name }) => {
+  const loading = useSelector((store) => store.conference.setup.loading);
   const blur = useSelector(
     (store) => store.conference.setup.devices.processedCameraStream.blurred
   );
@@ -129,36 +133,39 @@ export const ToolbarSide = ({ size, name }) => {
                 ? "Supprimer le floutage"
                 : "Flouter l'arrière-plan"
             }>
-            <IconButton
-              sx={{ color: "white" }}
-              size={size}
-              onClick={() => {
-                let key;
-                let data;
-                if (background.enabled) {
-                  key = [
-                    "setup.devices.processedCameraStream.background.enabled",
-                    "setup.devices.processedCameraStream.background.id",
-                  ];
-                  data = [false, null];
-                } else {
-                  key = "setup.devices.processedCameraStream.blurred";
-                  data = !blur;
-                }
-                dispatch(updateConferenceData({ key, data }));
-              }}>
-              {background.enabled ? (
-                <LayersClearOutlinedIcon fontSize={size} />
-              ) : (
-                <>
-                  {blur ? (
-                    <BlurOffOutlinedIcon fontSize={size} />
-                  ) : (
-                    <LensBlurOutlinedIcon fontSize={size} />
-                  )}
-                </>
-              )}
-            </IconButton>
+            <div>
+              <IconButton
+                disabled={loading}
+                sx={{ color: "white" }}
+                size={size}
+                onClick={() => {
+                  let key;
+                  let data;
+                  if (background.enabled) {
+                    key = [
+                      "setup.devices.processedCameraStream.background.enabled",
+                      "setup.devices.processedCameraStream.background.id",
+                    ];
+                    data = [false, null];
+                  } else {
+                    key = "setup.devices.processedCameraStream.blurred";
+                    data = !blur;
+                  }
+                  dispatch(updateConferenceData({ key, data }));
+                }}>
+                {background.enabled ? (
+                  <LayersClearOutlinedIcon fontSize={size} />
+                ) : (
+                  <>
+                    {blur ? (
+                      <BlurOffOutlinedIcon fontSize={size} />
+                    ) : (
+                      <LensBlurOutlinedIcon fontSize={size} />
+                    )}
+                  </>
+                )}
+              </IconButton>
+            </div>
           </Tooltip>
         }
         actionPosition='right'
@@ -179,13 +186,14 @@ const DevicePermission = () => {
   const microPer = useSelector(
     (store) => store.conference.setup.devices.microphone.permission
   );
+  const loading = useSelector((store) => store.conference.setup.loading);
   const isPrompt = cameraPer === "prompt" && microPer === "prompt";
   const isDenied = cameraPer === "denied";
   const dispatch = useDispatch();
 
   return (
     <Fade
-      in={Boolean(cameraPer) && cameraPer !== "granted"}
+      in={Boolean(cameraPer) && cameraPer !== "granted" && !loading}
       unmountOnExit
       appear={false}
       style={{

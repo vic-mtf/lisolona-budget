@@ -37,7 +37,7 @@ const MicButton = () => {
   const deviceId = useSelector(
     (store) => store.conference.setup.devices.microphone.deviceId
   );
-
+  const loading = useSelector((store) => store.conference.setup.loading);
   const anchorElRef = useRef(null);
   const matches = useSmallScreen();
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
@@ -94,7 +94,7 @@ const MicButton = () => {
         icon={<MicOffOutlinedIcon />}
         activeIcon={<MicNoneOutlinedIcon />}
         active={enabled}
-        disabled={permission === "denied"}
+        disabled={loading || permission === "denied"}
         error={permission !== "granted"}
         disabledMoreButton={microphones.length === 0}
         disabledTitle={

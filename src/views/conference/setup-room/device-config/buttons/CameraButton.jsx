@@ -40,6 +40,7 @@ const CameraButton = () => {
   const enabled = useSelector(
     (store) => store.conference.setup.devices.camera.enabled
   );
+  const loading = useSelector((store) => store.conference.setup.loading);
 
   const matches = useSmallScreen();
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
@@ -93,7 +94,7 @@ const CameraButton = () => {
         icon={<VideocamOffOutlinedIcon />}
         activeIcon={<VideocamOutlinedIcon />}
         active={enabled}
-        disabled={permission === "denied"}
+        disabled={loading || permission === "denied"}
         error={permission !== "granted"}
         disabledMoreButton={cameras.length === 0}
         disabledTitle={

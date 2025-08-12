@@ -162,7 +162,7 @@ const CallDetailsView = ({ onCallAction }) => {
             endIcon={React.createElement(buttonActionProps.Icon)}
             //type='submit'
             onClick={() => {
-              onCallAction(call);
+              onCallAction(call)();
               onClose();
             }}>
             {buttonActionProps.text}

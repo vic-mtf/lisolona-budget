@@ -1,7 +1,13 @@
 import { ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import ListAvatar from "../../../../components/ListAvatar";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import getFullName from "../../../../utils/getFullName";
 
 export const ToolbarIdentity = () => {
+  const { state } = useLocation();
+  const target = useMemo(() => state?.target || null, [state]);
+
   return (
     <ListItem
       sx={{
@@ -15,9 +21,27 @@ export const ToolbarIdentity = () => {
       disableGutters
       disablePadding>
       <ListItemAvatar>
-        <ListAvatar />
+        <ListAvatar id={target?.id} src={target?.image} />
       </ListItemAvatar>
-      <ListItemText primary='John Doe' secondary='john.doe@example.com' />
+      <ListItemText
+        primary={getFullName(target)}
+        secondary={target?.email || target?.description || ""}
+        slotProps={{
+          primary: {
+            textOverflow: "ellipsis",
+            width: "100%",
+            overflow: "hidden",
+            noWrap: true,
+          },
+          secondary: {
+            textOverflow: "ellipsis",
+            width: "100%",
+            overflow: "hidden",
+            noWrap: true,
+            title: target?.email || target?.description || "",
+          },
+        }}
+      />
     </ListItem>
   );
 };

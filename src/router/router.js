@@ -11,6 +11,10 @@ const PUBLIC_URL = import.meta.env.BASE_URL;
 
 const PROTECTED_ROUTES = [
   {
+    path: "/conference/create",
+    component: Conference,
+  },
+  {
     component: Main,
     path: "/*",
   },

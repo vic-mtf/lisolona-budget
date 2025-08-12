@@ -1,4 +1,5 @@
 const initialState = {
+  callTarget: null,
   room: {
     name: null,
     description: null,

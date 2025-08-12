@@ -92,7 +92,6 @@ export default function MeetingProvider({ children }) {
   //   const onUserPublished = handleUserTogglePublished(true);
   //   const onUserUnpublished = handleUserTogglePublished(false);
   //   const onUserJoined = handleUserToggleJoin(true);
-  //   const onUserLeft = handleUserToggleJoin(false);
   //   client.on("user-joined", onUserJoined);
   //   client.on("user-published", onUserPublished);
   //   client.on("user-unpublished", onUserUnpublished);

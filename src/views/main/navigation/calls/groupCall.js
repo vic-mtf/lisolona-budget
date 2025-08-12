@@ -147,6 +147,7 @@ const addDateLabel = (calls = []) => {
   });
   return callsWithLabel;
 };
+
 export const groupTypes = [
   {
     id: "all",
@@ -176,6 +177,22 @@ export const options = [
     icon: HistoryToggleOffOutlinedIcon,
     id: "start-meeting",
     content: InstantMeeting,
+    action(_, user) {
+      window.open(import.meta.env.BASE_URL + "/conference/create", "_blank");
+      store.dispatch({
+        type: "conference/updateConferenceData",
+        payload: {
+          key: "callTarget",
+          data: {
+            id: user?.id,
+            name: user.name,
+            type: user?.type,
+            image: user?.image,
+            description: user?.description,
+          },
+        },
+      });
+    },
   },
   {
     label: "Planifier une réunion",

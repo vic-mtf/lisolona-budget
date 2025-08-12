@@ -22,6 +22,7 @@ const DeviceAlertPermission = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");
   const clickableRef = useRef(true);
   const notifications = useNotifications();
+  const loading = useSelector((store) => store.conference.setup.loading);
   const cameraPer = useSelector(
     (store) => store.conference.setup.devices.camera.permission
   );
@@ -143,7 +144,7 @@ const DeviceAlertPermission = () => {
   );
 
   useEffect(() => {
-    if (cameraPer) {
+    if (cameraPer && !loading) {
       const stream = getData("camera.stream");
       const isVideoTrack = stream?.getVideoTracks()?.length > 0;
 
@@ -160,10 +161,10 @@ const DeviceAlertPermission = () => {
         setData("camera", { stream: null });
       }
     }
-  }, [cameraPer, createStream, getData, dispatch, setData]);
+  }, [cameraPer, createStream, getData, dispatch, setData, loading]);
 
   useEffect(() => {
-    if (microPer) {
+    if (microPer && !loading) {
       const stream = getData("microphone.stream");
       const isMicroTrack = stream?.getAudioTracks()?.length > 0;
       if (microPer === "granted" && !isMicroTrack) createStream("microphone");
@@ -178,7 +179,7 @@ const DeviceAlertPermission = () => {
         setData("microphone", { stream: null });
       }
     }
-  }, [microPer, createStream, getData, dispatch, setData]);
+  }, [microPer, createStream, getData, dispatch, setData, loading]);
 
   return (
     <Dialog open={open} onClose={onClose}>

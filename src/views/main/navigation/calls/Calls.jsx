@@ -11,6 +11,8 @@ import toggleFullscreen from "../../../../utils/toggleFullscreen";
 import VirtualList from "../../../../components/VirtualList";
 import { updateData } from "../../../../redux/data/data";
 import CallDetailsView from "./CallDetailsView";
+import store from "../../../../redux/store";
+import { updateConferenceData } from "../../../../redux/conference/conference";
 
 export default function Calls() {
   const bulkCalls = useSelector((store) => store.data.app.calls);
@@ -32,12 +34,18 @@ export default function Calls() {
 
   const handleCallAction = useCallback(
     (call) => () => {
-      console.log("call", call);
       const url = import.meta.env.BASE_URL + `/conference/${call.id}`;
-      const subWin = window.open(url, "_blank");
-      subWin.name = "GEED-CONFERENCE";
+      let target = call?.location;
+      const type = call?.room ? "room" : "direct";
+      window.open(url, "_blank");
+      dispatch(
+        updateConferenceData({
+          key: "callTarget",
+          data: { type, ...target },
+        })
+      );
     },
-    []
+    [dispatch]
   );
 
   const data = useMemo(
