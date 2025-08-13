@@ -15,7 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { updateConferenceData } from "../../../../../../redux/conference/conference";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
-import { streamSegmenter } from "../../../../../../utils/StreamSegmenter";
+import { streamSegmenterMediaPipe } from "../../../../../../utils/StreamSegmenterMediaPipe";
 import { axios } from "../../../../../../hooks/useAxios";
 
 const ReplaceBackground = () => {
@@ -84,7 +84,7 @@ const ReplaceBackground = () => {
     const url = URL.createObjectURL(blob);
     const image = new Image();
     image.onload = () => {
-      streamSegmenter.setBackgroundImage(image);
+      streamSegmenterMediaPipe.setBackgroundImage(image);
       setData({ [id]: image });
 
       const key = [
@@ -127,7 +127,7 @@ const ReplaceBackground = () => {
       const background = getData(id);
 
       if (background) {
-        streamSegmenter.setBackgroundImage(background);
+        streamSegmenterMediaPipe.setBackgroundImage(background);
         data.push(false);
       } else {
         handleDownload(id);

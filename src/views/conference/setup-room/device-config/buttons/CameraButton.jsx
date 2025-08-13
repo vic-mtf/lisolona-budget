@@ -19,7 +19,7 @@ import { updateConferenceData } from "../../../../../redux/conference/conference
 import { stopStream } from "../../../../../utils/getDevices";
 import { useCallback } from "react";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import { streamSegmenter } from "../../../../../utils/StreamSegmenter";
+import { streamSegmenterMediaPipe } from "../../../../../utils/StreamSegmenterMediaPipe";
 
 const CameraButton = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");
@@ -58,8 +58,10 @@ const CameraButton = () => {
               frameRate: { max: 30, min: 15 },
             },
           });
-          streamSegmenter.stop();
-          const processedStream = await streamSegmenter.initStream(newStream);
+          streamSegmenterMediaPipe.stop();
+          const processedStream = await streamSegmenterMediaPipe.initStream(
+            newStream
+          );
           setData("camera", { stream: newStream, processedStream });
         } catch (error) {
           console.error(error);

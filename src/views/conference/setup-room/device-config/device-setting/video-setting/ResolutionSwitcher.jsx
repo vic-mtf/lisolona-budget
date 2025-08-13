@@ -1,5 +1,5 @@
 import { Box, TextField, MenuItem } from "@mui/material";
-import { streamSegmenter } from "../../../../../../utils/StreamSegmenter";
+import { streamSegmenterMediaPipe } from "../../../../../../utils/StreamSegmenterMediaPipe";
 import { useState } from "react";
 import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,7 @@ const ResolutionSwitcher = () => {
     () =>
       resolutions.find(({ value }) => {
         const { width, height } = value;
-        const current = streamSegmenter.getCurrentResolution();
+        const current = streamSegmenterMediaPipe.getCurrentResolution();
         return width === current.width && height === current.height;
       })?.id || "auto"
   );
@@ -30,8 +30,8 @@ const ResolutionSwitcher = () => {
           const { width, height } = resolutions.find(
             ({ id }) => id === value
           ).value;
-          if (value === "auto") streamSegmenter.resetResolution();
-          else streamSegmenter.setResolution(width, height);
+          if (value === "auto") streamSegmenterMediaPipe.resetResolution();
+          else streamSegmenterMediaPipe.setResolution(width, height);
         }}>
         {resolutions.map(({ label, id }, index) => {
           return (
@@ -49,7 +49,7 @@ const ResolutionSwitcher = () => {
   );
 };
 
-const defaultResolution = streamSegmenter.getCurrentResolution();
+const defaultResolution = streamSegmenterMediaPipe.getCurrentResolution();
 
 const resolutions = [
   {

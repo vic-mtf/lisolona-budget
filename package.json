@@ -8,6 +8,7 @@
     "@emotion/styled": "^11.14.0",
     "@lexical/react": "^0.33.1",
     "@lexical/text": "^0.33.1",
+    "@mediapipe/tasks-vision": "0.10.22-rc.20250304",
     "@mui/icons-material": "^7.0.2",
     "@mui/lab": "5.0.0-alpha.176",
     "@mui/material": "^7.0.2",
@@ -71,6 +72,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "rm -rf dist dist.zip;pnpm build && zip -r dist.zip dist && scp dist.zip root@143.198.110.104:~/server/GEID_Git/public/geid-platform/lisolo",
     "lint": "eslint .",
     "preview": "vite preview"
   },

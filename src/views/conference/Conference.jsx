@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useLayoutEffect, useEffect } from "react";
 import SetupRoom from "./setup-room/SetupRoom";
 import { useSelector } from "react-redux";
-import { streamSegmenter } from "../../utils/StreamSegmenter";
+import { streamSegmenterMediaPipe } from "../../utils/StreamSegmenterMediaPipe";
 import { noiseSuppressor } from "../../utils/NoiseSuppressor";
 
 const Conference = () => {
@@ -56,17 +56,17 @@ const ListerStream = () => {
   );
 
   useEffect(() => {
-    if (background) streamSegmenter.enableStyle("replaceBackground");
-    if (blurred) streamSegmenter.enableStyle("blur");
-    if (enhanced) streamSegmenter.enableStyle("enhance");
+    if (background) streamSegmenterMediaPipe.enableStyle("replaceBackground");
+    if (blurred) streamSegmenterMediaPipe.enableStyle("blur");
+    if (enhanced) streamSegmenterMediaPipe.enableStyle("enhance");
     if (filter) {
-      streamSegmenter.enableStyle("filter");
-      streamSegmenter.setFilterType(filter);
+      streamSegmenterMediaPipe.enableStyle("filter");
+      streamSegmenterMediaPipe.setFilterType(filter);
     }
     noiseSuppressor.toggleProcessing(suppressor);
 
     return () => {
-      streamSegmenter.resetStyles();
+      streamSegmenterMediaPipe.resetStyles();
     };
   }, [filter, blurred, enhanced, background, suppressor]);
 };

@@ -15,7 +15,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import getDevices from "../../../../utils/getDevices";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import { streamSegmenter } from "../../../../utils/StreamSegmenter";
+import { streamSegmenterMediaPipe } from "../../../../utils/StreamSegmenterMediaPipe";
 import { noiseSuppressor } from "../../../../utils/NoiseSuppressor";
 
 const DeviceAlertPermission = () => {
@@ -80,7 +80,9 @@ const DeviceAlertPermission = () => {
             audio: isAudio ? constraints?.audio || true : false,
           });
           if (isVideo) {
-            const processedStream = await streamSegmenter.initStream(stream);
+            const processedStream = await streamSegmenterMediaPipe.initStream(
+              stream
+            );
             setData(type, { stream, processedStream });
           }
 
