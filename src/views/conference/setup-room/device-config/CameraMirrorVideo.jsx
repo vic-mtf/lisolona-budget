@@ -186,6 +186,16 @@ export const ToolbarSide = ({ size, name }) => {
 };
 
 const DownloadSegmentModelEffect = () => {
+  const backgroundDownloadProgress = useSelector(
+    (store) =>
+      store.conference.setup.devices.processedCameraStream.background
+        .downloadProgress
+  );
+  const backgroundLoading = useSelector(
+    (store) =>
+      store.conference.setup.devices.processedCameraStream.background.loading
+  );
+
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(
     () => streamSegmenterMediaPipe.getModelStats().loadingModel
@@ -204,14 +214,24 @@ const DownloadSegmentModelEffect = () => {
   }, [loading]);
 
   return (
-    loading && (
-      <LinearProgress
-        value={progress}
-        variant='determinate'
-        sx={{ position: "absolute", bottom: 0, width: "100%", left: 0 }}
-        color='inherit'
-      />
-    )
+    <>
+      {loading && (
+        <LinearProgress
+          value={progress}
+          variant='determinate'
+          sx={{ position: "absolute", bottom: 0, width: "100%", left: 0 }}
+          color='inherit'
+        />
+      )}
+      {backgroundLoading && (
+        <LinearProgress
+          value={backgroundDownloadProgress}
+          variant='determinate'
+          sx={{ position: "absolute", bottom: 0, width: "100%", left: 0 }}
+          color='inherit'
+        />
+      )}
+    </>
   );
 };
 
