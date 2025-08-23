@@ -17,7 +17,7 @@ const DeviceConfig = () => {
         component={Paper}
         elevation={0}>
         <CameraMirrorVideo />
-        <Divider />
+        {/* <Divider /> */}
         <Toolbar
           sx={{ justifyContent: "center", gap: 2, borderRadius: 0 }}
           variant='dense'>

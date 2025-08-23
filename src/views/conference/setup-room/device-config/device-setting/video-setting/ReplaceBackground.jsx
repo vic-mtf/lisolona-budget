@@ -16,7 +16,9 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { updateConferenceData } from "../../../../../../redux/conference/conference";
 import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
 import { streamSegmenterMediaPipe } from "../../../../../../utils/StreamSegmenterMediaPipe";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { axios } from "../../../../../../hooks/useAxios";
+import { useCallback } from "react";
 
 const ReplaceBackground = () => {
   const [getData, setData] = useLocalStoreData(
@@ -35,9 +37,17 @@ const ReplaceBackground = () => {
     (store) =>
       store.conference.setup.devices.processedCameraStream.background.loading
   );
+  const customImages = useSelector(
+    (store) =>
+      store.conference.setup.devices.processedCameraStream.background
+        .customImages
+  );
   const select = useMemo(() => {
-    return items.find((item) => item.id === id);
-  }, [id]);
+    return (
+      items.find((item) => item.id === id) ||
+      customImages.find((item) => item.id === id)
+    );
+  }, [id, customImages]);
 
   const handleDownload = async (id) => {
     const background = getData(id);
@@ -140,6 +150,54 @@ const ReplaceBackground = () => {
       })
     );
   };
+  const handleLoadCustomImage = useCallback(async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (event) => {
+      const [file] = event.target.files;
+      if (file) {
+        const src = URL.createObjectURL(file);
+        const thumbSrc = await createThumbnail(src);
+
+        const item = {
+          id: createId(parseInt(Date.now())),
+          src,
+          thumbSrc,
+          group: "default",
+          title: file.name,
+        };
+        const newCustomImages = [item, ...customImages];
+        dispatch(
+          updateConferenceData({
+            key: [
+              "setup.devices.processedCameraStream.background.customImages",
+            ],
+            data: [newCustomImages],
+          })
+        );
+        const image = new Image();
+        image.onload = () => {
+          streamSegmenterMediaPipe.setBackgroundImage(image);
+          setData({ [item.id]: image });
+          const key = [
+            "setup.devices.processedCameraStream.background.loading",
+            "setup.devices.processedCameraStream.background.enabled",
+            "setup.devices.processedCameraStream.background.id",
+          ];
+          const data = [false, true, item.id];
+          dispatch(
+            updateConferenceData({
+              key,
+              data,
+            })
+          );
+        };
+        image.src = src;
+      }
+    };
+    input.click();
+  }, [dispatch, customImages, setData]);
 
   return (
     <Box my={2}>
@@ -153,6 +211,25 @@ const ReplaceBackground = () => {
         {"Modifier l'arrière-plan"}
       </ListSubheader>
       <ImageList cols={4} sx={{ px: 1, m: 0 }}>
+        <ImageListItem
+          sx={{ aspectRatio: 1, borderRadius: 2.5, overflow: "hidden" }}>
+          <Tooltip title='Sélectionner un arrière-plan personnalisé'>
+            <IconButton
+              sx={{ width: "100%", height: "100%" }}
+              onClick={handleLoadCustomImage}>
+              <AddPhotoAlternateOutlinedIcon fontSize='large' />
+            </IconButton>
+          </Tooltip>
+        </ImageListItem>
+        {customImages?.map((image) => (
+          <ImageItem
+            key={image.id}
+            image={image}
+            selected={select?.id === image.id && enabled}
+            onClick={() => handleSelect(image.id)}
+            loading={loading && select?.id === image.id}
+          />
+        ))}
         {items.map((image) => (
           <ImageItem
             key={image.id}
@@ -247,6 +324,27 @@ const items = images.map((image, index) => ({
   id: createId(index),
 }));
 
+const createThumbnail = (imageSrc) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 300;
+      canvas.height = 300;
+      const ratio = Math.min(img.width / 300, img.height / 300);
+      const newWidth = img.width / ratio;
+      const newHeight = img.height / ratio;
+      const offsetX = (newWidth - 300) / 2;
+      const offsetY = (newHeight - 300) / 2;
+      ctx.drawImage(img, offsetX, offsetY, 300, 300, 0, 0, 300, 300);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => reject(new Error("Erreur de chargement de l'image"));
+    img.src = imageSrc;
+  });
+};
+
 ImageItem.displayName = "ImageItem";
 ImageItem.propTypes = {
   image: PropTypes.object.isRequired,
@@ -254,112 +352,5 @@ ImageItem.propTypes = {
   onClick: PropTypes.func,
   loading: PropTypes.bool,
 };
-
-// const itemData = [
-//   {
-//     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-//     title: "Breakfast",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-//     title: "Burger",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-//     title: "Camera",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-//     title: "Coffee",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-//     title: "Hats",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
-//     title: "Honey",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-//     title: "Basketball",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-//     title: "Fern",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
-//     title: "Mushrooms",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
-//     title: "Tomato basil",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
-//     title: "Sea star",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-//     title: "Bike",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-//     title: "Bike",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-//     title: "Breakfast",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-//     title: "Burger",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-//     title: "Camera",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-//     title: "Coffee",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-//     title: "Hats",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
-//     title: "Honey",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-//     title: "Basketball",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-//     title: "Fern",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
-//     title: "Mushrooms",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
-//     title: "Tomato basil",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
-//     title: "Sea star",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-//     title: "Bike",
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-//     title: "Bike",
-//   },
-// ];
 
 export default ReplaceBackground;

@@ -54,6 +54,7 @@ const initialState = {
           loaded: false,
           uploadProgress: 0,
           downloadProgress: 0,
+          customImages: [],
         },
         enhanced: false,
       },

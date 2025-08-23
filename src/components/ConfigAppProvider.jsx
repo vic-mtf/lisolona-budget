@@ -12,6 +12,11 @@ export default function ConfigAppProvider({ children }) {
     document.head.parentElement.lang = lang;
     document.head.parentElement.style.backgroundColor = bgcolor;
     document.body.style.backgroundColor = bgcolor;
+    // const manifestLink = document.querySelector('link[href*="manifest"]');
+    // manifestLink.setAttribute(
+    //   "href",
+    //   `${import.meta.env.BASE_URL}/manifest.json`
+    // );
   }, [lang, bgcolor]);
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
