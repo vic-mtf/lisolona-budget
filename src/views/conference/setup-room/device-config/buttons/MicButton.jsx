@@ -34,6 +34,7 @@ const MicButton = () => {
   const enabled = useSelector(
     (store) => store.conference.setup.devices.microphone.enabled
   );
+
   const deviceId = useSelector(
     (store) => store.conference.setup.devices.microphone.deviceId
   );
@@ -86,7 +87,7 @@ const MicButton = () => {
       {!matches && (
         <ListItem disableGutters disablePadding sx={{ maxWidth: 50 }}>
           <Box width='100%'>
-            <VolumeBar deviceId={deviceId} />
+            <VolumeBar enabled={enabled} />
           </Box>
         </ListItem>
       )}
@@ -133,7 +134,7 @@ const MicButton = () => {
             <ListItem
               secondaryAction={
                 <Box width={100}>
-                  <VolumeBar deviceId={enabled && deviceId} />
+                  <VolumeBar enabled={enabled} />
                 </Box>
               }>
               <ListItemIcon>

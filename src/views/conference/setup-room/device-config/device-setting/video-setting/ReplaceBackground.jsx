@@ -86,7 +86,6 @@ const ReplaceBackground = () => {
     image.onload = () => {
       streamSegmenterMediaPipe.setBackgroundImage(image);
       setData({ [id]: image });
-
       const key = [
         "setup.devices.processedCameraStream.background.loading",
         "setup.devices.processedCameraStream.background.enabled",

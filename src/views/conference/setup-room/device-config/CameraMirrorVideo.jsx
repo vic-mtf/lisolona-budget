@@ -8,16 +8,18 @@ import {
   IconButton,
   Tooltip,
   Alert,
+  LinearProgress,
 } from "@mui/material";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import { updateConferenceData } from "../../../../redux/conference/conference";
 import LensBlurOutlinedIcon from "@mui/icons-material/LensBlurOutlined";
 import BlurOffOutlinedIcon from "@mui/icons-material/BlurOffOutlined";
 import LayersClearOutlinedIcon from "@mui/icons-material/LayersClearOutlined";
 import PropTypes from "prop-types";
+import { streamSegmenterMediaPipe } from "../../../../utils/StreamSegmenterMediaPipe";
 
 const CameraMirrorVideo = () => {
   const enabled = useSelector(
@@ -170,7 +172,46 @@ export const ToolbarSide = ({ size, name }) => {
         }
         actionPosition='right'
       />
+      <ImageListItemBar
+        sx={{
+          //p: 0.5,
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
+        }}
+        subtitle={<DownloadSegmentModelEffect />}
+        position='bottom'
+      />
     </>
+  );
+};
+
+const DownloadSegmentModelEffect = () => {
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(
+    () => streamSegmenterMediaPipe.getModelStats().loadingModel
+  );
+  useEffect(() => {
+    streamSegmenterMediaPipe.downloadProgressModel = (progress) => {
+      if (!loading) setLoading(true);
+      setProgress(progress * 100);
+    };
+    streamSegmenterMediaPipe.loadedModel = (data) => {
+      setLoading(!data);
+    };
+    return () => {
+      streamSegmenterMediaPipe.downloadProgressModel = null;
+    };
+  }, [loading]);
+
+  return (
+    loading && (
+      <LinearProgress
+        value={progress}
+        variant='determinate'
+        sx={{ position: "absolute", bottom: 0, width: "100%", left: 0 }}
+        color='inherit'
+      />
+    )
   );
 };
 

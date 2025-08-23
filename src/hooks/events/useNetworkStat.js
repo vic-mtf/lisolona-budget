@@ -33,7 +33,7 @@ const useNetworkStat = () => {
         1000
       );
     };
-    socket?.on("rtt-pong", handleRTTPong);
+    // socket?.on("rtt-pong", handleRTTPong);
     return () => {
       socket?.off("rtt-pong", handleRTTPong);
     };

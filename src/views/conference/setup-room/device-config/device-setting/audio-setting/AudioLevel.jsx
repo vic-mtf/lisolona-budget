@@ -13,9 +13,6 @@ const AudioLevel = () => {
     (store) =>
       store.conference.setup.devices.processedMicrophoneStream.noiseSuppressor
   );
-  const deviceId = useSelector(
-    (store) => store.conference.setup.devices.microphone.deviceId
-  );
 
   const rawStream = useMemo(() => {
     if (!enabled) return null;
@@ -29,7 +26,7 @@ const AudioLevel = () => {
           <MicNoneOutlinedIcon />
         </Box>
         <Box sx={{ flexGrow: 1 }}>
-          <VolumeBar deviceId={deviceId} rawStream={rawStream} />
+          <VolumeBar enabled rawStream={rawStream} />
         </Box>
       </ListItem>
       <Box display='flex' flexDirection='row' gap={4} mx={1}>

@@ -2,24 +2,17 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import { alpha } from "@mui/material/styles";
-import React, { useMemo } from "react";
-import useLocalStoreData from "../../../../hooks/useLocalStoreData";
+import React from "react";
+// import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import useAudioVolume from "../../../../hooks/useAudioVolume";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { noiseSuppressor } from "../../../../utils/NoiseSuppressor";
 
-const VolumeBar = ({ rawStream }) => {
-  const [getData] = useLocalStoreData("conference.setup.devices");
-  const enabled = useSelector(
-    (store) => store.conference.setup.devices.microphone.enabled
+const VolumeBar = ({ rawStream, enabled }) => {
+  const volume = useAudioVolume(
+    enabled && noiseSuppressor.getProcessedStream()
   );
 
-  const stream = useMemo(
-    () => (enabled ? getData("microphone.processedStream") : null),
-    [enabled, getData]
-  );
-
-  const volume = useAudioVolume(stream);
   const rawVolume = useAudioVolume(rawStream);
 
   return (
@@ -58,8 +51,9 @@ const VolumeBar = ({ rawStream }) => {
 };
 
 VolumeBar.propTypes = {
-  deviceId: PropTypes.string,
+  // deviceId: PropTypes.string,
   rawStream: PropTypes.instanceOf(MediaStream),
+  enabled: PropTypes.bool,
 };
 
 export default React.memo(VolumeBar);

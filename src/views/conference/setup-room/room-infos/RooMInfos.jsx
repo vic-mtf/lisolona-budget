@@ -16,7 +16,6 @@ import { updateConferenceData } from "../../../../redux/conference/conference";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { updateData } from "../../../../redux/data/data";
-console.log(window.location.pathname);
 
 const RoomInfos = () => {
   const matches = useSmallScreen();
@@ -49,7 +48,7 @@ const RoomInfos = () => {
     const onListeningResponse = (e) => {
       if (e.origin === window.location.origin)
         if (e.data?.type === "response") {
-          console.log("Received response:", e.data);
+          //  console.log("Received response:", e.data);
           navigateTo("", {
             state: { target: e.data?.callTarget, ...state },
           });

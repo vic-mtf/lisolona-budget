@@ -89,20 +89,18 @@ const DeviceAlertPermission = () => {
           if (isAudio) {
             const processedStream = await noiseSuppressor.initStream(stream);
             setData(type, { stream, processedStream });
-            // noiseSuppressor.toggleProcessing(false);
           }
 
-          const { microphones, cameras, speakers, screens } =
-            await getDevices();
+          const devices = await getDevices();
           const defaultDevices = {
-            microphone: microphones[0],
-            camera: cameras[0],
-            speaker: speakers[0],
-            screen: screens[0],
+            microphone: devices.microphones[0],
+            camera: devices.cameras[0],
+            speaker: devices.speakers[0],
+            screen: devices.screens[0],
           };
 
           const key = ["setup.devices.screens"];
-          const data = [screens];
+          const data = [devices.screens];
 
           if (isAudio) {
             key.push(
@@ -110,11 +108,11 @@ const DeviceAlertPermission = () => {
               "setup.devices.speakers",
               "setup.devices.microphone.enabled"
             );
-            data.push(microphones, speakers, true);
+            data.push(devices.microphones, devices.speakers, true);
           }
           if (isVideo) {
             key.push("setup.devices.cameras", "setup.devices.camera.enabled");
-            data.push(cameras, true);
+            data.push(devices.cameras, true);
           }
 
           Object.keys(defaultDevices).forEach((k) => {
@@ -160,7 +158,7 @@ const DeviceAlertPermission = () => {
             data: false,
           })
         );
-        setData("camera", { stream: null });
+        setData("camera", { stream: null, processedStream: null });
       }
     }
   }, [cameraPer, createStream, getData, dispatch, setData, loading]);
@@ -178,7 +176,7 @@ const DeviceAlertPermission = () => {
             data: false,
           })
         );
-        setData("microphone", { stream: null });
+        setData("microphone", { stream: null, processedStream: null });
       }
     }
   }, [microPer, createStream, getData, dispatch, setData, loading]);

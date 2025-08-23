@@ -8,7 +8,7 @@
     "@emotion/styled": "^11.14.0",
     "@lexical/react": "^0.33.1",
     "@lexical/text": "^0.33.1",
-    "@mediapipe/tasks-vision": "0.10.22-rc.20250304",
+    "@mediapipe/tasks-vision": "0.10.2",
     "@mui/icons-material": "^7.0.2",
     "@mui/lab": "5.0.0-alpha.176",
     "@mui/material": "^7.0.2",
