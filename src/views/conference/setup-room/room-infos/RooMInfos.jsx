@@ -16,19 +16,24 @@ import { updateConferenceData } from "../../../../redux/conference/conference";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { updateData } from "../../../../redux/data/data";
+import { setStatus } from "../../../main/navigation/calls/groupCall";
+import normalizeObjectKeys from "../../../../utils/normalizeObjectKeys";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 const RoomInfos = () => {
   const matches = useSmallScreen();
   const { code } = useParams();
   const connected = useSelector((store) => store.user.connected);
   const setupLoading = useSelector((store) => store.conference.setup.loading);
+  const notifications = useNotifications();
+
   const Authorization = useToken();
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
   const { state } = useLocation();
   const target = useMemo(() => state?.target || null, [state]);
   const timerRef = useRef(null);
-  const [{ loading, data: callDetail }] = useAxios(
+  const [{ loading, data: callDetail }, refetch] = useAxios(
     {
       url: "/api/chat/room/call/" + code,
       headers: { Authorization },
@@ -98,6 +103,73 @@ const RoomInfos = () => {
     }
   }, [navigateTo, state, callDetail]);
 
+  const isRoom = target?.type === "room";
+  const status = useMemo(() => setStatus(data?.status), [data?.status]);
+
+  const text = useMemo(
+    () => ({
+      type: isRoom ? "la réunion" : "l'appel",
+      action: data ? (status === "ended" ? "Relancer" : "Rejoindre") : "Lancer",
+    }),
+    [data, isRoom, status]
+  );
+
+  const handleCreateCall = async () => {
+    dispatch(
+      updateConferenceData({
+        key: ["loading"],
+        data: [true],
+      })
+    );
+    const request = {
+      method: "POST",
+      url: "/api/chat/room/call",
+      data: {
+        target: target?.id,
+        type: isRoom ? "room" : "direct",
+        tokenType: "uid",
+        role: "publisher",
+        start: Date.now(),
+      },
+    };
+    try {
+      const response = await refetch(request);
+      const data = normalizeObjectKeys(response.data);
+      const { APP_ID, APP_CERTIFICATE, TOKEN, EXPIRE_AT } =
+        data?.callDetail || {};
+      const participants = {};
+      data?.participants?.forEach((p) => (participants[p.id] = p));
+
+      dispatch(
+        updateConferenceData({
+          key: ["AGORA_DATA", "meeting.participants", "step"],
+          data: [
+            {
+              TOKEN: TOKEN,
+              APP_CERTIFICATE: APP_CERTIFICATE,
+              APP_ID: APP_ID,
+              EXPIRE_AT: EXPIRE_AT,
+            },
+            participants,
+            "meeting",
+          ],
+        })
+      );
+      navigateTo("/conference/" + data.id, {
+        state: { data, ...state },
+        replace: true,
+      });
+    } catch (error) {
+      console.error(error);
+      notifications.show({
+        message: "Une erreur est survenue lors de la connexion.",
+        severity: "error",
+      });
+
+      dispatch(updateConferenceData({ key: ["loading"], data: [false] }));
+    }
+  };
+
   return (
     <Box
       width={{ md: 400 }}
@@ -160,12 +232,21 @@ const RoomInfos = () => {
             alignItems='center'
             flexDirection='column'
             py={{ xs: 2, md: 0 }}>
+            {data?.title && (
+              <Typography variant='h6' fontSize={18} align='center'>
+                {data?.title}
+              </Typography>
+            )}
             <Typography color='textSecondary' align='center'>
-              Vous êtes sur le point de lancer un appel
+              Le moment est venu de commencer
             </Typography>
             <Box>
-              <Button variant='contained' color='primary'>
-                {"Lancer l'appel"}
+              <Button
+                variant='contained'
+                color='primary'
+                loading={loading}
+                onClick={handleCreateCall}>
+                {text.action} {text.type}
               </Button>
             </Box>
           </Box>

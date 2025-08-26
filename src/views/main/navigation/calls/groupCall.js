@@ -91,7 +91,7 @@ const getCallDate = (date) =>
   }).toLocaleLowerCase();
 
 ////////////////////////////////////////////////////////////////////////
-const setStatus = (status) =>
+export const setStatus = (status) =>
   ["started", "scheduled", "running", "fail", "ended"].includes(status)
     ? status
     : { 0: "started", 1: "running", 7: "scheduled" }[status] || "ended";

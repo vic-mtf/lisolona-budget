@@ -15,6 +15,7 @@ export default function Footer() {
   const handleCreateMeeting = useCreateMeeting();
   const handleJoinMeeting = useJoinMeeting();
   const socket = useSocket();
+
   const handleStartMeeting = useCallback(async () => {
     const state = meetingData.defaultCallingState;
     const origin = meetingData.origin;

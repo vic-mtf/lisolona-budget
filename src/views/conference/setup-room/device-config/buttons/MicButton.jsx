@@ -19,6 +19,7 @@ import {
   Divider,
   MenuItem,
   Box,
+  Typography,
 } from "@mui/material";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
@@ -86,7 +87,7 @@ const MicButton = () => {
     <>
       {!matches && (
         <ListItem disableGutters disablePadding sx={{ maxWidth: 50 }}>
-          <Box width='100%'>
+          <Box width='100%' component={Typography}>
             <VolumeBar enabled={enabled} />
           </Box>
         </ListItem>

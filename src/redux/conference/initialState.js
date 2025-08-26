@@ -1,20 +1,13 @@
 const initialState = {
+  loading: false,
   callTarget: null,
-  room: {
-    name: null,
-    description: null,
-    type: null,
-    status: null,
-    createdAt: null,
-    updatedAt: null,
-    startedAt: null,
-    endedAt: null,
-    AGORA_DATA: {
-      channel: null,
-      token: null,
-      uid: null,
-      screenUid: null,
-    },
+  step: "setup",
+
+  AGORA_DATA: {
+    TOKEN: null,
+    APP_CERTIFICATE: null,
+    APP_ID: null,
+    EXPIRE_AT: null,
   },
   setup: {
     loading: true,
@@ -67,12 +60,12 @@ const initialState = {
       screens: [],
     },
   },
-
   meeting: {
     nav: {
       open: false,
-      index: 0,
+      id: null,
     },
+    participants: {},
   },
 };
 

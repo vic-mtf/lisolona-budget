@@ -1,25 +1,18 @@
-import { Box } from "@mui/material";
-import { useLayoutEffect, useEffect } from "react";
+import {
+  Backdrop,
+  Box,
+  Fade,
+  Typography,
+  LinearProgress,
+  alpha,
+} from "@mui/material";
 import SetupRoom from "./setup-room/SetupRoom";
 import { useSelector } from "react-redux";
-import { streamSegmenterMediaPipe } from "../../utils/StreamSegmenterMediaPipe";
-import { noiseSuppressor } from "../../utils/NoiseSuppressor";
+import ListerStream from "./ListerStream";
+import MeetingRoom from "./meeting-room/MeetingRoom";
 
 const Conference = () => {
-  useLayoutEffect(() => {
-    const handleBeforeUnload = (e) => {
-      const message =
-        "Si vous rechargez la page, vous perdrez les informations saisies.";
-      e.preventDefault();
-      return message;
-    };
-
-    // window.addEventListener("beforeunload", handleBeforeUnload);
-    // return () => {
-    //   window.removeEventListener("beforeunload", handleBeforeUnload);
-    // };
-  }, []);
-
+  const step = useSelector((store) => store.conference.step);
   return (
     <>
       <Box
@@ -29,46 +22,53 @@ const Conference = () => {
           display: "flex",
           flex: 1,
         }}>
-        <SetupRoom />
+        <Fade in={step === "setup"} unmountOnExit appear={false}>
+          <SetupRoom />
+        </Fade>
+        <Fade in={step === "meeting"} unmountOnExit appear={false}>
+          <MeetingRoom />
+        </Fade>
       </Box>
       <ListerStream />
+      <Loading />
     </>
   );
 };
 
-const ListerStream = () => {
-  const filter = useSelector(
-    (store) => store.conference.setup.devices.processedCameraStream.filter
+const Loading = () => {
+  const loading = useSelector((store) => store.conference.loading);
+  return (
+    <Backdrop
+      open={loading}
+      component={Typography}
+      timeout={600}
+      sx={{
+        background: (t) =>
+          alpha(
+            t.palette.common[t.palette.mode === "light" ? "white" : "black"],
+            0.95
+          ),
+        zIndex: (t) => t.zIndex.modal,
+        backdropFilter: (t) => `blur(${t.spacing(2)})`,
+        flexDirection: "column",
+      }}>
+      <LinearProgress
+        color='inherit'
+        sx={{ position: "absolute", top: 0, width: "100%" }}
+      />
+      <Box
+        mx={2}
+        textAlign='center'
+        display='flex'
+        flexDirection='column'
+        alignItems='center'
+        gap={2}>
+        <Typography component='span' variant='h6'>
+          Démarrage dans quelques instants...
+        </Typography>
+      </Box>
+    </Backdrop>
   );
-  const blurred = useSelector(
-    (store) => store.conference.setup.devices.processedCameraStream.blurred
-  );
-  const enhanced = useSelector(
-    (store) => store.conference.setup.devices.processedCameraStream.enhanced
-  );
-  const background = useSelector(
-    (store) =>
-      store.conference.setup.devices.processedCameraStream.background.enabled
-  );
-  const suppressor = useSelector(
-    (store) =>
-      store.conference.setup.devices.processedMicrophoneStream.noiseSuppressor
-  );
-
-  useEffect(() => {
-    if (background) streamSegmenterMediaPipe.enableStyle("replaceBackground");
-    if (blurred) streamSegmenterMediaPipe.enableStyle("blur");
-    if (enhanced) streamSegmenterMediaPipe.enableStyle("enhance");
-    if (filter) {
-      streamSegmenterMediaPipe.enableStyle("filter");
-      streamSegmenterMediaPipe.setFilterType(filter);
-    }
-    noiseSuppressor.toggleProcessing(suppressor);
-
-    return () => {
-      streamSegmenterMediaPipe.resetStyles();
-    };
-  }, [filter, blurred, enhanced, background, suppressor]);
 };
 
 export default Conference;

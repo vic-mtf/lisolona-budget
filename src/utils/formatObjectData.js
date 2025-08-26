@@ -16,7 +16,7 @@ export default function formatObjectData(
         ];
         configKeys.forEach((k) => !keys.includes(k) && keys.push(k));
         if (
-          configKeys.find((key) => Object.hasOwnProperty.call(data, key)) &&
+          configKeys?.find((key) => Object.hasOwnProperty.call(data, key)) &&
           result[configKey] === undefined
         )
           result[configKey] = getValFromObj(data, configKeys);

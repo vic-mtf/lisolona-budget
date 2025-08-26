@@ -1,4 +1,4 @@
-import { Box, Toolbar, Divider, Paper } from "@mui/material";
+import { Box, Toolbar, /*Divider, */ Paper } from "@mui/material";
 
 import MicButton from "./buttons/MicButton";
 import CameraButton from "./buttons/CameraButton";

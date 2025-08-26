@@ -11,7 +11,7 @@ import toggleFullscreen from "../../../../utils/toggleFullscreen";
 import VirtualList from "../../../../components/VirtualList";
 import { updateData } from "../../../../redux/data/data";
 import CallDetailsView from "./CallDetailsView";
-import store from "../../../../redux/store";
+// import store from "../../../../redux/store";
 import { updateConferenceData } from "../../../../redux/conference/conference";
 
 export default function Calls() {

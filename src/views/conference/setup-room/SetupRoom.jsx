@@ -5,11 +5,11 @@ import ToolbarIdentity from "./room-infos/ToolbarIdentity";
 import useSmallScreen from "../../../hooks/useSmallScreen";
 import { useDispatch } from "react-redux";
 import { updateConferenceData } from "../../../redux/conference/conference";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import DeviceAlertPermission from "./device-config/DeviceAlertPermission";
 import useSocket from "../../../hooks/useSocket";
 
-const SetupRoom = () => {
+const SetupRoom = React.forwardRef((_, ref) => {
   const matches = useSmallScreen();
   const dispatch = useDispatch();
   const socket = useSocket();
@@ -44,6 +44,7 @@ const SetupRoom = () => {
   return (
     <>
       <Box
+        ref={ref}
         sx={{
           width: "100%",
           height: "100%",
@@ -69,6 +70,8 @@ const SetupRoom = () => {
       <DeviceAlertPermission />
     </>
   );
-};
+});
+
+SetupRoom.displayName = "SetupRoom";
 
 export default SetupRoom;

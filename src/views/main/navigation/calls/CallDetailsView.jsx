@@ -31,7 +31,7 @@ import useSmallScreen from "../../../../hooks/useSmallScreen";
 import { updateData } from "../../../../redux/data/data";
 import getFullName from "../../../../utils/getFullName";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import generateQRImage from "../../../../utils/generateQRImage";
+//import generateQRImage from "../../../../utils/generateQRImage";
 import scrollBarSx from "../../../../utils/scrollBarSx";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -45,7 +45,7 @@ const CallDetailsView = ({ onCallAction }) => {
   );
   const dispatch = useDispatch();
   const matches = useSmallScreen();
-  const qrCodeRef = useRef();
+  // const qrCodeRef = useRef();
 
   const onClose = useCallback(() => {
     const key = "app.actions.calls.info.open";
@@ -54,7 +54,7 @@ const CallDetailsView = ({ onCallAction }) => {
 
   const location = useMemo(() => call?.location, [call]);
   const name = useMemo(() => getFullName(location), [location]);
-  const theme = useTheme();
+  // const theme = useTheme();
   const isExistingCall = ["running", "scheduled"].includes(call?.status);
   const buttonActionProps = useMemo(() => getButtonProps(call), [call]);
 
