@@ -3,7 +3,13 @@ import { alpha } from "@mui/system";
 
 const BorderAnimated = () => {
   return (
-    <Box position='absolute' width='100%' height='100%' zIndex={0}>
+    <Box
+      position='absolute'
+      width='100%'
+      height='100%'
+      zIndex={0}
+      borderRadius={1}
+      overflow='hidden'>
       <Box
         sx={{
           position: "relative",
@@ -25,8 +31,8 @@ const BorderAnimated = () => {
                 t.palette.primary.main,
                 0.75
               )} 50%, transparent 100%)`,
-            width: "100%",
-            height: "100%",
+            width: "80%",
+            aspectRatio: 9 / 16,
             transform: "translate(0)",
             position: "absolute",
             animation: "rotate 5s linear forwards infinite",

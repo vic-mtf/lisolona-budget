@@ -65,7 +65,20 @@ const initialState = {
       open: false,
       id: null,
     },
+    view: {
+      layoutView: "liveInteractionGrid", // or "presentation"
+      liveInteractionGrid: {
+        layout: "grid",
+        grid: {
+          max: 12,
+        },
+      },
+      presentation: {},
+    },
     participants: {},
+    actions: {
+      raiseHand: false,
+    },
   },
 };
 

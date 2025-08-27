@@ -3,13 +3,14 @@ import Box from "@mui/material/Box";
 import React from "react";
 import NavActions from "./nav-actions/NavActions";
 import MainActions from "./main-actions/MainActions";
+import InfoPanel from "./InfoPanel";
 
 const MeetingFooter = () => {
   return (
     <Box bgcolor='background.paper'>
       <Toolbar>
         <Box display={{ xs: "none", lg: "inline-flex" }} width={{ lg: 320 }}>
-          a
+          <InfoPanel />
         </Box>
         <Box flexGrow={1} display='flex' justifyContent='center'>
           <MainActions />

@@ -7,7 +7,7 @@ const HangUpButton = () => {
     <Fab
       variant='extended'
       size='small'
-      // sx={{ aspectRatio: 1 }}
+      sx={{ boxShadow: 0 }}
       color='error'
       onClick={null}>
       <CallEndOutlinedIcon />

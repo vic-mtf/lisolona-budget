@@ -3,7 +3,9 @@ import Box from "@mui/material/Box";
 import Slide from "@mui/material/Slide";
 import useSmallScreen from "../../../../hooks/useSmallScreen";
 import { useSelector } from "react-redux";
-import BorderAnimated from "../../../../components/BorderAnimated";
+import RaiseHandSignal from "../footer/main-actions/RaiseHandSignal";
+import LiveInteractionGridView from "./live-interaction-grid-view/LiveInteractionGridView";
+import PresentationView from "./presentation-view/PresentationView";
 
 const navWidth = 420;
 
@@ -50,11 +52,15 @@ const MeetingContentContainer = React.forwardRef((_, ref) => {
           bgcolor='background.default'>
           <Box
             flex={1}
+            position='relative'
             bgcolor='background.default'
             zIndex={100}
+            overflow='hidden'
             m={0.5}
-            borderRadius={1}></Box>
-          <BorderAnimated />
+            borderRadius={1}>
+            <ViewContainer />
+          </Box>
+          <RaiseHandSignal />
         </Box>
       </Box>
       <Slide
@@ -81,6 +87,45 @@ const MeetingContentContainer = React.forwardRef((_, ref) => {
     </Box>
   );
 });
+
+const ViewContainer = () => {
+  const view = useSelector((store) => store.conference.meeting.view.layoutView);
+  return (
+    <Box
+      position='absolute'
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      width={"100%"}
+      height={"100%"}
+      sx={{
+        "& > div": {
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: "flex",
+        },
+      }}>
+      <Slide
+        in={view === "liveInteractionGrid"}
+        direction='right'
+        unmountOnExit
+        appear={false}>
+        <LiveInteractionGridView />
+      </Slide>
+      <Slide
+        in={view === "presentation"}
+        direction='left'
+        unmountOnExit
+        appear={false}>
+        <PresentationView />
+      </Slide>
+    </Box>
+  );
+};
 
 MeetingContentContainer.displayName = "MeetingContentContainer";
 

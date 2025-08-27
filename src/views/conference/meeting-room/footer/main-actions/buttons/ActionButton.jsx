@@ -5,13 +5,15 @@ import PropTypes from "prop-types";
 import { Tooltip } from "@mui/material";
 
 const ActionButton = React.forwardRef(
-  ({ children, id, title, onClick }, ref) => {
+  ({ children, id, title, onClick, selected }, ref) => {
     return (
       <Tooltip title={title}>
         <div ref={ref}>
           <ToggleButton
             value={id || ""}
             onClick={onClick}
+            selected={selected}
+            color={selected ? "primary" : "standard"}
             size='small'
             sx={{
               border: "none",
@@ -20,7 +22,7 @@ const ActionButton = React.forwardRef(
                   t.palette.common[
                     t.palette.mode === "light" ? "black" : "white"
                   ],
-                  0.05
+                  0.03
                 ),
             }}>
             {children}
@@ -36,6 +38,7 @@ ActionButton.propTypes = {
   id: PropTypes.string,
   title: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  selected: PropTypes.bool,
 };
 
 ActionButton.displayName = "ActionButton";
