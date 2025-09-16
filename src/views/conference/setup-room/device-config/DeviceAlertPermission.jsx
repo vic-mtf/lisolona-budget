@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Dialog,
   DialogContentText,
@@ -11,7 +12,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { updateConferenceData } from "../../../../redux/conference/conference";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { useCallback, useEffect, useMemo, useRef } from "react";
 import useLocalStoreData from "../../../../hooks/useLocalStoreData";
 import getDevices from "../../../../utils/getDevices";
 import { useNotifications } from "@toolpad/core/useNotifications";
@@ -295,4 +295,4 @@ const mediaStreamErrorMessages = (deviceType = "all") => ({
   UnknownError:
     "Une erreur est survenue lors de la demande d'autorisation. Vérifiez les paramètres du navigateur et réessayez",
 });
-export default DeviceAlertPermission;
+export default React.memo(DeviceAlertPermission);

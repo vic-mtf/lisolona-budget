@@ -40,11 +40,9 @@ const CameraMirrorVideo = () => {
     if (deviceId) {
       const video = videoRef.current;
       const stream = getData("camera.processedStream"); //|| getData("camera.stream");
-      if (enabled && stream && stream !== video.srcObject) {
-        video.srcObject = null;
+      if (enabled && stream && stream !== video.srcObject)
         video.srcObject = stream;
-        video.play();
-      } else video.srcObject = null;
+      else video.srcObject = null;
       return () => {
         if (video.srcObject) video.srcObject = null;
       };

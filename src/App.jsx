@@ -11,6 +11,7 @@ import Cover from "./views/cover/Cover";
 import { SIGN_IN_CHANNEL } from "./utils/broadcastChannel";
 import ErrorNetwork from "./components/ErrorNetwork";
 import { useMemo } from "react";
+import TestSocket from "./test/TestSocket";
 
 function App() {
   const connected = useSelector((store) => store.user.connected);
@@ -73,6 +74,7 @@ function App() {
           <RouterProvider router={router(connected)} />
         </Box>
       </Fade>
+      {/* <TestSocket /> */}
     </BoxGradient>
   );
 }

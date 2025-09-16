@@ -6,7 +6,10 @@ import { useSelector } from "react-redux";
 import RaiseHandSignal from "../footer/main-actions/RaiseHandSignal";
 import LiveInteractionGridView from "./live-interaction-grid-view/LiveInteractionGridView";
 import PresentationView from "./presentation-view/PresentationView";
-
+import DragDropContainer from "../../../../components/DragDropContainer";
+import Nav from "../nav/Nav";
+import LocalParticipantView from "./local-participant-view/LocalParticipantView";
+import LocalViewWrapper from "./local-participant-view/LocalViewWrapper";
 const navWidth = 420;
 
 const MeetingContentContainer = React.forwardRef((_, ref) => {
@@ -82,7 +85,9 @@ const MeetingContentContainer = React.forwardRef((_, ref) => {
           sx={{
             borderLeft: (t) => `1px solid ${t.palette.divider}`,
             width: { md: navWidth, xs: "100%" },
-          }}></Box>
+          }}>
+          <Nav />
+        </Box>
       </Slide>
     </Box>
   );
@@ -90,6 +95,10 @@ const MeetingContentContainer = React.forwardRef((_, ref) => {
 
 const ViewContainer = () => {
   const view = useSelector((store) => store.conference.meeting.view.layoutView);
+  const isFloating = useSelector(
+    (store) =>
+      store.conference.meeting.view.localParticipant.mode === "floating"
+  );
   return (
     <Box
       position='absolute'
@@ -100,7 +109,7 @@ const ViewContainer = () => {
       width={"100%"}
       height={"100%"}
       sx={{
-        "& > div": {
+        "& > liveInteractionGrid, & > presentation": {
           position: "absolute",
           top: 0,
           left: 0,
@@ -109,8 +118,10 @@ const ViewContainer = () => {
           display: "flex",
         },
       }}>
+      {isFloating && <LocalViewWrapper />}
       <Slide
         in={view === "liveInteractionGrid"}
+        className='liveInteractionGrid'
         direction='right'
         unmountOnExit
         appear={false}>
@@ -118,6 +129,7 @@ const ViewContainer = () => {
       </Slide>
       <Slide
         in={view === "presentation"}
+        className='presentation'
         direction='left'
         unmountOnExit
         appear={false}>

@@ -7,7 +7,7 @@ import { updateConferenceData } from "../../../../../../redux/conference/confere
 import useSocket from "../../../../../../hooks/useSocket";
 
 const RaiseHandButton = ({ onClose }) => {
-  const raiseHand = useSelector(
+  const state = useSelector(
     (store) => store.conference.meeting.actions.raiseHand
   );
 
@@ -17,18 +17,19 @@ const RaiseHandButton = ({ onClose }) => {
   return (
     <ActionButton
       id='raise-hand'
-      title={raiseHand ? "Baisser la main" : "Lever la main"}
+      title={state ? "Baisser la main" : "Lever la main"}
       onClick={() => {
-        //socket.emit("raise-hand", { raiseHand: !raiseHand });
+        const handRaised = !state;
+        socket.emit("signal-room", { state: { handRaised } });
         dispatch(
           updateConferenceData({
             key: "meeting.actions.raiseHand",
-            data: !raiseHand,
+            data: handRaised,
           })
         );
         if (typeof onClose === "function") onClose();
       }}
-      selected={raiseHand}>
+      selected={state}>
       <FrontHandOutlinedIcon />
     </ActionButton>
   );

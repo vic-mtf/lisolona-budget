@@ -3,6 +3,7 @@ import Navigation from "./navigation/Navigation";
 import Views from "./view-content-box/ViewContentBox";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import TestSocket from "../../test/TestSocket";
 
 export default function Main() {
   return (
@@ -21,6 +22,7 @@ export default function Main() {
         </Box>
       </Box>
       <ReloadData />
+      <TestSocket />
     </>
   );
 }

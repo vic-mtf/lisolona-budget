@@ -1,0 +1,64 @@
+import { useEffect, useMemo } from "react";
+import useSocket from "../useSocket";
+import store from "../../redux/store";
+import { useLocation } from "react-router-dom";
+import { useNotifications } from "@toolpad/core/useNotifications";
+import getFullName from "../../utils/getFullName";
+import ringtones from "../../utils/ringtones";
+import normalizeObjectKeys from "../../utils/normalizeObjectKeys";
+
+const useRemoteUserLeave = () => {
+  const socket = useSocket();
+  const { state } = useLocation();
+  const id = useMemo(() => state?.data?.id, [state?.data]);
+  const notifications = useNotifications();
+
+  useEffect(() => {
+    const onRemoteUserLeave = (d) => {
+      const data = normalizeObjectKeys(d);
+      const userId = store.getState().user.id;
+      const remoteUserId = data?.id;
+      if (userId === remoteUserId) return;
+      const participants = store.getState().conference.meeting.participants;
+      const participant = participants[remoteUserId];
+
+      console.log(participant, participant);
+
+      if (participant) {
+        const { identity } = participant || { identity: "Une personne" };
+        store.dispatch({
+          type: "conference/updateConferenceData",
+          payload: {
+            key: [`meeting.participants.${remoteUserId}.state.isInRoom`],
+            data: [false],
+          },
+        });
+        notifications.show(`${getFullName(identity)} a quitté la réunion`, {
+          key: remoteUserId,
+        });
+        ringtones.disconnect.play();
+        ringtones.disconnect.volume = 0.1;
+      }
+    };
+    const onBeforeUnload = () => {
+      socket.emit("leave", { id });
+      socket?.disconnect();
+      store.dispatch({
+        type: "conference/updateConferenceData",
+        payload: {
+          key: ["step"],
+          data: ["end"],
+        },
+      });
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    socket?.on("leave-room", onRemoteUserLeave);
+    return () => {
+      socket?.off("leave-room", onRemoteUserLeave);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [socket, id, notifications]);
+  return null;
+};
+
+export default useRemoteUserLeave;

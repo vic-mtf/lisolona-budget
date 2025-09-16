@@ -1,3 +1,4 @@
+import React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -12,27 +13,28 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(1),
   height: "100%",
   position: "absolute",
   pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  color: theme.palette.text.secondary,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(0.8),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(3)})`,
     transition: theme.transitions.create("width"),
+    //color:
   },
 }));
 
-export default function InputSearch(props) {
+const InputSearch = (props) => {
   return (
     <Search sx={{ flexGrow: 1 }}>
       <SearchIconWrapper>
@@ -41,4 +43,6 @@ export default function InputSearch(props) {
       <StyledInputBase {...props} />
     </Search>
   );
-}
+};
+
+export default React.memo(InputSearch);

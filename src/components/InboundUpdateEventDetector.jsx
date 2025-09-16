@@ -5,6 +5,7 @@ import useNewInvitations from "../hooks/events/useNewInvitations";
 import useNewContacts from "../hooks/events/useNewContacts";
 import useNetworkStat from "../hooks/events/useNetworkStat";
 import useBroadcastCall from "../hooks/events/useBroadcastCall";
+import useNewCall from "../hooks/events/useNewCall";
 
 export default function InboundUpdateEventDetector() {
   useListenRemoteUserStatus();
@@ -14,5 +15,6 @@ export default function InboundUpdateEventDetector() {
   useNewContacts();
   useNetworkStat();
   useBroadcastCall();
+  useNewCall();
   return null;
 }

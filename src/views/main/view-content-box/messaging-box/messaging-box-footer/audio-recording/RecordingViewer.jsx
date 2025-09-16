@@ -44,7 +44,7 @@ const RecordingViewer = ({ setPaused, paused, waveSurferData }) => {
         getData("app.playings.audio")?.pause();
       });
       ringtones.start.play();
-      ringtones.start.volume = 0.3;
+      ringtones.start.volume = 0.1;
     }
     waveSurfer?.on("ready", onGetDuration);
     return () => {

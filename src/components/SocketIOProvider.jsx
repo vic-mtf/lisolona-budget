@@ -4,13 +4,12 @@ import { io } from "socket.io-client";
 import axiosConfig from "../configs/axios-config.json";
 import PropTypes from "prop-types";
 import { SocketIOContext } from "../hooks/useSocket";
-import { useEffect } from "react";
 
 const DEFAULT_OPTIONS = { transports: ["websocket"] };
-const OPENER_SOCKET = window.opener?._OPENER_SOCKET;
 const BASE_URL = axiosConfig.baseURL;
 
 const Provider = SocketIOContext.Provider;
+let socketIO = null;
 
 const SocketIOProvider = ({
   children,
@@ -20,16 +19,21 @@ const SocketIOProvider = ({
 }) => {
   const token = useSelector((store) => store?.user?.token || defaultToken);
   const loaded = useSelector((store) => store?.data?.app?.loaded);
-  const socket = useMemo(
-    () =>
-      OPENER_SOCKET ||
-      (loaded ? (token ? io(`${url}?token=${token}`, options) : null) : null),
-    [token, url, options, loaded]
+  const isConference = useMemo(() => {
+    const isValidConference = /\/conference\/\w+/.test(
+      window.location.pathname
+    );
+    return isValidConference;
+  }, []);
+  const ready = useMemo(
+    () => (isConference || loaded) && token,
+    [isConference, loaded, token]
   );
-  useEffect(() => {
-    if (socket && window._OPENER_SOCKET !== socket)
-      window._OPENER_SOCKET = socket;
-  }, [socket]);
+  const socket = useMemo(() => {
+    if (ready && token && options && !socketIO)
+      socketIO = io(`${url}?token=${token}`, options);
+    return socketIO;
+  }, [ready, url, options, token]);
 
   return <Provider value={socket}>{children}</Provider>;
 };

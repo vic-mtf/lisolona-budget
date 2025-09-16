@@ -18,14 +18,10 @@ const extractValueFromAliases = (obj = {}, keys = []) => {
   }
   return undefined;
 };
-export default function normalizeObjectKeys(
-  data = {},
-  keyAliases = userKeyAliases
-) {
+export default function normalizeObjectKeys(data, keyAliases = userKeyAliases) {
   if (Array.isArray(data)) {
     return data.map((item) => normalizeObjectKeys(item, keyAliases));
   }
-
   if (!isPlainObject(data)) return data;
 
   const result = {};

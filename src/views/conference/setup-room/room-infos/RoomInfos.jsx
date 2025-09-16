@@ -10,15 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import useToken from "../../../../hooks/useToken";
 import useAxios from "../../../../hooks/useAxios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef, useCallback } from "react";
 import { CALL_CHANNEL } from "../../../../utils/broadcastChannel";
 import { updateConferenceData } from "../../../../redux/conference/conference";
-import { useMemo } from "react";
-import { useRef } from "react";
 import { updateData } from "../../../../redux/data/data";
 import { setStatus } from "../../../main/navigation/calls/groupCall";
 import normalizeObjectKeys from "../../../../utils/normalizeObjectKeys";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import store from "../../../../redux/store";
 
 const RoomInfos = () => {
   const matches = useSmallScreen();
@@ -26,7 +25,7 @@ const RoomInfos = () => {
   const connected = useSelector((store) => store.user.connected);
   const setupLoading = useSelector((store) => store.conference.setup.loading);
   const notifications = useNotifications();
-
+  const id = useSelector((store) => store.user.id);
   const Authorization = useToken();
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
@@ -37,14 +36,158 @@ const RoomInfos = () => {
     {
       url: "/api/chat/room/call/" + code,
       headers: { Authorization },
+      method: "GET",
     },
     { manual: !code }
   );
-
   const data = useMemo(
-    () => state?.data || callDetail,
+    () => state?.data || normalizeObjectKeys(callDetail),
     [callDetail, state?.data]
   );
+
+  const isRoom = target?.type === "room";
+  const status = useMemo(() => setStatus(data?.status), [data?.status]);
+  const text = useMemo(
+    () => ({
+      type: isRoom ? "la réunion" : "l'appel",
+      action: data ? (status === "ended" ? "Relancer" : "Rejoindre") : "Lancer",
+    }),
+    [data, isRoom, status]
+  );
+
+  const updateCallData = useCallback(
+    async (request) => {
+      try {
+        const response = await refetch(request);
+        if (!response) return;
+        const data = normalizeObjectKeys(response.data);
+        const { APP_ID, TOKEN, EXPIRE_AT } =
+          data?.callDetail || data?.callDetails || {};
+        const participants = {};
+        data?.participants?.forEach((p) => {
+          if (p.identity.id === id) {
+            const devices = store.getState().conference.setup.devices;
+            const isCamActive = devices.camera.enabled;
+            const isMicActive = devices.microphone.enabled;
+            p.state.isInRoom = true;
+            p.state.isCamActive = isCamActive;
+            p.state.isMicActive = isMicActive;
+          }
+          participants[p.identity.id] = p;
+        });
+        console.log("participants => ", participants);
+
+        dispatch(
+          updateConferenceData({
+            key: ["AGORA_DATA", "meeting.participants", "step", "roomId"],
+            data: [
+              {
+                TOKEN,
+                APP_ID,
+                EXPIRE_AT,
+                CHANNEL: data?.location,
+              },
+              participants,
+              "meeting",
+              data?.id,
+            ],
+          })
+        );
+
+        return data;
+      } catch (error) {
+        console.error(error);
+        notifications.show("Une erreur est survenue lors de la connexion.", {
+          severity: "error",
+          key: "call-error",
+        });
+        dispatch(
+          updateConferenceData({
+            key: ["loading", "step"],
+            data: [false, "setup"],
+          })
+        );
+      }
+    },
+    [dispatch, notifications, refetch, id]
+  );
+
+  const handleCreateCall = useCallback(async () => {
+    dispatch(
+      updateConferenceData({
+        key: ["loading"],
+        data: [true],
+      })
+    );
+    const request = {
+      method: "POST",
+      url: "/api/chat/call/create",
+      data: {
+        target: target?.id,
+        type: isRoom ? "room" : "direct",
+        tokenType: "uid",
+        role: "publisher",
+        start: Date.now(),
+      },
+    };
+    try {
+      const data = await updateCallData(request);
+      if (!data) return;
+      navigateTo("/conference/" + data.id, {
+        state: { data, ...state },
+        replace: true,
+      });
+      CALL_CHANNEL.postMessage({ type: "create", call: data });
+    } catch (error) {
+      console.error(error);
+      notifications.show("Une erreur est survenue lors de la connexion.", {
+        severity: "error",
+        key: "call-error",
+      });
+      dispatch(
+        updateConferenceData({
+          key: ["loading", "step"],
+          data: [false, "setup"],
+        })
+      );
+    }
+  }, [
+    dispatch,
+    navigateTo,
+    notifications,
+    state,
+    target,
+    isRoom,
+    updateCallData,
+  ]);
+
+  const handleJoinCall = async () => {
+    dispatch(
+      updateConferenceData({
+        key: ["loading"],
+        data: [true],
+      })
+    );
+    let time = performance.now();
+    const request = {
+      method: "GET",
+      url: `/api/chat/room/call/${code}`,
+    };
+    const data = await updateCallData(request);
+    if (!data) return;
+    time = performance.now() - time;
+    setTimeout(
+      () => {
+        dispatch(
+          updateConferenceData({
+            key: ["step"],
+            data: ["meeting"],
+          })
+        );
+      },
+      time < 1000 ? 1000 - time : 0
+    );
+  };
 
   useEffect(() => {
     if (connected && !loading && !target && window.opener)
@@ -52,12 +195,10 @@ const RoomInfos = () => {
 
     const onListeningResponse = (e) => {
       if (e.origin === window.location.origin)
-        if (e.data?.type === "response") {
-          //  console.log("Received response:", e.data);
+        if (e.data?.type === "response")
           navigateTo("", {
             state: { target: e.data?.callTarget, ...state },
           });
-        }
     };
     if (setupLoading && target && !loading)
       dispatch(
@@ -97,78 +238,11 @@ const RoomInfos = () => {
   useEffect(() => {
     if (callDetail && !state?.data) {
       navigateTo("", {
-        state: { data: callDetail, ...state },
+        state: { data: normalizeObjectKeys(callDetail), ...state },
         replace: true,
       });
     }
   }, [navigateTo, state, callDetail]);
-
-  const isRoom = target?.type === "room";
-  const status = useMemo(() => setStatus(data?.status), [data?.status]);
-
-  const text = useMemo(
-    () => ({
-      type: isRoom ? "la réunion" : "l'appel",
-      action: data ? (status === "ended" ? "Relancer" : "Rejoindre") : "Lancer",
-    }),
-    [data, isRoom, status]
-  );
-
-  const handleCreateCall = async () => {
-    dispatch(
-      updateConferenceData({
-        key: ["loading"],
-        data: [true],
-      })
-    );
-    const request = {
-      method: "POST",
-      url: "/api/chat/room/call",
-      data: {
-        target: target?.id,
-        type: isRoom ? "room" : "direct",
-        tokenType: "uid",
-        role: "publisher",
-        start: Date.now(),
-      },
-    };
-    try {
-      const response = await refetch(request);
-      const data = normalizeObjectKeys(response.data);
-      const { APP_ID, APP_CERTIFICATE, TOKEN, EXPIRE_AT } =
-        data?.callDetail || {};
-      const participants = {};
-      data?.participants?.forEach((p) => (participants[p.id] = p));
-
-      dispatch(
-        updateConferenceData({
-          key: ["AGORA_DATA", "meeting.participants", "step"],
-          data: [
-            {
-              TOKEN: TOKEN,
-              APP_CERTIFICATE: APP_CERTIFICATE,
-              APP_ID: APP_ID,
-              EXPIRE_AT: EXPIRE_AT,
-            },
-            participants,
-            "meeting",
-          ],
-        })
-      );
-      navigateTo("/conference/" + data.id, {
-        state: { data, ...state },
-        replace: true,
-      });
-    } catch (error) {
-      console.error(error);
-      notifications.show({
-        message: "Une erreur est survenue lors de la connexion.",
-        severity: "error",
-      });
-
-      dispatch(updateConferenceData({ key: ["loading"], data: [false] }));
-    }
-  };
 
   return (
     <Box
@@ -245,7 +319,12 @@ const RoomInfos = () => {
                 variant='contained'
                 color='primary'
                 loading={loading}
-                onClick={handleCreateCall}>
+                onClick={() => {
+                  notifications.close("call-error");
+                  notifications.close("session-expired");
+                  if (data) handleJoinCall();
+                  else handleCreateCall();
+                }}>
                 {text.action} {text.type}
               </Button>
             </Box>

@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import DeviceConfig from "./device-config/DeviceConfig";
-import RoomInfos from "./room-infos/RooMInfos";
+import RoomInfos from "./room-infos/RoomInfos";
 import ToolbarIdentity from "./room-infos/ToolbarIdentity";
 import useSmallScreen from "../../../hooks/useSmallScreen";
 import { useDispatch } from "react-redux";

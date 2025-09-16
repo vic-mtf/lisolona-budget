@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
@@ -19,9 +19,28 @@ import { updateConferenceData } from "../../../../../../redux/conference/confere
 import SettingButton from "../../../../setup-room/device-config/buttons/SettingButton";
 
 const SmallScreenMoreOptions = () => {
+  const id = useSelector((store) => store.user.id);
+  const isOrganizer = useSelector(
+    (store) => store.conference.meeting.participants[id].state.isOrganizer
+  );
   const [open, setOpen] = React.useState(false);
   const nav = useSelector((store) => store.conference.meeting.nav);
   const dispatch = useDispatch();
+
+  const auths = useMemo(
+    () => ({
+      isOrganizer,
+    }),
+    [isOrganizer]
+  );
+
+  const filterActions = useMemo(
+    () =>
+      navActions.filter(({ hiddenKeys }) =>
+        hiddenKeys ? hiddenKeys.find((key) => auths[key]) : true
+      ),
+    [auths]
+  );
 
   const onClose = () => {
     setOpen(false);
@@ -42,7 +61,7 @@ const SmallScreenMoreOptions = () => {
           <SettingButton onClose={onClose} />
         </Toolbar>
         <Divider />
-        {navActions.map((action) => (
+        {filterActions.map((action) => (
           <MenuItem
             key={action.id}
             onClick={() => {

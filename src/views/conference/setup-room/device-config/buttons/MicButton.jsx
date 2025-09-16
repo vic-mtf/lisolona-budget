@@ -74,6 +74,24 @@ const MicButton = () => {
     [getData, setData, dispatch, deviceId]
   );
 
+  const onToggleMicrophone = useCallback(() => {
+    const stream = getData("microphone.stream");
+    if (stream) {
+      const key = "setup.devices.microphone.enabled";
+      dispatch(updateConferenceData({ key, data: !enabled }));
+    } else {
+      dispatch(
+        updateConferenceData({
+          key: [
+            "setup.devices.alertPermission.open",
+            "setup.devices.alertPermission.deviceType",
+          ],
+          data: [true, "microphone"],
+        })
+      );
+    }
+  }, [dispatch, enabled, getData]);
+
   useEffect(() => {
     const stream = getData("microphone.stream");
     if (stream) {
@@ -82,6 +100,14 @@ const MicButton = () => {
         audioTrack.enabled = enabled;
     }
   }, [enabled, getData]);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.code === "Space") onToggleMicrophone();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onToggleMicrophone]);
 
   return (
     <>
@@ -104,23 +130,7 @@ const MicButton = () => {
         }
         activeTitle={"Micro activé"}
         inactiveTitle={"Micro désactivé"}
-        onClick={() => {
-          const stream = getData("microphone.stream");
-          if (stream) {
-            const key = "setup.devices.microphone.enabled";
-            dispatch(updateConferenceData({ key, data: !enabled }));
-          } else {
-            dispatch(
-              updateConferenceData({
-                key: [
-                  "setup.devices.alertPermission.open",
-                  "setup.devices.alertPermission.deviceType",
-                ],
-                data: [true, "microphone"],
-              })
-            );
-          }
-        }}
+        onClick={onToggleMicrophone}
         ref={anchorElRef}
         onExpand={() => setOpen((open) => !open)}
       />

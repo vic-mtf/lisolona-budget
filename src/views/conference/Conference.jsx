@@ -10,6 +10,7 @@ import SetupRoom from "./setup-room/SetupRoom";
 import { useSelector } from "react-redux";
 import ListerStream from "./ListerStream";
 import MeetingRoom from "./meeting-room/MeetingRoom";
+import ConferenceInboundEventDetector from "../../components/ConferenceInboundEventDetector";
 
 const Conference = () => {
   const step = useSelector((store) => store.conference.step);
@@ -21,6 +22,13 @@ const Conference = () => {
           height: "100%",
           display: "flex",
           flex: 1,
+          "& > div": {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          },
         }}>
         <Fade in={step === "setup"} unmountOnExit appear={false}>
           <SetupRoom />
@@ -30,6 +38,7 @@ const Conference = () => {
         </Fade>
       </Box>
       <ListerStream />
+      <ConferenceInboundEventDetector />
       <Loading />
     </>
   );
@@ -46,7 +55,7 @@ const Loading = () => {
         background: (t) =>
           alpha(
             t.palette.common[t.palette.mode === "light" ? "white" : "black"],
-            0.95
+            0.98
           ),
         zIndex: (t) => t.zIndex.modal,
         backdropFilter: (t) => `blur(${t.spacing(2)})`,

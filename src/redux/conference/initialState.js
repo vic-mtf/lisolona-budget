@@ -1,13 +1,13 @@
 const initialState = {
+  roomId: null,
   loading: false,
   callTarget: null,
   step: "setup",
-
   AGORA_DATA: {
     TOKEN: null,
-    APP_CERTIFICATE: null,
     APP_ID: null,
     EXPIRE_AT: null,
+    CHANNEL: null,
   },
   setup: {
     loading: true,
@@ -74,10 +74,14 @@ const initialState = {
         },
       },
       presentation: {},
+      localParticipant: {
+        mode: "floating",
+      },
     },
     participants: {},
     actions: {
       raiseHand: false,
+      search: "",
     },
   },
 };

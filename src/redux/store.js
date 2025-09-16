@@ -20,19 +20,6 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat((api) => (next) => (action) => {
-      const store = api.getState();
-
-      const elapsedTime = store.data.elapsedTime;
-      const duration = store.data.duration;
-
-      if (Date.now() - elapsedTime <= duration) {
-        action.store = {
-          ...store,
-          data: {}, // Delete data from store.data
-        };
-      }
-      next(action);
     }),
 });
 

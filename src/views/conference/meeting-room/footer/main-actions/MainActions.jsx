@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import MicButton from "../../../setup-room/device-config/buttons/MicButton";
 import CameraButton from "../../../setup-room/device-config/buttons/CameraButton";
 import HangUpButton from "./buttons/HangUpButton";
@@ -21,8 +20,24 @@ const MainActions = () => {
       display='flex'
       gap={1}
       flex={1}
-      justifyContent='center'
-      alignItems='center'>
+      justifyContent={{
+        xs: "center",
+        md: "flex-start",
+        lg: "center",
+      }}
+      alignItems='center'
+      position='absolute'
+      sx={{
+        zIndex: 0,
+        px: {
+          xs: 1,
+          md: 0,
+        },
+      }}
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}>
       <MicButton />
       <CameraButton />
       {!matches && (

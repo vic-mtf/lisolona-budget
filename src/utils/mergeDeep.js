@@ -1,16 +1,22 @@
 import { isPlainObject } from "@reduxjs/toolkit";
 
 export default function deepMerge(oldObject, newObject) {
-  let result = Object.assign({}, oldObject);
+  const result = Object.assign({}, oldObject);
+
   Object.keys(newObject).forEach((key) => {
-    if (isPlainObject(newObject[key]) && isPlainObject(oldObject[key]))
+    if (key === undefined || key.trim() === "") {
+      console.warn("key is undefined or empty");
+      return;
+    }
+    if (isPlainObject(newObject[key]) && isPlainObject(oldObject[key])) {
       result[key] = deepMerge(oldObject[key], newObject[key]);
-    else {
+    } else {
       const newState = newObject[key];
       result[key] =
         typeof newState === "function" ? newState(result[key]) : newState;
     }
   });
+
   return result;
 }
 

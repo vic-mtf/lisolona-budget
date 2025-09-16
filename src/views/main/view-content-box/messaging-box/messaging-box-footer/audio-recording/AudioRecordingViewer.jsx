@@ -91,7 +91,7 @@ const AudioRecordingViewer = () => {
 
     const onRecordStart = () => {
       ringtones.start.play();
-      ringtones.start.volume = 0.3;
+      ringtones.start.volume = 0.1;
     };
 
     mediaRecorder?.addEventListener("stop", onRecordStop);

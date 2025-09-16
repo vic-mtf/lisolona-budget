@@ -9,16 +9,17 @@ const MeetingFooter = () => {
   return (
     <Box bgcolor='background.paper'>
       <Toolbar>
-        <Box display={{ xs: "none", lg: "inline-flex" }} width={{ lg: 320 }}>
+        <Box display={{ xs: "none", lg: "inline-flex" }} zIndex={2}>
           <InfoPanel />
         </Box>
-        <Box flexGrow={1} display='flex' justifyContent='center'>
+        <Box
+          flexGrow={1}
+          display='flex'
+          justifyContent='center'
+          sx={{ position: { xs: "relative", lg: "initial" } }}>
           <MainActions />
         </Box>
-        <Box
-          width={{ md: 320 }}
-          // bgcolor='red'
-          display={{ xs: "none", md: "inline-flex" }}>
+        <Box zIndex={2} display={{ xs: "none", md: "inline-flex" }}>
           <NavActions />
         </Box>
       </Toolbar>

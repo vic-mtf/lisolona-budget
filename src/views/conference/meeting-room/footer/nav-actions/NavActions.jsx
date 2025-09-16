@@ -10,21 +10,50 @@ import { useMemo } from "react";
 import navActions from "./navActions";
 
 const NavActions = () => {
+  const id = useSelector((store) => store.user.id);
+  const isOrganizer = useSelector(
+    (store) => store.conference.meeting.participants[id].state.isOrganizer
+  );
+
   const nav = useSelector((store) => store.conference.meeting.nav);
+  const bulkParticipants = useSelector(
+    (store) => store.conference.meeting.participants
+  );
+  const participants = useMemo(
+    () =>
+      Object.values(bulkParticipants).filter(({ state }) => state?.isInRoom)
+        .length,
+    [bulkParticipants]
+  );
   const dispatch = useDispatch();
 
   const news = useMemo(
     () => ({
       chats: 0,
-      participants: 0,
+      participants,
       infos: 0,
       authParams: 0,
     }),
-    []
+    [participants]
+  );
+
+  const auths = useMemo(
+    () => ({
+      isOrganizer,
+    }),
+    [isOrganizer]
+  );
+
+  const filterActions = useMemo(
+    () =>
+      navActions.filter(({ hiddenKeys }) =>
+        hiddenKeys ? hiddenKeys.find((key) => auths[key]) : true
+      ),
+    [auths]
   );
 
   return (
-    <Box display='flex' justifyContent='space-between'>
+    <Box display='flex' justifyContent='right'>
       <BottomNavigation
         showLabels
         value={(nav.open && nav.id) || ""}
@@ -42,7 +71,7 @@ const NavActions = () => {
             fontSize: "10px!important",
           },
         }}>
-        {navActions.map((action) => (
+        {filterActions.map((action) => (
           <BottomNavigationAction
             key={action.id}
             label={action.label}
@@ -56,8 +85,6 @@ const NavActions = () => {
                 }}
                 sx={{
                   "& .MuiBadge-badge": {
-                    // right: -3,
-                    // top: 13,
                     fontSize: 10,
                     border: (t) =>
                       `2px solid ${(t.vars ?? t).palette.background.paper}`,
