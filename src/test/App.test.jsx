@@ -1,9 +1,9 @@
 // import MeetingRoom from "../views/conference/meeting-room/MeetingRoom";
 // import AudioVisualizer from "./AudioVisualizer";
-import LocalPresentView from "./LocalPresentView";
+import LocalPresentationView from "./local-presentation-view/LocalPresentationView";
 
 const App = () => {
-  return <LocalPresentView />;
+  return <LocalPresentationView />;
 };
 
 export default App;

@@ -34,7 +34,6 @@ const CamOption = ({ onClose }) => {
   );
   const dispatch = useDispatch();
   const onToggleCam = () => {
-    console.log(isCamActive);
     dispatch(
       updateConferenceData({
         key: ["setup.devices.camera.enabled"],
@@ -97,7 +96,6 @@ const MirrorCamOption = ({ onClose }) => {
   const mode = useSelector(
     (store) => store.conference.meeting.view.localParticipant.mode
   );
-  console.log(mode);
   const dispatch = useDispatch();
   const onToggleView = () => {
     dispatch(

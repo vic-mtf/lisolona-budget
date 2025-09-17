@@ -35,9 +35,7 @@ const useNewCall = () => {
         }
       }
     };
-    const onNewCall = async (data) => {
-      console.log("ici my call", data);
-    };
+    const onNewCall = async (data) => {};
 
     CALL_CHANNEL.addEventListener("message", onCallStateChanged);
     socket?.on("call", onNewCall);

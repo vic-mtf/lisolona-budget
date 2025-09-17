@@ -30,7 +30,6 @@ const useCamOrMicEmitChange = () => {
       const id = store.getState().user.id;
       const isLocalUser = participants.includes(id);
       const key = ["isCamActive", "isMicActive"].find((k) => hasProp(state, k));
-      console.log(state);
       if (isLocalUser && key && author) {
         notifications.close(key);
         const message = `Le modérateur a désactivé votre ${

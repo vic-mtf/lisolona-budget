@@ -1,3 +1,5 @@
+import { red } from "@mui/material/colors";
+
 const initialState = {
   roomId: null,
   loading: false,
@@ -22,14 +24,16 @@ const initialState = {
         label: null,
       },
       screen: {
-        deviceId: null,
         enabled: false,
-        label: null,
+        displaySurface: null,
+        capturedSurfaceControl: null,
+        zoom: 1,
       },
       camera: {
         deviceId: null,
         enabled: false,
         label: null,
+
         permission: null,
       },
       microphone: {
@@ -82,6 +86,13 @@ const initialState = {
     actions: {
       raiseHand: false,
       search: "",
+      localPresentation: {
+        annotation: {
+          active: false,
+          mode: "pencil",
+          color: red[500],
+        },
+      },
     },
   },
 };

@@ -48,7 +48,11 @@ body {
 
 @keyframes linearGradientMove {
   100% {
-    background-position: 4px 0, -4px 100%, 0 -4px, 100% 4px;
+    background-position:
+      4px 0,
+      -4px 100%,
+      0 -4px,
+      100% 4px;
   }
 }
 /* Firefox */

@@ -85,6 +85,7 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
             audio: null,
             screen: {
               stream: null,
+              controller: null,
             },
             camera: {
               stream: null,

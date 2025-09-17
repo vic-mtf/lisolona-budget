@@ -11,7 +11,7 @@ import * as workerSrc from "pdfjs-dist/build/pdf.worker.min.js";
 PdfLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 PdfLib.getDocument(file_pdf).promise.then((pdf) => {
-  console.log(pdf);
+
 });
 
 const DocReader = () => {

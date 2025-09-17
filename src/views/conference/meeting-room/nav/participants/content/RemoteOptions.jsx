@@ -116,7 +116,6 @@ const MicOption = ({ onClose, id }) => {
   const onToggleMic = () => {
     const isMicActive = !stateMic;
     socket.emit("signal-room", { state: { isMicActive }, participants: [id] });
-    console.log({ state: { isMicActive }, participants: [id] });
     // dispatch(
     //   updateConferenceData({
     //     key: [`meeting.participants.${id}.state.isMicActive`],

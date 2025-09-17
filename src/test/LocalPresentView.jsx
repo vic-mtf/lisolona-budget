@@ -138,7 +138,7 @@ const ScreenDrawCapture = () => {
           <button
             onClick={() => {
               const stream = getCombinedStream();
-              console.log("Flux combiné prêt:", stream);
+              
               // Tu peux l’utiliser avec MediaRecorder ou WebRTC ici
             }}>
             Obtenir le flux combiné

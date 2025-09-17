@@ -75,8 +75,6 @@ const RoomInfos = () => {
           }
           participants[p.identity.id] = p;
         });
-        console.log("participants => ", participants);
-
         dispatch(
           updateConferenceData({
             key: ["AGORA_DATA", "meeting.participants", "step", "roomId"],

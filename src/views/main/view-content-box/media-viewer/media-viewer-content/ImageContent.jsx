@@ -15,7 +15,6 @@ const ImageContent = ({ content, mode = "normal", id }) => {
     paths: { key: ["downloads", "uploads"] },
   });
   const [url, setUrl] = useState(() => getData(key)?.src);
-  // console.log("url => ", url);
   const [{ data, loading }] = useAxios(
     { url: content, responseType: "blob" },
     { manual: Boolean(url) }

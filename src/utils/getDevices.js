@@ -39,10 +39,7 @@ if (navigator.mediaDevices.ondevicechange === null)
       "setup.devices.speakers",
       "setup.devices.screens",
     ];
-    console.log("cameras", cameras);
-    console.log("microphones", microphones);
-    console.log("speakers", speakers);
-    console.log("screens", screens);
+
     const data = [cameras, microphones, speakers, screens];
     store.dispatch(updateConferenceData({ data, key }));
   };

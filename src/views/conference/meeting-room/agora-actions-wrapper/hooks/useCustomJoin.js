@@ -38,7 +38,7 @@ const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID }, ready) => {
         });
         setIsConnected(true);
       } catch (e) {
-        console.log(e);
+        console.error(e);
         setError(e.message);
       }
       loading = false;

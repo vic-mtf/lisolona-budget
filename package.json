@@ -41,6 +41,7 @@
     "lexical": "^0.33.1",
     "lodash": "^4.17.21",
     "markdown-draft-js": "^2.4.0",
+    "material-ui-popup-state": "^5.3.6",
     "pdfjs-dist": "^3.11.174",
     "prop-types": "^15.8.1",
     "query-string": "^8.2.0",

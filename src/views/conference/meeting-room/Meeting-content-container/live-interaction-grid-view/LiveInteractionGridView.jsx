@@ -37,7 +37,6 @@ const LiveInteractionGridView = React.forwardRef((_, ref) => {
 
 const RenderComponent = React.memo(({ name }) => {
   useEffect(() => {
-    console.log("render component ", name);
   }, [name]);
   return `user: ${name}`;
 });

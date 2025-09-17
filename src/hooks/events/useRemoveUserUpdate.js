@@ -16,7 +16,6 @@ const useRemoteUserUpdate = () => {
         const id = d?.identity?.id;
         if (id) participants[d?.identity?.id] = d;
       }
-      console.log("participants => ", participants);
       store.dispatch({
         type: "conference/updateConferenceData",
         payload: {

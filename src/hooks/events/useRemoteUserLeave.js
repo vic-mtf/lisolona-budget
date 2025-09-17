@@ -22,8 +22,6 @@ const useRemoteUserLeave = () => {
       const participants = store.getState().conference.meeting.participants;
       const participant = participants[remoteUserId];
 
-      console.log(participant, participant);
-
       if (participant) {
         const { identity } = participant || { identity: "Une personne" };
         store.dispatch({
