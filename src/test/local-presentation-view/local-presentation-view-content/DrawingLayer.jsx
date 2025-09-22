@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from "react";
+import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
@@ -7,11 +7,9 @@ import annotationStyles, {
 } from "../local-presentation-view-header/annotationStyles";
 import { Layer } from "react-konva";
 import DrawingStageProvider from "../../../components/DrawingStageProvider";
-import Pencil from "./pencils/Pencil";
+import DrawingArea from "./DrawingArea";
 
 const DrawingLayer = ({ width, height, scaleX, scaleY, offsetX, offsetY }) => {
-  const containerLayerRef = useRef(null);
-
   const mode = useSelector(
     (store) =>
       store.conference.meeting.actions.localPresentation.annotation.mode
@@ -46,6 +44,7 @@ const DrawingLayer = ({ width, height, scaleX, scaleY, offsetX, offsetY }) => {
     <Box
       position={"absolute"}
       id='local-presentation-video-layer'
+      onContextMenu={(e) => e.preventDefault()}
       top={offsetY}
       left={offsetX}
       width={width}
@@ -57,7 +56,7 @@ const DrawingLayer = ({ width, height, scaleX, scaleY, offsetX, offsetY }) => {
         scaleX={scaleX}
         scaleY={scaleY}>
         <Layer>
-          <Pencil />
+          <DrawingArea />
         </Layer>
       </DrawingStageProvider>
     </Box>

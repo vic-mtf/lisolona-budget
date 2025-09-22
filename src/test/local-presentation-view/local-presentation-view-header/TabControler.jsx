@@ -81,9 +81,10 @@ const TabController = () => {
   const allowedControl = useMemo(() => {
     return (
       (capturedSurfaceControl ? capturedSurfaceControl !== "granted" : false) &&
-      displaySurface === "browser"
+      displaySurface === "browser" &&
+      enabled
     );
-  }, [capturedSurfaceControl, displaySurface]);
+  }, [capturedSurfaceControl, displaySurface, enabled]);
 
   const isVisibleZoomOption = useMemo(() => {
     return (

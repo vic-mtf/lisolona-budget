@@ -13,7 +13,6 @@ const LocalPresentationViewContent = () => {
   const enabled = useSelector(
     (store) => store.conference.setup.devices.screen.enabled
   );
-  console.log(offsetY);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -31,7 +30,6 @@ const LocalPresentationViewContent = () => {
           autoPlay
           playsInline
           ref={videoRef}
-          bgcolor='black'
           muted
           width='100%'
           height='100%'

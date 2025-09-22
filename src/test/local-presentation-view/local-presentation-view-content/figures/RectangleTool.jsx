@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Line } from "react-konva";
+import React, { useState, useEffect, useRef } from "react";
+import { Rect } from "react-konva";
 import useDrawingStageRef from "../../../../hooks/useDrawingStageRef";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-const Pencil = ({ data: { id, points, stroke }, onErase }) => {
+const RectangleTool = ({ data, onErase }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const stageRef = useDrawingStageRef();
   const isErasing = useRef(false);
@@ -19,6 +19,7 @@ const Pencil = ({ data: { id, points, stroke }, onErase }) => {
   );
 
   const isGum = mode === "gum";
+  const { id, x, y, width, height, stroke } = data;
 
   useEffect(() => {
     const stage = stageRef?.current;
@@ -43,19 +44,24 @@ const Pencil = ({ data: { id, points, stroke }, onErase }) => {
     };
   }, [stageRef, active, isGum]);
 
-  const handleErase = useCallback(() => {
+  const handleErase = () => {
     if (typeof onErase === "function") onErase(id);
-  }, [onErase, id]);
+  };
 
   return (
-    <Line
-      points={points}
+    <Rect
+      x={x}
+      y={y}
+      width={width}
+      height={height}
       stroke={stroke}
       strokeWidth={5}
-      lineCap='round'
-      lineJoin='round'
-      tension={0.8}
       draggable={!isGum}
+      onDragEnd={(e) => {
+        const { x, y } = e.target.position();
+        data.x = x;
+        data.y = y;
+      }}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
       onMouseEnter={() => setHoveredId(id)}
       onMouseLeave={() => setHoveredId(null)}
@@ -67,20 +73,25 @@ const Pencil = ({ data: { id, points, stroke }, onErase }) => {
   );
 };
 
-Pencil.propTypes = {
+RectangleTool.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    points: PropTypes.array.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
     stroke: PropTypes.string.isRequired,
   }).isRequired,
   onErase: PropTypes.func,
 };
 
-const PencilMark_ = ({ onFinishDrawing }) => {
-  const [points, setPoints] = useState([]);
+const MIN_SIZE = 5;
+
+const RectangleMark_ = ({ onFinishDrawing }) => {
+  const [rect, setRect] = useState(null);
   const stageRef = useDrawingStageRef();
   const isDrawing = useRef(false);
-  const pointsRef = useRef([]);
+  const startPosRef = useRef(null);
 
   const active = useSelector(
     (store) =>
@@ -95,11 +106,11 @@ const PencilMark_ = ({ onFinishDrawing }) => {
       store.conference.meeting.actions.localPresentation.annotation.color
   );
 
-  const isPencil = mode === "pencil";
+  const isRectangle = mode === "rectangle";
 
   useEffect(() => {
     const stage = stageRef?.current;
-    if (!stage || !active || !isPencil) return;
+    if (!stage || !active || !isRectangle) return;
 
     const getPosition = () => {
       const pos = stage.getPointerPosition();
@@ -111,29 +122,42 @@ const PencilMark_ = ({ onFinishDrawing }) => {
       if (e.target !== stage) return;
       isDrawing.current = true;
       const pos = getPosition();
-      const initial = [pos.x, pos.y, pos.x, pos.y];
-      setPoints(initial);
-      pointsRef.current = initial;
+      startPosRef.current = pos;
+      setRect({
+        x: pos.x,
+        y: pos.y,
+        width: 0,
+        height: 0,
+        stroke,
+      });
     };
 
     const draw = () => {
-      if (!isDrawing.current) return;
+      if (!isDrawing.current || !startPosRef.current) return;
       const pos = getPosition();
-      setPoints((prev) => {
-        const updated = [pos.x, pos.y, ...prev];
-        pointsRef.current = updated;
-        return updated;
+      const width = pos.x - startPosRef.current.x;
+      const height = pos.y - startPosRef.current.y;
+
+      setRect({
+        x: Math.min(pos.x, startPosRef.current.x),
+        y: Math.min(pos.y, startPosRef.current.y),
+        width: Math.abs(width),
+        height: Math.abs(height),
+        stroke,
       });
     };
 
     const endDrawing = () => {
-      if (!isDrawing.current || !pointsRef.current.length) return;
+      if (!isDrawing.current || !rect) return;
       isDrawing.current = false;
-      const id = Date.now().toString(16);
-      const data = { id, points: pointsRef.current, stroke };
-      setPoints([]);
-      pointsRef.current = [];
-      if (onFinishDrawing) onFinishDrawing(data);
+      if (rect.width > MIN_SIZE && rect.height > MIN_SIZE) {
+        const id = Date.now().toString(16);
+        if (typeof onFinishDrawing === "function") {
+          onFinishDrawing({ ...rect, id });
+        }
+      }
+      setRect(null);
+      startPosRef.current = null;
     };
 
     stage.on("pointerdown", startDrawing);
@@ -145,28 +169,27 @@ const PencilMark_ = ({ onFinishDrawing }) => {
       stage.off("pointermove", draw);
       stage.off("pointerup pointerleave pointercancel", endDrawing);
     };
-  }, [stageRef, active, isPencil, stroke, onFinishDrawing]);
+  }, [stageRef, active, isRectangle, stroke, rect, onFinishDrawing]);
 
   return (
     <>
-      {isPencil && points.length > 0 && (
-        <Line
-          points={points}
-          stroke={stroke}
+      {isRectangle && rect && (
+        <Rect
+          x={rect.x}
+          y={rect.y}
+          width={rect.width}
+          height={rect.height}
+          stroke={rect.stroke}
           strokeWidth={5}
-          lineCap='round'
-          lineJoin='round'
-          tension={0.8}
         />
       )}
     </>
   );
 };
 
-PencilMark_.propTypes = {
+RectangleMark_.propTypes = {
   onFinishDrawing: PropTypes.func,
 };
 
-export const PencilMark = React.memo(PencilMark_);
-
-export default React.memo(Pencil);
+export default RectangleTool;
+export const RectangleMark = React.memo(RectangleMark_);

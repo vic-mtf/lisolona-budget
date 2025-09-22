@@ -71,6 +71,11 @@ const annotationStyles = [
     icon: TextIncreaseOutlinedIcon,
     label: "Ajouter le texte",
     id: "text",
+    onClick: () => {
+      const name = "__local_presentation_view_add_text";
+      const customEvent = new CustomEvent(name, {});
+      window.dispatchEvent(customEvent);
+    },
   },
   {
     icon: ColorIcon,

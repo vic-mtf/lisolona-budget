@@ -49,21 +49,35 @@ const useVisibleVideoSize = (videoRef) => {
       });
     };
 
-    const handleMetadata = () => {
-      updateSize();
-    };
+    const handleMetadata = updateSize;
 
     if (video.readyState >= 1) {
       handleMetadata();
     } else {
       video.addEventListener("loadedmetadata", handleMetadata);
     }
+
+    video.addEventListener("resize", updateSize);
+
     const resizeObserver = new ResizeObserver(updateSize);
     resizeObserver.observe(video.parentElement ?? video);
 
+    // fallback robuste : polling si pas supporté
+    let lastW = video.videoWidth;
+    let lastH = video.videoHeight;
+    const interval = setInterval(() => {
+      if (video.videoWidth !== lastW || video.videoHeight !== lastH) {
+        lastW = video.videoWidth;
+        lastH = video.videoHeight;
+        updateSize();
+      }
+    }, 500);
+
     return () => {
       video.removeEventListener("loadedmetadata", handleMetadata);
+      video.removeEventListener("resize", updateSize);
       resizeObserver.disconnect();
+      clearInterval(interval);
     };
   }, [videoRef]);
 
