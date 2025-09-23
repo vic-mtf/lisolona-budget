@@ -72,7 +72,6 @@ const Footer = () => {
       });
       const [videoStreamTrack] = stream.getVideoTracks();
       const displaySurface = videoStreamTrack?.getSettings()?.displaySurface;
-      console.log(displaySurface);
 
       stream.getTracks().forEach((track) => {
         track.onended = () => {

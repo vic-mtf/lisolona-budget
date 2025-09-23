@@ -41,7 +41,6 @@ const EphemeralPencil = () => {
 
   useEffect(() => {
     const stage = stageRef?.current;
-    console.log("isEphemeralPencil", isEphemeralPencil);
     if (!stage || !active || !isEphemeralPencil) {
       isDrawing.current = false;
       return;
@@ -55,7 +54,10 @@ const EphemeralPencil = () => {
     };
 
     const onStartDrawing = () => {
-      isDrawing.current = true;
+      const pointerPos = stage.getPointerPosition();
+      const shape = stage.getIntersection(pointerPos);
+      isDrawing.current = !shape;
+      if (!isDrawing.current) return;
       const pos = getPosition();
       const points = [pos.x, pos.y, pos.x, pos.y];
       setPoints(points);
@@ -97,14 +99,16 @@ const EphemeralPencil = () => {
 
   return (
     <>
-      <Line
-        points={points}
-        stroke={stroke}
-        strokeWidth={5}
-        lineCap='round'
-        lineJoin='round'
-        tension={0.8}
-      />
+      {points.length > 0 && (
+        <Line
+          points={points}
+          stroke={stroke}
+          strokeWidth={5}
+          lineCap='round'
+          lineJoin='round'
+          tension={0.8}
+        />
+      )}
       {persistePointsData.map(({ points, stroke, id }) => (
         <EphemeralLine
           key={id}
@@ -134,7 +138,6 @@ const CustomLine = ({ id, onFinish, ...otherProps }) => {
         if (typeof onFinish === "function") onFinish(e, { line, id });
       },
     });
-    console.log(line);
   }, [onFinish, id]);
 
   return (

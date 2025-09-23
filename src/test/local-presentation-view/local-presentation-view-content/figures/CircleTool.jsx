@@ -63,6 +63,7 @@ const CircleTool = ({ data, onErase }) => {
         data.x = x;
         data.y = y;
       }}
+      id={id}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
       onMouseEnter={() => setHoveredId(id)}
       onMouseLeave={() => setHoveredId(null)}

@@ -26,6 +26,7 @@ const TextTool = ({ data, onErase }) => {
     (store) =>
       store.conference.meeting.actions.localPresentation.annotation.mode
   );
+
   const isGum = mode === "gum";
 
   const handleTextDblClick = useCallback(() => {
@@ -66,13 +67,11 @@ const TextTool = ({ data, onErase }) => {
     if (!stage) return;
 
     const onClickText = () => {
-      console.log("click");
       const pointerPos = stage.getPointerPosition();
       const shape = stage.getIntersection(pointerPos);
-      console.log(shape?.id());
       if (shape?.id() === data.id && !hasFocus) setHasFocus(true);
       if (shape?.id() !== data.id && hasFocus) setHasFocus(false);
-
+      if (!active) return;
       if (isGum && shape?.id() === data.id) handleErase();
     };
 
@@ -92,7 +91,7 @@ const TextTool = ({ data, onErase }) => {
       stage.off("pointerdown", onStartErase);
       stage.off("pointerup pointerleave pointercancel", onEndErase);
     };
-  }, [stageRef, active, data.id, hasFocus, isGum, handleErase]);
+  }, [stageRef, data.id, hasFocus, isGum, handleErase, active]);
 
   useEffect(() => {
     const textNode = textRef.current;

@@ -8,6 +8,7 @@ import annotationStyles, {
 import { Layer } from "react-konva";
 import DrawingStageProvider from "../../../components/DrawingStageProvider";
 import DrawingArea from "./DrawingArea";
+import EphemeralPencil from "./pencils/EphemeralPencil";
 
 const DrawingLayer = ({ width, height, scaleX, scaleY, offsetX, offsetY }) => {
   const mode = useSelector(
@@ -55,8 +56,11 @@ const DrawingLayer = ({ width, height, scaleX, scaleY, offsetX, offsetY }) => {
         height={height}
         scaleX={scaleX}
         scaleY={scaleY}>
-        <Layer>
+        <Layer id='drawing-area-layer'>
           <DrawingArea />
+        </Layer>
+        <Layer id='ephemeral-pencil-layer'>
+          <EphemeralPencil />
         </Layer>
       </DrawingStageProvider>
     </Box>

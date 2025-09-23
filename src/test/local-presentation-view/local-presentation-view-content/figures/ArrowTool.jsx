@@ -158,6 +158,7 @@ const ArrowTool = ({ data, onErase }) => {
       stroke={stroke}
       fill={stroke}
       strokeWidth={5}
+      id={id}
       pointerLength={15}
       pointerWidth={15}
       draggable={!isGum}

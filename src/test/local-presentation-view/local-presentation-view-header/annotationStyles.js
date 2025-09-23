@@ -9,7 +9,6 @@ import CleaningServicesOutlinedIcon from "@mui/icons-material/CleaningServicesOu
 import AutoFixHighOutlinedIcon from "@mui/icons-material/AutoFixHighOutlined";
 import DrawOutlinedIcon from "@mui/icons-material/DrawOutlined";
 import store from "../../../redux/store";
-
 import {
   blue,
   cyan,
@@ -25,6 +24,13 @@ import {
   teal,
 } from "@mui/material/colors";
 import ColorIcon from "./ColorIcon";
+
+export const EVENT_NAMES = {
+  addText: "__local_presentation_view_add_text",
+  deleteAll: "__local_presentation_view_delete_all",
+  selectTool: "__local_presentation_view_select_tool",
+  updateTool: "__local_presentation_view_update_tool",
+};
 
 const annotationStyles = [
   {
@@ -165,6 +171,11 @@ const annotationStyles = [
     icon: CleaningServicesOutlinedIcon,
     label: "Tout effacer",
     id: "clear",
+    onClick: () => {
+      const name = "__local_presentation_view_delete_all";
+      const customEvent = new CustomEvent(name, {});
+      window.dispatchEvent(customEvent);
+    },
   },
 ];
 

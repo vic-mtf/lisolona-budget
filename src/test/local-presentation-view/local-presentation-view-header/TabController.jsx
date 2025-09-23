@@ -29,12 +29,12 @@ const TabController = () => {
 
   const handleAllowedControl = useCallback(async () => {
     const controller = getData("controller");
+
     if (!controller) return;
     const previewTile = document.querySelector(
       "#local-presentation-video-layer"
     );
     try {
-      console.log("forwardWheel");
       await controller.forwardWheel(previewTile);
     } catch (e) {
       console.error(e);

@@ -54,6 +54,7 @@ const LineTool = ({ data, onErase }) => {
       stroke={stroke}
       strokeWidth={5}
       lineCap='round'
+      id={id}
       draggable={!isGum}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
       onMouseEnter={() => setHoveredId(id)}

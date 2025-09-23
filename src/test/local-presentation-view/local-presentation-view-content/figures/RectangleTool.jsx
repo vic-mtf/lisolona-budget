@@ -56,6 +56,7 @@ const RectangleTool = ({ data, onErase }) => {
       height={height}
       stroke={stroke}
       strokeWidth={5}
+      id={id}
       draggable={!isGum}
       onDragEnd={(e) => {
         const { x, y } = e.target.position();

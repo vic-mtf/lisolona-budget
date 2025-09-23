@@ -4,8 +4,8 @@ import Slide from "@mui/material/Slide";
 import PropTypes from "prop-types";
 import MoreMenuStyles from "./MoreMenuStyles";
 import Typography from "@mui/material/Typography";
-import TabController from "./TabControler";
-
+import TabController from "./TabController";
+import FocusShapeNav from "./focus-shape-nav/FocusShapeNav";
 const LocalPresentationViewHeader = () => {
   return (
     <Slide
@@ -20,12 +20,15 @@ const LocalPresentationViewHeader = () => {
         left: 0,
         right: 0,
       }}>
-      <ToolBar variant='dense' sx={{ bgcolor: "background.paper" }}>
+      <ToolBar
+        variant='dense'
+        sx={{ bgcolor: "background.paper", position: "relative" }}>
         <MoreMenuStyles />
         <Typography ml={1} flexGrow={1}>
           L’écran est partagé avec votre audience
         </Typography>
         <TabController />
+        <FocusShapeNav />
       </ToolBar>
     </Slide>
   );
