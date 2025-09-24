@@ -1,13 +1,12 @@
 import React from "react";
-import Box from "@mui/material/Box";
+//import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
 import { useEffect } from "react";
 import { EVENT_NAMES } from "../annotationStyles";
-import ToggleButtonGroup, {
-  toggleButtonGroupClasses,
-} from "@mui/material/ToggleButtonGroup";
-import { styled } from "@mui/material";
-import FlipZIndexButton from "./buttons/FlipZIndexButton";
+import FlipZIndexButtons from "./buttons/FlipZIndexButtons";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import FormatTextButton from "./buttons/FormatTextButton";
 
 const FocusShapeNav = () => {
   const [open, setOpen] = React.useState(false);
@@ -15,8 +14,15 @@ const FocusShapeNav = () => {
 
   useEffect(() => {
     const handleFocusShape = (e) => {
-      const { shape } = e.detail;
-      setShapeNode(shape);
+      const { shape: s } = e.detail;
+      const transformer = s?.findAncestor(
+        (node) => node.getClassName() === "Transformer",
+        true
+      );
+
+      const shape = transformer?.nodes()?.[0] || s;
+
+      if (shape) setShapeNode(shape);
       setOpen(Boolean(shape));
     };
 
@@ -39,31 +45,21 @@ const FocusShapeNav = () => {
         left: "50%",
         transform: "translate(-50%, -50%)",
       }}>
-      <Box>
-        <RootToggleButtonGroup size='small'>
-          {shapeNode && (
-            <FlipZIndexButton shapeNode={shapeNode} key={shapeNode?.id()} />
-          )}
-        </RootToggleButtonGroup>
-      </Box>
+      <Stack
+        component='div'
+        direction='row'
+        flexWrap='wrap'
+        key={shapeNode?.id()}
+        divider={
+          <Divider flexItem orientation='vertical' sx={{ mx: 0.5, my: 1.5 }} />
+        }>
+        {shapeNode?.getClassName() === "Text" && (
+          <FormatTextButton shapeNode={shapeNode} />
+        )}
+        <FlipZIndexButtons shapeNode={shapeNode} />
+      </Stack>
     </Fade>
   );
 };
-
-const RootToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  [`& .${toggleButtonGroupClasses.grouped}`]: {
-    margin: theme.spacing(0.5),
-    border: 0,
-    borderRadius: theme.shape.borderRadius,
-    [`&.${toggleButtonGroupClasses.disabled}`]: {
-      border: 0,
-    },
-  },
-  [`& .${toggleButtonGroupClasses.middleButton},& .${toggleButtonGroupClasses.lastButton}`]:
-    {
-      marginLeft: -1,
-      borderLeft: "1px solid transparent",
-    },
-}));
 
 export default React.memo(FocusShapeNav);

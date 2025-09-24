@@ -108,7 +108,7 @@ ArrowMark_.propTypes = {
 
 export const ArrowMark = React.memo(ArrowMark_);
 
-const ArrowTool = ({ data, onErase }) => {
+const ArrowTool = ({ data, onErase, onUpdate }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const stageRef = useDrawingStageRef();
   const isErasing = useRef(false);
@@ -157,12 +157,20 @@ const ArrowTool = ({ data, onErase }) => {
       points={points}
       stroke={stroke}
       fill={stroke}
+      x={data?.x}
+      y={data?.y}
       strokeWidth={5}
       id={id}
       pointerLength={15}
       pointerWidth={15}
       draggable={!isGum}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
+      onDragEnd={(e) => {
+        const { x, y } = e.target.position();
+        // data.x = x;
+        // data.y = y;
+        if (typeof onUpdate === "function") onUpdate({ x, y });
+      }}
       onMouseEnter={() => setHoveredId(id)}
       onMouseLeave={() => setHoveredId(null)}
       onClick={() => isGum && handleErase()}
@@ -178,7 +186,10 @@ ArrowTool.propTypes = {
     id: PropTypes.string.isRequired,
     points: PropTypes.array.isRequired,
     stroke: PropTypes.string.isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
   }).isRequired,
+  onUpdate: PropTypes.func,
   onErase: PropTypes.func,
 };
 

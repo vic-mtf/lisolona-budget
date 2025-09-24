@@ -6,11 +6,12 @@ import TextEditor from "./TextEditor";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
-const TextTool = ({ data, onErase }) => {
-  const [hasFocus, setHasFocus] = useState(true);
+const TextTool = ({ data, onErase, onUpdate }) => {
   const [text, setText] = useState(data.text || "Nouvel texte");
   const [isEditing, setIsEditing] = useState(false);
-  const [textWidth, setTextWidth] = useState(200);
+  const [textWidth, setTextWidth] = useState(() =>
+    typeof data?.width === "number" ? data.width : 200
+  );
   const [hovered, setHovered] = useState(false);
 
   const textRef = useRef();
@@ -52,6 +53,13 @@ const TextTool = ({ data, onErase }) => {
     });
   }, []);
 
+  const handleTransformEnd = useCallback(() => {
+    const node = textRef.current;
+    const scaleX = node.scaleX();
+    const width = node.width() * scaleX;
+    if (typeof onUpdate === "function") onUpdate({ width });
+  }, [onUpdate]);
+
   const handleErase = useCallback(() => {
     if (typeof onErase === "function") onErase(data.id);
   }, [onErase, data.id]);
@@ -66,11 +74,19 @@ const TextTool = ({ data, onErase }) => {
     const stage = stageRef?.current;
     if (!stage) return;
 
-    const onClickText = () => {
+    const onSelect = () => {
       const pointerPos = stage.getPointerPosition();
-      const shape = stage.getIntersection(pointerPos);
-      if (shape?.id() === data.id && !hasFocus) setHasFocus(true);
-      if (shape?.id() !== data.id && hasFocus) setHasFocus(false);
+      const s = stage.getIntersection(pointerPos);
+      const transformer = s?.findAncestor(
+        (node) => node.getClassName() === "Transformer",
+        true
+      );
+      const shape = transformer?.nodes()?.[0] || s;
+
+      if (shape?.id() === data.id && !data?.focused)
+        onUpdate({ focused: true });
+      if (shape?.id() !== data.id && data?.focused)
+        onUpdate({ focused: false });
       if (!active) return;
       if (isGum && shape?.id() === data.id) handleErase();
     };
@@ -83,19 +99,20 @@ const TextTool = ({ data, onErase }) => {
     };
 
     stage.on("pointerdown", onStartErase);
+    stage.on("pointerdown", onSelect);
     stage.on("pointerup pointerleave pointercancel", onEndErase);
-    stage.on("click", onClickText);
 
     return () => {
-      stage.off("click", onClickText);
+      stage.off("pointerdown", onSelect);
       stage.off("pointerdown", onStartErase);
       stage.off("pointerup pointerleave pointercancel", onEndErase);
     };
-  }, [stageRef, data.id, hasFocus, isGum, handleErase, active]);
+  }, [stageRef, data.id, isGum, handleErase, active, onUpdate, data.focused]);
 
   useEffect(() => {
     const textNode = textRef.current;
     const stage = stageRef?.current;
+    if (typeof data?.x === "number" || typeof data?.y === "number") return;
     if (!textNode || !stage) return;
     const center = stage
       .getAbsoluteTransform()
@@ -106,7 +123,7 @@ const TextTool = ({ data, onErase }) => {
         y: stage.height() / 2,
       });
     textNode.position(center);
-  }, [stageRef]);
+  }, [stageRef, data.x, data.y]);
 
   return (
     <>
@@ -114,18 +131,28 @@ const TextTool = ({ data, onErase }) => {
         ref={textRef}
         text={text}
         id={data.id}
-        fontSize={30}
+        fontSize={data?.fontSize || 30}
         fill={data.fill}
         draggable={!isGum}
         width={textWidth}
         onDblClick={handleTextDblClick}
         onDblTap={handleTextDblClick}
+        x={data?.x}
+        y={data?.y}
+        onDragEnd={(e) => {
+          const { x, y } = e.target.position();
+          data.x = x;
+          data.y = y;
+          if (typeof onUpdate === "function") onUpdate({ x, y });
+        }}
         onTransform={handleTransform}
+        onTransformEnd={handleTransformEnd}
         visible={!isEditing}
         opacity={isGum && hovered ? 0.3 : 1}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={() => isGum && handleErase(data.id)}
+        fontStyle={data.fontStyle}
         onMouseOver={() => {
           if (isGum && isErasing.current) handleErase();
         }}
@@ -142,7 +169,8 @@ const TextTool = ({ data, onErase }) => {
       {
         <Transformer
           ref={trRef}
-          visible={hasFocus}
+          id={data.id}
+          visible={data?.focused}
           anchorCornerRadius={50}
           opacity={isGum && hovered ? 0.2 : 0.8}
           anchorSize={6}
@@ -165,7 +193,14 @@ TextTool.propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     fill: PropTypes.string.isRequired,
     text: PropTypes.string,
+    fontSize: PropTypes.number,
+    fontStyle: PropTypes.string,
+    focused: PropTypes.bool,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    width: PropTypes.number,
   }).isRequired,
+  onUpdate: PropTypes.func,
   onErase: PropTypes.func,
 };
 

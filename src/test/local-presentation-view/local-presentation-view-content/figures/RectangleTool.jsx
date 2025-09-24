@@ -4,7 +4,7 @@ import useDrawingStageRef from "../../../../hooks/useDrawingStageRef";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-const RectangleTool = ({ data, onErase }) => {
+const RectangleTool = ({ data, onErase, onUpdate }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const stageRef = useDrawingStageRef();
   const isErasing = useRef(false);
@@ -62,6 +62,7 @@ const RectangleTool = ({ data, onErase }) => {
         const { x, y } = e.target.position();
         data.x = x;
         data.y = y;
+        if (typeof onUpdate === "function") onUpdate({ x, y });
       }}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
       onMouseEnter={() => setHoveredId(id)}
@@ -83,6 +84,7 @@ RectangleTool.propTypes = {
     height: PropTypes.number.isRequired,
     stroke: PropTypes.string.isRequired,
   }).isRequired,
+  onUpdate: PropTypes.func,
   onErase: PropTypes.func,
 };
 

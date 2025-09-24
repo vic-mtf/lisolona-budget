@@ -5,30 +5,22 @@ import Box from "@mui/material/Box";
 //import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
 import PropTypes from "prop-types";
 import Tooltip from "@mui/material/Tooltip";
-import { useState } from "react";
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
+import {} from "react";
 import { EVENT_NAMES } from "../../annotationStyles";
-import { Chip } from "@mui/material";
+import Chip from "@mui/material/Chip";
+import RootToggleButtonGroup from "./RootToggleButtonGroup";
+import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
 
-const FlipZIndexButton = ({ shapeNode }) => {
-  const [maxValue] = useState(() => {
-    if (!shapeNode) return 0;
-    const stage = shapeNode?.getStage();
-    const layer = stage
-      .getChildren()
-      .find((l) => l?.id() === "drawing-area-layer");
-    return layer.getChildren().length - 1;
-  });
+const FlipZIndexButtons = ({ shapeNode }) => {
+  const [getData] = useLocalStoreData(
+    "conference.meeting.actions.localPresentation.annotation.stage"
+  );
+  const [maxValue] = useState(() => getData("shapes")?.length);
+
   const [index, setIndex] = useState(() => {
     if (!shapeNode) return 0;
-    const stage = shapeNode?.getStage();
-    const layer = stage
-      .getChildren()
-      .find((l) => l?.id() === "drawing-area-layer");
-    return layer
-      .getChildren()
-      .map((shape) => shape.id())
-      .indexOf(shapeNode?.id());
+    return getData("shapes").findIndex((s) => s?.data?.id === shapeNode?.id());
   });
 
   const handleToggle = useCallback(
@@ -46,7 +38,7 @@ const FlipZIndexButton = ({ shapeNode }) => {
   );
 
   return (
-    <>
+    <RootToggleButtonGroup size='small'>
       <Tooltip title="Retourner à l'arrière" placement='top'>
         <div>
           <ToggleButton
@@ -64,7 +56,7 @@ const FlipZIndexButton = ({ shapeNode }) => {
             onClick={handleToggle(1)}
             value='front'
             aria-label='front'
-            disabled={index === maxValue}>
+            disabled={index + 1 === maxValue}>
             <FlipToFrontOutlinedIcon fontSize='small' />
           </ToggleButton>
         </div>
@@ -79,12 +71,12 @@ const FlipZIndexButton = ({ shapeNode }) => {
           <Chip label={index + 1} size='small' variant='outlined' />
         </Box>
       </Tooltip>
-    </>
+    </RootToggleButtonGroup>
   );
 };
 
-FlipZIndexButton.propTypes = {
+FlipZIndexButtons.propTypes = {
   shapeNode: PropTypes.object,
 };
 
-export default FlipZIndexButton;
+export default FlipZIndexButtons;

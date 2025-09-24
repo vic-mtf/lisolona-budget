@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import LocalPresentationViewHeader from "./local-presentation-view-header/LocalPresentationViewHeader";
@@ -6,25 +7,37 @@ import ScreenShareOutlinedIcon from "@mui/icons-material/ScreenShareOutlined";
 import StopScreenShareOutlinedIcon from "@mui/icons-material/StopScreenShareOutlined";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Fade from "@mui/material/Fade";
 import useLocalStoreData from "../../hooks/useLocalStoreData";
 import { useDispatch, useSelector } from "react-redux";
 import { updateConferenceData } from "../../redux/conference/conference";
 
 const LocalPresentationView = () => {
+  const [open, setOpen] = React.useState(true);
+
+  useEffect(() => {
+    const onToggle = () => setOpen(!open);
+    window.addEventListener("dblclick", onToggle);
+    return () => {
+      window.removeEventListener("dblclick", onToggle);
+    };
+  }, [open]);
   return (
-    <Box
-      display='flex'
-      position='absolute'
-      left={0}
-      top={0}
-      right={0}
-      bottom={0}
-      bgcolor='background.default'
-      flexDirection='column'>
-      <LocalPresentationViewHeader />
-      <LocalPresentationViewContent />
-      <Footer />
-    </Box>
+    <Fade in={open} appear={false}>
+      <Box
+        display='flex'
+        position='absolute'
+        left={0}
+        top={0}
+        right={0}
+        bottom={0}
+        bgcolor='background.default'
+        flexDirection='column'>
+        <LocalPresentationViewHeader />
+        <LocalPresentationViewContent />
+        <Footer />
+      </Box>
+    </Fade>
   );
 };
 

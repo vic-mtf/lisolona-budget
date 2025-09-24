@@ -4,7 +4,7 @@ import useDrawingStageRef from "../../../../hooks/useDrawingStageRef";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-const LineTool = ({ data, onErase }) => {
+const LineTool = ({ data, onErase, onUpdate }) => {
   const [hoveredId, setHoveredId] = useState(null);
   const stageRef = useDrawingStageRef();
   const isErasing = useRef(false);
@@ -52,11 +52,19 @@ const LineTool = ({ data, onErase }) => {
     <Line
       points={points}
       stroke={stroke}
+      x={data?.x}
+      y={data?.y}
       strokeWidth={5}
       lineCap='round'
       id={id}
       draggable={!isGum}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
+      onDragEnd={(e) => {
+        const { x, y } = e.target.position();
+        // data.x = x;
+        // data.y = y;
+        if (typeof onUpdate === "function") onUpdate({ x, y });
+      }}
       onMouseEnter={() => setHoveredId(id)}
       onMouseLeave={() => setHoveredId(null)}
       onClick={() => isGum && handleErase()}
@@ -174,7 +182,10 @@ LineTool.propTypes = {
     id: PropTypes.string.isRequired,
     points: PropTypes.array.isRequired,
     stroke: PropTypes.string.isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
   }).isRequired,
+  onUpdate: PropTypes.func,
   onErase: PropTypes.func,
 };
 

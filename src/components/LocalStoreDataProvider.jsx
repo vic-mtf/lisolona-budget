@@ -99,6 +99,17 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
             },
           },
         },
+        meeting: {
+          actions: {
+            localPresentation: {
+              annotation: {
+                stage: {
+                  shapes: [],
+                },
+              },
+            },
+          },
+        },
       },
     }),
     []

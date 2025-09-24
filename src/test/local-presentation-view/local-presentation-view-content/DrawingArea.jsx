@@ -9,10 +9,14 @@ import TextTool from "./others/TextTool";
 import store from "../../../redux/store";
 import { EVENT_NAMES } from "../local-presentation-view-header/annotationStyles";
 import useDrawingStageRef from "../../../hooks/useDrawingStageRef";
+import useLocalStoreData from "../../../hooks/useLocalStoreData";
 
 const DrawingArea = () => {
+  const [getData, setData] = useLocalStoreData(
+    "conference.meeting.actions.localPresentation.annotation.stage"
+  );
   const stageRef = useDrawingStageRef();
-  const [drawings, setDrawings] = useState([]);
+  const [drawings, setDrawings] = useState(() => getData("shapes"));
 
   const handleAddNewDrawing = useCallback(
     (index) => (data) =>
@@ -25,6 +29,19 @@ const DrawingArea = () => {
     []
   );
 
+  const handleUpdateDrawing = useCallback(
+    (id) => (data) => {
+      setDrawings((d) => {
+        const drawings = [...d];
+        const index = drawings.findIndex(({ data }) => data.id === id);
+        if (index === -1) return drawings;
+        drawings[index].data = { ...drawings[index].data, ...data };
+        return drawings;
+      });
+    },
+    []
+  );
+
   useEffect(() => {
     const stage = stageRef?.current;
     const handleAddNewText = () => {
@@ -33,7 +50,7 @@ const DrawingArea = () => {
       const id = Date.now().toString(16);
       const index = tools.findIndex((f) => f === TextTool);
       const draw = handleAddNewDrawing(index);
-      if (draw) draw({ id, fill });
+      if (draw) draw({ id, fill, width: 200 });
     };
     const handleDeleteAll = () => setDrawings([]);
     const selectTool = (evt) => {
@@ -65,15 +82,55 @@ const DrawingArea = () => {
     const stage = stageRef?.current;
     if (!stage) return;
     const handleToolUpdate = (evt) => {
-      const { dir, type, index } = evt.detail;
-      if (type !== "flipZIndex") return;
-      const _drawings = [...drawings];
+      switch (evt.detail.type) {
+        case "flipZIndex":
+          {
+            const { dir, index } = evt.detail;
+            const _drawings = [...drawings];
 
-      const newIndex = Math.min(drawings.length - 1, Math.max(0, index + dir));
-      const replacedShape = drawings[newIndex];
-      _drawings[newIndex] = drawings[index];
-      _drawings[index] = replacedShape;
-      setDrawings([..._drawings]);
+            const newIndex = Math.min(
+              drawings.length - 1,
+              Math.max(0, index + dir)
+            );
+            const replacedShape = { ...drawings[newIndex] };
+            _drawings[newIndex] = { ...drawings[index] };
+            _drawings[index] = replacedShape;
+            setDrawings([..._drawings]);
+          }
+          break;
+        case "textFontSize":
+          {
+            const { nodeId, fontSize } = evt.detail;
+            // console.log({ nodeId, fontSize });
+            const _drawings = [...drawings];
+            const index = _drawings.findIndex(({ data }) => data.id === nodeId);
+            if (index === -1) return;
+            const data = _drawings[index].data;
+            _drawings[index].data = { ...data, fontSize };
+            if (index !== -1) {
+              _drawings[index].data.fontSize = fontSize;
+              setDrawings([..._drawings]);
+            }
+          }
+          break;
+        case "textFontStyle":
+          {
+            const { nodeId, fontStyle } = evt.detail;
+            // console.log({ nodeId, fontStyle });
+            const _drawings = [...drawings];
+            const index = _drawings.findIndex(({ data }) => data.id === nodeId);
+            if (index === -1) return;
+            const data = _drawings[index].data;
+            _drawings[index].data = { ...data, fontStyle };
+            if (index !== -1) {
+              _drawings[index].data.fontStyle = fontStyle;
+              setDrawings([..._drawings]);
+            }
+          }
+          break;
+        default:
+          break;
+      }
     };
 
     window.addEventListener(EVENT_NAMES.updateTool, handleToolUpdate);
@@ -82,15 +139,28 @@ const DrawingArea = () => {
     };
   }, [stageRef, drawings]);
 
-  console.log("render drawings", drawings);
+  useEffect(() => {
+    setData({ shapes: drawings });
+    if (drawings.length !== 0) return;
+    const name = EVENT_NAMES.selectTool;
+    const detail = { shape: null, name };
+    const customEvent = new CustomEvent(name, { detail });
+    window.dispatchEvent(customEvent);
+  }, [drawings, setData]);
 
   return (
     <>
       {drawings.map(({ index, data }, i) => {
         const Tool = tools[index] || null;
         return (
-          <React.Fragment key={Tool.id | i}>
-            {Tool && <Tool data={data} onErase={handleRemoveDrawing} />}
+          <React.Fragment key={`${data?.id}-${index}-${i}`}>
+            {Tool && (
+              <Tool
+                data={data}
+                onErase={handleRemoveDrawing}
+                onUpdate={handleUpdateDrawing(data?.id)}
+              />
+            )}
           </React.Fragment>
         );
       })}

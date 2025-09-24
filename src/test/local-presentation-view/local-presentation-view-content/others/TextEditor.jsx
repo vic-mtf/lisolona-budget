@@ -42,6 +42,12 @@ const TextEditor = ({ textNode, onClose, onChange }) => {
     textarea.style.transformOrigin = "left top";
     textarea.style.textAlign = textNode.align();
     textarea.style.color = textNode.fill();
+    textarea.style.fontWeight = textNode.fontStyle().includes("bold")
+      ? "bold"
+      : "normal";
+    textarea.style.fontStyle = textNode.fontStyle().includes("italic")
+      ? "italic"
+      : "normal";
     const rotation = textNode.rotation();
     let transform = "";
     if (rotation) {
@@ -72,6 +78,7 @@ const TextEditor = ({ textNode, onClose, onChange }) => {
       textarea.style.height = `${
         textarea.scrollHeight + textNode.fontSize()
       }px`;
+      onChange(textarea.value);
     };
 
     textarea.addEventListener("keydown", handleKeyDown);
