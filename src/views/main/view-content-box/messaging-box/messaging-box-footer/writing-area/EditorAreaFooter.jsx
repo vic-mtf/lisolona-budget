@@ -1,7 +1,10 @@
 import React from "react";
-import { Box, Fab, ToggleButton, Tooltip } from "@mui/material";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
-import { Stack } from "@mui/system";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
+import Tooltip from "@mui/material/Tooltip";
+import ToggleButton from "@mui/material/ToggleButton";
 import TextFieldsOutlinedIcon from "@mui/icons-material/TextFieldsOutlined";
 import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";

@@ -2,6 +2,7 @@ import React from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListAvatar from "../../../../../../components/ListAvatar";
+import WavingHand from "../../../../../../components/WavingHand";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
@@ -10,8 +11,6 @@ import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
-import { motion } from "framer-motion";
-import FrontHandOutlinedIcon from "@mui/icons-material/FrontHandOutlined";
 import Menu from "@mui/material/Menu";
 import Tooltip from "@mui/material/Tooltip";
 import getFullName from "../../../../../../utils/getFullName";
@@ -34,6 +33,7 @@ const ParticipantItem = ({ variant, type, identity, mode, state }) => {
               type={type}
               isMicActive={state?.isMicActive}
               name={name}
+              id={identity?.id}
             />
             <MoreOptions type={type} id={identity?.id} />
           </Box>
@@ -119,31 +119,6 @@ const MoreOptions = ({ type, id }) => {
 MoreOptions.propTypes = {
   type: PropTypes.oneOf(["remote", "local"]),
   id: PropTypes.string,
-};
-
-const WavingHand = () => {
-  return (
-    <Box
-      component={motion.div}
-      sx={{
-        display: "inline-flex",
-        justifyContent: "center",
-        alignItems: "center",
-        originY: 1,
-        color: (t) => t.palette.text.primary,
-      }}
-      animate={{
-        //y: [20, 0, 0, 0, 20],
-        rotate: [0, 25, -20, 25, -20, 0],
-      }}
-      transition={{
-        duration: 1,
-        ease: "easeInOut",
-        repeatDelay: 0.5,
-      }}>
-      <FrontHandOutlinedIcon fontSize='small' />
-    </Box>
-  );
 };
 
 ParticipantItem.propTypes = {

@@ -318,6 +318,7 @@ const DragDropContainer = React.forwardRef(
         sx={{
           aspectRatio: { md: 16 / 9, sm: 3 / 4, xs: 9 / 16 },
           touchAction: "none",
+          zIndex: (t) => t.zIndex.speedDial + 100,
         }}>
         {corners.map((corner) => (
           <div

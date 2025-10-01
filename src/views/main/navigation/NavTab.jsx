@@ -43,14 +43,14 @@ export default function NavTab() {
             fontSize: 10,
           },
       }}>
-      {tabs.map(({ label, id, icon, disabled }) => (
+      {tabs.map(({ label, id, icon = "div", disabled }) => (
         <BottomNavigationAction
           label={label}
           disabled={disabled}
           key={id}
           sx={{
             ...(disabled && {
-              color: (theme) => theme.palette.action.disabled,
+              color: (t) => t.palette.action.disabled,
             }),
           }}
           icon={
@@ -59,11 +59,10 @@ export default function NavTab() {
               color='primary'
               sx={{
                 "& .MuiBadge-badge": {
-                  border: (theme) =>
-                    `2px solid ${theme.palette.background.paper}`,
+                  border: (t) => `2px solid ${t.palette.background.paper}`,
                 },
               }}>
-              {createElement(icon, matches && { sx: { fontSize: 26 } })}
+              {createElement(icon, matches ? { sx: { fontSize: 26 } } : {})}
             </Badge>
           }
           value={id}

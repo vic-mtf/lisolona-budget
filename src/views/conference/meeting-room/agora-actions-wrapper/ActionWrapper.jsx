@@ -1,11 +1,13 @@
 import usePublishLocalCamStream from "./hooks/usePublishLocalCamStream";
 import usePublishLocalMicroStream from "./hooks/usePublishLocalMicroStream";
+import useRemotePublishAudioTrack from "./hooks/useRemotePublishAudioTrack";
 import React from "react";
 import PropTypes from "prop-types";
 
 const ActionWrapper = ({ isConnected }) => {
   usePublishLocalMicroStream(isConnected);
   usePublishLocalCamStream(isConnected);
+  useRemotePublishAudioTrack(isConnected);
   return null;
 };
 

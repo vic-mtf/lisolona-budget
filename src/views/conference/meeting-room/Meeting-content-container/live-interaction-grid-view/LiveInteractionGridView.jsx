@@ -1,27 +1,31 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 import GridLayoutView from "../../../../../components/GridLayoutView";
-import { useEffect } from "react";
-import { useMemo } from "react";
 import useActiveParticipants from "../../agora-actions-wrapper/hooks/useActiveParticipants";
-import getFullName from "../../../../../utils/getFullName";
+import LocalParticipantGridView from "../local-participant-view/LocalParticipantGridView";
+import { useSelector } from "react-redux";
+import RemoteParticipantView from "../remote-participant-view/RemoteParticipantView";
 
 const LiveInteractionGridView = React.forwardRef((_, ref) => {
   const participants = useActiveParticipants();
+  const userId = useSelector((store) => store.user.id);
+  const mode = useSelector(
+    (store) => store.conference.meeting.view.localParticipant.mode
+  );
 
   const data = useMemo(() => {
     let arr = [];
+    if (mode === "grid")
+      arr = [{ id: userId, children: <LocalParticipantGridView /> }];
     for (let i = 0; i < participants.length; ++i) {
-      const name = getFullName(participants[i].identity);
       const id = participants[i].identity.id;
-
       arr.push({
         id,
-        children: <RenderComponent key={id} name={name} />,
+        children: <RemoteParticipantView id={id} />,
       });
     }
     return arr;
-  }, [participants]);
+  }, [participants, userId, mode]);
 
   return (
     <Box
@@ -34,13 +38,6 @@ const LiveInteractionGridView = React.forwardRef((_, ref) => {
     </Box>
   );
 });
-
-const RenderComponent = React.memo(({ name }) => {
-  useEffect(() => {
-  }, [name]);
-  return `user: ${name}`;
-});
-RenderComponent.displayName = "RenderComponent";
 
 LiveInteractionGridView.displayName = "LiveInteractionGridView";
 export default React.memo(LiveInteractionGridView);

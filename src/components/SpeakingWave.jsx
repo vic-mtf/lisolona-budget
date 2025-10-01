@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import useElementSize from "../hooks/useElementSize";
 
 const parseColorToRgba = (color, alpha = 1) => {
   if (/^#([0-9A-F]{3}){1,2}$/i.test(color)) {
@@ -27,7 +28,7 @@ const parseColorToRgba = (color, alpha = 1) => {
 };
 
 const SpeakingWave = ({ volume, color = "#3498db" }) => {
-  const containerRef = useRef(null);
+  const [containerRef, size] = useElementSize();
   const canvasRef = useRef(null);
   const pulsesRef = useRef([]);
   const lastPulseRef = useRef(0);
@@ -50,20 +51,13 @@ const SpeakingWave = ({ volume, color = "#3498db" }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
     const ctx = canvas.getContext("2d");
-
-    const resizeCanvas = () => {
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
 
     let animationFrame;
 
     const draw = () => {
+      canvas.width = size?.width;
+      canvas.height = size?.height;
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
@@ -107,9 +101,8 @@ const SpeakingWave = ({ volume, color = "#3498db" }) => {
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      window.removeEventListener("resize", resizeCanvas);
     };
-  }, [color]);
+  }, [color, size]);
 
   return (
     <div

@@ -7,13 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateConferenceData } from "../../../../../../redux/conference/conference";
 import { useCallback, useMemo } from "react";
 import useSocket from "../../../../../../hooks/useSocket";
+import useIsOrganizer from "../../../../../../hooks/useIsOrganizer";
 
-const ParticipantItemMicButton = ({ type, isMicActive, name: fullName }) => {
-  const name = useMemo(() => fullName?.split(/\s/)[0], [fullName]);
-  const id = useSelector((store) => store.user.id);
-  const isOrganizer = useSelector(
-    (store) => store.conference.meeting.participants[id].state.isOrganizer
-  );
+const ParticipantItemMicButton = ({ type, isMicActive, name, id }) => {
+  const fn = useMemo(() => name?.split(/\s/)[0], [name]);
+  const isOrganizer = useIsOrganizer();
   const dispatch = useDispatch();
   const socket = useSocket();
   const permission = useSelector(
@@ -29,10 +27,22 @@ const ParticipantItemMicButton = ({ type, isMicActive, name: fullName }) => {
           },
         })
       );
-    else socket.emit("toggle-mic", { isMicActive: !isMicActive });
-  }, [type, isMicActive, dispatch, socket]);
+    if (type === "remote") {
+      socket.emit("signal-room", {
+        state: { isMicActive: !isMicActive },
+        participants: [id],
+      });
+      dispatch(
+        updateConferenceData({
+          key: [`meeting.participants.${id}.state.isMicActive`],
+          data: [!isMicActive],
+        })
+      );
+    }
+  }, [type, isMicActive, dispatch, socket, id]);
 
-  const notPermission = permission ? permission !== "granted" : true;
+  const notPermission =
+    type === "local" && (permission ? permission !== "granted" : true);
   const canNotActivaRemote =
     type === "remote" && (!isMicActive || !isOrganizer);
 
@@ -43,9 +53,9 @@ const ParticipantItemMicButton = ({ type, isMicActive, name: fullName }) => {
     },
     remote: {
       active: isOrganizer
-        ? `Désactiver le micro de ${name}`
-        : `Micro de ${name} activé`,
-      inactive: `Micro de ${name} désactivé`,
+        ? `Désactiver le micro de ${fn}`
+        : `Micro de ${fn} activé`,
+      inactive: `Micro de ${fn} désactivé`,
     },
     notPermission: "Permission non accordée",
   };
@@ -77,5 +87,6 @@ ParticipantItemMicButton.propTypes = {
   type: PropTypes.oneOf(["remote", "local"]),
   isMicActive: PropTypes.bool,
   name: PropTypes.string,
+  id: PropTypes.string,
 };
 export default ParticipantItemMicButton;

@@ -127,6 +127,7 @@ const ViewContainer = () => {
         appear={false}>
         <LiveInteractionGridView />
       </Slide>
+
       <Slide
         in={view === "presentation"}
         className='presentation'

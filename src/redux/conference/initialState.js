@@ -33,7 +33,6 @@ const initialState = {
         deviceId: null,
         enabled: false,
         label: null,
-
         permission: null,
       },
       microphone: {

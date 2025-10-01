@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import BoxGradient from "./components/BoxGradient";
@@ -10,8 +10,6 @@ import { Box, Fade } from "@mui/material";
 import Cover from "./views/cover/Cover";
 import { SIGN_IN_CHANNEL } from "./utils/broadcastChannel";
 import ErrorNetwork from "./components/ErrorNetwork";
-import { useMemo } from "react";
-import TestSocket from "./test/TestSocket";
 
 function App() {
   const connected = useSelector((store) => store.user.connected);

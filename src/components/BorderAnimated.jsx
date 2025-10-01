@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { alpha } from "@mui/system";
+import { alpha } from "@mui/material";
 
 const BorderAnimated = () => {
   return (

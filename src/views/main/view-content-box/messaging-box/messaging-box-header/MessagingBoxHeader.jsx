@@ -1,14 +1,12 @@
-import {
-  AppBar,
-  IconButton,
-  Toolbar,
-  Zoom,
-  ListItemButton,
-  ListItemText,
-  ListItemAvatar,
-  Tooltip,
-} from "@mui/material";
-import { Box } from "@mui/system";
+import AppBar from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
+import Zoom from "@mui/material/Zoom";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import store from "../../../../../redux/store";

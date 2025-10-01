@@ -1,5 +1,8 @@
-import { Box, Divider, Toolbar, Typography } from "@mui/material";
-import { Stack } from "@mui/system";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import logo from "../../assets/geid_logo_blue_without_title.png";
 import CarouselPub from "./carousel-pub/CarouselPub";
 import CopyrightFooter from "../../components/CopyrightFooter";

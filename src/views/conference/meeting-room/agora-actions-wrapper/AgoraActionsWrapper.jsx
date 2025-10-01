@@ -52,7 +52,7 @@ const AgoraActionsWrapper = () => {
     const key = ["step"];
     const data = ["setup"];
     if (isInRoom) {
-      socket.emit("leave", { id: code });
+      socket.emit("leave-room", { id: code });
       key.push(`meeting.participants.${userId}.state.isInRoom}`);
       data.push(false);
     }

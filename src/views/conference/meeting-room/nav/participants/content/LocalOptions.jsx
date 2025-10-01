@@ -32,6 +32,10 @@ const CamOption = ({ onClose }) => {
   const isCamActive = useSelector(
     (store) => store.conference.setup.devices.camera.enabled
   );
+  const permission = useSelector(
+    (state) => state.conference.setup.devices.camera.permission
+  );
+
   const dispatch = useDispatch();
   const onToggleCam = () => {
     dispatch(
@@ -43,19 +47,21 @@ const CamOption = ({ onClose }) => {
     if (typeof onClose === "function") onClose();
   };
   return (
-    <MenuItem onClick={onToggleCam}>
-      <ListItemIcon>
-        {isCamActive ? (
-          <VideocamOutlinedIcon fontSize='small' />
-        ) : (
-          <VideocamOffOutlinedIcon fontSize='small' />
-        )}
-      </ListItemIcon>
-      <ListItemText
-        primary={isCamActive ? "Désactiver la caméra" : "Activer la caméra"}
-        slotProps={{ primary: { variant: "body2" } }}
-      />
-    </MenuItem>
+    permission === "granted" && (
+      <MenuItem onClick={onToggleCam}>
+        <ListItemIcon>
+          {isCamActive ? (
+            <VideocamOutlinedIcon fontSize='small' />
+          ) : (
+            <VideocamOffOutlinedIcon fontSize='small' />
+          )}
+        </ListItemIcon>
+        <ListItemText
+          primary={isCamActive ? "Désactiver la caméra" : "Activer la caméra"}
+          slotProps={{ primary: { variant: "body2" } }}
+        />
+      </MenuItem>
+    )
   );
 };
 CamOption.propTypes = { onClose: PropTypes.func };
@@ -63,6 +69,9 @@ CamOption.propTypes = { onClose: PropTypes.func };
 const MicOption = ({ onClose }) => {
   const isMicActive = useSelector(
     (store) => store.conference.setup.devices.microphone.enabled
+  );
+  const permission = useSelector(
+    (state) => state.conference.setup.devices.microphone.permission
   );
   const dispatch = useDispatch();
   const onToggleMic = () => {
@@ -74,22 +83,26 @@ const MicOption = ({ onClose }) => {
     );
     if (typeof onClose === "function") onClose();
   };
+
   return (
-    <MenuItem onClick={onToggleMic}>
-      <ListItemIcon>
-        {isMicActive ? (
-          <MicNoneOutlinedIcon fontSize='small' />
-        ) : (
-          <MicOffOutlinedIcon fontSize='small' />
-        )}
-      </ListItemIcon>
-      <ListItemText
-        primary={isMicActive ? "Désactiver le micro" : "Activer le micro"}
-        slotProps={{ primary: { variant: "body2" } }}
-      />
-    </MenuItem>
+    permission === "granted" && (
+      <MenuItem onClick={onToggleMic}>
+        <ListItemIcon>
+          {isMicActive ? (
+            <MicNoneOutlinedIcon fontSize='small' />
+          ) : (
+            <MicOffOutlinedIcon fontSize='small' />
+          )}
+        </ListItemIcon>
+        <ListItemText
+          primary={isMicActive ? "Désactiver le micro" : "Activer le micro"}
+          slotProps={{ primary: { variant: "body2" } }}
+        />
+      </MenuItem>
+    )
   );
 };
+
 MicOption.propTypes = { onClose: PropTypes.func };
 
 const MirrorCamOption = ({ onClose }) => {

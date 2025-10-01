@@ -8,6 +8,7 @@ const useHandleError = () => {
 
   useEffect(() => {
     const onHandleError = ({ message }) => {
+      console.log("error => ", message);
       notifications.show(message, { severity: "error" });
     };
     socket?.on("error", onHandleError);

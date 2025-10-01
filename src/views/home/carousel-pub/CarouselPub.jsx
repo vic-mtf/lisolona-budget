@@ -1,17 +1,14 @@
-import {
-  Box as MuiBox,
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import Carousel from "react-material-ui-carousel";
 import pubs from "./pubs";
 import PropTypes from "prop-types";
 
 export default function CarouselPub() {
   return (
-    <MuiBox
+    <Box
       position='relative'
       draggable={false}
       display='flex'
@@ -31,10 +28,12 @@ export default function CarouselPub() {
         duration={800}
         interval={6000}>
         {pubs.map((item, i) => (
-          <Item key={i} {...item} />
+          <div key={i}>
+            <Item {...item} />
+          </div>
         ))}
       </Carousel>
-    </MuiBox>
+    </Box>
   );
 }
 
@@ -51,7 +50,8 @@ const Item = ({ desc, ...otherProps }) => {
         userSelect: "none",
       }}
       elevation={0}>
-      <CardMedia
+      <Box
+        loading='lazy'
         sx={{
           height: 300,
           maxWidth: 300,

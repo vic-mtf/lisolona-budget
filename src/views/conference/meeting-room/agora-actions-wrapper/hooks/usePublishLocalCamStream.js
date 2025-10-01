@@ -30,6 +30,7 @@ const usePublishLocalCamStream = (isConnected) => {
       const localVideoTrack = AgoraRTC.createCustomVideoTrack({
         mediaStreamTrack,
       });
+
       await agoraClient.publish(localVideoTrack);
 
       publishing = false;

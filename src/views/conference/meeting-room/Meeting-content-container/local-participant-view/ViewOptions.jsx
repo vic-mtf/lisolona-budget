@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 const ViewOptions = ({ onReduced, onAddToGrid }) => {
   return (
     <Box
-      className='viewOptions'
+      className='local-view-options'
       sx={{
         display: "flex",
         gap: 1,

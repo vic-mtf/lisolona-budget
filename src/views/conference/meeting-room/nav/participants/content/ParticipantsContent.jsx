@@ -27,7 +27,6 @@ const ParticipantsContent = ({ participants, category }) => {
                 <ListSubheader disableSticky>{label}</ListSubheader>
               ) : (
                 <ParticipantItem
-                  id={identity.id}
                   variant={state.isOrganizer ? "moderator" : "collaborator"}
                   identity={identity}
                   state={state}
