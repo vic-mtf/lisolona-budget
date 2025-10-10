@@ -37,6 +37,7 @@ const EndMeeting = React.forwardRef((_, ref) => {
   };
 
   const handleGoHome = () => {
+    window.focus();
     window.close();
   };
 

@@ -49,6 +49,7 @@ function App() {
       <Fade
         in={!loaded && connected && !isConference}
         unmountOnExit
+        timeout={500}
         appear={false}
         style={{
           position: 'fixed',
@@ -66,6 +67,7 @@ function App() {
         in={connected ? isConference || loaded : true}
         unmountOnExit
         key={connected ? 'connected' : 'disconnected'}
+        timeout={500}
         appear={false}
         style={{
           top: 0,
@@ -75,7 +77,7 @@ function App() {
           position: 'absolute',
         }}
       >
-        <Box sx={{ display: (connected ? loaded : true) ? 'flex' : 'none' }}>
+        <Box sx={{ display: 'flex' }}>
           <ErrorNetwork />
           <RouterProvider router={router(connected)} />
         </Box>

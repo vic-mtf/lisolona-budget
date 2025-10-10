@@ -117,7 +117,6 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
 
   const setData = useCallback(
     (updateData, value) => {
-      console.log('value => ', value);
       if (typeof updateData === 'string')
         setValueByKey(data, updateData, value);
       else {

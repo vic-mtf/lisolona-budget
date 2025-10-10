@@ -30,7 +30,6 @@ const ListAvatar = ({
       const blob = new Blob([response.data], {
         type: response.headers['content-type'],
       });
-      console.log('blob => ', blob);
       const uri = URL.createObjectURL(blob);
       setUrl(uri);
       setData({ [id]: uri });

@@ -12,6 +12,8 @@ const CountdownTimer = ({ seconds = 10, onComplete, size = 60 }) => {
   const [progress, setProgress] = useState(100);
   const startTimeRef = useRef(Date.now());
 
+  const frameIdRef = useRef(null);
+
   useEffect(() => {
     const durationMs = seconds * 1000;
 
@@ -19,10 +21,7 @@ const CountdownTimer = ({ seconds = 10, onComplete, size = 60 }) => {
       const elapsed = Date.now() - startTimeRef.current;
       const remaining = Math.max(durationMs - elapsed, 0);
       const newProgress = (remaining / durationMs) * 100;
-      // const elapsed = Date.now() - startTimeRef.current;
-      // const remaining = Math.max(durationMs - elapsed, 0);
       const newTimeLeft = Math.ceil(remaining / 1000);
-      //const newProgress = (remaining / durationMs) * 100;
 
       setTimeLeft(newTimeLeft);
       setProgress(newProgress);
@@ -34,12 +33,16 @@ const CountdownTimer = ({ seconds = 10, onComplete, size = 60 }) => {
 
     const animationFrame = () => {
       updateProgress();
-      requestAnimationFrame(animationFrame);
+      frameIdRef.current = requestAnimationFrame(animationFrame);
     };
 
-    requestAnimationFrame(animationFrame);
+    frameIdRef.current = requestAnimationFrame(animationFrame);
 
-    return () => cancelAnimationFrame(animationFrame);
+    return () => {
+      if (frameIdRef.current) {
+        cancelAnimationFrame(frameIdRef.current);
+      }
+    };
   }, [seconds, onComplete]);
 
   return (

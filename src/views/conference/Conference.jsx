@@ -15,6 +15,7 @@ import EndMeeting from './end-meeting-room/EndMeetingRoom';
 
 const Conference = () => {
   const step = useSelector((store) => store.conference.step);
+
   return (
     <>
       <Box
@@ -23,31 +24,39 @@ const Conference = () => {
           height: '100%',
           display: 'flex',
           flex: 1,
-          '& > div': {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          },
         }}
       >
-        <Fade in={step === 'setup'} unmountOnExit appear={false}>
-          <SetupRoom />
-        </Fade>
-        <Fade in={step === 'meeting'} unmountOnExit appear={false}>
-          <MeetingRoom />
-        </Fade>
-        <Fade in={step === 'end'} unmountOnExit appear={false}>
-          <EndMeeting />
-        </Fade>
+        {steps.map(({ id, children }) => (
+          <Fade
+            in={id === step}
+            appear={false}
+            key={id}
+            unmountOnExit
+            timeout={500}
+            style={{
+              display: 'flex',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          >
+            <div>{children}</div>
+          </Fade>
+        ))}
       </Box>
       <ListerStream />
       <ConferenceInboundEventDetector />
-      {/* <Loading /> */}
+      <Loading />
     </>
   );
 };
+const steps = [
+  { id: 'setup', children: <SetupRoom /> },
+  { id: 'meeting', children: <MeetingRoom /> },
+  { id: 'end', children: <EndMeeting /> },
+];
 
 const Loading = () => {
   const loading = useSelector((store) => store.conference.loading);
