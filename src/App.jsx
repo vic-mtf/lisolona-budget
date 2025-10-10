@@ -1,15 +1,15 @@
-import { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RouterProvider } from "react-router-dom";
-import BoxGradient from "./components/BoxGradient";
-import router from "./router/router";
-import { decrypt } from "./utils/crypt";
-import { updateUser } from "./redux/user";
-import scrollBarSx from "./utils/scrollBarSx";
-import { Box, Fade } from "@mui/material";
-import Cover from "./views/cover/Cover";
-import { SIGN_IN_CHANNEL } from "./utils/broadcastChannel";
-import ErrorNetwork from "./components/ErrorNetwork";
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RouterProvider } from 'react-router-dom';
+import BoxGradient from './components/BoxGradient';
+import router from './router/router';
+import { decrypt } from './utils/crypt';
+import { updateUser } from './redux/user';
+import scrollBarSx from './utils/scrollBarSx';
+import { Box, Fade } from '@mui/material';
+import Cover from './views/cover/Cover';
+import { SIGN_IN_CHANNEL } from './utils/broadcastChannel';
+import ErrorNetwork from './components/ErrorNetwork';
 
 function App() {
   const connected = useSelector((store) => store.user.connected);
@@ -32,42 +32,50 @@ function App() {
           dispatch(updateUser({ data }));
         }
       };
-      SIGN_IN_CHANNEL.addEventListener("message", handleAutoConnection);
+      SIGN_IN_CHANNEL.addEventListener('message', handleAutoConnection);
       return () =>
-        SIGN_IN_CHANNEL.removeEventListener("message", handleAutoConnection);
+        SIGN_IN_CHANNEL.removeEventListener('message', handleAutoConnection);
     }
   }, [dispatch, connected]);
 
   return (
     <BoxGradient
-      overflow='hidden'
-      display='relative'
+      overflow="hidden"
+      display="relative"
       sx={{
-        "& *": { ...scrollBarSx },
-        "& > div": {
-          display: "flex",
-          flex: 1,
-          position: "absolute",
+        '& *': { ...scrollBarSx },
+      }}
+    >
+      <Fade
+        in={!loaded && connected && !isConference}
+        unmountOnExit
+        appear={false}
+        style={{
+          position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-        },
-        "& > div > div": { display: "flex", flex: 1 },
-        "& > div > #router-container": {
-          display: (connected ? loaded : true) ? "flex" : "none",
-        },
-      }}>
-      <Fade in={!loaded && connected && !isConference} unmountOnExit>
-        <Box>
+        }}
+      >
+        <div>
           <Cover />
-        </Box>
+        </div>
       </Fade>
       <Fade
         in={connected ? isConference || loaded : true}
         unmountOnExit
-        key={connected ? "connected" : "disconnected"}>
-        <Box id='router-container'>
+        key={connected ? 'connected' : 'disconnected'}
+        appear={false}
+        style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: 'absolute',
+        }}
+      >
+        <Box sx={{ display: (connected ? loaded : true) ? 'flex' : 'none' }}>
           <ErrorNetwork />
           <RouterProvider router={router(connected)} />
         </Box>

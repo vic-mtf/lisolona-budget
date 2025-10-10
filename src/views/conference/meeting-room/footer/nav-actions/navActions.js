@@ -1,37 +1,38 @@
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import Messages from "../../nav/messages/Messages";
-import Participants from "../../nav/participants/Participants";
-import Infos from "../../nav/Infos/Infos";
-import Admin from "../../nav/admin/Admin";
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import Messages from '../../nav/messages/Messages';
+import Participants from '../../nav/participants/Participants';
+import Infos from '../../nav/Infos/Infos';
+import Admin from '../../nav/admin/Admin';
 
 const navActions = [
   {
-    id: "chats",
+    id: 'chats',
     icon: ChatOutlinedIcon,
-    label: "Messages",
+    label: 'Messages',
     content: Messages,
+    disabled: true,
   },
   {
-    id: "participants",
+    id: 'participants',
     icon: PeopleAltOutlinedIcon,
-    label: "Participants",
+    label: 'Participants',
     content: Participants,
   },
   {
-    id: "infos",
+    id: 'infos',
     icon: InfoOutlinedIcon,
-    label: "Infos",
+    label: 'Infos',
     content: Infos,
   },
   {
-    id: "authParams",
+    id: 'authParams',
     icon: AdminPanelSettingsOutlinedIcon,
-    label: "Administration",
+    label: 'Modération',
     content: Admin,
-    hiddenKeys: ["isOrganizer"],
+    hiddenKeys: ['isOrganizer'],
   },
 ];
 

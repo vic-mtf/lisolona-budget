@@ -1,13 +1,13 @@
-import React from "react";
-import Box from "@mui/material/Box";
+import React from 'react';
+import Box from '@mui/material/Box';
 
-import BottomNavigation from "@mui/material/BottomNavigation";
-import Badge from "@mui/material/Badge";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import { useSelector, useDispatch } from "react-redux";
-import { updateConferenceData } from "../../../../../redux/conference/conference";
-import { useMemo } from "react";
-import navActions from "./navActions";
+import BottomNavigation from '@mui/material/BottomNavigation';
+import Badge from '@mui/material/Badge';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateConferenceData } from '../../../../../redux/conference/conference';
+import { useMemo } from 'react';
+import navActions from './navActions';
 
 const NavActions = () => {
   const id = useSelector((store) => store.user.id);
@@ -53,44 +53,47 @@ const NavActions = () => {
   );
 
   return (
-    <Box display='flex' justifyContent='right'>
+    <Box display="flex" justifyContent="right">
       <BottomNavigation
         showLabels
-        value={(nav.open && nav.id) || ""}
+        value={(nav.open && nav.id) || ''}
         sx={{
-          background: "none",
-          width: "100%",
+          background: 'none',
+          width: '100%',
           p: 0,
           m: 0,
-          "& .MuiBottomNavigationAction-root": {
+          '& .MuiBottomNavigationAction-root': {
             p: 0,
             m: 0,
             // fontSize: 10,
           },
-          "& .MuiBottomNavigationAction-label": {
-            fontSize: "10px!important",
+          '& .MuiBottomNavigationAction-label': {
+            fontSize: '10px!important',
           },
-        }}>
+        }}
+      >
         {filterActions.map((action) => (
           <BottomNavigationAction
             key={action.id}
             label={action.label}
+            disabled={action.disabled}
             icon={
               <Badge
                 badgeContent={news[action.id]}
-                color='primary'
+                color="primary"
                 anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
                 sx={{
-                  "& .MuiBadge-badge": {
+                  '& .MuiBadge-badge': {
                     fontSize: 10,
                     border: (t) =>
                       `2px solid ${(t.vars ?? t).palette.background.paper}`,
-                    padding: "0 4px",
+                    padding: '0 4px',
                   },
-                }}>
+                }}
+              >
                 <action.icon />
               </Badge>
             }
@@ -99,7 +102,7 @@ const NavActions = () => {
             onClick={() => {
               dispatch(
                 updateConferenceData({
-                  key: ["meeting.nav.id", "meeting.nav.open"],
+                  key: ['meeting.nav.id', 'meeting.nav.open'],
                   data: [action.id, nav.id === action.id ? !nav.open : true],
                 })
               );

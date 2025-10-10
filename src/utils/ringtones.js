@@ -1,13 +1,15 @@
-import alert_ringtone from "../assets/alert.mp3";
-import start_ringtone from "../assets/start_ton.mp3";
-import test_ringtone from "../assets/test.mp3";
-import enter_ringtone from "../assets/short-punchy-sine-wave-ding-2-c-211742.mp3";
-import error_ringtone from "../assets/echo-105584.mp3";
-import leave_ringtone from "../assets/leave.mp3";
-import active_ringtone from "../assets/notification-291230.mp3";
-import disconnect_ringtone from "../assets/notification-disable-291235.mp3";
-import raise_hand from "../assets/send_signal.mp3";
-import lower_hand from "../assets/receive_signal.mp3";
+import alert_ringtone from '../assets/alert.mp3';
+import start_ringtone from '../assets/start_ton.mp3';
+import test_ringtone from '../assets/test.mp3';
+import enter_ringtone from '../assets/short-punchy-sine-wave-ding-2-c-211742.mp3';
+import error_ringtone from '../assets/echo-105584.mp3';
+import leave_ringtone from '../assets/leave.mp3';
+import active_ringtone from '../assets/notification-291230.mp3';
+import disconnect_ringtone from '../assets/notification-disable-291235.mp3';
+import raise_hand from '../assets/send_signal.mp3';
+import lower_hand from '../assets/receive_signal.mp3';
+import signal_unknown from '../assets/start-13691.mp3';
+import hang_up from '../assets/hang-up.webm';
 
 export const ringtones_urls = {
   alert: alert_ringtone,
@@ -20,6 +22,8 @@ export const ringtones_urls = {
   disconnect: disconnect_ringtone,
   raise: raise_hand,
   lower: lower_hand,
+  hangUp: hang_up,
+  signalUnknown: signal_unknown,
 };
 
 const ringtones = {
@@ -33,6 +37,8 @@ const ringtones = {
   disconnect: new Audio(disconnect_ringtone),
   raise: new Audio(raise_hand),
   lower: new Audio(lower_hand),
+  hangUp: new Audio(hang_up),
+  signalUnknown: new Audio(signal_unknown),
 };
 
 export const vibrates = {

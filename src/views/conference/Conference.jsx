@@ -5,12 +5,13 @@ import {
   Typography,
   LinearProgress,
   alpha,
-} from "@mui/material";
-import SetupRoom from "./setup-room/SetupRoom";
-import { useSelector } from "react-redux";
-import ListerStream from "./ListerStream";
-import MeetingRoom from "./meeting-room/MeetingRoom";
-import ConferenceInboundEventDetector from "../../components/ConferenceInboundEventDetector";
+} from '@mui/material';
+import SetupRoom from './setup-room/SetupRoom';
+import { useSelector } from 'react-redux';
+import ListerStream from './ListerStream';
+import MeetingRoom from './meeting-room/MeetingRoom';
+import ConferenceInboundEventDetector from '../../components/ConferenceInboundEventDetector';
+import EndMeeting from './end-meeting-room/EndMeetingRoom';
 
 const Conference = () => {
   const step = useSelector((store) => store.conference.step);
@@ -18,28 +19,32 @@ const Conference = () => {
     <>
       <Box
         sx={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
+          width: '100%',
+          height: '100%',
+          display: 'flex',
           flex: 1,
-          "& > div": {
-            position: "absolute",
+          '& > div': {
+            position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
           },
-        }}>
-        <Fade in={step === "setup"} unmountOnExit appear={false}>
+        }}
+      >
+        <Fade in={step === 'setup'} unmountOnExit appear={false}>
           <SetupRoom />
         </Fade>
-        <Fade in={step === "meeting"} unmountOnExit appear={false}>
+        <Fade in={step === 'meeting'} unmountOnExit appear={false}>
           <MeetingRoom />
+        </Fade>
+        <Fade in={step === 'end'} unmountOnExit appear={false}>
+          <EndMeeting />
         </Fade>
       </Box>
       <ListerStream />
       <ConferenceInboundEventDetector />
-      <Loading />
+      {/* <Loading /> */}
     </>
   );
 };
@@ -54,25 +59,27 @@ const Loading = () => {
       sx={{
         background: (t) =>
           alpha(
-            t.palette.common[t.palette.mode === "light" ? "white" : "black"],
+            t.palette.common[t.palette.mode === 'light' ? 'white' : 'black'],
             0.98
           ),
         zIndex: (t) => t.zIndex.modal,
         backdropFilter: (t) => `blur(${t.spacing(2)})`,
-        flexDirection: "column",
-      }}>
+        flexDirection: 'column',
+      }}
+    >
       <LinearProgress
-        color='inherit'
-        sx={{ position: "absolute", top: 0, width: "100%" }}
+        color="inherit"
+        sx={{ position: 'absolute', top: 0, width: '100%' }}
       />
       <Box
         mx={2}
-        textAlign='center'
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
-        gap={2}>
-        <Typography component='span' variant='h6'>
+        textAlign="center"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        gap={2}
+      >
+        <Typography component="span" variant="h6">
           Démarrage dans quelques instants...
         </Typography>
       </Box>

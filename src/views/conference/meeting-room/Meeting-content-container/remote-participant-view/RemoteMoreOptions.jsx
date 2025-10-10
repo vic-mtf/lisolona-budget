@@ -79,7 +79,7 @@ const PinItem = ({ onClose }) => {
       </ListItemIcon>
       <ListItemText
         slotProps={{ primary: { variant: "body2" } }}
-        primary='Epingler sur la présentation '
+        primary='Épingler sur la présentation '
       />
     </ListItemButton>
   );

@@ -1,13 +1,13 @@
 //import { useJoin } from "agora-rtc-react";
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { updateConferenceData } from "../../../../redux/conference/conference";
-import { useNotifications } from "@toolpad/core/useNotifications";
-import ringtones from "../../../../utils/ringtones";
-import ActionWrapper from "./ActionWrapper";
-import useSocket from "../../../../hooks/useSocket";
-import { useParams } from "react-router-dom";
-import useCustomJoin from "./hooks/useCustomJoin";
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateConferenceData } from '../../../../redux/conference/conference';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import ringtones from '../../../../utils/ringtones';
+import ActionWrapper from './ActionWrapper';
+import useSocket from '../../../../hooks/useSocket';
+import { useParams } from 'react-router-dom';
+import useCustomJoin from './hooks/useCustomJoin';
 
 const AgoraActionsWrapper = () => {
   const { code } = useParams();
@@ -28,7 +28,7 @@ const AgoraActionsWrapper = () => {
   const { TOKEN, APP_ID, CHANNEL } = useSelector(
     (store) => store.conference.AGORA_DATA
   );
-  const ready = useSelector((store) => store.conference.step === "meeting");
+  const ready = useSelector((store) => store.conference.step === 'meeting');
 
   const { isConnected, isLoading, error } = useCustomJoin(
     { APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID },
@@ -38,7 +38,7 @@ const AgoraActionsWrapper = () => {
     if (isConnected && loading && !isLoading) {
       dispatch(
         updateConferenceData({
-          key: ["loading"],
+          key: ['loading'],
           data: [false],
         })
       );
@@ -49,24 +49,24 @@ const AgoraActionsWrapper = () => {
 
   useEffect(() => {
     if (!error) return;
-    const key = ["step"];
-    const data = ["setup"];
+    const key = ['step'];
+    const data = ['setup'];
     if (isInRoom) {
-      socket.emit("leave-room", { id: code });
+      socket.emit('leave-room', { id: code });
       key.push(`meeting.participants.${userId}.state.isInRoom}`);
       data.push(false);
     }
     dispatch(updateConferenceData({ key, data }));
     setTimeout(() => {
-      notifications.show("Impossible de rejoindre, la session a expiré", {
-        severity: "error",
-        key: "session-expired",
+      notifications.show('Impossible de rejoindre, la session a expiré', {
+        severity: 'error',
+        key: 'session-expired',
       });
       ringtones.error.volume = 0.1;
       ringtones.error.play();
       dispatch(
         updateConferenceData({
-          key: ["loading"],
+          key: ['loading'],
           data: [false],
         })
       );

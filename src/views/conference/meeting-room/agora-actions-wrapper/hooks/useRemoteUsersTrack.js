@@ -30,10 +30,18 @@ export const useVideoTrack = (id) => {
   const isCameraActive = useSelector(
     (store) => store.conference.meeting.participants?.[id]?.state?.isCamActive
   );
+
+  const isHidden = useSelector(
+    (store) =>
+      store.conference.meeting.actions.liveInteractionGrid.participant.hide?.[
+        id
+      ] === "video"
+  );
+
   const remoteTracks = useRemoteUsersTrack();
   const videoTrack = useMemo(
     () => remoteTracks.find((t) => t.uid === uid)?.videoTrack || null,
     [remoteTracks, uid]
   );
-  return isCameraActive ? videoTrack : null;
+  return isCameraActive ? (isHidden ? null : videoTrack) : null;
 };

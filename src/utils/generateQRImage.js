@@ -1,25 +1,25 @@
-import logoSrcWhite from "../assets/geid_logo_white_without_title.webp";
-import logoSrcBlue from "../assets/geid_logo_blue_without_title.webp";
+import logoSrcWhite from '../assets/geid_logo_white_without_title.webp';
+import logoSrcBlue from '../assets/geid_logo_blue_without_title.webp';
 
 export default async function generateSVGImage({
   svgElement,
-  title,
-  description,
+  title = '',
+  description = '',
   theme,
 }) {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
   const width = 1080;
   const height = 1920;
   canvas.width = width;
   canvas.height = height;
 
-  ctx.fillStyle = theme.palette.background.default || "#ffffff";
+  ctx.fillStyle = theme?.palette?.background?.default || '#ffffff';
   ctx.fillRect(0, 0, width, height);
 
   const logoImg = await loadImage(
-    theme?.palette?.mode === "light" ? logoSrcBlue : logoSrcWhite
+    theme?.palette?.mode === 'light' ? logoSrcBlue : logoSrcWhite
   );
 
   const logoHeight = 80;
@@ -34,20 +34,20 @@ export default async function generateSVGImage({
   const barWidth = 4;
   const barX = logoX + logoWidth + 20;
   const barY = centerY - barHeight / 2;
-  ctx.fillStyle = theme.palette.text.primary || "#000";
+  ctx.fillStyle = theme?.palette?.text?.primary || '#000';
   ctx.fillRect(barX, barY, barWidth, barHeight);
 
   const fontSize = logoHeight * 0.8;
-  ctx.font = `${fontSize}px ${theme.typography.fontFamily || "Arial"}`;
-  ctx.textAlign = "left";
-  ctx.fillStyle = theme.palette.text.primary || "#000";
+  ctx.font = `${fontSize}px ${theme?.typography?.fontFamily || 'Arial'}`;
+  ctx.textAlign = 'left';
+  ctx.fillStyle = theme?.palette?.text?.primary || '#000';
 
   const textX = barX + barWidth + 16;
   const textY = centerY + fontSize * 0.35;
-  ctx.fillText("Lisolo", textX, textY);
+  ctx.fillText('Lisolo', textX, textY);
 
   const svgString = new XMLSerializer().serializeToString(svgElement);
-  const blob = new Blob([svgString], { type: "image/svg+xml" });
+  const blob = new Blob([svgString], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(blob);
   const drawingImg = await loadImage(url);
 
@@ -65,13 +65,13 @@ export default async function generateSVGImage({
     x: width / 2,
     y: titleY,
     maxWidth: width - 160,
-    fontFamily: theme.typography.fontFamily || "Arial",
+    fontFamily: theme?.typography?.fontFamily || 'Arial',
     fontSize: 52,
     minFontSize: 24,
     lineHeight: 56,
-    textAlign: "center",
-    color: theme.palette.text.primary || "#000",
-    verticalDirection: "up",
+    textAlign: 'center',
+    color: theme?.palette?.text?.primary || '#000',
+    verticalDirection: 'up',
     maxHeight: qrY - 160,
   });
 
@@ -81,13 +81,13 @@ export default async function generateSVGImage({
     x: width / 2,
     y: descY,
     maxWidth: width - 160,
-    fontFamily: theme.typography.fontFamily || "Arial",
+    fontFamily: theme?.typography?.fontFamily || 'Arial',
     fontSize: 36,
     minFontSize: 18,
     lineHeight: 42,
-    textAlign: "center",
-    color: theme.palette.text.secondary || "#555",
-    verticalDirection: "down",
+    textAlign: 'center',
+    color: theme?.palette?.text?.secondary || '#555',
+    verticalDirection: 'down',
     maxHeight: height - descY - 100,
   });
 
@@ -113,13 +113,13 @@ export default async function generateSVGImage({
   ctx.drawImage(drawingImg, qrX, qrY, qrSize, qrSize);
   ctx.restore();
 
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL('image/png');
 }
 
 export const loadImage = (src) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = src;
@@ -138,7 +138,7 @@ function drawWrappedText({
   fontFamily,
   textAlign,
   color,
-  verticalDirection = "down",
+  verticalDirection = 'down',
   maxHeight = Infinity,
 }) {
   ctx.textAlign = textAlign;
@@ -146,16 +146,16 @@ function drawWrappedText({
 
   while (fontSize >= minFontSize) {
     ctx.font = `${fontSize}px ${fontFamily}`;
-    const words = text.split(" ");
+    const words = text.split(' ');
     const lines = [];
-    let line = "";
+    let line = '';
 
     for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + " ";
+      const testLine = line + words[n] + ' ';
       const testWidth = ctx.measureText(testLine).width;
       if (testWidth > maxWidth && n > 0) {
         lines.push(line.trim());
-        line = words[n] + " ";
+        line = words[n] + ' ';
       } else {
         line = testLine;
       }
@@ -166,7 +166,7 @@ function drawWrappedText({
     if (totalHeight <= maxHeight) {
       lines.forEach((lineText, i) => {
         const yOffset =
-          verticalDirection === "up"
+          verticalDirection === 'up'
             ? y - (lines.length - 1 - i) * lineHeight
             : y + i * lineHeight;
         ctx.fillText(lineText, x, yOffset);

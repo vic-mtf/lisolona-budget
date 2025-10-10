@@ -40,7 +40,6 @@ export const RemoteUsersTrackProvider = ({ children }) => {
   useEffect(() => {
     const onUserPublished = async (user, mediaType) => {
       await client.subscribe(user, mediaType); // sauf screen
-      console.log(user, mediaType);
 
       if (mediaType === "audio") user.audioTrack.play();
       const key = mediaType + "Track";

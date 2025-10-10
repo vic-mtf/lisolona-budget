@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 
-const pad2 = (n) => String(n).padStart(2, "0");
+const pad2 = (n) => String(n).padStart(2, '0');
 
 const MeetingTimer = ({ start = false, paused = false, className }) => {
   const [elapsedSec, setElapsedSec] = useState(0);

@@ -1,9 +1,9 @@
-import { alpha, createTheme } from "@mui/material";
-import appConfig from "../configs/app-config.json";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import useAutoMode from "./useAutoMode";
-import MuiDialogTransition from "../components/MuiDialogTransition";
+import { alpha, createTheme } from '@mui/material';
+import appConfig from '../configs/app-config.json';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import useAutoMode from './useAutoMode';
+import MuiDialogTransition from '../components/MuiDialogTransition';
 
 const MuiTheme = createTheme();
 
@@ -16,12 +16,12 @@ const useTheme = (defaultMode) => {
   } = useSelector((store) => store.app.theme);
 
   const mode = useMemo(
-    () => defaultMode || (themeMode === "auto" ? autoMode : themeMode),
+    () => defaultMode || (themeMode === 'auto' ? autoMode : themeMode),
     [themeMode, autoMode, defaultMode]
   );
 
   const { main, paper, ...otherKey } = useMemo(
-    () => appConfig.colors.primary[mode || "dark"],
+    () => appConfig.colors.primary[mode || 'dark'],
     [mode]
   );
 
@@ -37,15 +37,15 @@ const useTheme = (defaultMode) => {
           MuiButton: {
             styleOverrides: {
               root: {
-                textTransform: "none",
+                textTransform: 'none',
               },
             },
           },
           MuiTypography: {
             defaultProps: {
-              variant: "body2",
-              color: "text.primary",
-              component: "div",
+              variant: 'body2',
+              color: 'text.primary',
+              component: 'div',
             },
           },
           MuiChip: {
@@ -57,14 +57,14 @@ const useTheme = (defaultMode) => {
           },
           MuiAvatar: {
             defaultProps: {
-              variant: "rounded",
+              variant: 'rounded',
             },
           },
           MuiIconButton: {
             styleOverrides: {
               root: {
                 borderRadius: MuiTheme.shape.borderRadius,
-                "& .MuiTouchRipple-root span": {
+                '& .MuiTouchRipple-root span': {
                   borderRadius: MuiTheme.shape.borderRadius,
                 },
               },
@@ -72,22 +72,22 @@ const useTheme = (defaultMode) => {
           },
           MuiMenu: {
             defaultProps: {
-              transformOrigin: { horizontal: "left", vertical: "top" },
-              anchorOrigin: { horizontal: "right", vertical: "bottom" },
+              transformOrigin: { horizontal: 'left', vertical: 'top' },
+              anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
               onContextMenu: (event) => event.preventDefault(),
             },
             styleOverrides: {
               root: {
-                "& .MuiBackdrop-root": {
-                  backdropFilter: "none",
+                '& .MuiBackdrop-root': {
+                  backdropFilter: 'none',
                 },
               },
             },
           },
           MuiBadge: {
             defaultProps: {
-              overlap: "rectangular",
-              anchorOrigin: { vertical: "bottom", horizontal: "right" },
+              overlap: 'rectangular',
+              anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
             },
           },
           MuiTooltip: {
@@ -99,7 +99,7 @@ const useTheme = (defaultMode) => {
               slotProps: {
                 backdrop: {
                   sx: (theme) => ({
-                    ...theme.applyStyles("light", {
+                    ...theme.applyStyles('light', {
                       bgcolor: alpha(theme.palette.background.paper, 0.5),
                     }),
                   }),
@@ -107,15 +107,15 @@ const useTheme = (defaultMode) => {
               },
               PaperProps: {
                 sx: {
-                  position: "relative",
-                  overflow: "hidden",
+                  position: 'relative',
+                  overflow: 'hidden',
                 },
               },
             },
             styleOverrides: {
               root: {
-                "& .MuiBackdrop-root": {
-                  backdropFilter: "blur(10px)",
+                '& .MuiBackdrop-root': {
+                  backdropFilter: 'blur(10px)',
                 },
               },
             },
@@ -125,7 +125,7 @@ const useTheme = (defaultMode) => {
               slotProps: {
                 backdrop: {
                   sx: (theme) => ({
-                    ...theme.applyStyles("light", {
+                    ...theme.applyStyles('light', {
                       bgcolor: alpha(theme.palette.background.paper, 0.2),
                     }),
                   }),
@@ -134,8 +134,8 @@ const useTheme = (defaultMode) => {
             },
             styleOverrides: {
               root: {
-                "& .MuiBackdrop-root": {
-                  backdropFilter: "blur(10px)",
+                '& .MuiBackdrop-root': {
+                  backdropFilter: 'blur(10px)',
                 },
               },
             },
@@ -143,23 +143,28 @@ const useTheme = (defaultMode) => {
           MuiBackdrop: {
             styleOverrides: {
               root: {
-                userSelect: "none",
-                "& *": {
-                  userSelect: "none",
+                userSelect: 'none',
+                '& *': {
+                  userSelect: 'none',
                 },
               },
             },
           },
           MuiFab: {
             defaultProps: {
-              size: "small",
-              variant: "extended",
+              size: 'small',
+              variant: 'extended',
             },
             styleOverrides: {
               root: {
                 boxShadow: 0,
                 borderRadius: MuiTheme.shape.borderRadius,
               },
+            },
+          },
+          MuiSwitch: {
+            defaultProps: {
+              size: 'small',
             },
           },
         },

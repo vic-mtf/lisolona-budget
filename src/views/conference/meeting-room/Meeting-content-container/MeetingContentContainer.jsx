@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import RaiseHandSignal from "../footer/main-actions/RaiseHandSignal";
 import LiveInteractionGridView from "./live-interaction-grid-view/LiveInteractionGridView";
 import PresentationView from "./presentation-view/PresentationView";
-import DragDropContainer from "../../../../components/DragDropContainer";
+//import DragDropContainer from "../../../../components/DragDropContainer";
 import Nav from "../nav/Nav";
-import LocalParticipantView from "./local-participant-view/LocalParticipantView";
+//import LocalParticipantView from "./local-participant-view/LocalParticipantView";
 import LocalViewWrapper from "./local-participant-view/LocalViewWrapper";
 const navWidth = 420;
 

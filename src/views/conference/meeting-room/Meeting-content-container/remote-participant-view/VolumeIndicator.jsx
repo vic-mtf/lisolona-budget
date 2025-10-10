@@ -15,10 +15,10 @@ const VolumeIndicator = ({ id }) => {
 
   useEffect(() => {
     const threshold = 15;
-    const handleVolumeIndicator = (volumes) => {
+    const handleVolumeIndicator = (volumes = []) => {
       const maxLevelUser = volumes.reduce((a, b) => {
         return a?.level > b?.level ? a : b;
-      });
+      }, {});
       const s = maxLevelUser?.uid === uid && maxLevelUser?.level > threshold;
       if (selected !== s) setSelected(s);
     };

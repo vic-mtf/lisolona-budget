@@ -1,8 +1,8 @@
-import React from "react";
-import { useCallback, useMemo } from "react";
-import PropTypes from "prop-types";
-import deepMerge, { getValueByKey, setValueByKey } from "../utils/mergeDeep";
-import { LocalStoreDataContext } from "../hooks/useLocalStoreData";
+import React from 'react';
+import { useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import deepMerge, { getValueByKey, setValueByKey } from '../utils/mergeDeep';
+import { LocalStoreDataContext } from '../hooks/useLocalStoreData';
 
 const LocalStoreDataProvider = React.memo(({ children }) => {
   const data = useMemo(
@@ -117,7 +117,8 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
 
   const setData = useCallback(
     (updateData, value) => {
-      if (typeof updateData === "string")
+      console.log('value => ', value);
+      if (typeof updateData === 'string')
         setValueByKey(data, updateData, value);
       else {
         const states = deepMerge(data, updateData);
@@ -130,7 +131,7 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
   );
 
   const getData = useCallback(
-    (key) => (typeof key === "function" ? key(data) : getValueByKey(data, key)),
+    (key) => (typeof key === 'function' ? key(data) : getValueByKey(data, key)),
     [data]
   );
 
@@ -139,7 +140,7 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
 
 const { Provider } = LocalStoreDataContext;
 
-LocalStoreDataProvider.displayName = "LocalStoreDataProvider";
+LocalStoreDataProvider.displayName = 'LocalStoreDataProvider';
 
 LocalStoreDataProvider.propTypes = {
   children: PropTypes.node,

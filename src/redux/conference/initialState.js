@@ -1,10 +1,10 @@
-import { red } from "@mui/material/colors";
+import { red } from '@mui/material/colors';
 
 const initialState = {
   roomId: null,
   loading: false,
   callTarget: null,
-  step: "setup",
+  step: 'setup',
   AGORA_DATA: {
     TOKEN: null,
     APP_ID: null,
@@ -69,27 +69,36 @@ const initialState = {
       id: null,
     },
     view: {
-      layoutView: "liveInteractionGrid", // or "presentation"
+      layoutView: 'liveInteractionGrid', // or "presentation"
       liveInteractionGrid: {
-        layout: "grid",
+        layout: 'grid',
         grid: {
           max: 12,
         },
       },
       presentation: {},
       localParticipant: {
-        mode: "floating",
+        mode: 'floating',
       },
     },
     participants: {},
     actions: {
       raiseHand: false,
-      search: "",
+      search: '',
       localPresentation: {
         annotation: {
           active: false,
-          mode: "pencil",
+          mode: 'pencil',
           color: red[500],
+        },
+      },
+      liveInteractionGrid: {
+        fullScreen: false,
+        activeId: null,
+        participant: {
+          hide: {
+            //[id]: 'video' || 'grid',
+          },
         },
       },
     },

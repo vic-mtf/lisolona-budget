@@ -9,7 +9,7 @@ import { darkGradientFromId } from "../../../../../utils/color";
 import RemoteVideoStream from "./RemoteVideoStream";
 import { useSelector } from "react-redux";
 import VolumeIndicator from "./VolumeIndicator";
-import RemoteMoreOptions from "./RemoteMoreOptions";
+// import RemoteMoreOptions from "./RemoteMoreOptions";
 import RemoteOptions from "./RemoteOptions";
 
 const RemoteParticipantView = ({ id }) => {
@@ -18,6 +18,12 @@ const RemoteParticipantView = ({ id }) => {
     (store) => store.conference.meeting.participants?.[id]?.identity?.image
   );
   const src = useMemo(() => getData(id) || image, [getData, id, image]);
+  const showVideo = useSelector(
+    (store) =>
+      store.conference.meeting.actions.liveInteractionGrid.participant.hide?.[
+        id
+      ] !== "video"
+  );
 
   return (
     <>
@@ -28,7 +34,7 @@ const RemoteParticipantView = ({ id }) => {
         left={0}
         right={0}
         bottom={0}>
-        <RemoteVideoStream id={id} />
+        <RemoteVideoStream id={id} show={showVideo} />
         <RemoteMuteMicro id={id} />
         <FooterInfo id={id} />
 
@@ -50,7 +56,7 @@ const RemoteParticipantView = ({ id }) => {
         )}
       </Box>
       <VolumeIndicator id={id} />
-      <RemoteOptions />
+      <RemoteOptions id={id} />
     </>
   );
 };

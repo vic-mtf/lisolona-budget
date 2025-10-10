@@ -1,14 +1,14 @@
-import React, { forwardRef } from "react";
-import Box from "@mui/material/Box";
+import React, { forwardRef } from 'react';
+import Box from '@mui/material/Box';
 
-import ParticipantsHeader from "./header/ParticipantsHeader";
-import ParticipantsContent from "./content/ParticipantsContent";
-import { useSelector } from "react-redux";
-import { useMemo } from "react";
-import deepMerge from "../../../../../utils/mergeDeep";
-import { useState } from "react";
-import { useCallback } from "react";
-import { filterByName } from "../../../../../utils/filterByKey";
+import ParticipantsHeader from './header/ParticipantsHeader';
+import ParticipantsContent from './content/ParticipantsContent';
+import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import deepMerge from '../../../../../utils/mergeDeep';
+import { useState } from 'react';
+import { useCallback } from 'react';
+import { filterByName } from '../../../../../utils/filterByKey';
 
 const Participants = forwardRef((_, ref) => {
   const [category, setCategory] = useState(null);
@@ -35,9 +35,9 @@ const Participants = forwardRef((_, ref) => {
   );
   const getFilterCat = useCallback(
     (p) => {
-      if (category === "inRoom") return Boolean(p?.state?.isInRoom);
-      if (category === "raiseHand") return Boolean(p?.state?.handRaised);
-      if (category === "waiting") return false;
+      if (category === 'inRoom') return Boolean(p?.state?.isInRoom);
+      if (category === 'raiseHand') return Boolean(p?.state?.handRaised);
+      if (category === 'waiting') return false;
       else return true;
     },
     [category]
@@ -45,11 +45,11 @@ const Participants = forwardRef((_, ref) => {
   const users = useMemo(
     () =>
       Object.values(bulkParticipants).map((d) => {
-        const type = d.identity.id === id ? "local" : "remote";
+        const type = d.identity.id === id ? 'local' : 'remote';
         return {
           ...d,
           type,
-          ...(type === "local" && {
+          ...(type === 'local' && {
             state: deepMerge(d.state, localState),
           }),
         };
@@ -77,15 +77,16 @@ const Participants = forwardRef((_, ref) => {
   );
 
   return (
-    <Box ref={ref} bgcolor='background.paper' display='flex' flex={1}>
+    <Box ref={ref} display="flex" flex={1}>
       <Box
-        position='absolute'
+        position="absolute"
         top={0}
         left={0}
         right={0}
         bottom={0}
-        display='flex'
-        flexDirection='column'>
+        display="flex"
+        flexDirection="column"
+      >
         <ParticipantsHeader
           category={category}
           setCategory={setCategory}
@@ -97,6 +98,6 @@ const Participants = forwardRef((_, ref) => {
   );
 });
 
-Participants.displayName = "Participants";
+Participants.displayName = 'Participants';
 
 export default React.memo(Participants);

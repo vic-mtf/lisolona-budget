@@ -1,7 +1,7 @@
 const getBestGrid = (
   containerWidth,
   containerHeight,
-  itemCount,
+  itemCount = 0,
   aspectRatio = 16 / 9
 ) => {
   let bestGrid = null;
@@ -61,7 +61,16 @@ const getBestGrid = (
     }
   }
 
-  return bestGrid;
+  return (
+    bestGrid || {
+      rows: 0,
+      cols: 0,
+      cellWidth: 0,
+      cellHeight: 0,
+      emptySlots: 0,
+      balanceScore: 0,
+    }
+  );
 };
 
 export default getBestGrid;

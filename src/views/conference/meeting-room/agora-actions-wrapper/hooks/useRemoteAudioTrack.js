@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 const useRemoteVolumeAudioTrack = (audioTrack) => {
   const [volume, setVolume] = useState(0);
@@ -15,7 +15,7 @@ const useRemoteVolumeAudioTrack = (audioTrack) => {
 
   useEffect(() => {
     // Cas : pas de track ou track non jouable
-    if (!audioTrack || typeof audioTrack.getMediaStreamTrack !== "function") {
+    if (!audioTrack || typeof audioTrack.getMediaStreamTrack !== 'function') {
       setVolume(0);
       return;
     }
@@ -38,7 +38,7 @@ const useRemoteVolumeAudioTrack = (audioTrack) => {
       try {
         audioContextRef.current.close();
       } catch (e) {
-        console.warn("Error closing context:", e);
+        console.warn('Error closing context:', e);
       }
       audioContextRef.current = null;
     }
