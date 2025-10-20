@@ -18,12 +18,12 @@ import useSmallScreen from '../../../../hooks/useSmallScreen';
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
-  const user = useSelector((store) => store.user);
+
   const favorites = useSelector(
-    (store) => store.app.user[user.id]?.discussions?.favorites
+    (store) => store.app.user[store.user.id]?.discussions?.favorites
   );
   const pins = useSelector(
-    (store) => store.app.user[user.id]?.discussions?.pins
+    (store) => store.app.user[store.user.id]?.discussions?.pins
   );
   const [menuItem, setMenuItem] = useState({ contextMenu: null, data: null });
   const [category, setCategory] = useState(filterCategory[0].id);
