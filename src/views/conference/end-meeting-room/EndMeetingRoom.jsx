@@ -17,15 +17,17 @@ import { darken, lighten } from '@mui/material/styles';
 import { updateConferenceData } from '../../../redux/conference/conference';
 import { useDispatch, useSelector } from 'react-redux';
 import getFullName from '../../../utils/getFullName';
+import useLocalStoreData from '../../../hooks/useLocalStoreData';
 
 const EndMeeting = React.forwardRef((_, ref) => {
+  const [getData] = useLocalStoreData('conference.meeting.startedAt');
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
   const participants = useSelector(
     (store) => store.conference.meeting.participants
   );
 
-  const meetingDuration = '45 min 32 sec';
+  const meetingDuration = formatElapsedTime(getData());
 
   const handleRejoin = () => {
     dispatch(
@@ -195,6 +197,23 @@ const EndMeeting = React.forwardRef((_, ref) => {
     </Box>
   );
 });
+
+const formatElapsedTime = (timestamp) => {
+  const elapsedMs = Date.now() - timestamp;
+  const totalSeconds = Math.floor(elapsedMs / 1000);
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const pad = (num) => String(num).padStart(2, '0');
+
+  if (hours > 0) {
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  } else {
+    return `${pad(minutes)}:${pad(seconds)}`;
+  }
+};
 
 EndMeeting.displayName = 'EndMeeting';
 

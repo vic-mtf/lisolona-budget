@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -7,8 +7,38 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Switch from '@mui/material/Switch';
 // import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import ThreePOutlinedIcon from '@mui/icons-material/ThreePOutlined';
+import { useDispatch, useSelector } from 'react-redux';
+import useSocket from '../../../../../hooks/useSocket';
+
 const MessageOptions = () => {
-  const [messaging, setMessaging] = React.useState(false);
+  const writeMessage = useSelector(
+    (store) => store.conference.meeting.organizerAuth.writeMessage
+  );
+  const allowPrivateMessage = useSelector(
+    (store) => store.conference.meeting.organizerAuth.allowPrivateMessage
+  );
+  console.log('allowPrivateMessage => ', allowPrivateMessage);
+  const dispatch = useDispatch();
+  const socket = useSocket();
+
+  const isOrganizer = useSelector(
+    (store) =>
+      store.conference.meeting.participants[store.user.id].state.isOrganizer
+  );
+
+  const handleToggle = useCallback(
+    (type) => (_, v) => {
+      if (!isOrganizer) return;
+      socket.emit('update-auth-room', { [type]: v });
+      dispatch({
+        type: 'conference/updateConferenceData',
+        payload: {
+          data: { meeting: { organizerAuth: { [type]: v } } },
+        },
+      });
+    },
+    [socket, dispatch, isOrganizer]
+  );
 
   return (
     <List
@@ -41,8 +71,8 @@ const MessageOptions = () => {
         />
         <Switch
           edge="end"
-          onChange={(_, v) => setMessaging(v)}
-          checked={messaging}
+          onChange={handleToggle('writeMessage')}
+          checked={writeMessage}
         />
       </ListItem>
       <ListItem alignItems="flex-start" sx={{ m: 0, p: 0, pl: 2 }}>
@@ -55,7 +85,13 @@ const MessageOptions = () => {
               primary="Autoriser les messages privés"
               slotProps={{ primary: { variant: 'body2' } }}
             />
-            <Switch edge="end" disabled={!messaging} size="small" />
+            <Switch
+              edge="end"
+              disabled={!writeMessage}
+              size="small"
+              checked={allowPrivateMessage}
+              onChange={handleToggle('allowPrivateMessage')}
+            />
           </ListItem>
         </List>
       </ListItem>

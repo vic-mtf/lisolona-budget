@@ -64,6 +64,15 @@ const initialState = {
     },
   },
   meeting: {
+    organizerAuth: {
+      controlAuthorization: false,
+      shareScreen: true,
+      writeMessage: true,
+      allowPrivateMessage: true,
+      react: true,
+      activateCam: true,
+      activateMic: true,
+    },
     nav: {
       open: false,
       id: null,

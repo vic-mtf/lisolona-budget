@@ -100,6 +100,7 @@ const LocalStoreDataProvider = React.memo(({ children }) => {
           },
         },
         meeting: {
+          startedAt: null,
           actions: {
             localPresentation: {
               annotation: {

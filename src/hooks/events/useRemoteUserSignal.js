@@ -96,16 +96,23 @@ const useOrganizerSignal = () => {
       const storeState = store.getState();
       const userId = storeState.user.id;
       const notMine = !participants.some((p) => p === userId);
+      const isOrg = state?.isOrganizer;
+
+      if (!hasProp(state, 'isOrganizer')) return;
       if (!author || userId === author || notMine) return;
       const participant =
         storeState.conference.meeting.participants[author]?.identity;
       const fullName = getFullName(participant);
       const fn = fname(fullName);
-      const isOrg = state?.isOrganizer;
+
       const key = `${userId}-organizer`;
       notifications.close(key);
       notifications.show(
-        `${fn} ${isOrg ? 'vous a ajouté en tant que modérateur' : 'vous a retiré en tant que modérateur'} `,
+        `${fn} ${
+          isOrg
+            ? 'vous a ajouté en tant que modérateur'
+            : 'vous a retiré en tant que modérateur'
+        } `,
         { key }
       );
       ringtones.signalUnknown.volume = 0.1;

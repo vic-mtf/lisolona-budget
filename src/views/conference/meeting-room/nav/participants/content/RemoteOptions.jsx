@@ -23,9 +23,9 @@ import getFullName from '../../../../../../utils/getFullName';
 import { useMemo } from 'react';
 
 const RemoteOptions = ({ remoteId, onClose }) => {
-  const id = useSelector((store) => store.user.id);
   const isOrganizer = useSelector(
-    (store) => store.conference.meeting.participants[id].state.isOrganizer
+    (store) =>
+      store.conference.meeting.participants[store.user.id].state.isOrganizer
   );
 
   return (
@@ -161,7 +161,7 @@ const ToggleModerator = ({ onClose, id }) => {
   const data = useMemo(() => state?.data, [state]);
   const socket = useSocket();
   const dispatch = useDispatch();
-  console.log(data);
+
   const onToggleOrganizeState = () => {
     const isOrganizer = !stateOrganizer;
     socket.emit('signal-room', { state: { isOrganizer }, participants: [id] });

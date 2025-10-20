@@ -1,31 +1,66 @@
-import React from 'react';
+import { useCallback, useMemo } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Switch from '@mui/material/Switch';
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import ScreenShareOutlinedIcon from '@mui/icons-material/ScreenShareOutlined';
 import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
+import { useDispatch, useSelector } from 'react-redux';
+import useSocket from '../../../../../hooks/useSocket';
+
 const ModerationOptions = () => {
-  const [controlled, setControlled] = React.useState(true);
-  const [checked, setChecked] = React.useState(['wifi']);
+  const socket = useSocket();
+  const dispatch = useDispatch();
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const controlled = useSelector(
+    (state) => state.conference.meeting.organizerAuth.controlAuthorization
+  );
+  const shareScreen = useSelector(
+    (state) => state.conference.meeting.organizerAuth.shareScreen
+  );
+  const reaction = useSelector(
+    (state) => state.conference.meeting.organizerAuth.react
+  );
+  const activateCam = useSelector(
+    (state) => state.conference.meeting.organizerAuth.activateCam
+  );
+  const activateMic = useSelector(
+    (state) => state.conference.meeting.organizerAuth.activateMic
+  );
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+  const isOrganizer = useSelector(
+    (state) =>
+      state.conference.meeting.participants[state.user.id].state.isOrganizer
+  );
 
-    setChecked(newChecked);
-  };
+  const controls = useMemo(
+    () => ({
+      shareScreen,
+      activateCam,
+      activateMic,
+      react: reaction,
+    }),
+    [shareScreen, activateCam, activateMic, reaction]
+  );
+
+  const handleToggle = useCallback(
+    (type) => (_, v) => {
+      if (!isOrganizer) return;
+      socket.emit('update-auth-room', { [type]: v });
+      dispatch({
+        type: 'conference/updateConferenceData',
+        payload: {
+          data: { meeting: { organizerAuth: { [type]: v } } },
+        },
+      });
+    },
+    [socket, dispatch, isOrganizer]
+  );
 
   return (
     <List
@@ -61,7 +96,7 @@ const ModerationOptions = () => {
         />
         <Switch
           edge="end"
-          onChange={(_, v) => setControlled(v)}
+          onChange={handleToggle('controlAuthorization')}
           checked={controlled}
         />
       </ListItem>
@@ -86,8 +121,8 @@ const ModerationOptions = () => {
               />
               <Switch
                 edge="end"
-                onChange={handleToggle('screen')}
-                checked={checked.includes('screen')}
+                onChange={handleToggle(id)}
+                checked={controls[id]}
                 disabled={!controlled}
               />
             </ListItem>
@@ -100,7 +135,7 @@ const ModerationOptions = () => {
 
 const options = [
   {
-    id: 'screenSharing',
+    id: 'shareScreen',
     label: 'Partager d’écran',
     icon: ScreenShareOutlinedIcon,
   },
@@ -110,13 +145,13 @@ const options = [
     icon: SentimentSatisfiedAltOutlinedIcon,
   },
   {
-    id: 'Activer la vidéo',
+    id: 'activateCam',
     label: 'Caméra',
     icon: VideocamOutlinedIcon,
   },
   {
-    id: 'Allumer micro',
-    label: 'Microphone',
+    id: 'activateMic',
+    label: 'Micro',
     icon: MicNoneOutlinedIcon,
   },
 ];

@@ -8,8 +8,10 @@ import ActionWrapper from './ActionWrapper';
 import useSocket from '../../../../hooks/useSocket';
 import { useParams } from 'react-router-dom';
 import useCustomJoin from './hooks/useCustomJoin';
+import useLocalStoreData from '../../../../hooks/useLocalStoreData';
 
 const AgoraActionsWrapper = () => {
+  const [, setData] = useLocalStoreData('conference.meeting');
   const { code } = useParams();
   const loading = useSelector((store) => store.conference.loading);
   const userId = useSelector((store) => store.user.id);
@@ -44,8 +46,9 @@ const AgoraActionsWrapper = () => {
       );
       ringtones.enter.volume = 0.1;
       ringtones.enter.play();
+      setData({ startedAt: Date.now() });
     }
-  }, [isConnected, loading, dispatch, isLoading, notifications]);
+  }, [isConnected, loading, dispatch, isLoading, notifications, setData]);
 
   useEffect(() => {
     if (!error) return;

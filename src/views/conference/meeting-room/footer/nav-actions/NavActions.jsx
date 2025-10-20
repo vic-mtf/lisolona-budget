@@ -10,9 +10,9 @@ import { useMemo } from 'react';
 import navActions from './navActions';
 
 const NavActions = () => {
-  const id = useSelector((store) => store.user.id);
   const isOrganizer = useSelector(
-    (store) => store.conference.meeting.participants[id].state.isOrganizer
+    (store) =>
+      store.conference.meeting.participants[store.user.id].state.isOrganizer
   );
 
   const nav = useSelector((store) => store.conference.meeting.nav);

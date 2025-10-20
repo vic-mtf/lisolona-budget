@@ -1,19 +1,19 @@
-import { Chip, Stack, Toolbar, Typography, Box } from "@mui/material";
-import filterCategory, { filterByCategory, sortbyKey } from "./filterCategory";
-import { createElement, useState, useMemo, useCallback } from "react";
-import InputSearch from "../../../../components/InputSearch";
-import { useSelector } from "react-redux";
-import DiscussionItem from "./DiscussionItem";
-import store from "../../../../redux/store";
-import { updateData } from "../../../../redux/data/data";
-import VirtualizedList from "../../../../components/VirtualizedList";
-import MenuItems from "../../../../components/MenuItems";
-import CreateDiscussionGroupButton from "./CreateDiscussionGroupButton.";
-import toggleFullScreen from "../../../../utils/toggleFullscreen";
-import { filterByName } from "../../../../utils/filterByKey";
-import { getFilteredMenuItems } from "./discussionMenuItems";
-import getCoordContextMenu from "../../../../utils/getCoordContextMenu";
-import useSmallScreen from "../../../../hooks/useSmallScreen";
+import { Chip, Stack, Toolbar, Typography, Box } from '@mui/material';
+import filterCategory, { filterByCategory, sortbyKey } from './filterCategory';
+import { createElement, useState, useMemo, useCallback } from 'react';
+import InputSearch from '../../../../components/InputSearch';
+import { useSelector } from 'react-redux';
+import DiscussionItem from './DiscussionItem';
+import store from '../../../../redux/store';
+import { updateData } from '../../../../redux/data/data';
+import VirtualizedList from '../../../../components/VirtualizedList';
+import MenuItems from '../../../../components/MenuItems';
+import CreateDiscussionGroupButton from './CreateDiscussionGroupButton.';
+import toggleFullScreen from '../../../../utils/toggleFullscreen';
+import { filterByName } from '../../../../utils/filterByKey';
+import { getFilteredMenuItems } from './discussionMenuItems';
+import getCoordContextMenu from '../../../../utils/getCoordContextMenu';
+import useSmallScreen from '../../../../hooks/useSmallScreen';
 
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
@@ -27,7 +27,7 @@ export default function Discussions() {
   );
   const [menuItem, setMenuItem] = useState({ contextMenu: null, data: null });
   const [category, setCategory] = useState(filterCategory[0].id);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const discussions = useMemo(
     () =>
@@ -37,7 +37,7 @@ export default function Discussions() {
             filterByCategory({ ...item, favorites }, category) &&
             filterByName(item, search)
         ),
-        "update",
+        'update',
         false,
         pins
       ),
@@ -53,7 +53,7 @@ export default function Discussions() {
       const remote = data?.members?.find(
         ({ id }) => id !== store.getState().user.id
       );
-      const image = data?.type === "room" ? data.image : remote?.image;
+      const image = data?.type === 'room' ? data.image : remote?.image;
 
       return (
         <div key={id} style={style}>
@@ -61,7 +61,7 @@ export default function Discussions() {
             name={data?.name}
             image={image}
             type={data?.type}
-            message={data?.message || "Nouvelle discussion"}
+            message={data?.message || 'Nouvelle discussion'}
             status={data?.status}
             search={search}
             id={id}
@@ -70,7 +70,7 @@ export default function Discussions() {
             onClick={() =>
               store.dispatch(
                 updateData({
-                  data: { discussionTarget: data, targetView: "messages" },
+                  data: { discussionTarget: data, targetView: 'messages' },
                 })
               )
             }
@@ -95,43 +95,45 @@ export default function Discussions() {
       <Stack spacing={1} px={1} pb={1}>
         <Toolbar>
           <Typography
-            variant='h5'
+            variant="h5"
             flexGrow={1}
-            onDoubleClick={() => toggleFullScreen(document.body)}>
+            onDoubleClick={() => toggleFullScreen(document.body)}
+          >
             Discussions
           </Typography>
           <CreateDiscussionGroupButton />
         </Toolbar>
         <InputSearch
-          placeholder='Recherche'
+          placeholder="Recherche"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
         <Box
-          overflow='hidden'
+          overflow="hidden"
           sx={{
-            overflowX: "auto",
+            overflowX: 'auto',
             ...(matches && {
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              "&::-webkit-scrollbar": { display: "none" },
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              '&::-webkit-scrollbar': { display: 'none' },
             }),
           }}
-          flexDirection='row'
-          display='flex'
+          flexDirection="row"
+          display="flex"
           gap={1}
-          position='relative'>
+          position="relative"
+        >
           {filterCategory.map(({ id, label, icon, disabled }) => (
             <Chip
               key={id}
               label={
-                typeof label === "function"
+                typeof label === 'function'
                   ? label({ search, favorites })
                   : label
               }
-              color={category === id ? "primary" : "default"}
+              color={category === id ? 'primary' : 'default'}
               onClick={() => setCategory(id)}
-              icon={createElement(typeof icon === "function" ? icon() : icon)}
+              icon={createElement(typeof icon === 'function' ? icon() : icon)}
               disabled={disabled}
               sx={{ flex: 1 }}
             />
@@ -143,7 +145,7 @@ export default function Discussions() {
         data={discussions}
         itemContent={itemContent}
         rowHeight={69}
-        emptyMessage='Aucune discussion trouvée'
+        emptyMessage="Aucune discussion trouvée"
       />
       <MenuItems
         {...menuItem}

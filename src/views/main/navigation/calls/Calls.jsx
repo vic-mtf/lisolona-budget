@@ -1,22 +1,22 @@
-import { Stack, Toolbar, Typography, ListSubheader } from "@mui/material";
-import { useState, useMemo, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import groupCall from "./groupCall";
-import CreateCallButton from "./CreateCallButton";
-import FilterCallButton from "./FilterCallButton";
-import RunningCallItem from "./RunningCallItem";
-import ScheduledCallItem from "./ScheduledCallItem";
-import CallItem from "./CallItem";
-import toggleFullscreen from "../../../../utils/toggleFullscreen";
-import VirtualList from "../../../../components/VirtualList";
-import { updateData } from "../../../../redux/data/data";
-import CallDetailsView from "./CallDetailsView";
+import { Stack, Toolbar, Typography, ListSubheader } from '@mui/material';
+import { useState, useMemo, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import groupCall from './groupCall';
+import CreateCallButton from './CreateCallButton';
+import FilterCallButton from './FilterCallButton';
+import RunningCallItem from './RunningCallItem';
+import ScheduledCallItem from './ScheduledCallItem';
+import CallItem from './CallItem';
+import toggleFullscreen from '../../../../utils/toggleFullscreen';
+import VirtualList from '../../../../components/VirtualList';
+import { updateData } from '../../../../redux/data/data';
+import CallDetailsView from './CallDetailsView';
 // import store from "../../../../redux/store";
-import { updateConferenceData } from "../../../../redux/conference/conference";
+import { updateConferenceData } from '../../../../redux/conference/conference';
 
 export default function Calls() {
   const bulkCalls = useSelector((store) => store.data.app.calls);
-  const [type, setType] = useState("all");
+  const [type, setType] = useState('all');
   const dispatch = useDispatch();
   const calls = useMemo(() => groupCall(bulkCalls, type), [bulkCalls, type]);
 
@@ -24,7 +24,7 @@ export default function Calls() {
     (call) => () => {
       dispatch(
         updateData({
-          key: "app.actions.calls.info",
+          key: 'app.actions.calls.info',
           data: { call, open: true },
         })
       );
@@ -36,11 +36,11 @@ export default function Calls() {
     (call) => () => {
       const url = import.meta.env.BASE_URL + `/conference/${call.id}`;
       let target = call?.location;
-      const type = call?.room ? "room" : "direct";
-      window.open(url, "_blank");
+      const type = call?.room ? 'room' : 'direct';
+      window.open(url, '_blank');
       dispatch(
         updateConferenceData({
-          key: "callTarget",
+          key: 'callTarget',
           data: { type, ...target },
         })
       );
@@ -57,13 +57,13 @@ export default function Calls() {
 
         return (
           <div key={id}>
-            {call?.type === "label" && (
-              <ListSubheader sx={{ height: "100%" }} disableSticky>
+            {call?.type === 'label' && (
+              <ListSubheader sx={{ height: '100%' }} disableSticky>
                 {call?.label}
               </ListSubheader>
             )}
 
-            {call?.status === "running" && (
+            {call?.status === 'running' && (
               <RunningCallItem
                 location={call?.location}
                 divider={call?.status === calls[index + 1]?.status}
@@ -79,7 +79,7 @@ export default function Calls() {
                 }
               />
             )}
-            {call?.status === "scheduled" && (
+            {call?.status === 'scheduled' && (
               <ScheduledCallItem
                 location={call?.location}
                 divider={call?.status === calls[index + 1]?.status}
@@ -93,17 +93,17 @@ export default function Calls() {
               />
             )}
 
-            {["started", "ended", "failed"].includes(call?.status) && (
+            {['started', 'ended', 'failed'].includes(call?.status) && (
               <CallItem
                 location={call?.location}
                 divider={call?.status === calls[index + 1]?.status}
                 createdAt={call?.createdAt}
                 // createdBy={call?.createdBy}
                 onCallAction={handleCallAction(call)}
-                calls={call?.calls?.length + 1}
+                calls={call?.calls?.length}
                 incoming={call?.incoming}
-                failed={call?.status === "failed"}
-                action='accepted'
+                failed={call?.status === 'failed'}
+                action="accepted"
                 onClickDetail={handleOpenDetails(call)}
               />
             )}
@@ -116,11 +116,12 @@ export default function Calls() {
   return (
     <>
       <Stack spacing={1} px={1} pb={1}>
-        <Toolbar variant='dense'>
+        <Toolbar variant="dense">
           <Typography
-            variant='h5'
+            variant="h5"
             flexGrow={1}
-            onDoubleClick={() => toggleFullscreen(document.body)}>
+            onDoubleClick={() => toggleFullscreen(document.body)}
+          >
             Appels
           </Typography>
           <CreateCallButton />
@@ -129,7 +130,7 @@ export default function Calls() {
           <FilterCallButton type={type} onChange={(_, type) => setType(type)} />
         </div>
       </Stack>
-      <VirtualList data={data} emptyMessage='Aucun appel trouvé' />
+      <VirtualList data={data} emptyMessage="Aucun appel trouvé" />
       <CallDetailsView onCallAction={handleCallAction} />
     </>
   );
