@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 import {
   Backdrop,
   Box,
@@ -11,13 +11,13 @@ import {
   Tooltip,
   IconButton,
   Typography,
-} from "@mui/material";
-import useAxios from "../../../hooks/useAxios";
-import CodeMeeting from "./CodeMeeting";
-import IdentifyForm from "./IdentifyForm";
-import { useNavigate } from "react-router-dom";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import PropTypes from "prop-types";
+} from '@mui/material';
+import useAxios from '../../../hooks/useAxios';
+import CodeMeeting from './CodeMeeting';
+import IdentifyForm from './IdentifyForm';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import PropTypes from 'prop-types';
 export default function JoinFormMeeting({ message }) {
   const location = useLocation();
   const meetingData = useMemo(
@@ -26,20 +26,20 @@ export default function JoinFormMeeting({ message }) {
   );
 
   const navigateTo = useNavigate();
-  const values = useMemo(() => {
-    let code = [];
+
+  const code = useMemo(() => {
     try {
-      code = queryString.parse(location.search)?.code?.split("") || [];
+      return queryString.parse(location.search)?.code;
     } catch (error) {
       console.error(error);
     }
-    return code;
+    return null;
   }, [location.search]);
 
   const [{ loading }, refetch] = useAxios(
     {
-      url: "api/chat/room/call/" + values.join(""),
-      method: "GET",
+      url: `api/chat/room/call/${code}`,
+      method: 'GET',
     },
     { manual: true }
   );
@@ -47,33 +47,34 @@ export default function JoinFormMeeting({ message }) {
   return (
     <>
       <Box
-        position='relative'
-        width='100%'
-        display='flex'
-        justifyItems='center'
-        alignItems='center'
+        position="relative"
+        width="100%"
+        display="flex"
+        justifyItems="center"
+        alignItems="center"
         sx={{
-          "& > div": {
-            position: "absolute",
+          '& > div': {
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
           },
-        }}>
+        }}
+      >
         <Fade unmountOnExit in={!meetingData}>
-          <Box display='flex'>
-            <CodeMeeting loading={loading} values={values} refetch={refetch} />
+          <Box display="flex">
+            <CodeMeeting loading={loading} code={code} refetch={refetch} />
           </Box>
         </Fade>
         <Fade unmountOnExit in={!!meetingData}>
-          <Box display='flex' gap={2}>
-            <Toolbar sx={{ gap: 1 }} disableGutters variant='dense'>
-              <Tooltip title='Retour' arrow>
-                <IconButton onClick={() => navigateTo("/", { replace: true })}>
+          <Box display="flex" gap={2}>
+            <Toolbar sx={{ gap: 1 }} disableGutters variant="dense">
+              <Tooltip title="Retour" arrow>
+                <IconButton onClick={() => navigateTo('/', { replace: true })}>
                   <ArrowBackOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -81,7 +82,11 @@ export default function JoinFormMeeting({ message }) {
                 Identifiez vous pour participer à la réunion
               </FormLabel>
             </Toolbar>
-            <IdentifyForm loading={loading} values={values} refetch={refetch} />
+            <IdentifyForm
+              loading={loading}
+              code={code || meetingData?._id}
+              refetch={refetch}
+            />
           </Box>
         </Fade>
       </Box>
@@ -90,11 +95,12 @@ export default function JoinFormMeeting({ message }) {
         sx={{
           background: (theme) =>
             theme.palette.background.paper + theme.customOptions.opacity,
-        }}>
+        }}
+      >
         <LinearProgress
           sx={{
-            width: "100%",
-            position: "absolute",
+            width: '100%',
+            position: 'absolute',
             top: 0,
           }}
         />

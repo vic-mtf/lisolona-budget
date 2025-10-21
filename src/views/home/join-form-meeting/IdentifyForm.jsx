@@ -1,9 +1,15 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { TextField, Box, Button } from "@mui/material";
-import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import FormHelperText from '@mui/material/FormHelperText';
+import Fade from '@mui/material/Fade';
+import PropTypes from 'prop-types';
+import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
 // import { useDispatch } from "react-redux";
 // import useHandleJoinMeeting from "../../main/action/useHandleJoinMeeting";
-import CoPresentOutlinedIcon from "@mui/icons-material/CoPresentOutlined";
+import CoPresentOutlinedIcon from '@mui/icons-material/CoPresentOutlined';
+import { useForm } from 'react-hook-form';
 
 // import { useNavigate } from "react-router-dom";
 
@@ -11,100 +17,85 @@ import CoPresentOutlinedIcon from "@mui/icons-material/CoPresentOutlined";
 // import { setData } from "../../../redux/meeting";
 // import { updateUser } from "../../../redux/user";
 
-export default function IdentifyForm({ loading, refetch }) {
-  const nameRef = useRef();
-  const [disabled, setDisabled] = useState(true);
+const IdentifyForm = ({ loading, code, refetch }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   // const dispatch = useDispatch();
   // const navigateTo = useNavigate();
   // const handleJoinMeeting = useHandleJoinMeeting("guest");
 
-  // const handleGetData = useCallback((event) => {
-  //   event.preventDefault();
-  //   const name = nameRef?.current?.value?.trim();
-  //   if (name?.length > 2) {
-  //     refetch({
-  //       url: "api/chat/room/call/register",
-  //       method: "POST",
-  //       data: {
-  //         name: nameRef?.current?.value?.trim(),
-  //       },
-  //     }).then(async ({ data }) => {
-  //       const { name, _id: id, token } = data;
-  //       dispatch(updateUser({ data: { id, name, token } }));
-  //       const Authorization = `Bearer ${token}`;
-  //       const result = await refetch({
-  //         headers: { Authorization },
-  //         url: "/api/chat/room/call/" + data.meetingCode,
-  //         method: "GET",
-  //       });
-  //       const event = "_open_meeting_sub_window";
-  //       const customEvent = new CustomEvent(event, {
-  //         detail: {
-  //           name: event,
-  //           subWindow: handleJoinMeeting({
-  //             data: {
-  //               id: result?.data?.room?._id,
-  //               name: result?.data?.room?.name,
-  //               avatarSrc: result?.data?.room?.image,
-  //               type: "room",
-  //             },
-  //             origin: result.data,
-  //           }),
-  //         },
-  //       });
-  //       CHANNEL.dispatchEvent(customEvent);
-  //       dispatch(
-  //         setData({
-  //           data: { mode: data?.mode },
-  //         })
-  //       );
-  //     });
-  //   }
-  // }, []);
+  const handleSendData = useCallback(
+    async ({ name }) => {
+      const data = await refetch({
+        url: '/api/chat/guest/create',
+        method: 'POST',
+        data: { name, code },
+      });
+      console.log(data);
+    },
 
-  const handleChange = useCallback(() => {
-    const name = nameRef.current.value?.trim();
-    const isCorrect = name?.length > 1;
-    if (isCorrect && disabled) setDisabled(false);
-    if (!isCorrect && !disabled) setDisabled(true);
-  }, [disabled]);
-
-  useLayoutEffect(() => {
-    handleChange();
-  }, [handleChange]);
+    [refetch, code]
+  );
+  const error = errors.name;
 
   return (
     <Box
-      display='flex'
+      display="flex"
+      component="form"
+      onSubmit={handleSubmit(handleSendData)}
       gap={1}
       sx={{
-        flexDirection: "column",
+        flexDirection: 'column',
 
-        width: { xs: "100%", md: 400 },
-      }}>
-      <TextField
-        label='Nom complet'
-        variant='outlined'
-        type='text'
-        name='name'
-        placeholder='Ex: Victor Mongolo Tanzey'
-        inputRef={nameRef}
-        onChange={handleChange}
-        sx={{ minWidth: { xs: "auto", md: 300 } }}
-      />
-      <Box display='flex' flexDirection='row' gap={1}>
+        width: { xs: '100%', md: 400 },
+      }}
+    >
+      <Box flexGrow={1} display="flex" flexDirection="column">
+        <TextField
+          label="Nom complet"
+          variant="outlined"
+          color={error ? 'error' : 'primary'}
+          type="text"
+          name="name"
+          placeholder="Ex: Victor Mongolo Tanzey"
+          {...register('name', {
+            required: 'Le nom est requis',
+            pattern: {
+              value: /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,}$/,
+              message: 'Entrez un nom valide',
+            },
+          })}
+          sx={{ minWidth: { xs: 'auto', md: 300 } }}
+        />
+        <Fade in={Boolean(error)} sx={{ height: 20, color: 'error.main' }}>
+          <FormHelperText>{error?.message}</FormHelperText>
+        </Fade>
+      </Box>
+
+      <Box display="flex" flexDirection="row" gap={1}>
         <div>
           <Button
-            variant='outlined'
-            disabled={disabled}
-            size='medium'
+            variant="outlined"
+            loading={loading}
             endIcon={<LaunchOutlinedIcon />}
             startIcon={<CoPresentOutlinedIcon />}
-            type='submit'>
+            type="submit"
+          >
             Participer à la réunion
           </Button>
         </div>
       </Box>
     </Box>
   );
-}
+};
+
+IdentifyForm.propTypes = {
+  loading: PropTypes.bool,
+  refetch: PropTypes.func,
+  code: PropTypes.string,
+};
+
+export default IdentifyForm;

@@ -1,22 +1,23 @@
-import { useCallback /*,useLayoutEffect*/ } from "react";
-import { Box, FormLabel, Toolbar } from "@mui/material";
-import InputCode from "../../../components/InputCode";
-import { useNavigate } from "react-router-dom";
-import messages from "./messages";
-import PropTypes from "prop-types";
-import { useNotifications } from "@toolpad/core/useNotifications";
+import { useCallback /*,useLayoutEffect*/ } from 'react';
+import { Box, FormLabel, Toolbar } from '@mui/material';
+import InputCode from '../../../components/InputCode';
+import { useNavigate } from 'react-router-dom';
+import messages from './messages';
+import PropTypes from 'prop-types';
+import { useNotifications } from '@toolpad/core/useNotifications';
 
-const CodeMeeting = ({ values, loading, refetch }) => {
+const CodeMeeting = ({ code, loading, refetch }) => {
   const navigateTo = useNavigate();
   const notifications = useNotifications();
+
   const handleCompleteCode = useCallback(
-    async (code) => {
+    async (value) => {
       if (!loading) {
         try {
           const { data: meeting } = await refetch({
-            url: "api/chat/room/call/" + code.join(""),
+            url: `api/chat/room/call/${value?.join('')}`,
           });
-          navigateTo("/", { replace: true, state: { meeting } });
+          navigateTo('/', { replace: true, state: { meeting } });
         } catch (error) {
           const status = error?.request?.status;
           const { message, severity } = messages[status] || {};
@@ -30,21 +31,22 @@ const CodeMeeting = ({ values, loading, refetch }) => {
 
   return (
     <Box
-      display='flex'
+      display="flex"
       gap={1}
-      width='100%'
-      flexDirection='column'
-      alignItems='center'>
-      <Toolbar variant='dense' disableGutters>
+      width="100%"
+      flexDirection="column"
+      alignItems="center"
+    >
+      <Toolbar variant="dense" disableGutters>
         <FormLabel mb={1}>
           Entrez le code de la réunion pour participer
         </FormLabel>
       </Toolbar>
-      <div style={{ width: "auto", display: "inline-flex" }}>
+      <div style={{ width: 'auto', display: 'inline-flex' }}>
         <InputCode
           length={9}
           size={38}
-          values={values}
+          values={code?.split('') || []}
           onComplete={handleCompleteCode}
         />
       </div>
@@ -53,7 +55,7 @@ const CodeMeeting = ({ values, loading, refetch }) => {
 };
 
 CodeMeeting.propTypes = {
-  values: PropTypes.array,
+  code: PropTypes.string,
   loading: PropTypes.bool,
   refetch: PropTypes.func,
 };
