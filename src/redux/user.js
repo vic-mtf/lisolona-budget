@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import persistReducer from "redux-persist/es/persistReducer";
-import storage from "redux-persist/lib/storage/session";
-import deepMerge from "../utils/mergeDeep";
+import { createSlice } from '@reduxjs/toolkit';
+import persistReducer from 'redux-persist/es/persistReducer';
+import storage from 'redux-persist/lib/storage/session';
+import deepMerge from '../utils/mergeDeep';
 
 const initialState = {
   id: null,
@@ -10,6 +10,7 @@ const initialState = {
   firstName: null,
   lastName: null,
   middleName: null,
+  name: null,
   docTypes: null,
   number: null,
   image: null,
@@ -17,10 +18,11 @@ const initialState = {
   role: null,
   auth: null,
   connected: false,
+  isGuest: false,
 };
 
 const user = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     updateUser(state, actions) {
@@ -37,7 +39,7 @@ export const { updateUser } = user.actions;
 export default persistReducer(
   {
     storage,
-    key: "__ROOT_GEID_USER_CONFIG_APP",
+    key: '__ROOT_GEID_USER_CONFIG_APP',
   },
   user.reducer
 );

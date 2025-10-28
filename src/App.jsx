@@ -15,12 +15,7 @@ function App() {
   const connected = useSelector((store) => store.user.connected);
   const loaded = useSelector((store) => store.data.app.loaded);
   const dispatch = useDispatch();
-  const isConference = useMemo(() => {
-    const isValidConference = /\/conference\/\w+/.test(
-      window.location.pathname
-    );
-    return isValidConference;
-  }, []);
+  const isConference = /\/conference\/\w+/.test(window.location.pathname);
 
   useEffect(() => {
     if (!connected) {

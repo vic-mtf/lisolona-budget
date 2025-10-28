@@ -18,14 +18,19 @@ import { setStatus } from '../../../main/navigation/calls/groupCall';
 import normalizeObjectKeys from '../../../../utils/normalizeObjectKeys';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import store from '../../../../redux/store';
+import useSocket from '../../../../hooks/useSocket';
+import { useState } from 'react';
 
 const RoomInfos = () => {
+  const [requestInProgress, setRequestInProgress] = useState(false);
   const matches = useSmallScreen();
+  const socket = useSocket();
   const { code } = useParams();
   const connected = useSelector((store) => store.user.connected);
   const setupLoading = useSelector((store) => store.conference.setup.loading);
   const notifications = useNotifications();
   const id = useSelector((store) => store.user.id);
+  const name = useSelector((store) => store.user.name);
   const Authorization = useToken();
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
@@ -44,15 +49,26 @@ const RoomInfos = () => {
     () => state?.data || normalizeObjectKeys(callDetail),
     [callDetail, state?.data]
   );
+  const isGuest = useSelector((store) => store.user.isGuest);
+  const isApplicant = useMemo(() => {
+    if (!data) return false;
+    return isGuest && !data.participants.some((p) => p.identity.id === id);
+  }, [data, id, isGuest]);
 
   const isRoom = target?.type === 'room';
   const status = useMemo(() => setStatus(data?.status), [data?.status]);
   const text = useMemo(
     () => ({
       type: isRoom ? 'la réunion' : "l'appel",
-      action: data ? (status === 'ended' ? 'Relancer' : 'Rejoindre') : 'Lancer',
+      action: data
+        ? isApplicant
+          ? 'Demander à rejoindre'
+          : status === 'ended' && !isGuest
+          ? 'Relancer'
+          : 'Rejoindre'
+        : 'Lancer',
     }),
-    [data, isRoom, status]
+    [data, isRoom, status, isGuest, isApplicant]
   );
 
   const updateCallData = useCallback(
@@ -64,6 +80,8 @@ const RoomInfos = () => {
         const { APP_ID, TOKEN, EXPIRE_AT } =
           data?.callDetail || data?.callDetails || {};
         const participants = {};
+        const guests = {};
+
         data?.participants?.forEach((p) => {
           if (p.identity.id === id) {
             const devices = store.getState().conference.setup.devices;
@@ -75,12 +93,14 @@ const RoomInfos = () => {
           }
           participants[p.identity.id] = p;
         });
+        data?.guests?.forEach((g) => (guests[g.identity.id] = g));
 
         dispatch(
           updateConferenceData({
             key: [
               'AGORA_DATA',
               'meeting.participants',
+              'meeting.guests',
               'step',
               'roomId',
               'meeting.organizerAuth',
@@ -93,6 +113,7 @@ const RoomInfos = () => {
                 CHANNEL: data?.location,
               },
               participants,
+              guests,
               'meeting',
               data?.id,
               data?.organizerAuth,
@@ -167,7 +188,7 @@ const RoomInfos = () => {
     updateCallData,
   ]);
 
-  const handleJoinCall = async () => {
+  const handleJoinCall = useCallback(async () => {
     dispatch(
       updateConferenceData({
         key: ['loading'],
@@ -193,7 +214,30 @@ const RoomInfos = () => {
       },
       time < 1000 ? 1000 - time : 0
     );
-  };
+  }, [dispatch, code, updateCallData]);
+
+  const handleApplicant = useCallback(() => {
+    setRequestInProgress(true);
+    socket?.emit('request-join-room', { roomId: code, name });
+  }, [socket, code, name]);
+
+  const handleClick = useCallback(() => {
+    notifications.close('call-error');
+    notifications.close('session-expired');
+    notifications.close('remote-response');
+    if (isApplicant) handleApplicant();
+    else {
+      if (data) handleJoinCall();
+      else handleCreateCall();
+    }
+  }, [
+    handleApplicant,
+    handleCreateCall,
+    handleJoinCall,
+    isApplicant,
+    data,
+    notifications,
+  ]);
 
   useEffect(() => {
     if (connected && !loading && !target && window.opener)
@@ -226,6 +270,9 @@ const RoomInfos = () => {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    if (!connected && !target) {
+      navigateTo('/', { replace: true });
+    }
     CALL_CHANNEL.addEventListener('message', onListeningResponse);
     return () => {
       CALL_CHANNEL.removeEventListener('message', onListeningResponse);
@@ -239,6 +286,7 @@ const RoomInfos = () => {
     setupLoading,
     state,
     code,
+    id,
   ]);
 
   useEffect(() => {
@@ -249,6 +297,42 @@ const RoomInfos = () => {
       });
     }
   }, [navigateTo, state, callDetail]);
+
+  useEffect(() => {
+    const key = 'remote-response';
+
+    if (!requestInProgress) return;
+    timerRef.current = setTimeout(() => {
+      notifications.close(key);
+      setRequestInProgress(false);
+      notifications.show(
+        'Personne n’a accepté votre demande. Réessayer dans quelques instants.',
+        { key }
+      );
+      socket?.emit('decline-join-room', { roomId: code });
+    }, 40 * 1000);
+
+    const handleResponse = (data) => {
+      socket?.emit('decline-join-room', { roomId: code });
+      notifications.close(key);
+      clearTimeout(timerRef.current);
+      setRequestInProgress(false);
+      const { status } = data;
+      if (status === 'declined')
+        notifications.show('Le modérateur a refusé votre demande', {
+          severity: data.severity,
+          key,
+        });
+      if (status === 'accepted') handleJoinCall();
+    };
+
+    socket?.on('response-join-room', handleResponse);
+    return () => {
+      socket?.off('response-join-room', handleResponse);
+      clearTimeout(timerRef.current);
+    };
+    //request-join-room
+  }, [requestInProgress, notifications, socket, handleJoinCall, code]);
 
   return (
     <Box
@@ -322,19 +406,16 @@ const RoomInfos = () => {
               </Typography>
             )}
             <Typography color="textSecondary" align="center">
-              Le moment est venu de commencer
+              {requestInProgress
+                ? 'En attente de l’approbation du modérateur…'
+                : 'Le moment est venu de commencer'}
             </Typography>
             <Box>
               <Button
                 variant="contained"
                 color="primary"
-                loading={loading}
-                onClick={() => {
-                  notifications.close('call-error');
-                  notifications.close('session-expired');
-                  if (data) handleJoinCall();
-                  else handleCreateCall();
-                }}
+                loading={loading || requestInProgress}
+                onClick={handleClick}
               >
                 {text.action} {text.type}
               </Button>

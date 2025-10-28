@@ -15,7 +15,23 @@ const Participants = forwardRef((_, ref) => {
   const bulkParticipants = useSelector(
     (store) => store.conference.meeting.participants
   );
+  const bulkGuests = useSelector((store) => store.conference.meeting.guests);
   const id = useSelector((store) => store.user.id);
+
+  // transform guest format
+  const guests = useMemo(() => {
+    const data = [];
+    Object.values(bulkGuests)?.forEach((identity) => {
+      data.push({
+        state: {
+          isWaiting: true,
+          isGuest: true,
+        },
+        identity,
+      });
+    });
+    return data;
+  }, [bulkGuests]);
 
   // const isOrganizer = useSelector(
   //   (store) => store.conference.meeting.participants[id].state.isOrganizer
@@ -37,14 +53,14 @@ const Participants = forwardRef((_, ref) => {
     (p) => {
       if (category === 'inRoom') return Boolean(p?.state?.isInRoom);
       if (category === 'raiseHand') return Boolean(p?.state?.handRaised);
-      if (category === 'waiting') return false;
+      if (category === 'waiting') return Boolean(p?.state?.isWaiting);
       else return true;
     },
     [category]
   );
   const users = useMemo(
     () =>
-      Object.values(bulkParticipants).map((d) => {
+      [...Object.values({ ...bulkParticipants }), ...guests].map((d) => {
         const type = d.identity.id === id ? 'local' : 'remote';
         return {
           ...d,
@@ -54,13 +70,18 @@ const Participants = forwardRef((_, ref) => {
           }),
         };
       }),
-    [bulkParticipants, id, localState]
+    [bulkParticipants, id, localState, guests]
   );
 
   const handRaisedCount = useMemo(() => {
     let count = 0;
     for (let p of users) if (p?.state?.isInRoom && p.state.handRaised) count++;
+    return count;
+  }, [users]);
 
+  const waitingCount = useMemo(() => {
+    let count = 0;
+    for (let p of users) if (p?.state?.isWaiting) count++;
     return count;
   }, [users]);
 
@@ -68,8 +89,7 @@ const Participants = forwardRef((_, ref) => {
     () =>
       []
         .concat(
-          users.filter(({ state }) => state?.isInRoom)
-          //.filter(({ state }) => !state?.isWaiting)
+          users.filter(({ state }) => state?.isInRoom || state?.isWaiting)
         )
         .filter(getFilterCat)
         .filter(({ identity }) => filterByName(identity, search)),
@@ -91,6 +111,7 @@ const Participants = forwardRef((_, ref) => {
           category={category}
           setCategory={setCategory}
           handRaisedCount={handRaisedCount}
+          waitingCount={waitingCount}
         />
         <ParticipantsContent participants={participants} category={category} />
       </Box>

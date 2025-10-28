@@ -58,6 +58,7 @@ export default function CarouselPub() {
           maxHeight: 420,
           position: 'relative',
           '& > .MuiIconButton-root': {
+            zIndex: 2,
             bgcolor: (t) => alpha(t.palette.common.black, 0.4),
             color: (t) => t.palette.common.white,
             opacity: 0,
@@ -78,7 +79,6 @@ export default function CarouselPub() {
             key={i}
             in={index === i}
             appear={false}
-            unmountOnExit
             timeout={1000}
             style={{
               position: 'absolute',
@@ -86,6 +86,7 @@ export default function CarouselPub() {
               left: 0,
               right: 0,
               bottom: 0,
+              zIndex: index === i ? 1 : 0,
             }}
           >
             <div>
@@ -113,6 +114,7 @@ export default function CarouselPub() {
                   p: 0,
                   m: 0,
                   borderRadius: 25,
+                  zIndex: 2,
                   bgcolor: (t) =>
                     alpha(
                       i === index

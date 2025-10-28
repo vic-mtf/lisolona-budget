@@ -44,15 +44,20 @@ const useRemoteUserLeave = () => {
       }
     };
     const onBeforeUnload = () => {
-      if (isInRoom) socket.emit('leave-room', { id });
+      const storeState = store.getState();
+      const step = storeState.conference.step;
+      if (step !== 'meeting' || !isInRoom) return;
+
+      socket.emit('leave-room', { id });
       socket?.disconnect();
-      store.dispatch({
-        type: 'conference/updateConferenceData',
-        payload: {
-          key: ['step'],
-          data: ['end'],
-        },
-      });
+      if (step !== 'meeting')
+        store.dispatch({
+          type: 'conference/updateConferenceData',
+          payload: {
+            key: ['step'],
+            data: ['end'],
+          },
+        });
     };
     window.addEventListener('beforeunload', onBeforeUnload);
     socket?.on('leave-room', onRemoteUserLeave);

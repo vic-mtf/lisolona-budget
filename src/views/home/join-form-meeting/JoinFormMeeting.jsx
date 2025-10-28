@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import queryString from 'query-string';
 import {
   Backdrop,
@@ -12,29 +12,30 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
+import Slide from '@mui/material/Slide';
 import useAxios from '../../../hooks/useAxios';
 import CodeMeeting from './CodeMeeting';
 import IdentifyForm from './IdentifyForm';
-import { useNavigate } from 'react-router-dom';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PropTypes from 'prop-types';
+import LocalSaveUser from './LocalSaveUser';
+import { useSelector } from 'react-redux';
+
 export default function JoinFormMeeting({ message }) {
-  const location = useLocation();
-  const meetingData = useMemo(
-    () => location?.state?.meeting,
-    [location.state?.meeting]
-  );
+  const { state, search } = useLocation();
+  const meetingData = useMemo(() => state?.meeting, [state?.meeting]);
 
   const navigateTo = useNavigate();
 
   const code = useMemo(() => {
+    let v;
     try {
-      return queryString.parse(location.search)?.code;
+      v = queryString.parse(search)?.code || null;
     } catch (error) {
       console.error(error);
     }
-    return null;
-  }, [location.search]);
+    return meetingData?._id || v;
+  }, [search, meetingData?._id]);
 
   const [{ loading }, refetch] = useAxios(
     {
@@ -43,6 +44,9 @@ export default function JoinFormMeeting({ message }) {
     },
     { manual: true }
   );
+  const isGuest = useSelector((store) => store.user.isGuest);
+
+  const [step, setStep] = useState(() => (isGuest ? 1 : 0));
 
   return (
     <>
@@ -59,8 +63,8 @@ export default function JoinFormMeeting({ message }) {
             left: 0,
             width: '100%',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            // justifyContent: 'center',
+            // alignItems: 'center',
             flexDirection: 'column',
           },
         }}
@@ -70,11 +74,21 @@ export default function JoinFormMeeting({ message }) {
             <CodeMeeting loading={loading} code={code} refetch={refetch} />
           </Box>
         </Fade>
-        <Fade unmountOnExit in={!!meetingData}>
-          <Box display="flex" gap={2}>
-            <Toolbar sx={{ gap: 1 }} disableGutters variant="dense">
+        <Fade
+          unmountOnExit
+          in={!!meetingData}
+          style={{ position: 'absolute', top: 0, overflow: 'hidden' }}
+        >
+          <Box position="relative" display="flex" height={300}>
+            <Toolbar sx={{ gap: 1, mb: 2 }} disableGutters variant="dense">
               <Tooltip title="Retour" arrow>
-                <IconButton onClick={() => navigateTo('/', { replace: true })}>
+                <IconButton
+                  onClick={() => {
+                    setStep(isGuest ? 1 : 0);
+                    if (step === 0 && isGuest) setStep(1);
+                    else navigateTo('/', { replace: true });
+                  }}
+                >
                   <ArrowBackOutlinedIcon />
                 </IconButton>
               </Tooltip>
@@ -82,11 +96,30 @@ export default function JoinFormMeeting({ message }) {
                 Identifiez vous pour participer à la réunion
               </FormLabel>
             </Toolbar>
-            <IdentifyForm
-              loading={loading}
-              code={code || meetingData?._id}
-              refetch={refetch}
-            />
+            <Box position="relative">
+              <Slide in={step === 0} direction={isGuest ? 'left' : 'right'}>
+                <Box>
+                  <IdentifyForm
+                    loading={loading}
+                    code={code}
+                    refetch={refetch}
+                  />
+                </Box>
+              </Slide>
+              <Slide
+                in={step === 1}
+                style={{ position: 'absolute', top: 0 }}
+                direction="right"
+              >
+                <Box>
+                  <LocalSaveUser
+                    setStep={setStep}
+                    refetch={refetch}
+                    code={code}
+                  />
+                </Box>
+              </Slide>
+            </Box>
           </Box>
         </Fade>
       </Box>

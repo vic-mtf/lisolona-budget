@@ -91,6 +91,7 @@ const initialState = {
       },
     },
     participants: {},
+    guests: {},
     actions: {
       raiseHand: false,
       search: '',

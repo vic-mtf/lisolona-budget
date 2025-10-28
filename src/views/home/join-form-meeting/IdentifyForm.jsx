@@ -1,21 +1,21 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 import Fade from '@mui/material/Fade';
 import PropTypes from 'prop-types';
-import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
+// import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
 // import { useDispatch } from "react-redux";
 // import useHandleJoinMeeting from "../../main/action/useHandleJoinMeeting";
-import CoPresentOutlinedIcon from '@mui/icons-material/CoPresentOutlined';
+import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import { useForm } from 'react-hook-form';
-
-// import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
 // import { CHANNEL } from "../Home";
 // import { setData } from "../../../redux/meeting";
-// import { updateUser } from "../../../redux/user";
+import { updateUser } from '../../../redux/user';
 
 const IdentifyForm = ({ loading, code, refetch }) => {
   const {
@@ -23,21 +23,40 @@ const IdentifyForm = ({ loading, code, refetch }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  // const dispatch = useDispatch();
-  // const navigateTo = useNavigate();
-  // const handleJoinMeeting = useHandleJoinMeeting("guest");
+  const dispatch = useDispatch();
+  const navigateTo = useNavigate();
+  const { state } = useLocation();
+  const meeting = useMemo(() => state?.meeting, [state?.meeting]);
 
   const handleSendData = useCallback(
     async ({ name }) => {
-      const data = await refetch({
+      let response = await refetch({
         url: '/api/chat/guest/create',
         method: 'POST',
         data: { name, code },
       });
-      console.log(data);
+      dispatch(
+        updateUser({
+          data: {
+            name: response.data.name,
+            id: response.data._id,
+            token: response.data.token,
+            isGuest: true,
+          },
+        })
+      );
+
+      const target = {
+        type: meeting?.room ? 'room' : 'direct',
+        ...meeting?.room,
+      };
+      navigateTo(`/conference/${code}`, {
+        replace: true,
+        state: { target },
+      });
     },
 
-    [refetch, code]
+    [refetch, code, dispatch, navigateTo, meeting]
   );
   const error = errors.name;
 
@@ -80,8 +99,8 @@ const IdentifyForm = ({ loading, code, refetch }) => {
           <Button
             variant="outlined"
             loading={loading}
-            endIcon={<LaunchOutlinedIcon />}
-            startIcon={<CoPresentOutlinedIcon />}
+            endIcon={<NavigateNextOutlinedIcon />}
+            startIcon={<MeetingRoomOutlinedIcon />}
             type="submit"
           >
             Participer à la réunion

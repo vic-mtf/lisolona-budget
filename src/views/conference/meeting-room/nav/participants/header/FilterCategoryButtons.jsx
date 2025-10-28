@@ -23,12 +23,12 @@ const FilterCategoryButtons = ({ category, setCategory, counts }) => {
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             sx={{
               '& .MuiBadge-badge': {
-                fontSize: 10,
-                top: 15,
-                right: 0,
+                fontSize: 9,
+                top: 6,
+                right: 4,
                 border: (t) =>
                   `2px solid ${(t.vars ?? t).palette.background.paper}`,
-                padding: '0 4px',
+                padding: '0 2px',
               },
             }}
           >

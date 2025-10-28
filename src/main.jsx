@@ -11,19 +11,30 @@ import LocalStoreDataProvider from './components/LocalStoreDataProvider';
 import InboundUpdateEventDetector from './components/InboundUpdateEventDetector';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const slotProps = { snackbar: { autoHideDuration: 7000 } };
+const slotProps = {
+  snackbar: {
+    autoHideDuration: 7000,
+    sx: {
+      '& .MuiPaper-root': { alignItems: 'flex-start', m: 0 },
+      '& .MuiSnackbarContent-message': {
+        m: 0,
+        p: 0,
+      },
+    },
+  },
+};
 
 root.render(
   <StrictMode>
     <ReduxProvider store={store}>
       <SocketIOProvider>
         <ConfigAppProvider>
-          <NotificationsProvider slotProps={slotProps}>
-            <LocalStoreDataProvider>
+          <LocalStoreDataProvider>
+            <NotificationsProvider slotProps={slotProps}>
               <App />
               <InboundUpdateEventDetector />
-            </LocalStoreDataProvider>
-          </NotificationsProvider>
+            </NotificationsProvider>
+          </LocalStoreDataProvider>
         </ConfigAppProvider>
       </SocketIOProvider>
     </ReduxProvider>
