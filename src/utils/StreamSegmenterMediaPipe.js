@@ -1,6 +1,6 @@
-import { FilesetResolver, ImageSegmenter } from "@mediapipe/tasks-vision";
-import mergeDeep from "./mergeDeep";
-import axios from "axios";
+import { FilesetResolver, ImageSegmenter } from '@mediapipe/tasks-vision';
+import mergeDeep from './mergeDeep';
+import axios from 'axios';
 
 class StreamSegmenterMediaPipe {
   #canvas = null;
@@ -17,29 +17,29 @@ class StreamSegmenterMediaPipe {
   #blurCtx = null;
   #backgroundImage = null;
   #activeStyles = new Set();
-  #filterType = "grayscale";
+  #filterType = 'grayscale';
   #localModelAssetPath = null;
   #remoteModelAssetPath =
-    "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite";
+    'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite';
   #loadingModel = false;
   updateProgressModel = null;
   downloadProgressModel = null;
   loadedModel = null;
-  #model = "selfie_segmenter.tflite";
-  #useMaskTypes = ["blur", "replaceBackground", "removeBackground"];
-
+  #model = 'selfie_segmenter.tflite';
+  #useMaskTypes = ['blur', 'replaceBackground', 'removeBackground'];
+  #modelReady = false;
   isReady = false;
   #filterBlur = 10;
 
   #maskTypes = [
-    "background",
-    "hair",
-    "body-skin",
-    "face-skin",
-    "clothes",
-    "others",
+    'background',
+    'hair',
+    'body-skin',
+    'face-skin',
+    'clothes',
+    'others',
   ];
-  #useNoMaskTypes = ["enhance", "filter"];
+  #useNoMaskTypes = ['enhance', 'filter'];
 
   #qualityConfig = {
     maxProcessingWidth: 640,
@@ -70,29 +70,29 @@ class StreamSegmenterMediaPipe {
   #mediaPipeConfig = {
     baseOptions: {
       modelAssetPath: `${import.meta.env.BASE_URL}/models/${this.#model}`,
-      delegate: "GPU",
+      delegate: 'GPU',
     },
-    runningMode: "LIVE_STREAM",
+    runningMode: 'LIVE_STREAM',
     outputCategoryMask: true,
     outputConfidenceMasks: false,
   };
 
   constructor() {
-    this.#canvas = document.createElement("canvas");
-    this.#ctx = this.#canvas.getContext("2d", this.#contextConfig);
-    this.#video = document.createElement("video");
+    this.#canvas = document.createElement('canvas');
+    this.#ctx = this.#canvas.getContext('2d', this.#contextConfig);
+    this.#video = document.createElement('video');
     this.#video.autoplay = true;
     this.#video.muted = true;
     this.#video.playsInline = true;
-    this.#finalCanvas = document.createElement("canvas");
-    this.#finalCtx = this.#finalCanvas.getContext("2d", this.#contextConfig);
-    this.#blurCanvas = document.createElement("canvas");
-    this.#blurCtx = this.#blurCanvas.getContext("2d", this.#contextConfig);
+    this.#finalCanvas = document.createElement('canvas');
+    this.#finalCtx = this.#finalCanvas.getContext('2d', this.#contextConfig);
+    this.#blurCanvas = document.createElement('canvas');
+    this.#blurCtx = this.#blurCanvas.getContext('2d', this.#contextConfig);
   }
 
   #createImageSegmenter = async () => {
     const vision = await FilesetResolver.forVisionTasks(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm'
     );
 
     return await ImageSegmenter.createFromOptions(
@@ -108,34 +108,41 @@ class StreamSegmenterMediaPipe {
 
   #downloadModel = async () => {
     if (this.#localModelAssetPath || this.#loadingModel) return;
-    let response = null;
     this.#loadingModel = true;
+    this.#modelReady = false;
+
+    let response = null;
     try {
       response = await axios({
         url: this.#remoteModelAssetPath,
-        responseType: "blob",
+        responseType: 'blob',
         onDownloadProgress: (e) => {
-          if (typeof this.downloadProgressModel === "function")
+          if (typeof this.downloadProgressModel === 'function')
             this.downloadProgressModel(e.loaded / e.total);
         },
         onUploadProgress: (e) => {
-          if (typeof this.updateProgressModel === "function")
+          if (typeof this.updateProgressModel === 'function')
             this.updateProgressModel(e.loaded / e.total);
         },
       });
-      // Nettoyage ancien blob si existant
+
       if (this.#localModelAssetPath) {
         URL.revokeObjectURL(this.#localModelAssetPath);
       }
+
       const modelUrl = URL.createObjectURL(response.data);
       this.#localModelAssetPath = modelUrl;
       this.#mediaPipeConfig.baseOptions.modelAssetPath = modelUrl;
+
       await this.getImageSegmenter();
+      this.#modelReady = true;
+
+      if (typeof this.loadedModel === 'function')
+        this.loadedModel(response?.data);
     } catch (error) {
-      console.error("Error downloading model:", error);
+      console.error('Error downloading model:', error);
     }
-    if (typeof this.loadedModel === "function")
-      this.loadedModel(response?.data);
+
     this.#loadingModel = false;
   };
 
@@ -226,21 +233,31 @@ class StreamSegmenterMediaPipe {
         this.#resolution.width = dimensions.output.width;
         this.#resolution.height = dimensions.output.height;
 
-        if (import.meta.env.DEV)
-          console.log(
-            `Optimisation qualité:\n  - Vidéo source: ${videoWidth}x${videoHeight}\n  - Traitement: ${dimensions.processing.width}x${dimensions.processing.height}\n  - Sortie: ${dimensions.output.width}x${dimensions.output.height}`
-          );
-
         this.isReady = true;
-        if (typeof this.#readyCallback === "function")
+        if (typeof this.#readyCallback === 'function')
           this.#readyCallback(this.getProcessedStream());
         resolve(this.getProcessedStream());
       };
     });
 
     if (this.#video.paused) this.#video.play();
-    this.#predictWebcam();
-    return processedStream;
+
+    // Télécharge le modèle avant de lancer la segmentation
+    if (!this.#imageSegmenter && !this.#localModelAssetPath) {
+      await this.#downloadModel();
+    }
+
+    // Attend que le modèle soit prêt avant de démarrer
+    const waitForModel = async () => {
+      if (this.#modelReady && this.#imageSegmenter) {
+        this.#predictWebcam();
+        return processedStream;
+      }
+      await new Promise((r) => setTimeout(r, 100));
+      return waitForModel();
+    };
+
+    return await waitForModel();
   };
 
   getProcessedStream = () => {
@@ -249,7 +266,7 @@ class StreamSegmenterMediaPipe {
 
   onReady = (callback) => {
     this.#readyCallback = callback;
-    if (this.isReady && typeof callback === "function")
+    if (this.isReady && typeof callback === 'function')
       callback(this.getProcessedStream());
   };
 
@@ -281,8 +298,8 @@ class StreamSegmenterMediaPipe {
     let imageData = this.#getImageData(this.#ctx);
     const pixels = imageData.data;
 
-    const hasBlur = this.#activeStyles.has("blur");
-    const hasReplace = this.#activeStyles.has("replaceBackground");
+    const hasBlur = this.#activeStyles.has('blur');
+    const hasReplace = this.#activeStyles.has('replaceBackground');
 
     if ((hasBlur || hasReplace) && result) {
       let mask = result?.categoryMask?.getAsFloat32Array();
@@ -300,8 +317,8 @@ class StreamSegmenterMediaPipe {
       let factor = null;
       let invGamma = null;
       for (let i = 0; i < pixels.length; i += 4) {
-        if (this.#activeStyles.has("filter")) this.#applyFilter(pixels, i);
-        if (this.#activeStyles.has("enhance")) {
+        if (this.#activeStyles.has('filter')) this.#applyFilter(pixels, i);
+        if (this.#activeStyles.has('enhance')) {
           factor ??= this.#getFactor();
           invGamma ??= 1 / this.#enhanceConfig.gamma;
           this.#applyEnhanceImage(pixels, factor, invGamma, i);
@@ -311,7 +328,7 @@ class StreamSegmenterMediaPipe {
     if (this.#activeStyles.size > 0) this.#ctx.putImageData(imageData, 0, 0);
 
     this.#finalCtx.imageSmoothingEnabled = true;
-    this.#finalCtx.imageSmoothingQuality = "high";
+    this.#finalCtx.imageSmoothingQuality = 'high';
 
     if (this.#backgroundImage && hasReplace)
       this.#drawImage(this.#finalCanvas, this.#backgroundImage, this.#finalCtx);
@@ -329,10 +346,10 @@ class StreamSegmenterMediaPipe {
 
     this.#drawVideo(this.#ctx);
 
-    if (this.#activeStyles.has("blur")) {
+    if (this.#activeStyles.has('blur')) {
       this.#blurCtx.filter = `blur(${this.#filterBlur}px)`;
       this.#drawVideo(this.#blurCtx);
-      this.#blurCtx.filter = "none";
+      this.#blurCtx.filter = 'none';
     }
 
     if (!this.#imageSegmenter) {
@@ -557,25 +574,25 @@ class StreamSegmenterMediaPipe {
       g = data[i + 1],
       b = data[i + 2];
     switch (this.#filterType) {
-      case "grayscale":
+      case 'grayscale':
         r = g = b = (r + g + b) / 3;
         break;
-      case "night":
+      case 'night':
         r *= 0.3;
         g *= 0.3;
         b = b * 0.6 + 20;
         break;
-      case "sunny":
+      case 'sunny':
         r = Math.min(255, r + 30);
         g = Math.min(255, g + 20);
         b = Math.max(0, b - 10);
         break;
-      case "cool":
+      case 'cool':
         r = Math.max(0, r - 20);
         g = Math.max(0, g - 10);
         b = Math.min(255, b + 30);
         break;
-      case "warm":
+      case 'warm':
         r = Math.min(255, r + 40);
         g = Math.min(255, g + 20);
         b = Math.max(0, b - 20);
@@ -584,6 +601,77 @@ class StreamSegmenterMediaPipe {
     data[i] = r;
     data[i + 1] = g;
     data[i + 2] = b;
+  };
+  destroy = async () => {
+    if (this.#animationId) {
+      cancelAnimationFrame(this.#animationId);
+      this.#animationId = null;
+    }
+    if (this.#imageSegmenter?.close) {
+      try {
+        await this.#imageSegmenter.close();
+      } catch (err) {
+        console.warn('Error closing imageSegmenter:', err);
+      }
+      this.#imageSegmenter = null;
+    }
+
+    const src = this.#video?.srcObject;
+    if (src instanceof MediaStream) {
+      src.getTracks().forEach((t) => t.stop());
+    }
+
+    this.#video.pause();
+    this.#video.srcObject = null;
+    this.#video.onloadedmetadata = null;
+
+    if (this.#localModelAssetPath) {
+      URL.revokeObjectURL(this.#localModelAssetPath);
+      this.#localModelAssetPath = null;
+    }
+
+    [this.#canvas, this.#blurCanvas, this.#finalCanvas].forEach((c) => {
+      if (c) {
+        const ctx = c.getContext('2d');
+        ctx?.clearRect(0, 0, c.width, c.height);
+        c.width = 0;
+        c.height = 0;
+      }
+    });
+
+    this.isReady = false;
+    this.#modelReady = false;
+    this.#loadingModel = false;
+    this.#backgroundImage = null;
+    this.#activeStyles.clear();
+  };
+
+  reInit = async (stream = null) => {
+    await this.destroy();
+
+    this.#canvas = document.createElement('canvas');
+    this.#ctx = this.#canvas.getContext('2d', this.#contextConfig);
+    this.#video = document.createElement('video');
+    this.#video.autoplay = true;
+    this.#video.muted = true;
+    this.#video.playsInline = true;
+    this.#finalCanvas = document.createElement('canvas');
+    this.#finalCtx = this.#finalCanvas.getContext('2d', this.#contextConfig);
+    this.#blurCanvas = document.createElement('canvas');
+    this.#blurCtx = this.#blurCanvas.getContext('2d', this.#contextConfig);
+
+    this.#resolution = {
+      width: null,
+      height: null,
+      processingWidth: null,
+      processingHeight: null,
+    };
+
+    if (stream instanceof MediaStream) {
+      return await this.initStream(stream);
+    }
+
+    return null;
   };
 }
 

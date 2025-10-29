@@ -14,15 +14,22 @@ import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
 import ListAvatar from '../../../components/ListAvatar';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import { darken, lighten } from '@mui/material/styles';
-import { updateConferenceData } from '../../../redux/conference/conference';
+import {
+  initConferenceData,
+  updateConferenceData,
+} from '../../../redux/conference/conference';
 import { useDispatch, useSelector } from 'react-redux';
 import getFullName from '../../../utils/getFullName';
 import useLocalStoreData from '../../../hooks/useLocalStoreData';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const EndMeeting = React.forwardRef((_, ref) => {
   const [getData] = useLocalStoreData('conference.meeting.startedAt');
+  const isGuest = useSelector((store) => store.user.isGuest);
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
+  const navigateTo = useNavigate();
   const participants = useSelector(
     (store) => store.conference.meeting.participants
   );
@@ -39,6 +46,14 @@ const EndMeeting = React.forwardRef((_, ref) => {
   };
 
   const handleGoHome = () => {
+    if (isGuest) {
+      navigateTo('/', { replace: true });
+      setTimeout(() => {
+        dispatch(initConferenceData({ key: ['meeting', 'step'] }));
+      }, 2000);
+
+      return;
+    }
     window.focus();
     window.close();
   };
@@ -178,9 +193,9 @@ const EndMeeting = React.forwardRef((_, ref) => {
               variant="outlined"
               fullWidth
               onClick={handleGoHome}
-              endIcon={<LogoutOutlinedIcon />}
+              endIcon={isGuest ? <HomeOutlinedIcon /> : <LogoutOutlinedIcon />}
             >
-              Fermer
+              {isGuest ? "Page d'accueil" : 'Fermer'}
             </Button>
             <Button
               variant="contained"

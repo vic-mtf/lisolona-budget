@@ -18,7 +18,7 @@ const slotProps = {
       '& .MuiPaper-root': { alignItems: 'flex-start', m: 0 },
       '& .MuiSnackbarContent-message': {
         m: 0,
-        p: 0,
+        px: 0,
       },
     },
   },

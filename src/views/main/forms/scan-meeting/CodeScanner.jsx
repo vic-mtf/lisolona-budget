@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Box } from "@mui/material";
-import { Scanner } from "@yudiel/react-qr-scanner";
+import React, { useState, useEffect, useMemo } from 'react';
+import Box from '@mui/material/Box';
+import { Scanner } from '@yudiel/react-qr-scanner';
+import PropTypes from 'prop-types';
 
-const CodeScanner = React.memo(() => {
+const CodeScanner = React.memo(({ onScan, paused }) => {
   const [permissionState, setPermissionState] = useState(null);
   const permission = useMemo(() => ({ status: null }), []);
 
@@ -11,7 +12,7 @@ const CodeScanner = React.memo(() => {
       (async () => {
         try {
           const status = await navigator?.permissions?.query({
-            name: "camera",
+            name: 'camera',
           });
           permission.status = status;
           setPermissionState(status.state);
@@ -21,46 +22,52 @@ const CodeScanner = React.memo(() => {
       })();
 
     const onChange = () => setPermissionState(permission.status?.state);
-    permission.status?.addEventListener("change", onChange);
-    return () => permission.status?.removeEventListener("change", onChange);
+    permission.status?.addEventListener('change', onChange);
+    return () => permission.status?.removeEventListener('change', onChange);
   }, [permissionState, permission]);
 
   return (
-    <Box width='100%' px={4} pb={4}>
+    <Box width="100%" px={4} pb={4}>
       <Box
         flexGrow={1}
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          "& > div": {
-            border: (theme) => "4px solid " + theme.palette.divider,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          '& > div': {
+            border: (theme) => '4px solid ' + theme.palette.divider,
             borderRadius: 1,
           },
-          "& video": {
-            position: "absolute",
-            objectFit: "cover",
-            background: "none",
+          '& video': {
+            position: 'absolute',
+            objectFit: 'cover',
+            background: 'none',
             aspectRatio: 16 / 9,
           },
-          "& path": {
+          '& path': {
             stroke: (theme) => theme.palette.primary.main,
+            fill: (theme) => theme.palette.primary.main,
             borderRadius: 1,
           },
         }}
-        flex={1}>
+        flex={1}
+      >
         <Scanner
-          onScan={(result) => console.log(result)}
+          onScan={onScan}
+          paused={paused}
+          formats={['qr_code']}
+          allowMultiple
+          sound={false}
           key={permissionState}
           styles={{
             container: {
-              overflow: "hidden",
+              overflow: 'hidden',
               width: 300,
               minWidth: 300,
               aspectRatio: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
               height: 300,
             },
           }}
@@ -68,27 +75,32 @@ const CodeScanner = React.memo(() => {
             finder: true,
             zoom: false,
             onOff: false,
-            audio: true,
-          }}>
-          {permissionState === "granted" && (
+            audio: false,
+          }}
+        >
+          {permissionState === 'granted' && (
             <Box
-              width='100%'
+              width="100%"
               height={10}
               sx={{
                 opacity: 0.8,
-                position: "absolute",
+                position: 'absolute',
                 top: -10,
-                animation: "scanBar 1.8s infinite linear alternate .2s",
+
+                animation: paused
+                  ? 'none'
+                  : 'scanBar 1.8s infinite linear alternate .2s',
+                animationDelay: '1s',
                 background: (theme) =>
                   `linear-gradient(transparent,${theme.palette.primary.main}, transparent)`,
-                "@keyframes scanBar": {
-                  "0%": {
+                '@keyframes scanBar': {
+                  '0%': {
                     top: -10,
                     opacity: 0.4,
                   },
-                  "50%": { opacity: 1 },
-                  "100%": {
-                    top: "100%",
+                  '50%': { opacity: 1 },
+                  '100%': {
+                    top: '100%',
                     opacity: 0.4,
                   },
                 },
@@ -101,6 +113,11 @@ const CodeScanner = React.memo(() => {
   );
 });
 
-CodeScanner.displayName = "CodeScanner";
+CodeScanner.displayName = 'CodeScanner';
+
+CodeScanner.propTypes = {
+  onScan: PropTypes.func,
+  paused: PropTypes.bool,
+};
 
 export default CodeScanner;

@@ -49,7 +49,7 @@ const Participants = forwardRef((_, ref) => {
     () => ({ isMicActive, handRaised }),
     [isMicActive, handRaised]
   );
-  const getFilterCat = useCallback(
+  const getOnlyCat = useCallback(
     (p) => {
       if (category === 'inRoom') return Boolean(p?.state?.isInRoom);
       if (category === 'raiseHand') return Boolean(p?.state?.handRaised);
@@ -85,15 +85,18 @@ const Participants = forwardRef((_, ref) => {
     return count;
   }, [users]);
 
+  const getActiveUser = useCallback(
+    ({ state }) => state?.isInRoom || state?.isWaiting,
+    []
+  );
+
   const participants = useMemo(
     () =>
-      []
-        .concat(
-          users.filter(({ state }) => state?.isInRoom || state?.isWaiting)
-        )
-        .filter(getFilterCat)
+      users
+        .filter(getActiveUser)
+        .filter(getOnlyCat)
         .filter(({ identity }) => filterByName(identity, search)),
-    [getFilterCat, search, users]
+    [getOnlyCat, search, users, getActiveUser]
   );
 
   return (

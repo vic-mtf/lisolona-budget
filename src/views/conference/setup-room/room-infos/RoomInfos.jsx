@@ -45,18 +45,21 @@ const RoomInfos = () => {
     },
     { manual: !code }
   );
+
   const data = useMemo(
     () => state?.data || normalizeObjectKeys(callDetail),
     [callDetail, state?.data]
   );
+  console.log(callDetail);
   const isGuest = useSelector((store) => store.user.isGuest);
   const isApplicant = useMemo(() => {
     if (!data) return false;
-    return isGuest && !data.participants.some((p) => p.identity.id === id);
-  }, [data, id, isGuest]);
+    return !data.participants.some((p) => p?.identity?.id === id);
+  }, [data, id]);
 
   const isRoom = target?.type === 'room';
   const status = useMemo(() => setStatus(data?.status), [data?.status]);
+
   const text = useMemo(
     () => ({
       type: isRoom ? 'la réunion' : "l'appel",
@@ -82,7 +85,10 @@ const RoomInfos = () => {
         const participants = {};
         const guests = {};
 
+        console.log(data?.participants);
+
         data?.participants?.forEach((p) => {
+          if (!p?.identity) return;
           if (p.identity.id === id) {
             const devices = store.getState().conference.setup.devices;
             const isCamActive = devices.camera.enabled;
@@ -93,7 +99,7 @@ const RoomInfos = () => {
           }
           participants[p.identity.id] = p;
         });
-        data?.guests?.forEach((g) => (guests[g.identity.id] = g));
+        data?.guests?.forEach((g) => (guests[g.id] = g));
 
         dispatch(
           updateConferenceData({
@@ -161,7 +167,7 @@ const RoomInfos = () => {
       const data = await updateCallData(request);
       if (!data) return;
       navigateTo('/conference/' + data.id, {
-        state: { data, ...state },
+        state: { ...state, data },
         replace: true,
       });
       CALL_CHANNEL.postMessage({ type: 'create', call: data });
@@ -240,16 +246,6 @@ const RoomInfos = () => {
   ]);
 
   useEffect(() => {
-    if (connected && !loading && !target && window.opener)
-      CALL_CHANNEL.postMessage({ type: 'request' });
-
-    const onListeningResponse = (e) => {
-      if (e.origin === window.location.origin)
-        if (e.data?.type === 'response')
-          navigateTo('', {
-            state: { target: e.data?.callTarget, ...state },
-          });
-    };
     if (setupLoading && target && !loading)
       dispatch(
         updateConferenceData({
@@ -270,33 +266,39 @@ const RoomInfos = () => {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
-    if (!connected && !target) {
-      navigateTo('/', { replace: true });
-    }
+  }, [loading, navigateTo, dispatch, target, setupLoading, code]);
+
+  useEffect(() => {
+    if (connected && !loading && !target && window.opener)
+      CALL_CHANNEL.postMessage({ type: 'request' });
+    const onListeningResponse = (e) => {
+      if (e.origin === window.location.origin)
+        if (e.data?.type === 'response')
+          navigateTo('', {
+            state: { ...state, target: e.data?.callTarget },
+          });
+    };
+
     CALL_CHANNEL.addEventListener('message', onListeningResponse);
     return () => {
       CALL_CHANNEL.removeEventListener('message', onListeningResponse);
     };
-  }, [
-    connected,
-    loading,
-    navigateTo,
-    dispatch,
-    target,
-    setupLoading,
-    state,
-    code,
-    id,
-  ]);
+  }, [connected, loading, navigateTo, target, state]);
 
   useEffect(() => {
-    if (callDetail && !state?.data) {
+    if (!callDetail || !state?.data) return;
+    const call = normalizeObjectKeys(callDetail);
+    if (JSON.stringify(call) !== JSON.stringify(state?.data)) {
       navigateTo('', {
-        state: { data: normalizeObjectKeys(callDetail), ...state },
+        state: { ...state, data: call },
         replace: true,
       });
     }
   }, [navigateTo, state, callDetail]);
+
+  useEffect(() => {
+    if (!connected && !target) navigateTo('/', { replace: true });
+  }, [connected, navigateTo, target]);
 
   useEffect(() => {
     const key = 'remote-response';

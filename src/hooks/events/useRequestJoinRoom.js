@@ -5,19 +5,22 @@ import useSocket from '../useSocket';
 import store from '../../redux/store';
 import { createElement } from 'react';
 import Button from '@mui/material/Button';
+import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
+import getFullName from '../../utils/getFullName';
 
 const useRequestJoinRoom = () => {
   const socket = useSocket();
   const notifications = useNotifications();
 
   useEffect(() => {
-    const handleRequestJoinRoom = ({ name, roomId, userId, src }) => {
-      const key = `${userId}-request-join-room`;
+    const handleRequestJoinRoom = (d) => {
+      const data = normalizeObjectKeys(d);
+      const key = `${data.id}-request-join-room`;
       notifications.close(key);
       const storeState = store.getState();
       const guests = { ...storeState.conference.meeting.guests };
-
-      guests[userId] = { name, id: userId };
+      const { roomId, ...user } = data;
+      guests[data.id] = user;
 
       if (storeState.conference.roomId === roomId) {
         store.dispatch({
@@ -33,7 +36,7 @@ const useRequestJoinRoom = () => {
         notifications.close(key);
         const storeState = store.getState();
         const guests = { ...storeState.conference.meeting.guests };
-        delete guests[userId];
+        delete guests[user.id];
         store.dispatch({
           type: 'conference/updateConferenceData',
           payload: {
@@ -41,7 +44,7 @@ const useRequestJoinRoom = () => {
             data: [guests],
           },
         });
-        socket.emit('response-join-room', { status, userId, roomId });
+        socket.emit('response-join-room', { status, userId: user.id, roomId });
         console.log('status => ', status);
       };
 
@@ -58,9 +61,9 @@ const useRequestJoinRoom = () => {
 
       notifications.show(
         React.createElement(NoticeSnack, {
-          name: name,
-          id: userId,
-          src,
+          name: getFullName(user),
+          id: user.id,
+          src: user.image,
           inline: true,
           action: buttons.map(({ id, label }) =>
             createElement(
@@ -81,12 +84,14 @@ const useRequestJoinRoom = () => {
         }
       );
     };
-    const handleAbortJoinRoom = ({ userId }) => {
-      const key = `${userId}-request-join-room`;
+
+    const handleAbortJoinRoom = (d) => {
+      const user = normalizeObjectKeys(d);
+      const key = `${user.id}-request-join-room`;
       notifications.close(key);
       const storeState = store.getState();
       const guests = { ...storeState.conference.meeting.guests };
-      delete guests[userId];
+      delete guests[user.id];
       store.dispatch({
         type: 'conference/updateConferenceData',
         payload: {

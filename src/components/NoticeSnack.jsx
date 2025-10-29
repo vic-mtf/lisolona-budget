@@ -51,7 +51,7 @@ const NoticeSnack = ({ name, id, message, src, inline, action }) => {
             </Typography>
           </Box>
           {action && (
-            <DialogActions sx={{ m: 0, p: 0 }}>{action}</DialogActions>
+            <DialogActions sx={{ m: 0, p: 0, mt: 0.5 }}>{action}</DialogActions>
           )}
         </Box>
       </Box>

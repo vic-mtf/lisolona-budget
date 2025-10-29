@@ -1,4 +1,4 @@
-import { isPlainObject } from "@reduxjs/toolkit";
+import { isPlainObject } from '@reduxjs/toolkit';
 
 export default function formatObjectData(
   data = {},
@@ -36,7 +36,7 @@ export const getValFromObj = (obj = {}, keys = [], output = null) => {
       Object.hasOwnProperty.call(obj, key)
     )
       val =
-        typeof obj[key] === "string"
+        typeof obj[key] === 'string'
           ? obj[key].trim() || null
           : obj[key] === undefined
           ? output
@@ -52,18 +52,21 @@ export const deleteKeysFromObject = (obj, keys) => {
 };
 
 export const formatUser = (obj) =>
+  obj &&
   formatObjectData({
     ...obj,
-    grade: obj.grade?.grade || obj?.grade,
-    role: obj?.grade?.role || obj?.role,
+    ...(obj.grade && {
+      grade: obj?.grade?.grade || obj?.grade,
+      role: obj?.grade?.role || obj?.role,
+    }),
   });
 
 export const userFormatConfig = {
-  id: ["_id", "userId"],
-  email: ["userEmail"],
-  firstName: ["userFname", "fname", "userFName"],
-  lastName: ["userLname", "lname", "userLName"],
-  middleName: ["userMname", "mname", "userMName"],
-  number: ["phoneCell"],
-  image: ["userImage", "imageUrl"],
+  id: ['_id', 'userId'],
+  email: ['userEmail'],
+  firstName: ['userFname', 'fname', 'userFName'],
+  lastName: ['userLname', 'lname', 'userLName'],
+  middleName: ['userMname', 'mname', 'userMName'],
+  number: ['phoneCell'],
+  image: ['userImage', 'imageUrl'],
 };
