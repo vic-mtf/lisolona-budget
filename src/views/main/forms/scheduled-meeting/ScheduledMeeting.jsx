@@ -1,12 +1,11 @@
-import {
-  Box,
-  Button,
-  DialogActions,
-  IconButton,
-  Toolbar,
-  Typography,
-  Slide,
-} from '@mui/material';
+import React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Slide from '@mui/material/Slide';
 import PropTypes from 'prop-types';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DiscussionList from '../../navigation/discussions/DiscussionList';
@@ -15,40 +14,54 @@ import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import { useState, useCallback, useMemo } from 'react';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import ScheduledMeetingForm from './ScheduledMeetingForm';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import dayjs from 'dayjs';
 import LinearProgressLayer from '../../../../components/LinearProgressLayer';
 import useToken from '../../../../hooks/useToken';
 import useAxios from '../../../../hooks/useAxios';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import { useDispatch } from 'react-redux';
+import store from '../../../../redux/store';
+import { updateArraysData } from '../../../../redux/data/data';
 
-export default function ScheduledMeeting({ onClose, room = null }) {
+const ScheduledMeeting = ({ onClose, room }) => {
   const [data, setData] = useState(room);
-  const {
-    register,
-    control,
-    setError,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({ values: { date: null, time: null, duration: null } });
+  const notifications = useNotifications();
+  const dispatch = useDispatch();
+
+  const duration = useMemo(() => dayjs().hour(1).minute(0).second(0), []);
+  const date = useMemo(() => dayjs().add('1', 'hour').toString(), []);
+  const time = useMemo(() => dayjs().add('1', 'hour'), []);
+
+  const methods = useForm({
+    values: {
+      date,
+      time,
+      duration,
+    },
+  });
   const Authorization = useToken();
   const [{ loading }, refetch] = useAxios(
-    { url: '/api/chat/room/call/', method: 'POST', headers: { Authorization } },
+    {
+      url: '/api/chat/call/create',
+      method: 'POST',
+      headers: { Authorization },
+    },
     { manual: true }
   );
-  const option = useMemo(
-    () => (data ? 'scheduled-form' : 'contact-list'),
-    [data]
-  );
+  const nav = useMemo(() => (data ? 'scheduled-form' : 'contact-list'), [data]);
 
   const onSubmit = useCallback(
     async (fields) => {
       const duration = dayjs(fields.duration);
       if (duration.hour() * 60 + duration.minute() < 5) {
-        setError('duration', {
+        methods.setError('duration', {
           message: 'La réunion doit durer au moins 5 minutes.',
+          type: 'value',
         });
         return;
       }
+      const key = 'scheduled-meeting-' + data?.id;
 
       try {
         const time = dayjs(fields.time);
@@ -60,26 +73,66 @@ export default function ScheduledMeeting({ onClose, room = null }) {
           .add(duration.hour(), 'hour')
           .add(duration.minute(), 'minute')
           .toDate();
-        const call = refetch({
-          target: data?.id,
-          type: 'room',
-          tokenType: 'uid',
-          role: 'publisher',
-          scheduled: true,
-          startedAt,
-          endedAt,
-          title: fields.title,
-          description: fields.description,
+
+        const response = await refetch({
+          data: {
+            target: data?.id,
+            type: 'room',
+            tokenType: 'uid',
+            role: 'publisher',
+            scheduled: true,
+            startedAt,
+            endedAt,
+            title: fields.title,
+            description: fields.description,
+          },
+        });
+        const user = store.getState().user;
+
+        dispatch(updateArraysData({ data: { calls: [response.data] }, user }));
+        dispatch({
+          type: 'data/updateData',
+          payload: {
+            key: `app.actions.calls.blink.${response.data._id}`,
+            data: true,
+          },
+        });
+        notifications.show('La reunion a bien été planifiée', {
+          key,
+          severity: 'success',
         });
       } catch (err) {
         console.error(err);
+        notifications.show(
+          'Une erreur est survenue lors de la planification de la reunion. Réessayez ultérieurement',
+          {
+            key,
+            severity: 'error',
+          }
+        );
       }
+      onClose();
     },
-    [data, setError, refetch]
+    [data, methods, refetch, notifications, onClose, dispatch]
   );
+  const isContactListOrRoom = useMemo(
+    () => nav === 'contact-list' || room,
+    [nav, room]
+  );
+
+  const secondaryAction = useCallback(
+    (data) => (
+      <IconButton edge="end" onClick={data?.onClick}>
+        <NavigateNextOutlinedIcon />
+      </IconButton>
+    ),
+    []
+  );
+  const onClickItem = useCallback((_, data) => setData(data), []);
 
   return (
     <>
+      <LinearProgressLayer open={loading} />
       <Box
         component="form"
         overflow="hidden"
@@ -87,20 +140,18 @@ export default function ScheduledMeeting({ onClose, room = null }) {
         width="100%"
         display="flex"
         flexDirection="column"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit)}
       >
         <Toolbar>
           <IconButton
             edge="start"
             color="inherit"
             disabled={loading}
-            onClick={
-              option === 'contact-list' || room ? onClose : () => setData(null)
-            }
+            onClick={isContactListOrRoom ? onClose : () => setData(null)}
             aria-label="close"
-            key={option}
+            key={nav}
           >
-            {option === 'contact-list' || room ? (
+            {isContactListOrRoom ? (
               <CloseOutlinedIcon />
             ) : (
               <ArrowBackOutlinedIcon />
@@ -137,10 +188,13 @@ export default function ScheduledMeeting({ onClose, room = null }) {
             }}
           >
             <Slide
-              in={option === 'contact-list'}
-              unmountOnExit
+              in={nav === 'contact-list'}
+              //unmountOnExit
               appear={false}
               direction="right"
+              style={{
+                zIndex: nav === 'contact-list' ? 1 : -1,
+              }}
             >
               <Box
                 display="flex"
@@ -157,21 +211,17 @@ export default function ScheduledMeeting({ onClose, room = null }) {
                 <DiscussionList
                   onClose={onClose}
                   closable={false}
-                  onClickItem={(_, data) => setData(data)}
+                  onClickItem={onClickItem}
                   itemType="group"
-                  secondaryAction={(data) => (
-                    <IconButton edge="end" onClick={data?.onClick}>
-                      <NavigateNextOutlinedIcon />
-                    </IconButton>
-                  )}
+                  secondaryAction={secondaryAction}
                 />
               </Box>
             </Slide>
             <Slide
-              in={option === 'scheduled-form'}
-              unmountOnExit
+              in={nav === 'scheduled-form'}
               appear={false}
               direction="left"
+              style={{ zIndex: nav === 'scheduled-form' ? 1 : -1 }}
             >
               <Box
                 display="flex"
@@ -179,13 +229,9 @@ export default function ScheduledMeeting({ onClose, room = null }) {
                 overflow="hidden"
                 flexDirection="column"
               >
-                <ScheduledMeetingForm
-                  data={data}
-                  register={register}
-                  control={control}
-                  errors={errors}
-                  loading={loading}
-                />
+                <FormProvider {...methods}>
+                  <ScheduledMeetingForm data={data} loading={loading} />
+                </FormProvider>
               </Box>
             </Slide>
           </Box>
@@ -201,12 +247,13 @@ export default function ScheduledMeeting({ onClose, room = null }) {
           </Button>
         </DialogActions>
       </Box>
-      <LinearProgressLayer open={false} />
     </>
   );
-}
+};
 
 ScheduledMeeting.propTypes = {
   onClose: PropTypes.func,
   room: PropTypes.object,
 };
+
+export default React.memo(ScheduledMeeting);

@@ -40,6 +40,7 @@ const Cover = React.forwardRef((_, ref) => {
         callHistory,
       } = response.data || {};
       const { data: calls } = await refresh({ url: '/api/chat/room/call/' });
+
       const data = {
         calls,
         discussions,
@@ -50,7 +51,7 @@ const Cover = React.forwardRef((_, ref) => {
         callHistory,
       };
       const user = store.getState().user;
-      dispatch(updateArraysData({ data, user }));
+      //dispatch(updateArraysData({ data, user }));
       setTimeout(() => {
         dispatch(updateArraysData({ data, user }));
       }, 1000);

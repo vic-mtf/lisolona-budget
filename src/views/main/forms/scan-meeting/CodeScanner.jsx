@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Box from '@mui/material/Box';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import PropTypes from 'prop-types';
 
-const CodeScanner = React.memo(({ onScan, paused }) => {
+const CodeScanner = React.memo(({ onScan, paused, onError }) => {
   const [permissionState, setPermissionState] = useState(null);
   const permission = useMemo(() => ({ status: null }), []);
+  const rootRef = useRef();
 
   useEffect(() => {
+    const video = rootRef.current?.querySelector('video');
+
+    if (video) video.disablePictureInPicture = true;
+
     if (!permissionState)
       (async () => {
         try {
@@ -51,6 +56,7 @@ const CodeScanner = React.memo(({ onScan, paused }) => {
           },
         }}
         flex={1}
+        ref={rootRef}
       >
         <Scanner
           onScan={onScan}
@@ -59,6 +65,8 @@ const CodeScanner = React.memo(({ onScan, paused }) => {
           allowMultiple
           sound={false}
           key={permissionState}
+          onError={onError}
+          scanDelay={10000}
           styles={{
             container: {
               overflow: 'hidden',
@@ -76,6 +84,7 @@ const CodeScanner = React.memo(({ onScan, paused }) => {
             zoom: false,
             onOff: false,
             audio: false,
+            torch: true,
           }}
         >
           {permissionState === 'granted' && (
@@ -118,6 +127,7 @@ CodeScanner.displayName = 'CodeScanner';
 CodeScanner.propTypes = {
   onScan: PropTypes.func,
   paused: PropTypes.bool,
+  onError: PropTypes.func,
 };
 
 export default CodeScanner;

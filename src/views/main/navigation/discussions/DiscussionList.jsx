@@ -1,28 +1,29 @@
-import { Box } from "@mui/material";
-import { displays, filterByType, sortbyKey } from "./filterCategory";
-import { useState, useMemo, useCallback } from "react";
-import InputSearch from "../../../../components/InputSearch";
-import { useSelector } from "react-redux";
-import store from "../../../../redux/store";
-import VirtualizedList from "../../../../components/VirtualizedList";
-import PropTypes from "prop-types";
-import getFullName from "../../../../utils/getFullName";
-import DiscussionItem from "./DiscussionItem";
-import SortButton from "./SortButton";
-import { filterByName } from "../../../../utils/filterByKey";
+import React from 'react';
+import Box from '@mui/material/Box';
+import { displays, filterByType, sortbyKey } from './filterCategory';
+import { useState, useMemo, useCallback } from 'react';
+import InputSearch from '../../../../components/InputSearch';
+import { useSelector } from 'react-redux';
+import store from '../../../../redux/store';
+import VirtualizedList from '../../../../components/VirtualizedList';
+import PropTypes from 'prop-types';
+import getFullName from '../../../../utils/getFullName';
+import DiscussionItem from './DiscussionItem';
+import SortButton from './SortButton';
+import { filterByName } from '../../../../utils/filterByKey';
 
-export default function DiscussionList({
+const DiscussionList = ({
   onClose,
   closable = true,
   secondaryAction,
   onClickItem,
-  itemType = "all",
-}) {
+  itemType = 'all',
+}) => {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);
   const bulkContacts = useSelector((store) => store.data.app.contacts);
   const [sortMode, setSortMode] = useState({
-    type: "name",
-    order: "asc",
+    type: 'name',
+    order: 'asc',
     display: itemType,
   });
   const bulkAllDiscussions = useMemo(() => {
@@ -38,14 +39,14 @@ export default function DiscussionList({
     return allDiscussions?.concat(contacts) || [];
   }, [bulkDiscussions, bulkContacts]);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const discussions = useMemo(() => {
     const { type, order, display } = sortMode;
     const data = bulkAllDiscussions?.filter(
       (item) => filterByName(item, search) && filterByType(item, display)
     );
-    return sortbyKey(data, type, order === "desc");
+    return sortbyKey(data, type, order === 'desc');
   }, [bulkAllDiscussions, search, sortMode]);
 
   const itemContent = useCallback(
@@ -55,7 +56,7 @@ export default function DiscussionList({
       const remote = data?.members?.find(
         ({ id }) => id !== store.getState().user.id
       );
-      const image = data?.type === "room" ? data?.image : remote?.image || null;
+      const image = data?.type === 'room' ? data?.image : remote?.image || null;
       const name = getFullName(data);
       const onClick = (event) => {
         if (onClickItem) onClickItem(event, { name, id, ...data });
@@ -75,7 +76,7 @@ export default function DiscussionList({
             search={search}
             divider={index !== discussions.length - 1}
             secondaryAction={
-              typeof secondaryAction === "function"
+              typeof secondaryAction === 'function'
                 ? secondaryAction({ name, id, ...data, onClick })
                 : secondaryAction
             }
@@ -87,10 +88,10 @@ export default function DiscussionList({
   );
 
   return (
-    <Box display='flex' flex={1} overflow='hidden' flexDirection='column'>
-      <Box display='flex' flexDirection='row' gap={1} px={2} pb={1}>
+    <Box display="flex" flex={1} overflow="hidden" flexDirection="column">
+      <Box display="flex" flexDirection="row" gap={1} px={2} pb={1}>
         <InputSearch
-          placeholder='Recherche'
+          placeholder="Recherche"
           sx={{ flexGrow: 1 }}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
@@ -106,11 +107,11 @@ export default function DiscussionList({
         data={discussions}
         itemContent={itemContent}
         rowHeight={69}
-        emptyMessage='Aucune discussion trouvée'
+        emptyMessage="Aucune discussion trouvée"
       />
     </Box>
   );
-}
+};
 
 DiscussionList.propTypes = {
   onClose: PropTypes.func,
@@ -119,3 +120,5 @@ DiscussionList.propTypes = {
   itemType: PropTypes.oneOf(displays.map(({ id }) => id)),
   onClickItem: PropTypes.func,
 };
+
+export default React.memo(DiscussionList);

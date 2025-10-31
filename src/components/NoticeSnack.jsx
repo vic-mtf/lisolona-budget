@@ -1,12 +1,25 @@
 import React from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import DialogActions from '@mui/material/DialogActions';
+import {
+  createTheme,
+  ThemeProvider,
+  useTheme,
+  Box,
+  Typography,
+  DialogActions,
+} from '@mui/material';
 import ListAvatar from '../components/ListAvatar';
 import PropTypes from 'prop-types';
+import HighlightWord from './HighlightWord';
 
-const NoticeSnack = ({ name, id, message, src, inline, action }) => {
+const NoticeSnack = ({
+  name,
+  id,
+  message,
+  src,
+  inline,
+  action,
+  words = [],
+}) => {
   const nativeTheme = useTheme();
   const theme = createTheme({
     ...nativeTheme,
@@ -33,23 +46,28 @@ const NoticeSnack = ({ name, id, message, src, inline, action }) => {
             {name?.charAt(0)}
           </ListAvatar>
         </Box>
+
         <Box display="flex" flexDirection="column">
           <Box>
+            {/* NAME */}
             <Typography
               color="text.primary"
               variant="body1"
               component={inline ? 'span' : 'div'}
+              sx={{ fontWeight: 600 }}
             >
               {name}
             </Typography>{' '}
+            {/* MESSAGE avec highlight */}
             <Typography
               color="text.secondary"
               variant="body2"
               component={inline ? 'span' : 'div'}
             >
-              {message}
+              <HighlightWord text={message} words={words} />
             </Typography>
           </Box>
+
           {action && (
             <DialogActions sx={{ m: 0, p: 0, mt: 0.5 }}>{action}</DialogActions>
           )}
@@ -66,5 +84,10 @@ NoticeSnack.propTypes = {
   src: PropTypes.string,
   inline: PropTypes.bool,
   action: PropTypes.node,
+  words: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
 };
+
 export default React.memo(NoticeSnack);

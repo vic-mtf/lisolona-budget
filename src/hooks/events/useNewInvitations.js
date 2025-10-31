@@ -1,24 +1,24 @@
-import React, { useEffect } from "react";
-import useSocket from "../useSocket";
-import store from "../../redux/store";
-import ringtones, { vibrates } from "../../utils/ringtones";
-import { isPlainObject } from "lodash";
-import { useNotifications } from "@toolpad/core/useNotifications";
-import NoticeSnack from "../../components/NoticeSnack";
-import getFullName from "../../utils/getFullName";
-import { NAVIGATE_EVENT_NAME } from "../../views/main/navigation/NavTab";
+import React, { useEffect } from 'react';
+import useSocket from '../useSocket';
+import store from '../../redux/store';
+import ringtones, { vibrates } from '../../utils/ringtones';
+import { isPlainObject } from 'lodash';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import NoticeSnack from '../../components/NoticeSnack';
+import getFullName from '../../utils/getFullName';
+import { NAVIGATE_EVENT_NAME } from '../../views/main/navigation/NavTab';
 
 const useNewInvitations = () => {
   const socket = useSocket();
   const notifications = useNotifications();
 
   useEffect(() => {
-    const handelGetChatInvitation = (data) => {
+    const handleGetChatInvitation = (data) => {
       const notices = getGuests(data);
       const user = store.getState().user;
       const bulkInvitations = store.getState().data.app.notifications;
       store.dispatch({
-        type: "data/updateArraysData",
+        type: 'data/updateArraysData',
         payload: { data: { notifications: notices }, user },
       });
       const [notice] = notices;
@@ -42,10 +42,10 @@ const useNewInvitations = () => {
           }),
           {
             key: notice?._id,
-            actionText: "Voir plus",
+            actionText: 'Voir plus',
             onAction: () => {
               store.dispatch({
-                type: "data/updateData",
+                type: 'data/updateData',
                 payload: {
                   key: `app.actions.notifications.blink.${notice?._id}`,
                   data: true,
@@ -54,17 +54,17 @@ const useNewInvitations = () => {
               notifications.close(notice?._id);
 
               const manuelEvent = new CustomEvent(NAVIGATE_EVENT_NAME, {
-                detail: { name: NAVIGATE_EVENT_NAME, tab: "notifications" },
+                detail: { name: NAVIGATE_EVENT_NAME, tab: 'notifications' },
               });
-              document.getElementById("root").dispatchEvent(manuelEvent);
+              document.getElementById('root').dispatchEvent(manuelEvent);
             },
           }
         );
       }
     };
-    socket?.on("invitations", handelGetChatInvitation);
+    socket?.on('invitations', handleGetChatInvitation);
     return () => {
-      socket?.off("invitations", handelGetChatInvitation);
+      socket?.off('invitations', handleGetChatInvitation);
     };
   });
 };
@@ -74,13 +74,13 @@ const getGuests = (data) => {
   if (Array.isArray(data)) notices = data;
   else if (
     isPlainObject(data) &&
-    Object.hasOwnProperty.call(data, "invitations")
+    Object.hasOwnProperty.call(data, 'invitations')
   ) {
     const invitations = data?.invitations;
     notices = Array.isArray(invitations) ? invitations : [invitations];
   } else notices = [data];
   return notices
-    ?.map((d) => ({ ...d, variant: "guest" }))
+    ?.map((d) => ({ ...d, variant: 'guest' }))
     .sort((a, b) => {
       const dateA = new Date(a?.createdAt || a?.updatedAt);
       const dateB = new Date(b?.createdAt || b?.updatedAt);
@@ -95,7 +95,7 @@ const hasMissingElements = (array1, array2) => {
 
 export default useNewInvitations;
 
-// socket?.on("chats", handelGetChatInvitation);
+// socket?.on("chats", handleGetChatInvitation);
 // socket?.on("invitations", handleSignaling);
 // socket?.on("status", toggleStatus);
 // socket?.on("contacts", onGetContact);

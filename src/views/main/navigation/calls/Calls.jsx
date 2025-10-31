@@ -11,7 +11,7 @@ import toggleFullscreen from '../../../../utils/toggleFullscreen';
 import VirtualList from '../../../../components/VirtualList';
 import { updateData } from '../../../../redux/data/data';
 import CallDetailsView from './CallDetailsView';
-// import store from "../../../../redux/store";
+import { ItemWrapperFocus } from '../../../../components/BlinkWrapper';
 import { updateConferenceData } from '../../../../redux/conference/conference';
 
 export default function Calls() {
@@ -22,6 +22,7 @@ export default function Calls() {
 
   const handleOpenDetails = useCallback(
     (call) => () => {
+      console.log(call);
       dispatch(
         updateData({
           key: 'app.actions.calls.info',
@@ -57,56 +58,58 @@ export default function Calls() {
 
         return (
           <div key={id}>
-            {call?.type === 'label' && (
-              <ListSubheader sx={{ height: '100%' }} disableSticky>
-                {call?.label}
-              </ListSubheader>
-            )}
+            <ItemWrapperFocus id={id} location="calls">
+              {call?.type === 'label' && (
+                <ListSubheader sx={{ height: '100%' }} disableSticky>
+                  {call?.label}
+                </ListSubheader>
+              )}
 
-            {call?.status === 'running' && (
-              <RunningCallItem
-                location={call?.location}
-                divider={call?.status === calls[index + 1]?.status}
-                createdAt={call?.createdAt}
-                createdBy={call?.createdBy}
-                incoming={call?.incoming}
-                onClickDetail={handleOpenDetails(call)}
-                onCallAction={handleCallAction(call)}
-                participants={
-                  Array.isArray(participants) && Array.isArray(guests)
-                    ? participants.length + guests.length
-                    : undefined
-                }
-              />
-            )}
-            {call?.status === 'scheduled' && (
-              <ScheduledCallItem
-                location={call?.location}
-                divider={call?.status === calls[index + 1]?.status}
-                code={call?.id}
-                title={call?.title}
-                description={call?.description}
-                startedAt={call?.startedAt}
-                endedAt={call?.endedAt}
-                // onCallAction={handleCallAction(call)}
-                onClickDetail={handleOpenDetails(call)}
-              />
-            )}
+              {call?.status === 'running' && (
+                <RunningCallItem
+                  location={call?.location}
+                  divider={call?.status === calls[index + 1]?.status}
+                  createdAt={call?.createdAt}
+                  createdBy={call?.createdBy}
+                  incoming={call?.incoming}
+                  onClickDetail={handleOpenDetails(call)}
+                  onCallAction={handleCallAction(call)}
+                  participants={
+                    Array.isArray(participants) && Array.isArray(guests)
+                      ? participants.length + guests.length
+                      : undefined
+                  }
+                />
+              )}
+              {call?.status === 'scheduled' && (
+                <ScheduledCallItem
+                  location={call?.location}
+                  divider={call?.status === calls[index + 1]?.status}
+                  code={call?.id}
+                  title={call?.title}
+                  description={call?.description}
+                  startedAt={call?.startedAt}
+                  endedAt={call?.endedAt}
+                  // onCallAction={handleCallAction(call)}
+                  onClickDetail={handleOpenDetails(call)}
+                />
+              )}
 
-            {['started', 'ended', 'failed'].includes(call?.status) && (
-              <CallItem
-                location={call?.location}
-                divider={call?.status === calls[index + 1]?.status}
-                createdAt={call?.createdAt}
-                // createdBy={call?.createdBy}
-                onCallAction={handleCallAction(call)}
-                calls={call?.calls?.length}
-                incoming={call?.incoming}
-                failed={call?.status === 'failed'}
-                action="accepted"
-                onClickDetail={handleOpenDetails(call)}
-              />
-            )}
+              {['started', 'ended', 'failed'].includes(call?.status) && (
+                <CallItem
+                  location={call?.location}
+                  divider={call?.status === calls[index + 1]?.status}
+                  createdAt={call?.createdAt}
+                  // createdBy={call?.createdBy}
+                  onCallAction={handleCallAction(call)}
+                  calls={call?.calls?.length}
+                  incoming={call?.incoming}
+                  failed={call?.status === 'failed'}
+                  action="accepted"
+                  onClickDetail={handleOpenDetails(call)}
+                />
+              )}
+            </ItemWrapperFocus>
           </div>
         );
       }),

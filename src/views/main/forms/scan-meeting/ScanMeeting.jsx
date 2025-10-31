@@ -87,6 +87,32 @@ const ScanMeeting = React.memo(({ onClose }) => {
     [refetch, userId, dispatch, notifications, onClose]
   );
 
+  const onError = useCallback(
+    (error) => {
+      const errors = {
+        NotAllowedError: 'L’accès à la caméra a été refusé par l’utilisateur.',
+        NotFoundError:
+          'Aucun  périphérique correspondant à la caméra n’a été trouvé.',
+        NotReadableError:
+          'La caméra est occupée ou peut être utilisé par une autre application.',
+        OverconstrainedError:
+          'Les contraintes spécifiées ne peuvent pas être satisfaites par la caméra disponible.',
+        SecurityError:
+          'L’accès à la caméra n’est pas autorisé pour des raisons de sécurité.',
+        AbortError:
+          'La tentative d’accès à la caméra a été interrompue de manière inattendue.',
+        TypeError: 'Aucune contrainte valide n’a été fournie à la caméra',
+      };
+      notifications.show(errors[error?.name], {
+        severity: 'error',
+        key: error.name,
+      });
+      setPaused(false);
+      if (typeof onClose === 'function') onClose();
+    },
+    [notifications, onClose]
+  );
+
   return (
     <>
       <LinearProgressLayer open={loading} />
@@ -124,7 +150,7 @@ const ScanMeeting = React.memo(({ onClose }) => {
               Scannez le code QR fourni par l’hôte pour rejoindre la réunion.
             </Typography>
             <Box overflow="hidden" position="relative" display="flex">
-              <CodeScanner onScan={onScan} paused={paused} />
+              <CodeScanner onScan={onScan} paused={paused} onError={onError} />
             </Box>
           </Stack>
         </Box>

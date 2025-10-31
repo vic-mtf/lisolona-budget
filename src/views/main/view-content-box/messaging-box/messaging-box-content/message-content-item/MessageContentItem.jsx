@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import PropTypes from "prop-types";
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import {
   ListItemButton,
   ListItemAvatar,
@@ -9,21 +9,20 @@ import {
   ListItem,
   alpha,
   Stack,
-  Fade,
-} from "@mui/material";
-import ListAvatar from "../../../../../../components/ListAvatar";
-import getFullName from "../../../../../../utils/getFullName";
-import MessageContentText from "./message-content-text/MessageContentText";
-import { formatTime } from "../../../../../../utils/formatDate";
-import MessageActionItem from "./Message-action-Item/MessageActionItem";
-import useSmallScreen from "../../../../../../hooks/useSmallScreen";
-import useLongPress from "../../../../../../hooks/useLongPress";
-import { useSelector } from "react-redux";
-import dayjs from "dayjs";
-import MessageContentMedia from "./message-content-media/MessageContentMedia";
-import { ItemWrapperFocus } from "../../../../../../components/BlinkWrapper";
-import MessageContentVoice from "./message-content-voice/MessageContentVoice";
-import MessageContentDoc from "./message-content-doc/MessageContentDoc";
+} from '@mui/material';
+import ListAvatar from '../../../../../../components/ListAvatar';
+import getFullName from '../../../../../../utils/getFullName';
+import MessageContentText from './message-content-text/MessageContentText';
+import { formatTime } from '../../../../../../utils/formatDate';
+import MessageActionItem from './Message-action-Item/MessageActionItem';
+import useSmallScreen from '../../../../../../hooks/useSmallScreen';
+import useLongPress from '../../../../../../hooks/useLongPress';
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
+import MessageContentMedia from './message-content-media/MessageContentMedia';
+import { ItemWrapperFocus } from '../../../../../../components/BlinkWrapper';
+import MessageContentVoice from './message-content-voice/MessageContentVoice';
+import MessageContentDoc from './message-content-doc/MessageContentDoc';
 
 const MessageContentItem = React.forwardRef(
   (
@@ -65,24 +64,24 @@ const MessageContentItem = React.forwardRef(
               sx: {
                 py: 0,
                 mb: grouped ? 0.2 : 2,
-                userSelect: "none",
+                userSelect: 'none',
               },
             }
           : {
               sx: {
                 py: 0,
                 mb: grouped ? 0.2 : 2,
-                cursor: "auto",
-                transition: "background-color .1s ease-out",
-                "& .message-action-item, & .date-item": {
+                cursor: 'auto',
+                transition: 'background-color .1s ease-out',
+                '& .message-action-item, & .date-item': {
                   opacity: 0,
-                  pointerEvents: "none",
-                  transition: "opacity .2s ease-out",
+                  pointerEvents: 'none',
+                  transition: 'opacity .2s ease-out',
                 },
-                "&:hover, &:focus": {
+                '&:hover, &:focus': {
                   bgcolor: (theme) => theme.palette.action.hover,
-                  "& .message-action-item, & .date-item": {
-                    pointerEvents: "auto",
+                  '& .message-action-item, & .date-item': {
+                    pointerEvents: 'auto',
                     opacity: 1,
                   },
                 },
@@ -94,10 +93,11 @@ const MessageContentItem = React.forwardRef(
     return (
       <ItemWrapperFocus
         id={message?.id || message?.clientId}
-        location='messaging'>
+        location="messaging"
+      >
         {/* <Fade in appear={false} unmountOnExit style={{ width: "100%" }}> */}
         <Box
-          component='div'
+          component="div"
           ref={ref}
           sx={{
             bgcolor: (theme) =>
@@ -106,50 +106,55 @@ const MessageContentItem = React.forwardRef(
                     theme.palette.primary.main,
                     theme.palette.action.selectedOpacity
                   )
-                : "none",
-          }}>
-          <ListItemMessage alignItems='flex-start' {...listItemProps}>
+                : 'none',
+          }}
+        >
+          <ListItemMessage alignItems="flex-start" {...listItemProps}>
             <ListItemAvatar
               sx={{
-                display: "flex",
-                justifyContent: "start",
-              }}>
+                display: 'flex',
+                justifyContent: 'start',
+              }}
+            >
               {!hideAvatar ? (
                 <ListAvatar invisible id={sender.id} src={sender.image}>
                   {name?.charAt(0).toUpperCase()}
                 </ListAvatar>
               ) : (
                 <Typography
-                  variant='caption'
-                  component='div'
-                  display='flex'
-                  whiteSpace='nowrap'
-                  color='text.secondary'
-                  className='date-item'
-                  justifyContent='end'>
-                  {dayjs(createdAt).format("HH:mm")}
+                  variant="caption"
+                  component="div"
+                  display="flex"
+                  whiteSpace="nowrap"
+                  color="text.secondary"
+                  className="date-item"
+                  justifyContent="end"
+                >
+                  {dayjs(createdAt).format('HH:mm')}
                 </Typography>
               )}
             </ListItemAvatar>
             <ListItemText
               primary={
                 !hideName && (
-                  <Stack direction='row' spacing={1} alignItems='flex-end'>
+                  <Stack direction="row" spacing={1} alignItems="flex-end">
                     <Typography
-                      textOverflow='ellipsis'
-                      whiteSpace='nowrap'
-                      overflow='hidden'
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      overflow="hidden"
                       //fontWeight={550}
-                      variant='body1'>
+                      variant="body1"
+                    >
                       {name}
                     </Typography>
                     <Typography
-                      variant='caption'
-                      component='div'
-                      display='flex'
-                      whiteSpace='nowrap'
-                      color='text.secondary'
-                      justifyContent='end'>
+                      variant="caption"
+                      component="div"
+                      display="flex"
+                      whiteSpace="nowrap"
+                      color="text.secondary"
+                      justifyContent="end"
+                    >
                       {formatTime({ date: createdAt, showTime: true })}
                     </Typography>
                   </Stack>
@@ -157,23 +162,23 @@ const MessageContentItem = React.forwardRef(
               }
               secondary={
                 <>
-                  {message.type === "text" && (
+                  {message.type === 'text' && (
                     <MessageContentText content={message.content} />
                   )}
-                  {message.type === "media" && (
+                  {message.type === 'media' && (
                     <MessageContentMedia
                       content={message?.content}
                       subType={message?.subType}
                       id={message?.clientId || message?.id}
                     />
                   )}
-                  {message.type === "voice" && (
+                  {message.type === 'voice' && (
                     <MessageContentVoice
                       id={message?.clientId || message?.id}
                       content={message?.content}
                     />
                   )}
-                  {message.type === "doc" && (
+                  {message.type === 'doc' && (
                     <MessageContentDoc
                       id={message?.clientId || message?.id}
                       content={message?.content}
@@ -183,11 +188,11 @@ const MessageContentItem = React.forwardRef(
               }
               slotProps={{
                 primary: {
-                  component: "div",
+                  component: 'div',
                 },
                 secondary: {
-                  component: "div",
-                  sx: { "& p": { p: 0, m: 0 } },
+                  component: 'div',
+                  sx: { '& p': { p: 0, m: 0 } },
                 },
               }}
             />
@@ -200,7 +205,7 @@ const MessageContentItem = React.forwardRef(
   }
 );
 
-MessageContentItem.displayName = "MessageContentItem";
+MessageContentItem.displayName = 'MessageContentItem';
 
 MessageContentItem.propTypes = {
   message: PropTypes.object,

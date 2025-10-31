@@ -1,6 +1,6 @@
-import formatObjectData, { formatUser } from "../../utils/formatObjectData";
-import getFullName from "../../utils/getFullName";
-import deepMerge from "../../utils/mergeDeep";
+import formatObjectData, { formatUser } from '../../utils/formatObjectData';
+import getFullName from '../../utils/getFullName';
+import deepMerge from '../../utils/mergeDeep';
 
 const updateArraysData = (state, actions) => {
   const { data, user } = actions.payload;
@@ -13,7 +13,7 @@ const updateArraysData = (state, actions) => {
     values.forEach((value) => {
       const formattedValue = formatObjectData(value);
 
-      if (Object.hasOwnProperty.call(formattedValue, "participants")) {
+      if (Object.hasOwnProperty.call(formattedValue, 'participants')) {
         formattedValue.participants = formattedValue.participants.map(
           (participant) => ({
             ...participant,
@@ -21,29 +21,35 @@ const updateArraysData = (state, actions) => {
           })
         );
       }
-      if (Object.hasOwnProperty.call(formattedValue, "location"))
+      if (Object.hasOwnProperty.call(formattedValue, 'location')) {
+        const loc = formattedValue?.location;
+        const room = formattedValue?.room;
+        const ps = formattedValue?.participants;
+        const findLoc = ({ identity: u }) => u?.id === loc;
+        if (typeof loc === 'string')
+          formattedValue.location = room || ps?.find(findLoc)?.identity;
         formattedValue.location = formatObjectData(formattedValue.location);
-
-      if (Object.hasOwnProperty.call(formattedValue, "grade")) {
+      }
+      if (Object.hasOwnProperty.call(formattedValue, 'grade')) {
         formattedValue.role = formattedValue?.grade?.role;
         formattedValue.grade = formattedValue?.grade?.grade;
       }
 
-      if (Object.hasOwnProperty.call(formattedValue, "members"))
+      if (Object.hasOwnProperty.call(formattedValue, 'members'))
         formattedValue.members = formattedValue.members.map((member) => ({
           ...formatUser(member?._id),
           level: member?.role,
         }));
 
-      if (Object.hasOwnProperty.call(formattedValue, "messages")) {
+      if (Object.hasOwnProperty.call(formattedValue, 'messages')) {
         formattedValue.messages = formattedValue.messages.map((message) =>
           formatObjectData(
             { ...message, sender: formatUser(message?.sender) },
-            { id: "_id", subType: "subtype" }
+            { id: '_id', subType: 'subtype' }
           )
         );
 
-        if (formattedValue.type === "direct") {
+        if (formattedValue.type === 'direct') {
           const remoteUser = formattedValue.members.find(
             ({ id }) => id !== user.id
           );
@@ -54,10 +60,10 @@ const updateArraysData = (state, actions) => {
         ({ id }) => id === formattedValue.id
       );
 
-      if (key === "discussions") {
+      if (key === 'discussions') {
         formattedValue.createdBy = formatObjectData(formattedValue.createdBy);
         const newMessages = formattedValue.messages.map((msg) => ({
-          status: msg?.status || "sended",
+          status: msg?.status || 'sended',
           ...msg,
         })); //.sort((a, b) => new Date(b.updatedAt).getTime()  - new Date(a.updatedAt).getTime());
         let messages = state.app.messages[formattedValue.id] || [];
@@ -76,7 +82,7 @@ const updateArraysData = (state, actions) => {
         const [message] = messages;
         formattedValue.message = message;
 
-        if (formattedValue.type === "direct") {
+        if (formattedValue.type === 'direct') {
           const contactPerson = formattedValue.members.find(
             ({ id }) => id !== user?.id
           );
@@ -84,8 +90,8 @@ const updateArraysData = (state, actions) => {
         }
       }
 
-      if (key === "notifications") {
-        if (formattedValue.variant === "guest") {
+      if (key === 'notifications') {
+        if (formattedValue.variant === 'guest') {
           formattedValue.from = formatUser(formattedValue.from);
           formattedValue.to = formatUser(formattedValue.to);
         }

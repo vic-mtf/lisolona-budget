@@ -1,6 +1,6 @@
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import AddIcCallOutlinedIcon from "@mui/icons-material/AddIcCallOutlined";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import AddIcCallOutlinedIcon from '@mui/icons-material/AddIcCallOutlined';
 import {
   Dialog,
   Drawer,
@@ -13,16 +13,16 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { createElement } from "react";
-import PropTypes from "prop-types";
-import { options } from "../../../navigation/calls/groupCall";
-import { useMemo } from "react";
-import useSmallScreen from "../../../../../hooks/useSmallScreen";
-import ScheduledMeeting from "../../../forms/scheduled-meeting/ScheduledMeeting";
-import { useDispatch } from "react-redux";
-import { updateConferenceData } from "../../../../../redux/conference/conference";
+} from '@mui/material';
+import { useState } from 'react';
+import { createElement } from 'react';
+import PropTypes from 'prop-types';
+import { options } from '../../../navigation/calls/groupCall';
+import { useMemo } from 'react';
+import useSmallScreen from '../../../../../hooks/useSmallScreen';
+import ScheduledMeeting from '../../../forms/scheduled-meeting/ScheduledMeeting';
+import { useDispatch } from 'react-redux';
+import { updateConferenceData } from '../../../../../redux/conference/conference';
 
 export default function StartCallButton({ user }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -33,18 +33,18 @@ export default function StartCallButton({ user }) {
   const menuNavProps = useMemo(
     () =>
       matches
-        ? { anchor: "bottom" }
+        ? { anchor: 'bottom' }
         : {
             anchorEl,
-            transformOrigin: { horizontal: "right", vertical: "top" },
-            anchorOrigin: { horizontal: "left", vertical: "bottom" },
+            transformOrigin: { horizontal: 'right', vertical: 'top' },
+            anchorOrigin: { horizontal: 'left', vertical: 'bottom' },
           },
     [matches, anchorEl]
   );
 
   const actions = useMemo(
     () => ({
-      "schedule-meeting": () => setScheduleOpen(true),
+      'schedule-meeting': () => setScheduleOpen(true),
     }),
     []
   );
@@ -52,30 +52,30 @@ export default function StartCallButton({ user }) {
   return (
     <>
       <Tooltip
-        title={
-          user?.type === "room" ? "Démarrer la réunion" : "Lancer l'appel"
-        }>
+        title={user?.type === 'room' ? 'Démarrer la réunion' : "Lancer l'appel"}
+      >
         <IconButton
-          sx={{ position: "relative" }}
+          sx={{ position: 'relative' }}
           onClick={(event) => {
-            if (user?.type === "room") setAnchorEl(event.currentTarget);
+            if (user?.type === 'room') setAnchorEl(event.currentTarget);
             else {
               const callTarget = user?.members?.find(
                 ({ id }) => id === user?.id
               );
               window.open(
-                import.meta.env.BASE_URL + "/conference/create",
-                "_blank"
+                import.meta.env.BASE_URL + '/conference/create',
+                '_blank'
               );
               dispatch(
                 updateConferenceData({
-                  key: "callTarget",
+                  key: 'callTarget',
                   data: callTarget,
                 })
               );
             }
-          }}>
-          {user?.type === "room" ? (
+          }}
+        >
+          {user?.type === 'room' ? (
             <AddIcCallOutlinedIcon />
           ) : (
             <PhoneOutlinedIcon />
@@ -86,11 +86,12 @@ export default function StartCallButton({ user }) {
       <MenuNav
         onClose={() => setAnchorEl(null)}
         open={Boolean(anchorEl)}
-        {...menuNavProps}>
+        {...menuNavProps}
+      >
         <Fade in={matches} appear={false} unmountOnExit>
-          <Toolbar variant='dense'>
-            <Typography flexGrow={1} variant='body1' fontWeight='bold'>
-              Selectionnez une action
+          <Toolbar variant="dense">
+            <Typography flexGrow={1} variant="body1" fontWeight="bold">
+              Sélectionnez une action
             </Typography>
             <IconButton onClick={() => setAnchorEl(null)}>
               <CloseOutlinedIcon />
@@ -98,26 +99,28 @@ export default function StartCallButton({ user }) {
           </Toolbar>
         </Fade>
 
-        {options.map(({ label, id, icon = "div", action, disabled }) => (
+        {options.map(({ label, id, icon = 'div', action, disabled }) => (
           <MenuItem
             key={id}
             disabled={disabled}
             onClick={(event) => {
-              if (typeof action === "function") action(event, user);
-              if (typeof actions[id] === "function") actions[id](event);
+              if (typeof action === 'function') action(event, user);
+              if (typeof actions[id] === 'function') actions[id](event);
               setAnchorEl(null);
-            }}>
+            }}
+          >
             <ListItemIcon>{createElement(icon)}</ListItemIcon>
             <ListItemText primary={label} />
           </MenuItem>
         ))}
       </MenuNav>
-      <Dialog
+      {/* <Dialog
         fullScreen={matches}
         open={scheduleOpen}
-        onClose={() => setScheduleOpen(false)}>
+        onClose={() => setScheduleOpen(false)}
+      >
         <ScheduledMeeting onClose={() => setScheduleOpen(false)} room={user} />
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

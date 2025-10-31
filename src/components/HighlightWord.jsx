@@ -1,62 +1,70 @@
-import PropTypes from "prop-types";
-import { Box } from "@mui/material";
+import PropTypes from 'prop-types';
+import { Box } from '@mui/material';
 
-const HighlightWord = ({ text = "", word = "" }) => {
+const HighlightWord = ({ text = '', words = [] }) => {
   const safeText = String(text);
-  const safeWord = String(word).trim();
+  const list = Array.isArray(words)
+    ? words
+    : typeof words === 'string'
+    ? [words]
+    : [];
 
-  if (!safeWord) {
+  if (!safeText || list.length === 0) return <span>{safeText}</span>;
+
+  try {
+    // Escape regex char
+    const escaped = list
+      .filter(Boolean)
+      .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+    if (escaped.length === 0) return <span>{safeText}</span>;
+
+    const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
+
+    const parts = [];
+    let lastIndex = 0;
+
+    safeText.replace(regex, (match, _, offset) => {
+      // Partie non surlignée
+      if (offset > lastIndex) {
+        parts.push(safeText.slice(lastIndex, offset));
+      }
+      // Partie surlignée
+      parts.push(
+        <b key={offset} style={{ fontWeight: 800 }}>
+          {match}
+        </b>
+      );
+      lastIndex = offset + match.length;
+    });
+
+    // Fin du texte
+    if (lastIndex < safeText.length) {
+      parts.push(safeText.slice(lastIndex));
+    }
+
     return (
-      <span
-        style={{
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          display: "block",
-        }}>
-        {safeText}
-      </span>
+      <Box
+        component="span"
+        sx={{
+          whiteSpace: 'pre-wrap',
+          display: 'inline',
+        }}
+      >
+        {parts}
+      </Box>
     );
+  } catch {
+    return <span>{safeText}</span>;
   }
-
-  const keywords = [...new Set([safeWord, ...safeWord.split(/\s+/)])];
-  const escapedWords = keywords.map((w) =>
-    w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-  );
-  const regex = new RegExp(`(${escapedWords.join("|")})`, "gi");
-  const parts = safeText.split(regex);
-
-  return (
-    <span
-      style={{
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        display: "block",
-      }}>
-      {parts.map((part, index) =>
-        keywords.some((k) => part.toLowerCase() === k.toLowerCase()) ? (
-          <Box
-            component='b'
-            sx={{
-              color: "text.primary",
-              fontWeight: 900,
-              display: "inline",
-            }}
-            key={index}>
-            {part}
-          </Box>
-        ) : (
-          part
-        )
-      )}
-    </span>
-  );
 };
 
 HighlightWord.propTypes = {
   text: PropTypes.string,
-  word: PropTypes.string,
+  words: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
 };
 
 export default HighlightWord;
