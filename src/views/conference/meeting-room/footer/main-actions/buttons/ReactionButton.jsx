@@ -1,11 +1,11 @@
-import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
-import React from "react";
-import PropTypes from "prop-types";
-import ActionButton from "./ActionButton";
+import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
+import React from 'react';
+import PropTypes from 'prop-types';
+import ActionButton from './ActionButton';
 
 const ReactionButton = ({ onClose }) => {
   return (
-    <ActionButton id='reaction' title='Réagir' onClick={onClose}>
+    <ActionButton id="reaction" title="Réagir" onClick={onClose} disabled>
       <SentimentSatisfiedOutlinedIcon />
     </ActionButton>
   );

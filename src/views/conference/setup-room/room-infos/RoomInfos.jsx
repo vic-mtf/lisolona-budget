@@ -51,7 +51,6 @@ const RoomInfos = () => {
     () => state?.data || normalizeObjectKeys(callDetail),
     [callDetail, state?.data]
   );
-  console.log(callDetail);
   const isGuest = useSelector((store) => store.user.isGuest);
   const isApplicant = useMemo(() => {
     if (!data) return false;
@@ -86,8 +85,6 @@ const RoomInfos = () => {
         const participants = {};
         const guests = {};
 
-        console.log(data?.participants);
-
         data?.participants?.forEach((p) => {
           if (!p?.identity) return;
           if (p.identity.id === id) {
@@ -102,9 +99,18 @@ const RoomInfos = () => {
         });
         data?.guests?.forEach((g) => (guests[g.id] = g));
 
+        const callData = { ...data };
+        delete callData.participants;
+        delete callData.guests;
+        delete callData.message;
+        delete callData.status;
+        delete callData.organizerAuth;
+        delete callData.callDetail;
+
         dispatch(
           updateConferenceData({
             key: [
+              'callData',
               'AGORA_DATA',
               'meeting.participants',
               'meeting.guests',
@@ -113,6 +119,7 @@ const RoomInfos = () => {
               'meeting.organizerAuth',
             ],
             data: [
+              callData,
               {
                 TOKEN,
                 APP_ID,

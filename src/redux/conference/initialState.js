@@ -1,6 +1,7 @@
 import { red } from '@mui/material/colors';
 
 const initialState = {
+  callData: null,
   roomId: null,
   loading: false,
   callTarget: null,

@@ -18,8 +18,6 @@ const ScheduledMeetingForm = ({ data }) => {
     formState: { errors },
   } = useFormContext();
 
-  console.log(data);
-
   return (
     <Box
       maxHeight="100%"

@@ -21,7 +21,6 @@ const LocalSaveUser = ({ setStep, refetch, code }) => {
   const navigateTo = useNavigate();
   const { state } = useLocation();
   const meeting = useMemo(() => state?.meeting, [state?.meeting]);
-  console.log('name => ', name);
 
   const handleSendData = useCallback(async () => {
     let response = await refetch({

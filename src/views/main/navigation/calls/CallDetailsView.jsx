@@ -30,7 +30,7 @@ import useSmallScreen from '../../../../hooks/useSmallScreen';
 import { updateData } from '../../../../redux/data/data';
 import getFullName from '../../../../utils/getFullName';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import generateQRImage from '../../../../utils/generateQRImage';
+// import generateQRImage from '../../../../utils/generateQRImage';
 import scrollBarSx from '../../../../utils/scrollBarSx';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
@@ -56,6 +56,21 @@ const CallDetailsView = ({ onCallAction }) => {
   // const theme = useTheme();
   const isExistingCall = ['running', 'scheduled'].includes(call?.status);
   const buttonActionProps = useMemo(() => getButtonProps(call), [call]);
+
+  const callUrl = useMemo(() => {
+    if (!call) return null;
+    const cleanPath = (p = '') =>
+      (p?.endsWith('/') ? p?.slice(0, -1) : p) || '';
+    try {
+      const pathname = '/conference/' + call?.id;
+      const base = new URL(import.meta.env.BASE_URL, window.location.origin);
+      base.pathname = cleanPath(base.pathname) + pathname;
+      return base.toString();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }, [call]);
 
   return (
     <Dialog open={open} fullScreen={matches}>
@@ -157,7 +172,7 @@ const CallDetailsView = ({ onCallAction }) => {
                 )}
                 {isExistingCall && (
                   <>
-                    <QRCodeBox value="Bonjour les gens" />
+                    <QRCodeBox value={callUrl} />
                     <Typography variant="caption" color="text.secondary">
                       Vous pouvez scanner ce code pour rejoindre la reunion
                     </Typography>

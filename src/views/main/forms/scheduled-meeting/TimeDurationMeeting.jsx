@@ -17,7 +17,6 @@ const TimeDurationMeeting = React.forwardRef(
 
       const hour = newValue.hour();
       const minute = newValue.minute();
-      console.log(hour, minute);
 
       const validHour = hour >= 0 && hour <= 23;
       const validMinute = minute >= 0 && minute <= 59;
@@ -65,7 +64,7 @@ const TimeDurationMeeting = React.forwardRef(
           {...otherProps}
           onChange={handleChange}
           onError={(e, v) => {
-            console.log('error => ', v);
+            console.error(v);
             handleChange(v);
           }}
           ref={ref}

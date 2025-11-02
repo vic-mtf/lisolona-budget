@@ -1,9 +1,9 @@
-import IconButton from "../../../../../components/IconButton";
-import { Tooltip, Stack } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
-import { setConferenceData } from "../../../../../redux/conference";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import IconButton from '../../../../../components/IconButton';
+import { Tooltip, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import { setConferenceData } from '../../../../../redux/conference';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export default function DetailsButton({ getVideoStream }) {
   const nav = useSelector((store) => store.conference.nav);
@@ -13,28 +13,30 @@ export default function DetailsButton({ getVideoStream }) {
   return (
     <Stack
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
-      spacing={0.1}>
-      <Tooltip title='Détail de la réunion' arrow>
+      spacing={0.1}
+    >
+      <Tooltip title="Détail de la réunion" arrow>
         <IconButton
-          size='small'
-          color='primary'
+          size="small"
+          color="primary"
           selected={selected}
           onClick={() =>
             dispatch(
               setConferenceData({
-                data: { nav: selected ? "details-close" : "details-open" },
+                data: { nav: selected ? 'details-close' : 'details-open' },
               })
             )
           }
           sx={{
             zIndex: 0,
             borderRadius: 1,
-            boxShadow: "none",
-          }}>
+            boxShadow: 'none',
+          }}
+        >
           <InfoOutlinedIcon />
         </IconButton>
       </Tooltip>

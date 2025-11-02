@@ -10,24 +10,33 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import generateSVGImage from '../../../../../utils/generateQRImage';
 import { useTheme } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const MeetingQRCode = () => {
   const { code } = useParams();
   const { state } = useLocation();
   const qRCodeRef = useRef(null);
+  const call = useSelector((store) => store.conference.callData);
 
-  const url = useMemo(
-    () =>
-      new URL(
-        '/conference/' + code,
-        new URL(PATH_NAME, window.origin).toString()
-      ).toString(),
-    [code]
-  );
+  const callUrl = useMemo(() => {
+    if (!code) return null;
+    const cleanPath = (p = '') =>
+      (p?.endsWith('/') ? p?.slice(0, -1) : p) || '';
+    try {
+      const pathname = '/conference/' + code;
+      const base = new URL(import.meta.env.BASE_URL, window.location.origin);
+      base.pathname = cleanPath(base.pathname) + pathname;
+      return base.toString();
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }, [code]);
+
   const target = useMemo(() => state?.target, [state?.target]);
-  const call = useMemo(() => state?.call, [state?.call]);
   const theme = useTheme();
   const title = call?.title || target?.name;
+
   const desc = call?.description;
 
   const handleDownload = async () => {
@@ -64,7 +73,6 @@ const MeetingQRCode = () => {
     for (let i = 0; i < byteCharacters.length; i++)
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     const byteArray = new Uint8Array(byteNumbers);
-
     const file = new File([byteArray], 'geid_meeting_qr_code.png', {
       type: 'image/png',
     });
@@ -90,7 +98,7 @@ const MeetingQRCode = () => {
             {title}
           </Typography>
         )}
-        <QRCodeBox value={url} ref={qRCodeRef} />
+        <QRCodeBox value={callUrl} ref={qRCodeRef} />
         <Typography variant="caption" align="center" color="textSecondary">
           Migrer la réunion en scannant le code
         </Typography>
@@ -121,13 +129,11 @@ const MeetingQRCode = () => {
       {desc && (
         <>
           <ListSubheader>Description de la réunion</ListSubheader>
-          <Typography>{desc}</Typography>
+          <Typography px={2}>{desc}</Typography>
         </>
       )}
     </Box>
   );
 };
-
-const PATH_NAME = window.location.pathname.split('/conference/')[0];
 
 export default MeetingQRCode;

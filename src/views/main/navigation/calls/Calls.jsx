@@ -22,7 +22,6 @@ export default function Calls() {
 
   const handleOpenDetails = useCallback(
     (call) => () => {
-      console.log(call);
       dispatch(
         updateData({
           key: 'app.actions.calls.info',

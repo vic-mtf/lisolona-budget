@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -17,7 +17,6 @@ const MessageOptions = () => {
   const allowPrivateMessage = useSelector(
     (store) => store.conference.meeting.organizerAuth.allowPrivateMessage
   );
-  console.log('allowPrivateMessage => ', allowPrivateMessage);
   const dispatch = useDispatch();
   const socket = useSocket();
 

@@ -33,7 +33,6 @@ const JoinMeeting = React.memo(({ onClose }) => {
           url: '/api/chat/room/call/' + code,
         });
         const data = normalizeObjectKeys(response?.data);
-        console.log('data => ', data);
         const url = import.meta.env.BASE_URL + `/conference/${data.id}`;
         window.open(url, '_blank');
         const type = data?.room ? 'room' : 'direct';
