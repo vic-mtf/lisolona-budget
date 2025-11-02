@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 const HighlightWord = ({ text = '', words = [] }) => {
   const safeText = String(text);
@@ -9,7 +9,12 @@ const HighlightWord = ({ text = '', words = [] }) => {
     ? [words]
     : [];
 
-  if (!safeText || list.length === 0) return <span>{safeText}</span>;
+  if (!safeText || list.length === 0)
+    return (
+      <Typography color="currentColor" component="span">
+        {safeText}
+      </Typography>
+    );
 
   try {
     // Escape regex char
@@ -17,7 +22,12 @@ const HighlightWord = ({ text = '', words = [] }) => {
       .filter(Boolean)
       .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 
-    if (escaped.length === 0) return <span>{safeText}</span>;
+    if (escaped.length === 0)
+      return (
+        <Typography color="currentColor" component="span">
+          {safeText}
+        </Typography>
+      );
 
     const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
 
@@ -31,9 +41,9 @@ const HighlightWord = ({ text = '', words = [] }) => {
       }
       // Partie surlignée
       parts.push(
-        <b key={offset} style={{ fontWeight: 800 }}>
+        <Typography component="b" key={offset} color="currentColor">
           {match}
-        </b>
+        </Typography>
       );
       lastIndex = offset + match.length;
     });
@@ -44,15 +54,17 @@ const HighlightWord = ({ text = '', words = [] }) => {
     }
 
     return (
-      <Box
+      <Typography
         component="span"
+        color="currentColor"
         sx={{
           whiteSpace: 'pre-wrap',
           display: 'inline',
+          color: 'currentColor',
         }}
       >
         {parts}
-      </Box>
+      </Typography>
     );
   } catch {
     return <span>{safeText}</span>;

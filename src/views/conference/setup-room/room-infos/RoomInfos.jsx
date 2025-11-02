@@ -20,6 +20,7 @@ import { useNotifications } from '@toolpad/core/useNotifications';
 import store from '../../../../redux/store';
 import useSocket from '../../../../hooks/useSocket';
 import { useState } from 'react';
+import ringtones from '../../../../utils/ringtones';
 
 const RoomInfos = () => {
   const [requestInProgress, setRequestInProgress] = useState(false);
@@ -297,8 +298,9 @@ const RoomInfos = () => {
   }, [navigateTo, state, callDetail]);
 
   useEffect(() => {
-    if (!connected && !target) navigateTo('/', { replace: true });
-  }, [connected, navigateTo, target]);
+    if (!connected && !target && code)
+      navigateTo('/?code=' + code, { replace: true });
+  }, [connected, navigateTo, target, code]);
 
   useEffect(() => {
     const key = 'remote-response';
@@ -307,6 +309,8 @@ const RoomInfos = () => {
     timerRef.current = setTimeout(() => {
       notifications.close(key);
       setRequestInProgress(false);
+      ringtones.error.volume = 0.1;
+      ringtones.error.play();
       notifications.show(
         'Personne n’a accepté votre demande. Réessayer dans quelques instants.',
         { key }
@@ -315,17 +319,24 @@ const RoomInfos = () => {
     }, 40 * 1000);
 
     const handleResponse = (data) => {
-      socket?.emit('decline-join-room', { roomId: code });
+      //socket?.emit('decline-join-room', { roomId: code });
       notifications.close(key);
       clearTimeout(timerRef.current);
       setRequestInProgress(false);
       const { status } = data;
-      if (status === 'declined')
+      if (status === 'declined') {
+        ringtones.error.volume = 0.1;
+        ringtones.error.play();
         notifications.show('Le modérateur a refusé votre demande', {
           severity: data.severity,
           key,
         });
-      if (status === 'accepted') handleJoinCall();
+      }
+      if (status === 'accepted') {
+        ringtones.newsRoom.volume = 0.1;
+        ringtones.newsRoom.play();
+        handleJoinCall();
+      }
     };
 
     socket?.on('response-join-room', handleResponse);

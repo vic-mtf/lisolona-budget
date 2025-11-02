@@ -19,6 +19,7 @@ const NoticeSnack = ({
   inline,
   action,
   words = [],
+  inlineAction = false,
 }) => {
   const nativeTheme = useTheme();
   const theme = createTheme({
@@ -38,8 +39,8 @@ const NoticeSnack = ({
         display="flex"
         flexDirection="row"
         gap={2}
-        alignItems="flex-start"
-        maxWidth={{ xs: 320, xl: 400 }}
+        alignItems={inlineAction ? 'center' : 'flex-start'}
+        minWidth={{ xs: 300, xl: 400 }}
       >
         <Box>
           <ListAvatar id={id} src={src}>
@@ -47,18 +48,21 @@ const NoticeSnack = ({
           </ListAvatar>
         </Box>
 
-        <Box display="flex" flexDirection="column">
-          <Box>
-            {/* NAME */}
+        <Box
+          display="flex"
+          flexDirection={inlineAction ? 'row' : 'column'}
+          gap={1}
+          flexGrow={1}
+        >
+          <Box flexGrow={1}>
             <Typography
               color="text.primary"
-              variant="body1"
+              variant="body2"
               component={inline ? 'span' : 'div'}
-              sx={{ fontWeight: 600 }}
+              sx={{ fontWeight: 550 }}
             >
               {name}
             </Typography>{' '}
-            {/* MESSAGE avec highlight */}
             <Typography
               color="text.secondary"
               variant="body2"
@@ -69,7 +73,9 @@ const NoticeSnack = ({
           </Box>
 
           {action && (
-            <DialogActions sx={{ m: 0, p: 0, mt: 0.5 }}>{action}</DialogActions>
+            <DialogActions sx={{ m: 0, p: 0, mt: 0.5, flexGrow: 1 }}>
+              {action}
+            </DialogActions>
           )}
         </Box>
       </Box>
@@ -84,6 +90,7 @@ NoticeSnack.propTypes = {
   src: PropTypes.string,
   inline: PropTypes.bool,
   action: PropTypes.node,
+  inlineAction: PropTypes.bool,
   words: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),

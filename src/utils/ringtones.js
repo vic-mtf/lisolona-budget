@@ -10,6 +10,7 @@ import raise_hand from '../assets/send_signal.mp3';
 import lower_hand from '../assets/receive_signal.mp3';
 import signal_unknown from '../assets/start-13691.mp3';
 import hang_up from '../assets/hang-up.webm';
+import news_room from '../assets/news_room.mp3';
 
 export const ringtones_urls = {
   alert: alert_ringtone,
@@ -24,6 +25,7 @@ export const ringtones_urls = {
   lower: lower_hand,
   hangUp: hang_up,
   signalUnknown: signal_unknown,
+  newsRoom: news_room,
 };
 
 const ringtones = {
@@ -39,6 +41,7 @@ const ringtones = {
   lower: new Audio(lower_hand),
   hangUp: new Audio(hang_up),
   signalUnknown: new Audio(signal_unknown),
+  newsRoom: new Audio(news_room),
 };
 
 export const vibrates = {

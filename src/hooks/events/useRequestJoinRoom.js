@@ -7,6 +7,7 @@ import { createElement } from 'react';
 import Button from '@mui/material/Button';
 import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
 import getFullName from '../../utils/getFullName';
+import ringtones from '../../utils/ringtones';
 
 const useRequestJoinRoom = () => {
   const socket = useSocket();
@@ -58,6 +59,9 @@ const useRequestJoinRoom = () => {
           label: 'Refuser',
         },
       ];
+
+      ringtones.newsRoom.volume = 0.1;
+      ringtones.newsRoom.play();
 
       notifications.show(
         React.createElement(NoticeSnack, {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import useSocket from '../useSocket';
 import store from '../../redux/store';
 import { useLocation } from 'react-router-dom';
@@ -7,6 +7,7 @@ import getFullName from '../../utils/getFullName';
 import ringtones from '../../utils/ringtones';
 import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
 import { useSelector } from 'react-redux';
+import NoticeSnack from '../../components/NoticeSnack';
 
 const useRemoteUserLeave = () => {
   const socket = useSocket();
@@ -36,9 +37,19 @@ const useRemoteUserLeave = () => {
             data: [false],
           },
         });
-        notifications.show(`${getFullName(identity)} a quitté la réunion`, {
-          key: remoteUserId,
-        });
+        notifications.show(
+          React.createElement(NoticeSnack, {
+            src: identity.image,
+            id: identity.id,
+            name: getFullName(identity),
+            inline: true,
+            inlineAction: true,
+            message: 'a quitté la réunion',
+          }),
+          {
+            key: remoteUserId,
+          }
+        );
         ringtones.disconnect.play();
         ringtones.disconnect.volume = 0.1;
       }

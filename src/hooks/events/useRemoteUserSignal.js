@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useSocket from '../useSocket';
 import store from '../../redux/store';
 import { isPlainObject } from '@reduxjs/toolkit';
 import getFullName from '../../utils/getFullName';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import ringtones from '../../utils/ringtones';
-
+import NoticeSnack from '../../components/NoticeSnack';
+import WavingHand from '../../components/WavingHand';
 const useRemoteUserSignal = () => {
   const socket = useSocket();
 
@@ -56,24 +57,33 @@ const useRaiseHandSignal = () => {
   useEffect(() => {
     const onSignal = ({ state, participants = [] }) => {
       const members = store.getState().conference.meeting.participants;
-      const names = [];
       const userId = store.getState().user.id;
 
       for (let p of participants) {
         const participant = members[p];
         if (participant && participant?.identity?.id !== userId) {
-          names.push(getFullName(participant.identity));
+          const name = getFullName(participant.identity);
           const prop = 'handRaised';
-          const key = names.join('') + prop;
+          const key = participant.identity.id + prop;
           if (hasProp(state, prop) && !state.handRaised) {
             notifications.close(key);
             ringtones.lower.volume = 0.03;
             ringtones.lower.play();
           }
           if (hasProp(state, prop) && state?.handRaised) {
-            const message =
-              names > 1 ? 'ont  levé leurs mains' : 'a levé sa main';
-            notifications.show(`${genNameSummary(names)} ${message}`, { key });
+            const message = 'a levé la main';
+            notifications.show(
+              React.createElement(NoticeSnack, {
+                src: participant.identity.image,
+                id: participant.identity.id,
+                name,
+                message,
+                inline: true,
+                inlineAction: true,
+                action: React.createElement(WavingHand),
+              }),
+              { key }
+            );
             ringtones.raise.volume = 0.05;
             ringtones.raise.play();
           }
@@ -137,15 +147,15 @@ const useOrganizerSignal = () => {
 
 const hasProp = (obj, prop) => isPlainObject(obj) && prop in obj;
 const fname = (fullName) => fullName.trim().split(/\s+/)[0];
-const genNameSummary = (fullNames) => {
-  const count = fullNames.length;
-  const ft = fname(fullNames[0]);
-  const lt = fname(fullNames[fullNames.length - 1]);
-  if (!count) return '';
-  if (count === 1) return fullNames[0];
-  if (count === 2) return `${ft} et ${lt}`;
-  if (count === 3) return `${ft}, ${lt} et 1 autre personne`;
-  return `${ft}, ${lt} et ${count - 2} autres personnes`;
-};
+// const genNameSummary = (fullNames) => {
+//   const count = fullNames.length;
+//   const ft = fname(fullNames[0]);
+//   const lt = fname(fullNames[fullNames.length - 1]);
+//   if (!count) return '';
+//   if (count === 1) return fullNames[0];
+//   if (count === 2) return `${ft} et ${lt}`;
+//   if (count === 3) return `${ft}, ${lt} et 1 autre personne`;
+//   return `${ft}, ${lt} et ${count - 2} autres personnes`;
+// };
 
 export default useRemoteUserSignal;
