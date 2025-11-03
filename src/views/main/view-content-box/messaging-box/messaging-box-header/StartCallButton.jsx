@@ -23,6 +23,8 @@ import useSmallScreen from '../../../../../hooks/useSmallScreen';
 import ScheduledMeeting from '../../../forms/scheduled-meeting/ScheduledMeeting';
 import { useDispatch } from 'react-redux';
 import { updateConferenceData } from '../../../../../redux/conference/conference';
+import { startNewCall } from '../../../../../utils/handleStartNewCall';
+import { useCallback } from 'react';
 
 export default function StartCallButton({ user }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -49,6 +51,10 @@ export default function StartCallButton({ user }) {
     []
   );
 
+  const onCloseDialog = useCallback(() => {
+    setScheduleOpen(false);
+  }, []);
+
   return (
     <>
       <Tooltip
@@ -56,22 +62,13 @@ export default function StartCallButton({ user }) {
       >
         <IconButton
           sx={{ position: 'relative' }}
-          onClick={(event) => {
-            if (user?.type === 'room') setAnchorEl(event.currentTarget);
+          onClick={(e) => {
+            if (user?.type === 'room') setAnchorEl(e.currentTarget);
             else {
               const callTarget = user?.members?.find(
                 ({ id }) => id === user?.id
               );
-              window.open(
-                import.meta.env.BASE_URL + '/conference/create',
-                '_blank'
-              );
-              dispatch(
-                updateConferenceData({
-                  key: 'callTarget',
-                  data: callTarget,
-                })
-              );
+              startNewCall(callTarget);
             }
           }}
         >
@@ -114,13 +111,13 @@ export default function StartCallButton({ user }) {
           </MenuItem>
         ))}
       </MenuNav>
-      {/* <Dialog
+      <Dialog
         fullScreen={matches}
         open={scheduleOpen}
         onClose={() => setScheduleOpen(false)}
       >
-        <ScheduledMeeting onClose={() => setScheduleOpen(false)} room={user} />
-      </Dialog> */}
+        <ScheduledMeeting onClose={onCloseDialog} room={user} />
+      </Dialog>
     </>
   );
 }

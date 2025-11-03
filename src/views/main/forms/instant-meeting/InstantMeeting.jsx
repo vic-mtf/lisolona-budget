@@ -3,26 +3,17 @@ import PropTypes from 'prop-types';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DiscussionList from '../../navigation/discussions/DiscussionList';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
-import { useDispatch } from 'react-redux';
-import { updateConferenceData } from '../../../../redux/conference/conference';
+import { startNewCall } from '../../../../utils/handleStartNewCall';
 
 export default function InstantMeeting({ onClose }) {
-  const dispatch = useDispatch();
-
-  const handleCall = (_, user) => {
-    window.open(import.meta.env.BASE_URL + '/conference/create', '_blank');
-    dispatch(
-      updateConferenceData({
-        key: 'callTarget',
-        data: {
-          id: user?.id,
-          name: user.name,
-          type: user?.type,
-          image: user?.image,
-          description: user?.description,
-        },
-      })
-    );
+  const handleCall = async (_, user) => {
+    await startNewCall({
+      id: user?.id,
+      name: user.name,
+      type: user?.type,
+      image: user?.image,
+      description: user?.description,
+    });
   };
   return (
     <>

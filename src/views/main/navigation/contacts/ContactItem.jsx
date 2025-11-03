@@ -1,8 +1,8 @@
-import React from "react";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+import React from 'react';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import {
   Checkbox,
   IconButton,
@@ -10,12 +10,11 @@ import {
   ListItemButton,
   Stack,
   Tooltip,
-} from "@mui/material";
-import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
-import PropTypes from "prop-types";
-import AvatarStatus from "../../../../components/AvatarStatus";
-import HighlightWord from "../../../../components/HighlightWord";
-import { updateData } from "../../../../redux/data/data";
+} from '@mui/material';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import PropTypes from 'prop-types';
+import AvatarStatus from '../../../../components/AvatarStatus';
+import HighlightWord from '../../../../components/HighlightWord';
 
 const ContactItem = ({
   selected,
@@ -27,6 +26,7 @@ const ContactItem = ({
   checkable,
   checked,
   search,
+  onStartCall,
   CheckboxProps,
   ...otherProps
 }) => {
@@ -34,23 +34,24 @@ const ContactItem = ({
     <div>
       <ListItem
         disablePadding
-        alignItems='flex-start'
+        alignItems="flex-start"
         secondaryAction={
           checkable ? (
             <Checkbox
-              edge='end'
+              edge="end"
               checked={checked}
-              slotProps={{ input: { "aria-labelledby": id } }}
+              slotProps={{ input: { 'aria-labelledby': id } }}
               {...CheckboxProps}
             />
           ) : (
-            <Tooltip title='Appel'>
-              <IconButton edge='end'>
+            <Tooltip title="Appeler">
+              <IconButton edge="end" onClick={onStartCall}>
                 <CallOutlinedIcon />
               </IconButton>
             </Tooltip>
           )
-        }>
+        }
+      >
         <ListItemButton selected={selected} {...otherProps}>
           <ListItemAvatar>
             <AvatarStatus src={image} alt={name} id={id}>
@@ -59,44 +60,46 @@ const ContactItem = ({
           </ListItemAvatar>
           <ListItemText
             primary={
-              <Stack direction='row' spacing={1}>
+              <Stack direction="row" spacing={1}>
                 <Typography
                   flexGrow={1}
-                  textOverflow='ellipsis'
-                  whiteSpace='nowrap'
-                  overflow='hidden'
-                  fontWeight={550}>
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  fontWeight={550}
+                >
                   {<HighlightWord word={search} text={name} />}
                 </Typography>
               </Stack>
             }
             secondary={
-              <Stack direction='row' spacing={1}>
+              <Stack direction="row" spacing={1}>
                 <Typography
-                  alignItems='center'
+                  alignItems="center"
                   flexGrow={1}
-                  textOverflow='ellipsis'
-                  whiteSpace='nowrap'
-                  overflow='hidden'
-                  color='text.secondary'
-                  variant='body2'>
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  color="text.secondary"
+                  variant="body2"
+                >
                   {<HighlightWord word={search} text={email} />}
                 </Typography>
               </Stack>
             }
             slotProps={{
-              primary: { component: "div" },
-              secondary: { component: "div" },
+              primary: { component: 'div' },
+              secondary: { component: 'div' },
             }}
           />
         </ListItemButton>
       </ListItem>
-      <Divider variant='inset' sx={{ opacity: divider ? 1 : 0 }} />
+      <Divider variant="inset" sx={{ opacity: divider ? 1 : 0 }} />
     </div>
   );
 };
 
-ContactItem.displayName = "ContactItem";
+ContactItem.displayName = 'ContactItem';
 
 ContactItem.propTypes = {
   selected: PropTypes.bool,
@@ -108,8 +111,9 @@ ContactItem.propTypes = {
   checked: PropTypes.bool,
   CheckboxProps: PropTypes.object,
   image: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(URL)]),
-  status: PropTypes.oneOf(["online", "offline", "away"]),
+  status: PropTypes.oneOf(['online', 'offline', 'away']),
   search: PropTypes.string,
+  onStartCall: PropTypes.func,
 };
 
 export default React.memo(ContactItem);

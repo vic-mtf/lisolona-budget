@@ -1,5 +1,5 @@
 import store from '../../../../redux/store';
-import formatDate, { formatTime } from '../../../../utils/formatDate';
+import { formatTime } from '../../../../utils/formatDate';
 import JoinMeeting from '../../forms/join-meeting/JoinMeeting';
 import ScanMeeting from '../../forms/scan-meeting/ScanMeeting';
 import InstantMeeting from '../../forms/instant-meeting/InstantMeeting';
@@ -12,6 +12,7 @@ import PasswordOutlinedIcon from '@mui/icons-material/PasswordOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import OnlinePredictionOutlinedIcon from '@mui/icons-material/OnlinePredictionOutlined';
 import CallSplitOutlinedIcon from '@mui/icons-material/CallSplitOutlined';
+import { startNewCall } from '../../../../utils/handleStartNewCall';
 
 const groupCall = (calls = [], type = 'all') => {
   const groupedCalls = [];
@@ -93,37 +94,37 @@ export const setStatus = (status) =>
     : { 0: 'started', 1: 'running', 7: 'scheduled' }[status] || 'ended';
 ////////////////////////////////////////////////////////////////////////
 
-const addLabelInData = (calls = []) => {
-  const runningList = [];
-  const scheduledList = [];
-  const othersList = [];
-  calls.forEach((call) => {
-    if (call.status === 'running') runningList.push(call);
-    else if (call.status === 'scheduled') scheduledList.push(call);
-    else othersList.push(call);
-  });
+// const addLabelInData = (calls = []) => {
+//   const runningList = [];
+//   const scheduledList = [];
+//   const othersList = [];
+//   calls.forEach((call) => {
+//     if (call.status === 'running') runningList.push(call);
+//     else if (call.status === 'scheduled') scheduledList.push(call);
+//     else othersList.push(call);
+//   });
 
-  if (runningList.length)
-    runningList.unshift({
-      label: 'Réunion en cours',
-      id: 'running',
-      type: 'label',
-    });
-  if (scheduledList.length)
-    scheduledList.unshift({
-      label: 'Réunions planifiées',
-      id: 'scheduled',
-      type: 'label',
-    });
-  if (othersList.length)
-    othersList.unshift({
-      label: "Historique d'appels",
-      id: 'history',
-      type: 'label',
-    });
+//   if (runningList.length)
+//     runningList.unshift({
+//       label: 'Réunion en cours',
+//       id: 'running',
+//       type: 'label',
+//     });
+//   if (scheduledList.length)
+//     scheduledList.unshift({
+//       label: 'Réunions planifiées',
+//       id: 'scheduled',
+//       type: 'label',
+//     });
+//   if (othersList.length)
+//     othersList.unshift({
+//       label: "Historique d'appels",
+//       id: 'history',
+//       type: 'label',
+//     });
 
-  return [...runningList, ...scheduledList, ...othersList];
-};
+//   return [...runningList, ...scheduledList, ...othersList];
+// };
 
 const addDateLabel = (calls = []) => {
   const labels = [];
@@ -173,20 +174,13 @@ export const options = [
     icon: HistoryToggleOffOutlinedIcon,
     id: 'start-meeting',
     content: InstantMeeting,
-    action(_, user) {
-      window.open(import.meta.env.BASE_URL + '/conference/create', '_blank');
-      store.dispatch({
-        type: 'conference/updateConferenceData',
-        payload: {
-          key: 'callTarget',
-          data: {
-            id: user?.id,
-            name: user.name,
-            type: user?.type,
-            image: user?.image,
-            description: user?.description,
-          },
-        },
+    async action(_, user) {
+      await startNewCall({
+        id: user?.id,
+        name: user.name,
+        type: user?.type,
+        image: user?.image,
+        description: user?.description,
       });
     },
   },
@@ -195,6 +189,9 @@ export const options = [
     icon: DateRangeOutlinedIcon,
     id: 'schedule-meeting',
     content: ScheduledMeeting,
+    async action(_, user) {
+      console.log('user', user);
+    },
   },
   {
     label: 'Démarrer une diffusion en direct',

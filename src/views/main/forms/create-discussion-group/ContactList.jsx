@@ -13,6 +13,7 @@ import InputSearch from '../../../../components/InputSearch';
 import VirtualizedList from '../../../../components/VirtualizedList';
 import ContactItem from '../../navigation/contacts/ContactItem';
 import ListAvatar from '../../../../components/ListAvatar';
+import { startNewCall } from '../../../../utils/handleStartNewCall';
 
 const ContactList = ({ selectedContacts, setSelectedContacts }) => {
   const bulkContacts = useSelector((store) => store.data.app.contacts);
@@ -34,6 +35,7 @@ const ContactList = ({ selectedContacts, setSelectedContacts }) => {
           : [data].concat(selectedContacts);
         setSelectedContacts(filteredContacts);
       };
+      const onCall = () => startNewCall(data);
       return (
         <div key={data?.id} style={style}>
           {data?.type === 'label' ? (
@@ -49,6 +51,7 @@ const ContactList = ({ selectedContacts, setSelectedContacts }) => {
               id={id}
               email={data?.email}
               checkable
+              onStartCall={onCall}
               onClick={onChange}
               divider={data?.alpKey === contacts[index - 1]?.alpKey}
               CheckboxProps={{ onChange, checked }}

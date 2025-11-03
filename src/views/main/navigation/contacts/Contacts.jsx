@@ -4,29 +4,30 @@ import {
   Toolbar,
   Typography,
   Button,
-} from "@mui/material";
-import React, { useMemo, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
-import ContactItem from "./ContactItem";
-import groupContact from "./groupContacts";
-import store from "../../../../redux/store";
-import { updateData } from "../../../../redux/data/data";
-import VirtualList from "../../../../components/VirtualList";
-import InputSearch from "../../../../components/InputSearch";
-import GuestContactButton from "./GuestContactButton";
-import toggleFullscreen from "../../../../utils/toggleFullscreen";
-import { ItemWrapperFocus } from "../../../../components/BlinkWrapper";
-import MenuItems from "../../../../components/MenuItems";
-import getCoordContextMenu from "../../../../utils/getCoordContextMenu";
-import ConfirmDeleteItem from "../../../../components/ConfirmDeleteItem";
-import contactMenuItems from "./contactMenuItems";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+} from '@mui/material';
+import React, { useMemo, useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import ContactItem from './ContactItem';
+import groupContact from './groupContacts';
+import store from '../../../../redux/store';
+import { updateData } from '../../../../redux/data/data';
+import VirtualList from '../../../../components/VirtualList';
+import InputSearch from '../../../../components/InputSearch';
+import GuestContactButton from './GuestContactButton';
+import toggleFullscreen from '../../../../utils/toggleFullscreen';
+import { ItemWrapperFocus } from '../../../../components/BlinkWrapper';
+import MenuItems from '../../../../components/MenuItems';
+import getCoordContextMenu from '../../../../utils/getCoordContextMenu';
+import ConfirmDeleteItem from '../../../../components/ConfirmDeleteItem';
+import contactMenuItems from './contactMenuItems';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { startNewCall } from '../../../../utils/handleStartNewCall';
 
 export default function Contacts() {
   const bulkContacts = useSelector((store) => store.data.app.contacts);
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
   const [menuItem, setMenuItem] = useState({ contextMenu: null, data: null });
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const contacts = useMemo(
     () => groupContact(bulkContacts, search),
     [bulkContacts, search]
@@ -36,17 +37,17 @@ export default function Contacts() {
     (contact) => () => {
       store.dispatch(
         updateData({
-          key: ["discussionTarget", "targetView"],
+          key: ['discussionTarget', 'targetView'],
           data: [
             {
               ...contact,
-              type: "direct",
+              type: 'direct',
               members: [contact, store.getState().user],
               ...store
                 .getState()
                 .data.app.discussions.find((d) => d?.id === contact?.id),
             },
-            "messages",
+            'messages',
           ],
         })
       );
@@ -58,18 +59,19 @@ export default function Contacts() {
     () =>
       contacts.map(({ id, ...contact }, index, contacts) => (
         <React.Fragment key={id}>
-          {contact?.type === "label" ? (
-            <ListSubheader sx={{ height: "100%" }}>
+          {contact?.type === 'label' ? (
+            <ListSubheader sx={{ height: '100%' }}>
               {contact?.label}
             </ListSubheader>
           ) : (
-            <ItemWrapperFocus id={id} location='contacts'>
+            <ItemWrapperFocus id={id} location="contacts">
               <ContactItem
                 name={contact?.name}
                 image={contact?.image}
                 status={contact?.status}
                 id={id}
                 email={contact?.email}
+                onStartCall={() => startNewCall({ ...contact, id })}
                 search={search}
                 onClick={handleClickItem({ ...contact, id })}
                 onContextMenu={(event) => {
@@ -92,22 +94,23 @@ export default function Contacts() {
   return (
     <>
       <Stack spacing={1} px={1} pb={1}>
-        <Toolbar variant='dense'>
+        <Toolbar variant="dense">
           <Typography
-            variant='h5'
+            variant="h5"
             flexGrow={1}
-            onDoubleClick={() => toggleFullscreen(document.body)}>
+            onDoubleClick={() => toggleFullscreen(document.body)}
+          >
             Contacts
           </Typography>
           <GuestContactButton />
         </Toolbar>
         <InputSearch
-          placeholder='Recherche de contact'
+          placeholder="Recherche de contact"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
       </Stack>
-      <VirtualList data={data} emptyMessage='Aucun Contact trouvé' />
+      <VirtualList data={data} emptyMessage="Aucun Contact trouvé" />
       <MenuItems
         {...menuItem}
         discussionTarget={discussionTarget}
@@ -115,14 +118,14 @@ export default function Contacts() {
         itemContent={() => contactMenuItems}
       />
       <ConfirmDeleteItem
-        location='contacts'
-        title='Supprimer le contact'
+        location="contacts"
+        title="Supprimer le contact"
         description={({ data }) => (
           <>
-            Si vous retirez{" "}
-            <Typography color='textPrimary' component='b' fontWeight='bold'>
+            Si vous retirez{' '}
+            <Typography color="textPrimary" component="b" fontWeight="bold">
               {data?.name}
-            </Typography>{" "}
+            </Typography>{' '}
             de vos contacts, vous ne pourrez plus lui envoyer de messages.
             Voulez-vous vraiment supprimer ce contact ?
           </>
@@ -131,8 +134,9 @@ export default function Contacts() {
           <Button
             endIcon={<DeleteOutlineOutlinedIcon />}
             disabled
-            variant='outlined'
-            color='error'>
+            variant="outlined"
+            color="error"
+          >
             Supprimer
           </Button>
         )}

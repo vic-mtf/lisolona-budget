@@ -189,7 +189,7 @@ const ScheduledMeeting = ({ onClose, room }) => {
           >
             <Slide
               in={nav === 'contact-list'}
-              //unmountOnExit
+              unmountOnExit={Boolean(room)}
               appear={false}
               direction="right"
               style={{
