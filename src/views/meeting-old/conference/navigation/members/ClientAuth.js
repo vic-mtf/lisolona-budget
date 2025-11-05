@@ -9,15 +9,15 @@ import {
   ListItemText,
   Switch,
   Button,
-} from "@mui/material";
+} from '@mui/material';
 // import DialogContentText from '@mui/material/DialogContentText';
-import { options } from "../admin-options/MeetingManagementOptions";
-import useSocket from "../../../../../hooks/useSocket";
-import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useMemo } from "react";
-import { setConferenceData } from "../../../../../redux/conference";
-import getFullName from "../../../../../utils/getFullName";
-import store from "../../../../../redux/store";
+import { options } from '../admin-options/MeetingManagementOptions';
+import useSocket from '../../../../../hooks/useSocket';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useMemo } from 'react';
+import { setConferenceData } from '../../../../../redux/conference';
+import getFullName from '../../../../../utils/getFullName';
+import store from '../../../../../redux/store';
 
 export default function ClientAuth() {
   const auth = useSelector((store) => store.conference.moderatorOptions.auth);
@@ -56,7 +56,8 @@ export default function ClientAuth() {
             theme.palette.background.paper + theme.customOptions.opacity,
           backdropFilter: (theme) => `blur(${theme.customOptions.blur})`,
         },
-      }}>
+      }}
+    >
       <DialogTitle>
         Autorisations appliquées à {getFullName(user?.identity)}
       </DialogTitle>
@@ -71,25 +72,26 @@ export default function ClientAuth() {
               <ListItem
                 key={key}
                 disabled={disabledAuth}
-                alignItems='flex-start'>
+                alignItems="flex-start"
+              >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
                   id={`switch-list-label-${label}`}
                   primary={label}
                   secondary={description}
                   secondaryTypographyProps={{
-                    variant: "caption",
+                    variant: 'caption',
                   }}
                 />
                 <Switch
-                  edge='end'
-                  size='small'
+                  edge="end"
+                  size="small"
                   checked={state}
                   disabled={disabledAuth}
                   onChange={() => {
-                    socket.emit("signal", {
+                    socket.emit('signal', {
                       id: store.getState().meeting.meetingId,
-                      type: "auth",
+                      type: 'auth',
                       obj: { [key]: !state },
                       who: [user?.identity?._id],
                     });

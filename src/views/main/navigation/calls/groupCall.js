@@ -189,9 +189,9 @@ export const options = [
     icon: DateRangeOutlinedIcon,
     id: 'schedule-meeting',
     content: ScheduledMeeting,
-    async action(_, user) {
-      console.log('user', user);
-    },
+    // async action(_, user) {
+    //   // console.log('user', user);
+    // },
   },
   {
     label: 'Démarrer une diffusion en direct',

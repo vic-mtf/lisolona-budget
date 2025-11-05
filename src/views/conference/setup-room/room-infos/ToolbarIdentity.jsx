@@ -3,10 +3,14 @@ import ListAvatar from '../../../../components/ListAvatar';
 import { useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
 import getFullName from '../../../../utils/getFullName';
+import normalizeObjectKeys from '../../../../utils/normalizeObjectKeys';
 
 export const ToolbarIdentity = () => {
   const { state } = useLocation();
-  const target = useMemo(() => state?.target || null, [state]);
+  const target = useMemo(
+    () => (state?.target ? normalizeObjectKeys(state?.target) : null),
+    [state]
+  );
 
   return (
     target && (
@@ -23,7 +27,9 @@ export const ToolbarIdentity = () => {
         disablePadding
       >
         <ListItemAvatar>
-          <ListAvatar id={target?.id} src={target?.image} />
+          <ListAvatar id={target?.id} src={target?.image} key={target.id}>
+            {getFullName(target).charAt(0)}
+          </ListAvatar>
         </ListItemAvatar>
         <ListItemText
           primary={getFullName(target)}

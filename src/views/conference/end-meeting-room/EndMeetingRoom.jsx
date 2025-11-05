@@ -79,7 +79,7 @@ const EndMeeting = React.forwardRef((_, ref) => {
         <CardContent>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <CountdownTimer seconds={20} onComplete={handleGoHome} />
+            <CountdownTimer seconds={30} onComplete={handleGoHome} />
             <Stack
               direction="row"
               spacing={1}
@@ -134,7 +134,7 @@ const EndMeeting = React.forwardRef((_, ref) => {
                   {meetingDuration}
                 </Typography>
               </Stack>
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="row" spacing={3} alignItems="center">
                 <Box
                   sx={{
                     bgcolor: (t) => alpha(t.palette.primary.main, 0.1),
@@ -146,13 +146,14 @@ const EndMeeting = React.forwardRef((_, ref) => {
                   <GroupOutlinedIcon />
                 </Box>
                 <AvatarGroup
-                  //variant="rounded"
+                  variant="rounded"
                   max={4}
                   sx={{
                     '& 	.MuiAvatar-root': {
                       width: 30,
                       height: 30,
                       fontSize: 14,
+                      transform: 'rotate(45deg)',
                       borderColor: (t) =>
                         t.palette.mode === 'dark'
                           ? lighten(t.palette.background.paper, 0.03)

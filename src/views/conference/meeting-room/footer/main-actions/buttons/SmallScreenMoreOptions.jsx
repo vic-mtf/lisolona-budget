@@ -17,8 +17,9 @@ import navActions from '../../nav-actions/navActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateConferenceData } from '../../../../../../redux/conference/conference';
 import SettingButton from '../../../../setup-room/device-config/buttons/SettingButton';
+import PropTypes from 'prop-types';
 
-const SmallScreenMoreOptions = () => {
+const SmallScreenMoreOptions = ({ reaction }) => {
   const isOrganizer = useSelector(
     (store) =>
       store.conference.meeting.participants[store.user.id].state.isOrganizer
@@ -56,7 +57,7 @@ const SmallScreenMoreOptions = () => {
       <Drawer open={open} onClose={onClose} anchor="bottom">
         <Toolbar sx={{ gap: 2 }}>
           <RaiseHandButton onClose={onClose} />
-          <ReactionButton onClose={onClose} />
+          <ReactionButton onClose={onClose} reaction={reaction} />
           <PresentationViewButton onClose={onClose} />
           <SettingButton onClose={onClose} />
         </Toolbar>
@@ -84,6 +85,9 @@ const SmallScreenMoreOptions = () => {
       </Drawer>
     </>
   );
+};
+SmallScreenMoreOptions.propTypes = {
+  reaction: PropTypes.bool,
 };
 
 export default SmallScreenMoreOptions;

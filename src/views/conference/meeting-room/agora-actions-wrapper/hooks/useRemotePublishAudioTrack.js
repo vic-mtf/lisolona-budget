@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useRemoteAudioTracks, useRemoteUsers } from "agora-rtc-react";
+import { useEffect } from 'react';
+import { useRemoteAudioTracks, useRemoteUsers } from 'agora-rtc-react';
 
 const useRemotePublishAudioTrack = (isConnected) => {
   const remoteUsers = useRemoteUsers();

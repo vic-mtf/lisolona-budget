@@ -3,9 +3,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ActionButton from './ActionButton';
 
-const ReactionButton = ({ onClose }) => {
+const ReactionButton = ({ onClose, reaction }) => {
   return (
-    <ActionButton id="reaction" title="Réagir" onClick={onClose} disabled>
+    <ActionButton
+      id="reaction"
+      title="Réagir"
+      onClick={onClose}
+      disabled={reaction || true}
+    >
       <SentimentSatisfiedOutlinedIcon />
     </ActionButton>
   );
@@ -13,6 +18,7 @@ const ReactionButton = ({ onClose }) => {
 
 ReactionButton.propTypes = {
   onClose: PropTypes.func,
+  reaction: PropTypes.bool,
 };
 
 export default React.memo(ReactionButton);

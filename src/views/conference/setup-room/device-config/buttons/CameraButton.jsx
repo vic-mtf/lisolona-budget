@@ -1,8 +1,14 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import SplitButton from "../SplitButton";
-import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
-import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
-import { useDispatch, useSelector } from "react-redux";
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+  useCallback,
+} from 'react';
+import SplitButton from '../SplitButton';
+import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Menu,
   MenuItem,
@@ -11,18 +17,18 @@ import {
   Drawer,
   ListItem,
   Divider,
-} from "@mui/material";
-import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import useSmallScreen from "../../../../../hooks/useSmallScreen";
-import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
-import { updateConferenceData } from "../../../../../redux/conference/conference";
-import { stopStream } from "../../../../../utils/getDevices";
-import { useCallback } from "react";
-import { useNotifications } from "@toolpad/core/useNotifications";
-import { streamSegmenterMediaPipe } from "../../../../../utils/StreamSegmenterMediaPipe";
+} from '@mui/material';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import useSmallScreen from '../../../../../hooks/useSmallScreen';
+import useLocalStoreData from '../../../../../hooks/useLocalStoreData';
+import { updateConferenceData } from '../../../../../redux/conference/conference';
+import { stopStream } from '../../../../../utils/getDevices';
+import PropTypes from 'prop-types';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import { streamSegmenterMediaPipe } from '../../../../../utils/StreamSegmenterMediaPipe';
 
-const CameraButton = () => {
-  const [getData, setData] = useLocalStoreData("conference.setup.devices");
+const CameraButton = ({ activateCam = true }) => {
+  const [getData, setData] = useLocalStoreData('conference.setup.devices');
   const notifications = useNotifications();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -46,9 +52,9 @@ const CameraButton = () => {
   const MenuNav = useMemo(() => (matches ? Drawer : Menu), [matches]);
   const handleChangeCamera = useCallback(
     async (device) => {
-      const stream = getData("camera.stream");
+      const stream = getData('camera.stream');
       if (device.deviceId !== deviceId) {
-        stopStream(stream, "video");
+        stopStream(stream, 'video');
         try {
           const newStream = await navigator.mediaDevices.getUserMedia({
             video: {
@@ -62,18 +68,18 @@ const CameraButton = () => {
           const processedStream = await streamSegmenterMediaPipe.initStream(
             newStream
           );
-          setData("camera", { stream: newStream, processedStream });
+          setData('camera', { stream: newStream, processedStream });
         } catch (error) {
           console.error(error);
           notifications.show(`Caméra "${device.label}" n'est pas disponible`, {
-            severity: "error",
+            severity: 'error',
           });
         }
       }
       const key = [
-        "setup.devices.camera.deviceId",
-        "setup.devices.camera.enabled",
-        "setup.devices.camera.label",
+        'setup.devices.camera.deviceId',
+        'setup.devices.camera.enabled',
+        'setup.devices.camera.label',
       ];
       const data = [device.deviceId, true, device?.label];
       dispatch(updateConferenceData({ key, data }));
@@ -82,8 +88,13 @@ const CameraButton = () => {
     [getData, setData, dispatch, deviceId, notifications]
   );
 
+  const disabledCam = useMemo(
+    () => !activateCam || loading || permission === 'denied',
+    [loading, permission, activateCam]
+  );
+
   useEffect(() => {
-    const stream = getData("camera.stream");
+    const stream = getData('camera.stream');
     if (!stream) return;
     const [videoTrack] = stream.getVideoTracks();
     if (videoTrack && videoTrack.enabled !== enabled)
@@ -96,27 +107,29 @@ const CameraButton = () => {
         icon={<VideocamOffOutlinedIcon />}
         activeIcon={<VideocamOutlinedIcon />}
         active={enabled}
-        disabled={loading || permission === "denied"}
-        error={permission !== "granted"}
+        disabled={disabledCam}
+        error={permission !== 'granted'}
         disabledMoreButton={cameras.length === 0}
         disabledTitle={
-          "Vous avez refusé l'accès à la caméra. Voir les paramètres de votre navigateur pour activer l'accès."
+          activateCam
+            ? "Vous avez refusé l'accès à la caméra. Voir les paramètres de votre navigateur pour activer l'accès."
+            : "Le modérateur à bloqué l'accès à la caméra."
         }
-        activeTitle={"Caméra activée"}
-        inactiveTitle={"Caméra désactivée"}
+        activeTitle={'Caméra activée'}
+        inactiveTitle={'Caméra désactivée'}
         onClick={() => {
-          const stream = getData("camera.stream");
+          const stream = getData('camera.stream');
           if (stream) {
-            const key = "setup.devices.camera.enabled";
+            const key = 'setup.devices.camera.enabled';
             dispatch(updateConferenceData({ key, data: !enabled }));
           } else {
             dispatch(
               updateConferenceData({
                 key: [
-                  "setup.devices.alertPermission.open",
-                  "setup.devices.alertPermission.deviceType",
+                  'setup.devices.alertPermission.open',
+                  'setup.devices.alertPermission.deviceType',
                 ],
-                data: [true, "camera"],
+                data: [true, 'camera'],
               })
             );
           }
@@ -128,15 +141,16 @@ const CameraButton = () => {
         open={open}
         onClose={() => setOpen(false)}
         {...(matches
-          ? { anchor: "bottom" }
-          : { anchorEl: anchorElRef.current })}>
+          ? { anchor: 'bottom' }
+          : { anchorEl: anchorElRef.current })}
+      >
         {matches && (
           <>
             <ListItem>
               <ListItemIcon>
                 <VideocamOutlinedIcon />
               </ListItemIcon>
-              <ListItemText primary='Caméras' />
+              <ListItemText primary="Caméras" />
             </ListItem>
             <Divider />
           </>
@@ -144,7 +158,8 @@ const CameraButton = () => {
         {cameras.map((camera) => (
           <MenuItem
             key={camera.deviceId}
-            onClick={() => handleChangeCamera(camera)}>
+            onClick={() => handleChangeCamera(camera)}
+          >
             <ListItemIcon>
               {deviceId === camera?.deviceId ? <CheckOutlinedIcon /> : <div />}
             </ListItemIcon>
@@ -154,6 +169,10 @@ const CameraButton = () => {
       </MenuNav>
     </>
   );
+};
+
+CameraButton.propTypes = {
+  activateCam: PropTypes.bool,
 };
 
 export default React.memo(CameraButton);

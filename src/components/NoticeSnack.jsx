@@ -1,25 +1,27 @@
 import React from 'react';
-import {
-  createTheme,
-  ThemeProvider,
-  useTheme,
-  Box,
-  Typography,
-  DialogActions,
-} from '@mui/material';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import DialogActions from '@mui/material/DialogActions';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import ListAvatar from '../components/ListAvatar';
 import PropTypes from 'prop-types';
 import HighlightWord from './HighlightWord';
+import getFullName from '../utils/getFullName';
+import { useMemo } from 'react';
+import { useEffect } from 'react';
 
 const NoticeSnack = ({
-  name,
-  id,
+  name: n,
+  id: userId,
+  src: image,
   message,
-  src,
   inline,
   action,
   words = [],
   inlineAction = false,
+  participants = [],
+  showNoticeRef,
 }) => {
   const nativeTheme = useTheme();
   const theme = createTheme({
@@ -32,21 +34,45 @@ const NoticeSnack = ({
       },
     },
   });
+  const { name, id, src } = useMemo(() => {
+    const [user] = participants || [];
+    return {
+      name: n || getFullName(user),
+      id: userId || user?.id,
+      src: image || user?.image,
+    };
+  }, [n, userId, participants, image]);
+
+  const isMany = participants?.length > 1;
+
+  useEffect(() => {
+    if (!Object.hasOwnProperty.call(showNoticeRef || {}, 'current')) return;
+    showNoticeRef.current = true;
+    return () => {
+      showNoticeRef.current = false;
+    };
+  }, [showNoticeRef]);
 
   return (
     <ThemeProvider theme={theme}>
       <Box
         display="flex"
-        flexDirection="row"
+        flexDirection={isMany ? 'column' : 'row'}
         gap={2}
         alignItems={inlineAction ? 'center' : 'flex-start'}
-        minWidth={{ xs: 300, xl: 400 }}
+        maxWidth={{ xs: 350, xl: 400 }}
       >
-        <Box>
-          <ListAvatar id={id} src={src}>
-            {name?.charAt(0)}
-          </ListAvatar>
-        </Box>
+        {isMany ? (
+          <Box pl={2} width="100%" alignItems="start" display="flex">
+            <ListAvatarGroup participants={participants} />
+          </Box>
+        ) : (
+          <Box>
+            <ListAvatar id={id} src={src}>
+              {name?.charAt(0)}
+            </ListAvatar>
+          </Box>
+        )}
 
         <Box
           display="flex"
@@ -55,14 +81,16 @@ const NoticeSnack = ({
           flexGrow={1}
         >
           <Box flexGrow={1}>
-            <Typography
-              color="text.primary"
-              variant="body2"
-              component={inline ? 'span' : 'div'}
-              sx={{ fontWeight: 550 }}
-            >
-              {name}
-            </Typography>{' '}
+            {!isMany && (
+              <Typography
+                color="text.primary"
+                variant="body2"
+                component={inline ? 'span' : 'div'}
+                sx={{ fontWeight: 550 }}
+              >
+                {name}
+              </Typography>
+            )}{' '}
             <Typography
               color="text.secondary"
               variant="body2"
@@ -83,6 +111,34 @@ const NoticeSnack = ({
   );
 };
 
+const ListAvatarGroup = ({ participants }) => {
+  return (
+    <AvatarGroup
+      variant="rounded"
+      max={4}
+      sx={{
+        '& 	.MuiAvatar-root': {
+          width: 30,
+          height: 30,
+          fontSize: 14,
+          transform: 'rotate(45deg)',
+          borderColor: (t) => t.palette.background.paper,
+        },
+      }}
+    >
+      {participants.map(({ id, image, ...other }) => (
+        <ListAvatar key={id} src={image} id={id}>
+          {getFullName(other).charAt(0)}
+        </ListAvatar>
+      ))}
+    </AvatarGroup>
+  );
+};
+
+ListAvatarGroup.propTypes = {
+  participants: PropTypes.arrayOf(PropTypes.object),
+};
+
 NoticeSnack.propTypes = {
   name: PropTypes.string,
   id: PropTypes.string,
@@ -91,6 +147,8 @@ NoticeSnack.propTypes = {
   inline: PropTypes.bool,
   action: PropTypes.node,
   inlineAction: PropTypes.bool,
+  participants: PropTypes.arrayOf(PropTypes.object),
+  showNoticeRef: PropTypes.func,
   words: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),

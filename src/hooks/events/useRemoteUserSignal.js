@@ -2,40 +2,38 @@ import React, { useEffect } from 'react';
 import useSocket from '../useSocket';
 import store from '../../redux/store';
 import { isPlainObject } from '@reduxjs/toolkit';
-import getFullName from '../../utils/getFullName';
+import getFullName, { fname, genNameSummary } from '../../utils/getFullName';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import ringtones from '../../utils/ringtones';
 import NoticeSnack from '../../components/NoticeSnack';
 import WavingHand from '../../components/WavingHand';
+
 const useRemoteUserSignal = () => {
   const socket = useSocket();
 
-  //update state or auth on store
   useEffect(() => {
-    const handleSignal = ({ participants = [], state, auth }) => {
-      const members = store.getState().conference.meeting.participants;
-      const data = {};
-      for (let p of participants) {
-        let update = false;
-        const participant = Object.assign({}, members[p] || {});
-        if (Object.keys(participant).length) {
+    const handleSignal = ({ participants: members = [], state, auth }) => {
+      const data = store.getState().conference.meeting.participants;
+      const participants = JSON.parse(JSON.stringify(data));
+      let update = false;
+      for (const id of members) {
+        if (participants[id]) {
           if (state) {
-            participant.state = state;
+            participants[id].state = { ...participants[id].state, ...state };
             update = true;
           }
           if (auth) {
-            participants.auth = auth;
+            participants[id].auth = { ...participants[id].auth, ...auth };
             update = true;
           }
         }
-        if (update) data[p] = { ...participant };
       }
 
-      if (Object.keys(data).length)
+      if (update)
         store.dispatch({
           type: 'conference/updateConferenceData',
           payload: {
-            data: { meeting: { participants: data } },
+            data: { meeting: { participants } },
           },
         });
     };
@@ -54,42 +52,59 @@ const useRemoteUserSignal = () => {
 const useRaiseHandSignal = () => {
   const socket = useSocket();
   const notifications = useNotifications();
+
   useEffect(() => {
     const onSignal = ({ state, participants = [] }) => {
       const members = store.getState().conference.meeting.participants;
       const userId = store.getState().user.id;
+      let isNewRaise = false;
+      const users = Object.keys(members)
+        .filter((id) => id !== userId)
+        .filter((id) => !participants.includes(id))
+        .filter((id) => members[id].state.isInRoom)
+        .filter((id) => members[id].state.handRaised)
+        .map((id) => members[id].identity);
 
+      const key = 'handRaised';
       for (let p of participants) {
         const participant = members[p];
         if (participant && participant?.identity?.id !== userId) {
-          const name = getFullName(participant.identity);
-          const prop = 'handRaised';
-          const key = participant.identity.id + prop;
-          if (hasProp(state, prop) && !state.handRaised) {
+          if (hasProp(state, key) && !state.handRaised) {
             notifications.close(key);
             ringtones.lower.volume = 0.03;
             ringtones.lower.play();
           }
-          if (hasProp(state, prop) && state?.handRaised) {
-            const message = 'a levé la main';
-            notifications.show(
-              React.createElement(NoticeSnack, {
-                src: participant.identity.image,
-                id: participant.identity.id,
-                name,
-                message,
-                inline: true,
-                inlineAction: true,
-                action: React.createElement(WavingHand),
-              }),
-              { key }
-            );
+          if (hasProp(state, key) && state?.handRaised) {
+            users.push(participant?.identity);
+            isNewRaise = true;
             ringtones.raise.volume = 0.05;
             ringtones.raise.play();
           }
         }
       }
+      if (!isNewRaise) return;
+      const fullNames = users.map((u) => getFullName(u)?.trim());
+      const words = fullNames.map((n) => n?.trim()?.split(/\s+/)).flat();
+      const names = genNameSummary(fullNames);
+      const isMany = fullNames.length > 1;
+
+      const message = `${isMany ? names : ''} ${
+        isMany ? 'ont levé leurs mains' : 'a levé la main'
+      }`.trim();
+
+      notifications.show(
+        React.createElement(NoticeSnack, {
+          participants: users,
+          inline: true,
+          inlineAction: true,
+          message,
+          action: React.createElement(WavingHand),
+          words,
+        }),
+        { key }
+      );
     };
+
     socket?.on('signal-room', onSignal);
     return () => {
       socket?.off('signal-room', onSignal);
@@ -146,16 +161,5 @@ const useOrganizerSignal = () => {
 };
 
 const hasProp = (obj, prop) => isPlainObject(obj) && prop in obj;
-const fname = (fullName) => fullName.trim().split(/\s+/)[0];
-// const genNameSummary = (fullNames) => {
-//   const count = fullNames.length;
-//   const ft = fname(fullNames[0]);
-//   const lt = fname(fullNames[fullNames.length - 1]);
-//   if (!count) return '';
-//   if (count === 1) return fullNames[0];
-//   if (count === 2) return `${ft} et ${lt}`;
-//   if (count === 3) return `${ft}, ${lt} et 1 autre personne`;
-//   return `${ft}, ${lt} et ${count - 2} autres personnes`;
-// };
 
 export default useRemoteUserSignal;

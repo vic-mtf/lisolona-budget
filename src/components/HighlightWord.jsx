@@ -41,7 +41,12 @@ const HighlightWord = ({ text = '', words = [] }) => {
       }
       // Partie surlignée
       parts.push(
-        <Typography component="b" key={offset} color="currentColor">
+        <Typography
+          component="b"
+          key={offset}
+          fontWeight="bold"
+          color="text.primary"
+        >
           {match}
         </Typography>
       );

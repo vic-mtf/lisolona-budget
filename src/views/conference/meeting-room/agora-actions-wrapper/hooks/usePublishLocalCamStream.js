@@ -1,7 +1,7 @@
-import AgoraRTC, { useRTCClient } from "agora-rtc-react";
-import { useEffect } from "react";
-import { streamSegmenterMediaPipe } from "../../../../../utils/StreamSegmenterMediaPipe";
-import { useSelector } from "react-redux";
+import AgoraRTC, { useRTCClient } from 'agora-rtc-react';
+import { useEffect } from 'react';
+import { streamSegmenterMediaPipe } from '../../../../../utils/StreamSegmenterMediaPipe';
+import { useSelector } from 'react-redux';
 
 let publishing = false;
 
@@ -11,7 +11,7 @@ const usePublishLocalCamStream = (isConnected) => {
   );
   const agoraClient = useRTCClient();
   const isPublished = agoraClient?.localTracks.some(
-    ({ trackMediaType }) => trackMediaType === "video"
+    ({ trackMediaType }) => trackMediaType === 'video'
   );
   useEffect(() => {
     const stream = streamSegmenterMediaPipe.getProcessedStream();

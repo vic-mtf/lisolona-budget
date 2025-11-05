@@ -88,9 +88,10 @@ const RoomInfos = () => {
         data?.participants?.forEach((p) => {
           if (!p?.identity) return;
           if (p.identity.id === id) {
+            const { activateCam, activateMic } = p.auth;
             const devices = store.getState().conference.setup.devices;
-            const isCamActive = devices.camera.enabled;
-            const isMicActive = devices.microphone.enabled;
+            const isCamActive = activateCam && devices.camera.enabled;
+            const isMicActive = activateMic && devices.microphone.enabled;
             p.state.isInRoom = true;
             p.state.isCamActive = isCamActive;
             p.state.isMicActive = isMicActive;
@@ -283,7 +284,10 @@ const RoomInfos = () => {
       if (e.origin === window.location.origin)
         if (e.data?.type === 'response')
           navigateTo('', {
-            state: { ...state, target: e.data?.callTarget },
+            state: {
+              ...state,
+              target: normalizeObjectKeys(e.data?.callTarget),
+            },
           });
     };
 
