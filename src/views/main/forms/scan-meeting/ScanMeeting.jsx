@@ -13,14 +13,17 @@ import { updateConferenceData } from '../../../../redux/conference/conference';
 import { useDispatch, useSelector } from 'react-redux';
 import normalizeObjectKeys from '../../../../utils/normalizeObjectKeys';
 import { useNotifications } from '@toolpad/core/useNotifications';
+import { useNavigate } from 'react-router-dom';
 // import getLocalIP from '../../../../utils/getLocalIP';
 
-const ScanMeeting = React.memo(({ onClose }) => {
+const ScanMeeting = React.memo(({ onClose, onFinish }) => {
+  const connected = useSelector((store) => store.user.connected);
   const [paused, setPaused] = useState(false);
   const Authorization = useToken();
   const dispatch = useDispatch();
   const userId = useSelector((store) => store.user.id);
   const notifications = useNotifications();
+  const navigateTo = useNavigate();
 
   const [{ loading }, refetch] = useAxios(
     {
@@ -47,11 +50,21 @@ const ScanMeeting = React.memo(({ onClose }) => {
             url: '/api/chat/room/call/' + code,
           });
           const data = normalizeObjectKeys(response?.data);
+
+          if (!connected) {
+            setPaused(false);
+            console.log(data);
+            navigateTo('/', { replace: true, state: { meeting: data } });
+            if (typeof onFinish === 'function') onFinish(data);
+            if (typeof onClose === 'function') onClose();
+            return;
+          }
+
           const url = import.meta.env.BASE_URL + `/conference/${data.id}`;
 
           if (!checkPopupPermission()) {
             notifications.show(
-              'Votre bloque des popups. Veuillez autoriser les popups et réessayer',
+              'Votre navigateur bloque des popups. Veuillez autoriser les popups et réessayer',
               { severity: 'warning' }
             );
             setPaused(false);
@@ -84,7 +97,16 @@ const ScanMeeting = React.memo(({ onClose }) => {
         setPaused(false);
       }
     },
-    [refetch, userId, dispatch, notifications, onClose]
+    [
+      refetch,
+      userId,
+      dispatch,
+      notifications,
+      onClose,
+      onFinish,
+      connected,
+      navigateTo,
+    ]
   );
 
   const onError = useCallback(
@@ -135,7 +157,7 @@ const ScanMeeting = React.memo(({ onClose }) => {
             <CloseOutlinedIcon />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Rejoindre une reunion par le QrCode
+            Rejoindre une reunion par le code QR
           </Typography>
         </Toolbar>
         <Box
@@ -149,7 +171,12 @@ const ScanMeeting = React.memo(({ onClose }) => {
             <Typography color="text.secondary">
               Scannez le code QR fourni par l’hôte pour rejoindre la réunion.
             </Typography>
-            <Box overflow="hidden" position="relative" display="flex">
+            <Box
+              overflow="hidden"
+              position="relative"
+              display="flex"
+              justifyContent="center"
+            >
               <CodeScanner onScan={onScan} paused={paused} onError={onError} />
             </Box>
           </Stack>
@@ -162,6 +189,7 @@ const ScanMeeting = React.memo(({ onClose }) => {
 ScanMeeting.displayName = 'ScanMeeting';
 ScanMeeting.propTypes = {
   onClose: PropTypes.func,
+  onFinish: PropTypes.func,
 };
 
 export default ScanMeeting;

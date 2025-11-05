@@ -16,6 +16,8 @@ import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
 // import { CHANNEL } from "../Home";
 // import { setData } from "../../../redux/meeting";
 import { updateUser } from '../../../redux/user';
+import { updateApp } from '../../../redux/app';
+import { encrypt } from '../../../utils/crypt';
 
 const IdentifyForm = ({ loading, code, refetch }) => {
   const {
@@ -35,13 +37,18 @@ const IdentifyForm = ({ loading, code, refetch }) => {
         method: 'POST',
         data: { name, code },
       });
+      const data = {
+        name: response.data.name,
+        id: response.data._id,
+        token: response.data.token,
+        isGuest: true,
+      };
+      
+      dispatch(updateUser({ data }));
       dispatch(
-        updateUser({
+        updateApp({
           data: {
-            name: response.data.name,
-            id: response.data._id,
-            token: response.data.token,
-            isGuest: true,
+            guest: encrypt(data),
           },
         })
       );

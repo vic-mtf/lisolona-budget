@@ -10,17 +10,14 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import PropTypes from 'prop-types';
+import createCallLink from '../../../../../utils/createCallLink';
 
 const MeetingLink = () => {
   const { code } = useParams();
-  const url = useMemo(
-    () =>
-      new URL(
-        '/conference/' + code,
-        new URL(PATH_NAME, window.origin).toString()
-      ).toString(),
-    [code]
-  );
+  const callUrl = useMemo(() => {
+    if (!code) return null;
+    return createCallLink(code);
+  }, [code]);
 
   return (
     <Box>
@@ -39,19 +36,17 @@ const MeetingLink = () => {
       >
         <ListItem>
           <ListItemText
-            primary={url}
+            primary={callUrl}
             slotProps={{ primary: { noWrap: true, variant: 'body2' } }}
           />
           <div>
-            <ShareOrCopyButton url={url} />
+            <ShareOrCopyButton url={callUrl} />
           </div>
         </ListItem>
       </List>
     </Box>
   );
 };
-
-const PATH_NAME = window.location.pathname.split('/conference/')[0];
 
 const ShareOrCopyButton = ({ url }) => {
   const [copied, setCopied] = useState(false);

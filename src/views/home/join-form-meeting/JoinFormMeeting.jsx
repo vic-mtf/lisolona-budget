@@ -12,6 +12,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
+import { decrypt } from '../../../utils/crypt';
 import Slide from '@mui/material/Slide';
 import useAxios from '../../../hooks/useAxios';
 import CodeMeeting from './CodeMeeting';
@@ -20,10 +21,20 @@ import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PropTypes from 'prop-types';
 import LocalSaveUser from './LocalSaveUser';
 import { useSelector } from 'react-redux';
+import normalizeObjectKeys from '../../../utils/normalizeObjectKeys';
 
 export default function JoinFormMeeting({ message }) {
   const { state, search } = useLocation();
-  const meetingData = useMemo(() => state?.meeting, [state?.meeting]);
+  const meetingData = useMemo(
+    () => (state?.meeting ? normalizeObjectKeys(state?.meeting) : null),
+    [state?.meeting]
+  );
+
+  const encryptedGuest = useSelector((store) => store.app.guest);
+  const isGuest = useMemo(
+    () => Boolean(decrypt(encryptedGuest)),
+    [encryptedGuest]
+  );
 
   const navigateTo = useNavigate();
 
@@ -34,8 +45,10 @@ export default function JoinFormMeeting({ message }) {
     } catch (error) {
       console.error(error);
     }
-    return meetingData?._id || v;
-  }, [search, meetingData?._id]);
+    return meetingData?.id || v;
+  }, [search, meetingData?.id]);
+
+  console.log(code);
 
   const [{ loading }, refetch] = useAxios(
     {
@@ -44,7 +57,6 @@ export default function JoinFormMeeting({ message }) {
     },
     { manual: true }
   );
-  const isGuest = useSelector((store) => store.user.isGuest);
 
   const [step, setStep] = useState(() => (isGuest ? 1 : 0));
 
@@ -63,8 +75,7 @@ export default function JoinFormMeeting({ message }) {
             left: 0,
             width: '100%',
             display: 'flex',
-            // justifyContent: 'center',
-            // alignItems: 'center',
+
             flexDirection: 'column',
           },
         }}

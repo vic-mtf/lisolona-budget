@@ -9,6 +9,7 @@ import CardActions from '@mui/material/CardActions';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import generateSVGImage from '../../../../../utils/generateQRImage';
+import createCallLink from '../../../../../utils/createCallLink';
 import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 
@@ -20,17 +21,7 @@ const MeetingQRCode = () => {
 
   const callUrl = useMemo(() => {
     if (!code) return null;
-    const cleanPath = (p = '') =>
-      (p?.endsWith('/') ? p?.slice(0, -1) : p) || '';
-    try {
-      const pathname = '/conference/' + code;
-      const base = new URL(import.meta.env.BASE_URL, window.location.origin);
-      base.pathname = cleanPath(base.pathname) + pathname;
-      return base.toString();
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    return createCallLink(code);
   }, [code]);
 
   const target = useMemo(() => state?.target, [state?.target]);

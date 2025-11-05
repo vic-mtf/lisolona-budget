@@ -138,7 +138,7 @@ const Cover = React.forwardRef((_, ref) => {
           >
             <img alt="geid-budget" src={_platform_logo} />
             <Typography noWrap variant="h4">
-              Lisolo Na Budget
+              Lisolo
             </Typography>
           </Stack>
           <Box

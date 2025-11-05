@@ -7,6 +7,7 @@ import { useNotifications } from '@toolpad/core/useNotifications';
 import ringtones from '../../utils/ringtones';
 import NoticeSnack from '../../components/NoticeSnack';
 import WavingHand from '../../components/WavingHand';
+import HighlightWord from '../../components/HighlightWord';
 
 const useRemoteUserSignal = () => {
   const socket = useSocket();
@@ -133,11 +134,15 @@ const useOrganizerSignal = () => {
       const key = `${userId}-organizer`;
       notifications.close(key);
       notifications.show(
-        `${fn} ${
-          isOrg
-            ? 'vous a ajouté en tant que modérateur'
-            : 'vous a retiré en tant que modérateur'
-        } `,
+        React.createElement(HighlightWord, {
+          text: `${fn} ${
+            isOrg
+              ? 'vous a ajouté en tant que modérateur'
+              : 'vous a retiré en tant que modérateur'
+          } `,
+          words: [fn],
+        }),
+
         { key }
       );
       ringtones.signalUnknown.volume = 0.1;

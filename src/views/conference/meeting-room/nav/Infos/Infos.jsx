@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import InfosHeader from './header/InfosHeader';
 import MeetingLink from './MeetingLink';
 import MeetingQRCode from './MeetingQRCode';
+import CodeDisplay from './CodeDisplay';
 
 const Infos = forwardRef((_, ref) => {
   return (
@@ -17,7 +18,9 @@ const Infos = forwardRef((_, ref) => {
         flexDirection="column"
       >
         <InfosHeader />
+
         <MeetingLink />
+        <CodeDisplay />
         <MeetingQRCode />
       </Box>
     </Box>

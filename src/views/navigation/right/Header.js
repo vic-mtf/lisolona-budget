@@ -4,16 +4,16 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from "@mui/material";
-import React, { useMemo, useRef, useState } from "react";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import IconButton from "../../../components/IconButton";
-import appConfig from "../../../configs/app-config.json";
-import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
-import { useSelector } from "react-redux";
+} from '@mui/material';
+import React, { useMemo, useRef, useState } from 'react';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
+import IconButton from '../../../components/IconButton';
+import appConfig from '../../../configs/app-config.json';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import { useSelector } from 'react-redux';
 
 export default function Header({
   onChangeNavigation,
@@ -28,23 +28,23 @@ export default function Header({
   const navigationOptions = useMemo(
     () => [
       {
-        label: "Conversations",
+        label: 'Conversations',
         icon: <ChatOutlinedIcon />,
         nbr: 0,
       },
       {
-        label: "Appels",
+        label: 'Appels',
         icon: <CallOutlinedIcon />,
         nbr: 0,
-        activeKey: "activeCall",
+        activeKey: 'activeCall',
       },
       {
-        label: "Contacts",
+        label: 'Contacts',
         icon: <ContactsOutlinedIcon />,
         nbr: 0,
       },
       {
-        label: "Notifications",
+        label: 'Notifications',
         icon: <NotificationsNoneOutlinedIcon />,
         nbr: notificationsNumber || 0,
       },
@@ -54,26 +54,28 @@ export default function Header({
 
   return (
     <React.Fragment>
-      <ThemeProvider theme={createTheme({ palette: { mode: "dark" } })}>
-        <Toolbar variant='dense' sx={{ bgcolor: appConfig.colors.main }}>
+      <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
+        <Toolbar variant="dense" sx={{ bgcolor: appConfig.colors.main }}>
           <Typography
             flexGrow={1}
             fontSize={18}
-            fontWeight='bold'
-            variant='h6'
+            fontWeight="bold"
+            variant="h6"
             noWrap
-            component='div'
-            color='text.primary'>
-            Lisolo Na Budget
+            component="div"
+            color="text.primary"
+          >
+            Lisolo
           </Typography>
           <Tooltip title="Plus d'options" arrow>
             <div>
               <IconButton
-                aria-label='more'
+                aria-label="more"
                 disabled
                 ref={anchorEl}
-                onClick={() => setAnchor(anchorEl?.current)}>
-                <MoreVertOutlinedIcon fontSize='small' />
+                onClick={() => setAnchor(anchorEl?.current)}
+              >
+                <MoreVertOutlinedIcon fontSize="small" />
               </IconButton>
             </div>
           </Tooltip>

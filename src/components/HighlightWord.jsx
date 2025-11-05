@@ -45,7 +45,7 @@ const HighlightWord = ({ text = '', words = [] }) => {
           component="b"
           key={offset}
           fontWeight="bold"
-          color="text.primary"
+          color="currentColor"
         >
           {match}
         </Typography>

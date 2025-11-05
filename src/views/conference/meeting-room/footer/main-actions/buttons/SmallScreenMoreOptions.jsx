@@ -59,7 +59,7 @@ const SmallScreenMoreOptions = ({ reaction }) => {
           <RaiseHandButton onClose={onClose} />
           <ReactionButton onClose={onClose} reaction={reaction} />
           <PresentationViewButton onClose={onClose} />
-          <SettingButton onClose={onClose} />
+          <SettingButton />
         </Toolbar>
         <Divider />
         {filterActions.map((action) => (

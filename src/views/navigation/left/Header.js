@@ -7,33 +7,33 @@ import {
   Toolbar,
   Tooltip,
   Divider,
-} from "@mui/material";
+} from '@mui/material';
 import React, {
   useEffect,
   useMemo,
   useRef,
   useState,
   useCallback,
-} from "react";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import Typography from "../../../components/Typography";
-import geid_logo from "../../../assets/geid_logo_white_without_title.webp";
+} from 'react';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
+import Typography from '../../../components/Typography';
+import geid_logo from '../../../assets/geid_logo_white_without_title.webp';
 // import IconButton from "../../../components/IconButton";
-import appConfig from "../../../configs/app-config.json";
+import appConfig from '../../../configs/app-config.json';
 // import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
-import MoreOption from "./shortcut/MoreOption";
-import styled from "@emotion/styled";
-import { useSelector } from "react-redux";
-import ActionWrapper from "./actions/ActionWrapper";
-import CustomBadge from "../../../components/CustomBadge";
-import store from "../../../redux/store";
-import { isBoolean } from "lodash";
-import observeLastModification from "../../../utils/observeLastModification";
-import db from "../../../database/db";
-import countScheduleMeeting from "./countScheduleMeeting";
+import MoreOption from './shortcut/MoreOption';
+import styled from '@emotion/styled';
+import { useSelector } from 'react-redux';
+import ActionWrapper from './actions/ActionWrapper';
+import CustomBadge from '../../../components/CustomBadge';
+import store from '../../../redux/store';
+import { isBoolean } from 'lodash';
+import observeLastModification from '../../../utils/observeLastModification';
+import db from '../../../database/db';
+import countScheduleMeeting from './countScheduleMeeting';
 
 export default function Header({
   onChangeNavigation,
@@ -56,23 +56,23 @@ export default function Header({
   const navigationOptions = useMemo(
     () => [
       {
-        label: "Conversations",
+        label: 'Conversations',
         icon: <ChatOutlinedIcon />,
         nbr: 0,
       },
       {
-        label: "Appels",
+        label: 'Appels',
         icon: <CallOutlinedIcon />,
         nbr: scheduleMeeting,
-        activeKey: "activeCall",
+        activeKey: 'activeCall',
       },
       {
-        label: "Contacts",
+        label: 'Contacts',
         icon: <ContactsOutlinedIcon />,
         nbr: 0,
       },
       {
-        label: "Notifications",
+        label: 'Notifications',
         icon: <NotificationsNoneOutlinedIcon />,
         nbr: notificationsNumber || 0,
       },
@@ -81,7 +81,7 @@ export default function Header({
   );
 
   useEffect(() => {
-    const unsubscribe = observeLastModification("calls", onCallChange);
+    const unsubscribe = observeLastModification('calls', onCallChange);
     onCallChange();
     return () => {
       unsubscribe();
@@ -90,17 +90,18 @@ export default function Header({
 
   return (
     <React.Fragment>
-      <ThemeProvider theme={createTheme({ palette: { mode: "dark" } })}>
+      <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
         <Toolbar
-          variant='dense'
-          sx={{ bgcolor: appConfig.colors.main, py: 0.5 }}>
-          <img alt='geid-logo' src={geid_logo} width={80} />
+          variant="dense"
+          sx={{ bgcolor: appConfig.colors.main, py: 0.5 }}
+        >
+          <img alt="geid-logo" src={geid_logo} width={80} />
           <Divider
             flexItem
-            orientation='vertical'
-            variant='middle'
+            orientation="vertical"
+            variant="middle"
             sx={{
-              bgcolor: "text.primary",
+              bgcolor: 'text.primary',
               borderWidth: 1,
               mx: 1,
             }}
@@ -109,11 +110,12 @@ export default function Header({
             flexGrow={1}
             fontSize={18}
             //fontWeight='bold'
-            variant='h6'
+            variant="h6"
             noWrap
-            component='div'
-            color='text.primary'>
-            Lisolo Na Budget
+            component="div"
+            color="text.primary"
+          >
+            Lisolo
           </Typography>
           {/* <Tooltip title="Plus d'options" arrow>
             <div>
@@ -128,12 +130,13 @@ export default function Header({
           </Tooltip> */}
         </Toolbar>
       </ThemeProvider>
-      <Toolbar variant='dense'>
+      <Toolbar variant="dense">
         <BottomNavigation
           showLabels
           value={navigation}
-          sx={{ width: "100%", my: 1 }}
-          onChange={onChangeNavigation}>
+          sx={{ width: '100%', my: 1 }}
+          onChange={onChangeNavigation}
+        >
           {navigationOptions.map((nav, index) => (
             <BottomNavigationAction
               label={
@@ -142,7 +145,7 @@ export default function Header({
                 </LabelSignalActive>
               }
               icon={
-                <StyledBadge color='primary' badgeContent={nav.nbr}>
+                <StyledBadge color="primary" badgeContent={nav.nbr}>
                   {nav.icon}
                 </StyledBadge>
               }
@@ -160,18 +163,18 @@ export default function Header({
 const Label = ({ children, active }) => {
   return (
     <Typography
-      color={active ? "bacground.primary" : "text.primary"}
+      color={active ? 'bacground.primary' : 'text.primary'}
       fontSize={10}
-      variant='caption'
+      variant="caption"
       children={children}
     />
   );
 };
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
+  '& .MuiBadge-badge': {
     border: `2px solid ${theme.palette.background.paper}`,
-    padding: "0 4px",
+    padding: '0 4px',
   },
 }));
 
@@ -192,9 +195,10 @@ const LabelSignalActive = ({ children, activeKey }) => {
 
   return (
     <CustomBadge
-      variant={active ? "dot" : undefined}
+      variant={active ? 'dot' : undefined}
       online={active}
-      active={active}>
+      active={active}
+    >
       {children}
     </CustomBadge>
   );

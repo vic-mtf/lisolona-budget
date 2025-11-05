@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
-import persistReducer from "redux-persist/es/persistReducer";
-import storage from "redux-persist/lib/storage";
-import appConfig from "../configs/app-config.json";
-import deepMerge from "../utils/mergeDeep";
+import { createSlice } from '@reduxjs/toolkit';
+import persistReducer from 'redux-persist/es/persistReducer';
+import storage from 'redux-persist/lib/storage';
+import appConfig from '../configs/app-config.json';
+import deepMerge from '../utils/mergeDeep';
 const {
   lang,
   colors: {
@@ -11,7 +11,7 @@ const {
 } = appConfig;
 
 const app = createSlice({
-  name: "app",
+  name: 'app',
   initialState: {
     theme: { mode, opacity: 0.75, blur: 15 },
     lang,
@@ -20,6 +20,7 @@ const app = createSlice({
       stayConnected: false,
       data: null,
     },
+    guest: null,
   },
   reducers: {
     updateApp(state, actions) {
@@ -37,7 +38,7 @@ export const { updateApp } = app.actions;
 export default persistReducer(
   {
     storage,
-    key: "__ROOT_GEID_GLOBAL_CONFIG_APP",
+    key: '__ROOT_GEID_GLOBAL_CONFIG_APP',
   },
   app.reducer
 );

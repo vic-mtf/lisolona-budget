@@ -1,14 +1,26 @@
-import { useCallback /*,useLayoutEffect*/ } from 'react';
-import { Box, FormLabel, Toolbar } from '@mui/material';
+import { useCallback, useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import FormLabel from '@mui/material/FormLabel';
+import Dialog from '@mui/material/Dialog';
+import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
 import InputCode from '../../../components/InputCode';
+import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import messages from './messages';
 import PropTypes from 'prop-types';
 import { useNotifications } from '@toolpad/core/useNotifications';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
+import ScanMeeting from '../../main/forms/scan-meeting/ScanMeeting';
+import useSmallScreen from '../../../hooks/useSmallScreen';
 
 const CodeMeeting = ({ code, loading, refetch }) => {
   const navigateTo = useNavigate();
   const notifications = useNotifications();
+  const [open, setOpen] = useState(false);
+  const matches = useSmallScreen();
 
   const handleCompleteCode = useCallback(
     async (value) => {
@@ -28,29 +40,51 @@ const CodeMeeting = ({ code, loading, refetch }) => {
     },
     [notifications, refetch, loading, navigateTo]
   );
+  const onClose = useCallback(() => setOpen(false), []);
 
   return (
-    <Box
-      display="flex"
-      gap={1}
-      width="100%"
-      flexDirection="column"
-      alignItems="center"
-    >
-      <Toolbar variant="dense" disableGutters>
-        <FormLabel mb={1}>
-          Entrez le code de la réunion pour participer
-        </FormLabel>
-      </Toolbar>
-      <div style={{ width: 'auto', display: 'inline-flex' }}>
-        <InputCode
-          length={9}
-          size={38}
-          values={code?.split('') || []}
-          onComplete={handleCompleteCode}
-        />
-      </div>
-    </Box>
+    <>
+      <Box
+        display="flex"
+        gap={1}
+        width="100%"
+        flexDirection="column"
+        alignItems="center"
+        color="text.primary"
+      >
+        <Toolbar variant="dense" disableGutters>
+          <FormLabel mb={1}>
+            Entrez le code de la réunion pour participer
+          </FormLabel>
+        </Toolbar>
+        <div style={{ width: 'auto', display: 'inline-flex' }}>
+          <InputCode
+            length={9}
+            size={38}
+            values={code?.split('') || []}
+            onComplete={handleCompleteCode}
+          />
+        </div>
+        <Typography width="100%" my={2}>
+          <Divider variant="middle">Ou</Divider>
+        </Typography>
+
+        <>
+          <Button
+            color="inherit"
+            variant="outlined"
+            startIcon={<QrCodeScannerIcon />}
+            endIcon={<OpenInBrowserIcon />}
+            onClick={() => setOpen(true)}
+          >
+            Scanner le code QR
+          </Button>
+        </>
+      </Box>
+      <Dialog open={open} onClose={onClose} fullScreen={matches}>
+        <ScanMeeting onClose={onClose} />
+      </Dialog>
+    </>
   );
 };
 

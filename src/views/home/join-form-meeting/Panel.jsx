@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import openSignIn from "../../../utils/openSignIn";
-import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
+import { Box, Button, Typography } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import openSignIn from '../../../utils/openSignIn';
+import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
 
 export default function Panel() {
   const handleOpenSignIn = (event) => {
@@ -10,22 +10,24 @@ export default function Panel() {
   };
   return (
     <>
-      <Typography variant='h4' fontSize={32} fontWeight='lighter'>
-        Optimisez la collaboration et renforcez l'efficacité de vos réunions en
-        ligne
+      <Typography variant="h4" fontSize={32} fontWeight="lighter">
+        {
+          "Optimisez la collaboration et renforcez l'efficacité de vos réunions en ligne"
+        }
       </Typography>
-      <Typography color='text.secondary' variant='body1'>
-        Découvrez une nouvelle dimension de la collaboration avec Lisolo na
-        Budget. Grâce aux outils innovants, transformez vos réunions en ligne en
+      <Typography color="text.secondary" variant="body1">
+        Découvrez une nouvelle dimension de la collaboration avec <b>Lisolo</b>.
+        Grâce aux outils innovants, transformez vos réunions en ligne en
         expériences productives et stimulantes. Gagnez du temps, améliorez votre
         communication et atteignez vos objectifs plus rapidement
       </Typography>
-      <Box width='100%' display='flex' justifyContent='end'>
+      <Box width="100%" display="flex" justifyContent="end">
         <Button
-          variant='outlined'
+          variant="outlined"
           startIcon={<LockOutlinedIcon />}
           onClick={handleOpenSignIn}
-          endIcon={<LaunchOutlinedIcon />}>
+          endIcon={<LaunchOutlinedIcon />}
+        >
           Connectez-vous
         </Button>
       </Box>

@@ -84,14 +84,16 @@ const RoomInfos = () => {
           data?.callDetail || data?.callDetails || {};
         const participants = {};
         const guests = {};
+        let isCamActive;
+        let isMicActive;
 
         data?.participants?.forEach((p) => {
           if (!p?.identity) return;
           if (p.identity.id === id) {
             const { activateCam, activateMic } = p.auth;
             const devices = store.getState().conference.setup.devices;
-            const isCamActive = activateCam && devices.camera.enabled;
-            const isMicActive = activateMic && devices.microphone.enabled;
+            isCamActive = activateCam && devices.camera.enabled;
+            isMicActive = activateMic && devices.microphone.enabled;
             p.state.isInRoom = true;
             p.state.isCamActive = isCamActive;
             p.state.isMicActive = isMicActive;
@@ -118,6 +120,8 @@ const RoomInfos = () => {
               'step',
               'roomId',
               'meeting.organizerAuth',
+              'setup.devices.camera.enabled',
+              'setup.devices.microphone.enabled',
             ],
             data: [
               callData,
@@ -132,6 +136,8 @@ const RoomInfos = () => {
               'meeting',
               data?.id,
               data?.organizerAuth,
+              isCamActive,
+              isMicActive,
             ],
           })
         );

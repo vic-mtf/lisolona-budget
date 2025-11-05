@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from "react";
-import useSocket from "../useSocket";
-import store from "../../redux/store";
-import { useLocation } from "react-router-dom";
-import { useNotifications } from "@toolpad/core/useNotifications";
-import ringtones from "../../utils/ringtones";
-import normalizeObjectKeys from "../../utils/normalizeObjectKeys";
+import { useEffect, useMemo } from 'react';
+import useSocket from '../useSocket';
+import store from '../../redux/store';
+import { useLocation } from 'react-router-dom';
+import { useNotifications } from '@toolpad/core/useNotifications';
+import ringtones from '../../utils/ringtones';
+import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
 
 const useRemoteUserJoin = () => {
   const socket = useSocket();
@@ -25,15 +25,19 @@ const useRemoteUserJoin = () => {
       if (!participants[remoteUserId]) return;
       const participant = { ...participants[remoteUserId] };
       store.dispatch({
-        type: "conference/updateConferenceData",
+        type: 'conference/updateConferenceData',
         payload: {
           data: {
             meeting: {
               participants: {
                 [remoteUserId]: {
                   ...participant,
-                  state: { ...data?.state, isInRoom: true },
-                  auth: data?.auth,
+                  state: {
+                    ...participant.state,
+                    ...data?.state,
+                    isInRoom: true,
+                  },
+                  auth: { ...participant.auth, ...data?.auth },
                 },
               },
             },
@@ -44,9 +48,9 @@ const useRemoteUserJoin = () => {
       ringtones.active.volume = 0.1;
       notifications.close(remoteUserId);
     };
-    socket?.on("join-room", onRemoteUserJoin);
+    socket?.on('join-room', onRemoteUserJoin);
     return () => {
-      socket?.off("join-room", onRemoteUserJoin);
+      socket?.off('join-room', onRemoteUserJoin);
     };
   }, [socket, id, notifications]);
   return null;

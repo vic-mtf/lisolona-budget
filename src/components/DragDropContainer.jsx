@@ -1,14 +1,14 @@
-import React, { useRef, useEffect, useMemo, useCallback } from "react";
-import Box from "@mui/material/Box";
-import interact from "interactjs";
-import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
-import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
-import IconButton from "@mui/material/IconButton";
-import Toolbar from "@mui/material/Toolbar";
-import Tooltip from "@mui/material/Tooltip";
-import Fade from "@mui/material/Fade";
-import useSmallScreen from "../hooks/useSmallScreen";
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import Box from '@mui/material/Box';
+import interact from 'interactjs';
+import PropTypes from 'prop-types';
+import Paper from '@mui/material/Paper';
+import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Fade from '@mui/material/Fade';
+import useSmallScreen from '../hooks/useSmallScreen';
 
 const MARGIN = 5;
 
@@ -59,13 +59,13 @@ const DragDropContainer = React.forwardRef(
       const finalX = closest.corner.x - parentRect.left;
       const finalY = closest.corner.y - parentRect.top;
 
-      target.style.transition = "transform 0.1s ease";
+      target.style.transition = 'transform 0.1s ease';
       target.style.transform = `translate(${finalX}px, ${finalY}px)`;
-      target.setAttribute("data-x", finalX);
-      target.setAttribute("data-y", finalY);
+      target.setAttribute('data-x', finalX);
+      target.setAttribute('data-y', finalY);
 
       target.ontransitionend = () => {
-        target.style.transition = "";
+        target.style.transition = '';
         target.ontransitionend = null;
       };
     }, []);
@@ -75,7 +75,7 @@ const DragDropContainer = React.forwardRef(
         const el = containerRef.current;
         if (!el) return;
 
-        el.style.transition = "width, height 0.3s ease";
+        el.style.transition = 'width, height 0.3s ease';
         el.style.width = `${newWidth}px`;
         el.style.height = `${newHeight}px`;
 
@@ -84,7 +84,7 @@ const DragDropContainer = React.forwardRef(
           : newHeight <= hDims.minHeightThreshold;
         if (
           showSmallView !== isSmall &&
-          typeof onShowSmallViewChange === "function"
+          typeof onShowSmallViewChange === 'function'
         )
           onShowSmallViewChange(isSmall);
         el.ontransitionend = () => {
@@ -105,8 +105,8 @@ const DragDropContainer = React.forwardRef(
           listeners: {
             move(event) {
               const target = event.target;
-              let x = parseFloat(target.getAttribute("data-x")) || 0;
-              let y = parseFloat(target.getAttribute("data-y")) || 0;
+              let x = parseFloat(target.getAttribute('data-x')) || 0;
+              let y = parseFloat(target.getAttribute('data-y')) || 0;
 
               target.style.width = `${event.rect.width}px`;
               target.style.height = `${event.rect.height}px`;
@@ -115,8 +115,8 @@ const DragDropContainer = React.forwardRef(
               y += event.deltaRect.top;
 
               target.style.transform = `translate(${x}px, ${y}px)`;
-              target.setAttribute("data-x", x);
-              target.setAttribute("data-y", y);
+              target.setAttribute('data-x', x);
+              target.setAttribute('data-y', y);
             },
             end: (event) => {
               const height = parseFloat(event.target.style.height);
@@ -124,13 +124,16 @@ const DragDropContainer = React.forwardRef(
               const cond = matches
                 ? width <= wDims.minWidthThreshold
                 : height <= hDims.minHeightThreshold;
-              if (cond) manuelResize(initWidth, 50);
-              else autoDrag(event);
+              if (cond) {
+                const newHeight = matches ? initHeight - 50 : 50;
+                const newWidth = matches ? 40 : initWidth;
+                manuelResize(newWidth, newHeight);
+              } else autoDrag(event);
             },
           },
           modifiers: [
             interact.modifiers.restrictEdges({
-              outer: "parent",
+              outer: 'parent',
               offset: {
                 top: MARGIN,
                 left: MARGIN,
@@ -139,7 +142,7 @@ const DragDropContainer = React.forwardRef(
               },
               endOnly: true,
             }),
-            interact.modifiers.aspectRatio({ ratio: "preserve" }),
+            interact.modifiers.aspectRatio({ ratio: 'preserve' }),
             interact.modifiers.restrictSize({
               min: {
                 width: hDims.minHeight * aspectRatio,
@@ -157,20 +160,20 @@ const DragDropContainer = React.forwardRef(
           listeners: {
             move: (event) => {
               const target = event.target;
-              const dataX = target.getAttribute("data-x") || 0;
-              const dataY = target.getAttribute("data-y") || 0;
+              const dataX = target.getAttribute('data-x') || 0;
+              const dataY = target.getAttribute('data-y') || 0;
               const x = parseFloat(dataX) + event.dx;
               const y = parseFloat(dataY) + event.dy;
               target.style.transform = `translate(${x}px, ${y}px)`;
-              target.setAttribute("data-x", x);
-              target.setAttribute("data-y", y);
+              target.setAttribute('data-x', x);
+              target.setAttribute('data-y', y);
             },
             end: autoDrag,
           },
           inertia: true,
           modifiers: [
             interact.modifiers.restrictRect({
-              restriction: "parent",
+              restriction: 'parent',
               endOnly: true,
               offset: {
                 top: MARGIN,
@@ -197,21 +200,21 @@ const DragDropContainer = React.forwardRef(
       if (!showSmallView)
         corners.forEach((dir) => {
           interactive = interact(container.querySelector(`.corner-${dir}`));
-          interactive.on("down", onActiveInteract);
+          interactive.on('down', onActiveInteract);
         });
 
-      document.addEventListener("mouseup", onDeactivateInteract);
-      document.addEventListener("touchend", onDeactivateInteract);
-      document.addEventListener("pointerdown", onDeactivateInteract);
+      document.addEventListener('mouseup', onDeactivateInteract);
+      document.addEventListener('touchend', onDeactivateInteract);
+      document.addEventListener('pointerdown', onDeactivateInteract);
 
       return () => {
         corners.forEach((dir) => {
           interactive = interact(container.querySelector(`.corner-${dir}`));
-          interactive.off("down", onActiveInteract);
+          interactive.off('down', onActiveInteract);
         });
-        document.removeEventListener("mouseup", onDeactivateInteract);
-        document.removeEventListener("touchend", onDeactivateInteract);
-        document.removeEventListener("pointerdown", onDeactivateInteract);
+        document.removeEventListener('mouseup', onDeactivateInteract);
+        document.removeEventListener('touchend', onDeactivateInteract);
+        document.removeEventListener('pointerdown', onDeactivateInteract);
       };
     }, [
       aspectRatio,
@@ -220,6 +223,7 @@ const DragDropContainer = React.forwardRef(
       initWidth,
       showSmallView,
       matches,
+      initHeight,
     ]);
 
     useEffect(() => {
@@ -261,8 +265,8 @@ const DragDropContainer = React.forwardRef(
         const finalY = closest.corner.y - parentRect.top;
 
         child.style.transform = `translate(${finalX}px, ${finalY}px)`;
-        child.setAttribute("data-x", finalX);
-        child.setAttribute("data-y", finalY);
+        child.setAttribute('data-x', finalX);
+        child.setAttribute('data-y', finalY);
       });
 
       observer.observe(parent);
@@ -281,8 +285,8 @@ const DragDropContainer = React.forwardRef(
       const y = MARGIN;
 
       child.style.transform = `translate(${x}px, ${y}px)`;
-      child.setAttribute("data-x", x);
-      child.setAttribute("data-y", y);
+      child.setAttribute('data-x', x);
+      child.setAttribute('data-y', y);
     }, []);
 
     useEffect(() => {
@@ -304,51 +308,54 @@ const DragDropContainer = React.forwardRef(
       <Box
         ref={(node) => {
           containerRef.current = node;
-          if (ref && Object.hasOwnProperty.call(ref, "current"))
+          if (ref && Object.hasOwnProperty.call(ref, 'current'))
             ref.current = node;
         }}
-        display='flex'
+        display="flex"
         height={{ md: hDims.initHeight, xs: initHeight }}
         width={{ md: initWidth, xs: wDims.initWidth }}
         data-x={0}
         data-y={0}
-        position='absolute'
+        position="absolute"
         borderRadius={1}
         zIndex={(t) => t.zIndex.speedDial + 100}
         sx={{
           aspectRatio: { md: 16 / 9, sm: 3 / 4, xs: 9 / 16 },
-          touchAction: "none",
+          touchAction: 'none',
           zIndex: (t) => t.zIndex.speedDial + 100,
-        }}>
+        }}
+      >
         {corners.map((corner) => (
           <div
             key={corner}
             className={`corner-${corner}`}
             style={{
               ...cornerStyles[corner],
-              position: "absolute",
+              position: 'absolute',
               zIndex: 10,
               width: 10,
               aspectRatio: 1,
-              display: showSmallView && "none",
+              display: showSmallView && 'none',
             }}
           />
         ))}
         <Box
-          display='flex'
-          flexDirection='column'
+          display="flex"
+          flexDirection="column"
           elevation={5}
           component={Paper}
-          position='absolute'
-          overflow='hidden'
-          height='100%'
-          width='100%'>
+          position="absolute"
+          overflow="hidden"
+          height="100%"
+          width="100%"
+        >
           <Fade
             in={!showSmallView}
             unmountOnExit
             appear={false}
-            className='fadeContainer'
-            style={{ display: "flex", flex: 1 }}>
+            className="fadeContainer"
+            style={{ display: 'flex', flex: 1 }}
+          >
             <Box>{children}</Box>
           </Fade>
           <Fade
@@ -356,42 +363,46 @@ const DragDropContainer = React.forwardRef(
             unmountOnExit
             appear={false}
             style={{
-              position: "absolute",
+              position: 'absolute',
               bottom: 0,
               right: 0,
               left: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}>
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
             <Toolbar
               sx={{
                 px: { xs: 0, md: 1 },
                 gap: 1,
-                flexDirection: { xs: "column", md: "row" },
+                flexDirection: { xs: 'column', md: 'row' },
               }}
-              variant='dense'
-              disableGutters>
+              variant="dense"
+              disableGutters
+            >
               <Box
                 flexGrow={1}
-                display='inline-flex'
-                flexDirection={{ xs: "column", md: "row" }}
-                alignItems='center'
+                display="inline-flex"
+                flexDirection={{ xs: 'column', md: 'row' }}
+                alignItems="center"
                 pt={{ xs: 1, md: 0 }}
-                gap={1}>
+                gap={1}
+              >
                 {smallView}
               </Box>
-              <Tooltip title='Agrandir'>
+              <Tooltip title="Agrandir">
                 <Box pb={{ xs: 1, md: 0 }}>
                   <IconButton
-                    size='small'
+                    size="small"
                     onClick={() => {
                       const height = matches ? initHeight : hDims.initHeight;
                       const width = matches ? wDims.initWidth : initWidth;
                       manuelResize(width, height);
-                    }}>
-                    <OpenInFullOutlinedIcon fontSize='small' />
+                    }}
+                  >
+                    <OpenInFullOutlinedIcon fontSize="small" />
                   </IconButton>
                 </Box>
               </Tooltip>
@@ -403,12 +414,12 @@ const DragDropContainer = React.forwardRef(
   }
 );
 
-const corners = ["nw", "ne", "sw", "se"];
+const corners = ['nw', 'ne', 'sw', 'se'];
 const cornerStyles = {
-  nw: { top: 0, left: 0, cursor: "nw-resize" },
-  ne: { top: 0, right: 0, cursor: "ne-resize" },
-  sw: { bottom: 0, left: 0, cursor: "sw-resize" },
-  se: { bottom: 0, right: 0, cursor: "se-resize" },
+  nw: { top: 0, left: 0, cursor: 'nw-resize' },
+  ne: { top: 0, right: 0, cursor: 'ne-resize' },
+  sw: { bottom: 0, left: 0, cursor: 'sw-resize' },
+  se: { bottom: 0, right: 0, cursor: 'se-resize' },
 };
 
 const hDims = {
@@ -433,5 +444,5 @@ DragDropContainer.propTypes = {
   aspectRatio: PropTypes.number,
 };
 
-DragDropContainer.displayName = "DragDropContainer";
+DragDropContainer.displayName = 'DragDropContainer';
 export default React.memo(DragDropContainer);

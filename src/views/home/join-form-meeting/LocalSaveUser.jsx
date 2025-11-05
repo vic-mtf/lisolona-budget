@@ -12,31 +12,42 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback, useMemo } from 'react';
 import { updateUser } from '../../../redux/user';
+import { updateApp } from '../../../redux/app';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { decrypt, encrypt } from '../../../utils/crypt';
 
 const LocalSaveUser = ({ setStep, refetch, code }) => {
-  const name = useSelector((store) => store.user.name);
-  const id = useSelector((store) => store.user.id);
+  const encryptedGuest = useSelector((store) => store.app.guest);
+  const guest = useMemo(() => decrypt(encryptedGuest), [encryptedGuest]);
+
+  // const name = useSelector((store) => store.user.name);
+  // const id = useSelector((store) => store.user.id);
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
   const { state } = useLocation();
   const meeting = useMemo(() => state?.meeting, [state?.meeting]);
 
   const handleSendData = useCallback(async () => {
+    const name = guest?.name;
+    const id = guest?.id;
     let response = await refetch({
       url: '/api/chat/guest/create',
       method: 'POST',
       data: { name, code, id },
     });
-
+    const token = response.data.token;
     dispatch(
       updateUser({
+        data: { token, name, id, isGuest: true },
+      })
+    );
+    dispatch(
+      updateApp({
         data: {
-          token: response.data.token,
+          guest: encrypt({ token, name, id, isGuest: true }),
         },
       })
     );
-
     const target = {
       type: meeting?.room ? 'room' : 'direct',
       ...meeting?.room,
@@ -45,7 +56,7 @@ const LocalSaveUser = ({ setStep, refetch, code }) => {
       // replace: true,
       state: { target },
     });
-  }, [refetch, code, dispatch, navigateTo, meeting, id, name]);
+  }, [refetch, code, dispatch, navigateTo, meeting, guest]);
 
   return (
     <Box>
@@ -58,9 +69,9 @@ const LocalSaveUser = ({ setStep, refetch, code }) => {
       <ListItem disableGutters disablePadding>
         <ListItemButton onClick={handleSendData}>
           <ListItemAvatar>
-            <ListAvatar id={id}>{name?.charAt(0)}</ListAvatar>
+            <ListAvatar id={guest?.id}>{guest?.name.charAt(0)}</ListAvatar>
           </ListItemAvatar>
-          <ListItemText primary={name} />
+          <ListItemText primary={guest?.name} />
         </ListItemButton>
       </ListItem>
       <Button
