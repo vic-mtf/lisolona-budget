@@ -65,21 +65,23 @@ const NavActions = () => {
           '& .MuiBottomNavigationAction-root': {
             p: 0,
             m: 0,
-            // fontSize: 10,
           },
           '& .MuiBottomNavigationAction-label': {
             fontSize: '10px!important',
           },
+          '& .MuiBottomNavigationAction-root:disabled': {
+            color: (t) => t.palette.action.disabled,
+          },
         }}
       >
-        {filterActions.map((action) => (
+        {filterActions.map(({ id, label, disabled, icon: Icon }) => (
           <BottomNavigationAction
-            key={action.id}
-            label={action.label}
-            disabled={action.disabled}
+            key={id}
+            label={label}
+            disabled={disabled}
             icon={
               <Badge
-                badgeContent={news[action.id]}
+                badgeContent={news[id]}
                 color="primary"
                 anchorOrigin={{
                   vertical: 'top',
@@ -94,16 +96,16 @@ const NavActions = () => {
                   },
                 }}
               >
-                <action.icon />
+                <Icon />
               </Badge>
             }
-            value={action.id}
+            value={id}
             sx={{ borderRadius: 1 }}
             onClick={() => {
               dispatch(
                 updateConferenceData({
                   key: ['meeting.nav.id', 'meeting.nav.open'],
-                  data: [action.id, nav.id === action.id ? !nav.open : true],
+                  data: [id, nav.id === id ? !nav.open : true],
                 })
               );
             }}

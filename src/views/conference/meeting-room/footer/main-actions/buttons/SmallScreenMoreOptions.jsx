@@ -65,6 +65,7 @@ const SmallScreenMoreOptions = ({ reaction }) => {
         {filterActions.map((action) => (
           <MenuItem
             key={action.id}
+            disabled={action.disabled}
             onClick={() => {
               onClose();
               dispatch(
