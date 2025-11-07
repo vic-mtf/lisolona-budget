@@ -11,7 +11,7 @@ import Fade from '@mui/material/Fade';
 
 const MotionGrid = motion.create(Grid);
 
-const GridLayoutView = React.forwardRef(({ data }, ref) => {
+const GridLayoutView = React.forwardRef(({ data, bgcolor, elevation }, ref) => {
   const [parentRef, parentSize] = useElementSize();
   const fullScreen = useSelector(
     (state) => state.conference.meeting.actions.liveInteractionGrid.fullScreen
@@ -104,6 +104,7 @@ const GridLayoutView = React.forwardRef(({ data }, ref) => {
                   transition={{ type: 'spring', stiffness: 500, damping: 50 }}
                 >
                   <Paper
+                    elevation={elevation}
                     sx={{
                       height: 'calc(100% - 2px)',
                       width: 'calc(100% - 2px)',
@@ -112,6 +113,7 @@ const GridLayoutView = React.forwardRef(({ data }, ref) => {
                       position: 'relative',
                       borderRadius: 2,
                       cursor: 'pointer',
+                      bgcolor,
                     }}
                   >
                     {children}
@@ -130,6 +132,8 @@ GridLayoutView.displayName = 'GridLayoutView';
 export default React.memo(GridLayoutView);
 
 GridLayoutView.propTypes = {
+  bgcolor: PropTypes.string,
+  elevation: PropTypes.number,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,

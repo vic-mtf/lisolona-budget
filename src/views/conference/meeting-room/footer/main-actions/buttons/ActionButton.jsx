@@ -18,6 +18,7 @@ const ActionButton = React.forwardRef(
             size="small"
             sx={{
               border: 'none',
+              '&:disabled': { border: 'none' },
               bgcolor: (t) =>
                 alpha(
                   t.palette.common[

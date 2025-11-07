@@ -1,15 +1,15 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Slide from "@mui/material/Slide";
-import useSmallScreen from "../../../../hooks/useSmallScreen";
-import { useSelector } from "react-redux";
-import RaiseHandSignal from "../footer/main-actions/RaiseHandSignal";
-import LiveInteractionGridView from "./live-interaction-grid-view/LiveInteractionGridView";
-import PresentationView from "./presentation-view/PresentationView";
+import React from 'react';
+import Box from '@mui/material/Box';
+import Slide from '@mui/material/Slide';
+import useSmallScreen from '../../../../hooks/useSmallScreen';
+import { useSelector } from 'react-redux';
+import RaiseHandSignal from '../footer/main-actions/RaiseHandSignal';
+import LiveInteractionGridView from './live-interaction-grid-view/LiveInteractionGridView';
+import PresentationView from './presentation-view/PresentationView';
 //import DragDropContainer from "../../../../components/DragDropContainer";
-import Nav from "../nav/Nav";
+import Nav from '../nav/Nav';
 //import LocalParticipantView from "./local-participant-view/LocalParticipantView";
-import LocalViewWrapper from "./local-participant-view/LocalViewWrapper";
+import LocalViewWrapper from './local-participant-view/LocalViewWrapper';
 const navWidth = 420;
 
 const MeetingContentContainer = React.forwardRef((_, ref) => {
@@ -18,49 +18,53 @@ const MeetingContentContainer = React.forwardRef((_, ref) => {
   return (
     <Box
       ref={ref}
-      height='100%'
+      height="100%"
       width={{
-        md: openNav ? `calc(100% - ${navWidth}px)` : "100%",
-        xs: "100%",
+        md: openNav ? `calc(100% - ${navWidth}px)` : '100%',
+        xs: '100%',
       }}
-      display='flex'
+      display="flex"
       flex={1}
-      flexDirection='column'
+      flexDirection="column"
       sx={{
         transition: (t) =>
-          t.transitions.create("width", {
+          t.transitions.create('width', {
             easing: t.transitions.easing.easeInOut,
             duration:
               t.transitions.duration[
-                openNav ? "enteringScreen" : "leavingScreen"
+                openNav ? 'enteringScreen' : 'leavingScreen'
               ],
           }),
-      }}>
+      }}
+    >
       <Box
         flex={1}
         component={Slide}
-        direction='right'
-        position='relative'
+        direction="right"
+        position="relative"
         appear={false}
-        in={!matches || !openNav}>
+        in={!matches || !openNav}
+      >
         <Box
           left={0}
           top={0}
           right={0}
           bottom={0}
-          position='absolute'
-          width='100%'
-          height='100%'
-          display='flex'
-          bgcolor='background.default'>
+          position="absolute"
+          width="100%"
+          height="100%"
+          display="flex"
+          bgcolor="background.default"
+        >
           <Box
             flex={1}
-            position='relative'
-            bgcolor='background.default'
+            position="relative"
+            bgcolor="background.default"
             zIndex={100}
-            overflow='hidden'
+            overflow="hidden"
             m={0.5}
-            borderRadius={1}>
+            borderRadius={1}
+          >
             <ViewContainer />
           </Box>
           <RaiseHandSignal />
@@ -68,24 +72,26 @@ const MeetingContentContainer = React.forwardRef((_, ref) => {
       </Box>
       <Slide
         in={openNav}
-        direction='left'
+        direction="left"
         unmountOnExit
         appear={false}
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           right: 0,
-          height: "100%",
-          display: "flex",
-        }}>
+          height: '100%',
+          display: 'flex',
+        }}
+      >
         <Box
-          position='relative'
-          display='flex'
+          position="relative"
+          display="flex"
           flex={1}
           sx={{
             borderLeft: (t) => `1px solid ${t.palette.divider}`,
-            width: { md: navWidth, xs: "100%" },
-          }}>
+            width: { md: navWidth, xs: '100%' },
+          }}
+        >
           <Nav />
         </Box>
       </Slide>
@@ -97,49 +103,53 @@ const ViewContainer = () => {
   const view = useSelector((store) => store.conference.meeting.view.layoutView);
   const isFloating = useSelector(
     (store) =>
-      store.conference.meeting.view.localParticipant.mode === "floating"
+      store.conference.meeting.view.localParticipant.mode === 'floating'
   );
   return (
     <Box
-      position='absolute'
+      position="absolute"
       top={0}
       left={0}
       right={0}
       bottom={0}
-      width={"100%"}
-      height={"100%"}
-      sx={{
-        "& > liveInteractionGrid, & > presentation": {
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: "flex",
-        },
-      }}>
+      width={'100%'}
+      height={'100%'}
+    >
       {isFloating && <LocalViewWrapper />}
-      <Slide
-        in={view === "liveInteractionGrid"}
-        className='liveInteractionGrid'
-        direction='right'
-        unmountOnExit
-        appear={false}>
-        <LiveInteractionGridView />
-      </Slide>
-
-      <Slide
-        in={view === "presentation"}
-        className='presentation'
-        direction='left'
-        unmountOnExit
-        appear={false}>
-        <PresentationView />
-      </Slide>
+      {views.map(({ id, component: View, direction }) => (
+        <Slide
+          in={view === id}
+          key={id}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            zIndex: view === id ? 1 : -1,
+          }}
+          direction={direction}
+          //unmountOnExit
+          appear={false}
+        >
+          <Box width="100%" height="100%" position="relative">
+            <View />
+          </Box>
+        </Slide>
+      ))}
     </Box>
   );
 };
+const views = [
+  {
+    id: 'liveInteractionGrid',
+    component: LiveInteractionGridView,
+    direction: 'right',
+  },
+  { id: 'presentation', component: PresentationView, direction: 'left' },
+];
 
-MeetingContentContainer.displayName = "MeetingContentContainer";
+MeetingContentContainer.displayName = 'MeetingContentContainer';
 
 export default React.memo(MeetingContentContainer);

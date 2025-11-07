@@ -102,6 +102,10 @@ const initialState = {
           mode: 'pencil',
           color: red[500],
         },
+        view: {
+          activeId: null,
+          showAll: false,
+        },
       },
       liveInteractionGrid: {
         fullScreen: false,

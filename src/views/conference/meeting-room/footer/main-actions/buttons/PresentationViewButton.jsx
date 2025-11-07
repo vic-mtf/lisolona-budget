@@ -15,7 +15,7 @@ const PresentationViewButton = ({ onClose }) => {
     <ActionButton
       id="presentation"
       title="Vue de présentation"
-      disabled
+      // disabled
       onClick={() => {
         dispatch(
           updateConferenceData({

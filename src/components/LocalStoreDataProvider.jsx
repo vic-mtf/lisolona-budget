@@ -7,28 +7,6 @@ import { LocalStoreDataContext } from '../hooks/useLocalStoreData';
 const LocalStoreDataProvider = React.memo(({ children }) => {
   const data = useMemo(
     () => ({
-      // messages: {},
-      // meetingMessages: [],
-      // meetingCode: null,
-      // secretCode: (Date.now() * 17913).toString(16),
-      // downloads: [],
-      // voices: [],
-      // videos: [],
-      // images: [],
-      // docs: [],
-      // audioStream: null,
-      // videoStream: null,
-      // screenStream: null,
-      // streams: {
-      //   audio: null,
-      //   video: null,
-      //   audioVideo: null,
-      //   screen: {
-      //     audio: null,
-      //     video: null,
-      //     audioVideo: null,
-      //   },
-      // },
       app: {
         downloads: {
           images: {},
