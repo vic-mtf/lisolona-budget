@@ -1,13 +1,13 @@
-import { useRTCClient, useRTCScreenShareClient } from "agora-rtc-react";
-import { useState, useEffect } from "react";
-import { useMemo } from "react";
-import store from "../../../../../redux/store";
-import useSocket from "../../../../../hooks/useSocket";
-import { useSelector } from "react-redux";
+import { useRTCClient } from 'agora-rtc-react';
+import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
+import store from '../../../../../redux/store';
+import useSocket from '../../../../../hooks/useSocket';
+import { useSelector } from 'react-redux';
 
 let loading = false;
 
-const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID }, ready) => {
+const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID }, ready) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +15,6 @@ const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID }, ready) => {
   const roomId = useSelector((store) => store.conference.roomId);
 
   const userRTCClient = useRTCClient();
-  const screenRTCClient = useRTCScreenShareClient();
 
   useEffect(() => {
     if (isConnected || error || !ready || loading || !roomId) return;
@@ -23,16 +22,13 @@ const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID }, ready) => {
       loading = true;
       setIsLoading(loading);
       try {
-        await Promise.all([
-          userRTCClient.join(APP_ID, CHANNEL, TOKEN, UID),
-          screenRTCClient.join(APP_ID, CHANNEL, TOKEN, SCREEN_ID),
-        ]);
+        await userRTCClient.join(APP_ID, CHANNEL, TOKEN, UID);
         const conference = store.getState().conference;
         const devices = conference.setup.devices;
         const isCamActive = devices.camera.enabled;
         const isMicActive = devices.microphone.enabled;
         const handRaised = conference.meeting.actions.raiseHand;
-        socket.emit("join-room", {
+        socket.emit('join-room', {
           id: roomId,
           state: { isCamActive, isMicActive, handRaised },
         });
@@ -47,7 +43,6 @@ const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID }, ready) => {
     if (!loading) userJoin();
   }, [
     userRTCClient,
-    screenRTCClient,
     isConnected,
     error,
     ready,
@@ -55,7 +50,6 @@ const useCustomJoin = ({ APP_ID, CHANNEL, TOKEN, UID, SCREEN_ID }, ready) => {
     CHANNEL,
     TOKEN,
     UID,
-    SCREEN_ID,
     socket,
     roomId,
   ]);

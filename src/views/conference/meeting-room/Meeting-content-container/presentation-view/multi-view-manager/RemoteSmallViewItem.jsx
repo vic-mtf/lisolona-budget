@@ -1,16 +1,30 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion } from 'framer-motion';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import ListAvatar from '../../../../../../components/ListAvatar';
+// import { useSelector } from 'react-redux';
+import getFullName from '../../../../../../utils/getFullName';
+import { useEffect } from 'react';
+import { useScreenTrack } from '../../../agora-actions-wrapper/hooks/useRemoteUsersTrack';
 
-export default function SmallViewItem({
-  id,
-  index,
-  onClick,
-  activeView,
-  color,
-  name,
-  children,
-}) {
+const RemoteSmallViewItem = ({ user, index, onSelectView, selected }) => {
+  const videoRef = useRef(null);
+
+  const screenTrack = useScreenTrack(user.id);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!screenTrack || !video) return;
+    const mediaStreamTrack = screenTrack.getMediaStreamTrack();
+    const stream = new MediaStream([mediaStreamTrack]);
+    video.srcObject = stream;
+    return () => {
+      video.srcObject = null;
+    };
+  }, [screenTrack]);
+
   return (
     <Box
       width="100%"
@@ -21,7 +35,7 @@ export default function SmallViewItem({
     >
       <Box
         component={motion.div}
-        key={id}
+        key={user.id}
         initial={{ opacity: 0, scale: 0.8, y: 50 }}
         animate={{ opacity: 1, scale: 0.95, y: 0 }}
         exit={{ opacity: 0, scale: 0.8, y: 50 }}
@@ -35,12 +49,13 @@ export default function SmallViewItem({
           transition: { duration: 0.2 },
         }}
         whileTap={{ scale: 0.9 }}
-        onClick={onClick}
+        onClick={() => onSelectView(user.id)}
         sx={{
+          border: (t) =>
+            `2px solid ${selected ? t.palette.primary.main : 'transparent'}`,
           cursor: 'pointer',
           width: 'calc(100% - 8px)',
           height: 'calc(100% - 8px)',
-          background: `linear-gradient(135deg, ${color} 0%, ${color}dd 100%)`,
           borderRadius: 2,
           display: 'flex',
           flexDirection: 'column',
@@ -48,51 +63,75 @@ export default function SmallViewItem({
           justifyContent: 'center',
           position: 'relative',
           overflow: 'hidden',
-          border: activeView === index ? '3px solid white' : 'none',
-          //    transition: 'box-shadow 0.3s ease',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.1)',
+          },
         }}
       >
-        {children}
-        <div
-          style={{
+        <Box
+          component="video"
+          disablePictureInPicture
+          ref={videoRef}
+          autoPlay
+          muted="muted"
+          playsInline
+          sx={{
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+          }}
+        />
+        <Box
+          sx={{
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0,
+            display: 'flex',
+            py: 1,
+            gap: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
             background:
-              'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%)',
-            opacity: 0,
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none',
+              'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
+              'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
           }}
-        />
-        {activeView === index && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            style={{
-              position: 'absolute',
-              top: '8px',
-              right: '8px',
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: '50%',
-              width: window.innerWidth < 640 ? '24px' : '32px',
-              height: window.innerWidth < 640 ? '24px' : '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 'bold',
-
-              color: color,
-              zIndex: 2,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+        >
+          <Box
+            sx={{
+              '& .MuiAvatar-root': {
+                width: 25,
+                height: 25,
+                fontSize: 12,
+              },
             }}
           >
-            ✓
-          </motion.div>
-        )}
+            <ListAvatar id={user.id} src={user.image}>
+              {getFullName(user).charAt(0)}
+            </ListAvatar>
+          </Box>
+          <Typography
+            variant="body2"
+            noWrap
+            maxWidth="calc(100% - 100px)"
+            textOverflow="ellipsis"
+          >
+            {getFullName(user)}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
-}
+};
+
+RemoteSmallViewItem.propTypes = {
+  user: PropTypes.object,
+  index: PropTypes.number,
+  selected: PropTypes.bool,
+  onSelectView: PropTypes.func,
+};
+export default React.memo(RemoteSmallViewItem);

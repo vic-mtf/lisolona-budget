@@ -1,6 +1,6 @@
-import React from "react";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 export const RemoteUsersTrackContext = React.createContext([]);
 
@@ -35,7 +35,7 @@ export const useVideoTrack = (id) => {
     (store) =>
       store.conference.meeting.actions.liveInteractionGrid.participant.hide?.[
         id
-      ] === "video"
+      ] === 'video'
   );
 
   const remoteTracks = useRemoteUsersTrack();
@@ -44,4 +44,16 @@ export const useVideoTrack = (id) => {
     [remoteTracks, uid]
   );
   return isCameraActive ? (isHidden ? null : videoTrack) : null;
+};
+
+export const useScreenTrack = (id) => {
+  const screenId = useSelector(
+    (store) => store.conference.meeting.participants?.[id]?.screenId
+  );
+  const remoteTracks = useRemoteUsersTrack();
+  const screenTrack = useMemo(
+    () => remoteTracks.find((t) => t.uid === screenId)?.screenTrack || null,
+    [remoteTracks, screenId]
+  );
+  return screenTrack;
 };

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useRemoteUsers } from 'agora-rtc-react';
 import { useSelector } from 'react-redux';
 
-const useActiveParticipants = () => {
+const useSharedScreensParticipants = () => {
   const bulkParticipants = useSelector(
     (store) => store.conference.meeting.participants
   );
@@ -13,16 +13,18 @@ const useActiveParticipants = () => {
   );
   const remoteUsers = useRemoteUsers();
 
-  const activeParticipants = useMemo(() => {
+  const sharedScreensParticipants = useMemo(() => {
     const active = [];
     for (let p of participants) {
-      const found = remoteUsers.find((u) => u.uid === p.uid);
+      const found = remoteUsers.find(
+        (u) => u.uid === p.screeId && p.state.screenShared
+      );
       if (found) active.push(p);
     }
     return active;
   }, [participants, remoteUsers]);
 
-  return activeParticipants;
+  return sharedScreensParticipants;
 };
 
-export default useActiveParticipants;
+export default useSharedScreensParticipants;

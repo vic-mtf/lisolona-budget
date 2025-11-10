@@ -4,9 +4,11 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import useVisibleVideoSize from '../../../../../../hooks/useVisibleVideoSize';
 import DrawingLayer from './DrawingLayer';
+import useAddDrawingLayers from '../../../agora-actions-wrapper/hooks/useAddDrawingLayers';
 
 const LocalPresentationView = () => {
   const videoRef = useRef(null);
+  const stageRef = useRef(null);
   const { width, height, scaleX, scaleY, offsetX, offsetY } =
     useVisibleVideoSize(videoRef);
   const [getData] = useLocalStoreData('conference.setup.devices.screen');
@@ -14,7 +16,7 @@ const LocalPresentationView = () => {
     (store) => store.conference.setup.devices.screen.enabled
   );
 
-  console.log('BONJOUR LES GENS...');
+  useAddDrawingLayers(stageRef);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -29,6 +31,7 @@ const LocalPresentationView = () => {
       <Box position="absolute" top={0} left={0} right={0} bottom={0}>
         <Box
           component="video"
+          disablePictureInPicture
           autoPlay
           playsInline
           ref={videoRef}
@@ -47,6 +50,7 @@ const LocalPresentationView = () => {
           scaleY={scaleY}
           offsetX={offsetX}
           offsetY={offsetY}
+          ref={stageRef}
         />
       </Box>
     </Box>

@@ -1,62 +1,22 @@
 import React, { useMemo } from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
 import { motion, AnimatePresence } from 'framer-motion';
-import ActiveView from './ActiveView';
-import SmallViewItem from './RemoteSmallViewItem';
+import RemoteActiveView from './RemoteActiveView';
+import RemoteSmallViewItem from './RemoteSmallViewItem';
 import GridLayoutView from '../../../../../../components/GridLayoutView';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateConferenceData } from '../../../../../../redux/conference/conference';
 import { useCallback } from 'react';
 import LocalSmallViewItem from './LocalSmallViewItem';
-import LocalActiveView from './LocalActiveView';
+import useSharedScreensParticipants from '../../../agora-actions-wrapper/hooks/useSharedScreensParticipants';
+import StopScreenShareOutlinedIcon from '@mui/icons-material/StopScreenShareOutlined';
 
-const VIEWS = [
-  {
-    id: 1,
-    name: 'Dashboard',
-    color: '#667eea',
-    content: '📊',
-    description: 'Tableau de bord',
-  },
-  {
-    id: 2,
-    name: 'Projets',
-    color: '#f093fb',
-    content: '📁',
-    description: 'Mes projets',
-  },
-  // {
-  //   id: 3,
-  //   name: 'Messages',
-  //   color: '#4facfe',
-  //   content: '💬',
-  //   description: 'Messagerie',
-  // },
-  // {
-  //   id: 4,
-  //   name: 'Calendrier',
-  //   color: '#43e97b',
-  //   content: '📅',
-  //   description: 'Planning',
-  // },
-  // {
-  //   id: 5,
-  //   name: 'Paramètres',
-  //   color: '#fa709a',
-  //   content: '⚙️',
-  //   description: 'Configuration',
-  // },
-  // {
-  //   id: 6,
-  //   name: 'Analytics',
-  //   color: '#feca57',
-  //   content: '📈',
-  //   description: 'Statistiques',
-  // },
-];
-const now = Date.now();
 const MultiViewManager = () => {
+  const sharedScreensParticipants = useSharedScreensParticipants();
+
   const userId = useSelector((store) => store.user.id);
   const showAllViews = useSelector(
     (store) => store.conference.meeting.actions.localPresentation.view.showAll
@@ -103,79 +63,106 @@ const MultiViewManager = () => {
           ),
         },
       ];
-    for (let i = 0; i < VIEWS.length; ++i) {
-      const view = VIEWS[i];
-      const id = Math.round(view.id * now).toString(16);
+    for (let i = 0; i < sharedScreensParticipants.length; i++) {
+      const p = sharedScreensParticipants[i];
+      const id = p.identity.id;
+      const index = i + 1;
+      const selected = id === activeView;
+
       arr.push({
-        id: view.id,
+        id,
         children: (
-          <SmallViewItem
+          <RemoteSmallViewItem
             key={id}
-            id={id}
-            index={i + 1}
-            onClick={() => onSelectView(id)}
-            activeView={activeView}
-            color={view.color}
-            name={view.name}
-            content={view.content}
+            user={p.identity}
+            onSelectView={onSelectView}
+            selected={selected}
+            index={index}
           />
         ),
       });
     }
     return arr;
-  }, [activeView, onSelectView, screenShared, userId, isActiveLocalView]);
+  }, [
+    activeView,
+    onSelectView,
+    screenShared,
+    userId,
+    isActiveLocalView,
+    sharedScreensParticipants,
+  ]);
+
+  const isActiveRemoteView = useMemo(
+    () => activeView && activeView !== userId,
+    [activeView, userId]
+  );
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        overflow: 'hidden',
-        position: 'relative',
-        flex: 1,
-      }}
-    >
-      <AnimatePresence mode="wait">
-        {!showAllViews ? (
-          activeView && null
-        ) : (
-          // <ActiveView
-          //   key="single-view"
-          //   activeView={activeView}
-          //   // name={VIEWS[activeView].name}
-          //   // content={VIEWS[activeView].content}
-          //   // description={VIEWS[activeView].description}
-          // />
-          <motion.div
-            key="all-views"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              width: '100%',
-              height: '100%',
+    <AnimatePresence mode="wait">
+      {!showAllViews ? (
+        isActiveRemoteView && (
+          <RemoteActiveView key="single-view" id={activeView} />
+        )
+      ) : (
+        <motion.div
+          key="all-views"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+            gap: 10,
+          }}
+        >
+          <Typography align="center" variant="h6" fontSize={24}>
+            Toutes les présentations
+          </Typography>
+          <Box
+            sx={{
               display: 'flex',
-              alignItems: 'center',
               justifyContent: 'center',
-
-              overflow: 'auto',
+              alignItems: 'center',
+              flexGrow: 1,
+              p: { xs: 1, md: 5, lg: 20, xl: 30 },
             }}
           >
-            <Box
-              sx={{
-                width: { xs: '100%', md: '70%', lg: '60%' },
-                height: { xs: '100%', lg: '60%' },
-              }}
-            >
+            {data.length > 0 && (
               <GridLayoutView data={data} bgcolor="transparent" elevation={0} />
-            </Box>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <LocalActiveView isActive={!showAllViews && isActiveLocalView} />
-    </Box>
+            )}
+          </Box>
+        </motion.div>
+      )}
+      {data.length === 0 && !screenShared && (
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Chip
+            size="large"
+            label="Aucune présentation partagée pour le moment."
+            variant="outlined"
+            icon={<StopScreenShareOutlinedIcon />}
+          />
+        </Box>
+      )}
+    </AnimatePresence>
   );
 };
+
 MultiViewManager.propTypes = {
   showAllViews: PropTypes.bool,
   //onClose: PropTypes.func,

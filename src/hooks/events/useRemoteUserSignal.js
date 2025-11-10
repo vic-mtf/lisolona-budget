@@ -48,6 +48,8 @@ const useRemoteUserSignal = () => {
   useRaiseHandSignal();
   // organizer signal
   useOrganizerSignal();
+  // screen share signal
+  useScreenShareSignal();
 };
 
 const useRaiseHandSignal = () => {
@@ -163,6 +165,33 @@ const useOrganizerSignal = () => {
       socket?.off('signal-room', onSignal);
     };
   }, [socket, notifications]);
+};
+
+const useScreenShareSignal = () => {
+  const socket = useSocket();
+
+  useEffect(() => {
+    const handleSignal = ({ participants: members = [], state }) => {
+      const [id] = members;
+      if (!id) return;
+      const storeState = store.getState();
+      if (id === storeState.user.id || !state?.screenShared) return;
+      ringtones.systemAlert.volume = 0.1;
+      ringtones.systemAlert.play();
+      store.dispatch({
+        type: 'conference/updateConferenceData',
+        payload: {
+          key: ['meeting.actions.localPresentation.view.activeId'],
+          data: [id],
+        },
+      });
+    };
+
+    socket?.on('signal-room', handleSignal);
+    return () => {
+      socket?.off('signal-room', handleSignal);
+    };
+  });
 };
 
 const hasProp = (obj, prop) => isPlainObject(obj) && prop in obj;

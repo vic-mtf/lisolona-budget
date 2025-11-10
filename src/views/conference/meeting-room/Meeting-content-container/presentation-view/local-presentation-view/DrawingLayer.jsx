@@ -10,64 +10,69 @@ import DrawingStageProvider from '../../../../../../components/DrawingStageProvi
 import DrawingArea from './DrawingArea';
 import EphemeralPencil from './pencils/EphemeralPencil';
 
-const DrawingLayer = ({ width, height, scaleX, scaleY, offsetX, offsetY }) => {
-  const mode = useSelector(
-    (store) =>
-      store.conference.meeting.actions.localPresentation.annotation.mode
-  );
-  const color = useSelector(
-    (store) =>
-      store.conference.meeting.actions.localPresentation.annotation.color
-  );
-  const active = useSelector(
-    (store) =>
-      store.conference.meeting.actions.localPresentation.annotation.active
-  );
+const DrawingLayer = React.forwardRef(
+  ({ width, height, scaleX, scaleY, offsetX, offsetY }, ref) => {
+    const mode = useSelector(
+      (store) =>
+        store.conference.meeting.actions.localPresentation.annotation.mode
+    );
+    const color = useSelector(
+      (store) =>
+        store.conference.meeting.actions.localPresentation.annotation.color
+    );
+    const active = useSelector(
+      (store) =>
+        store.conference.meeting.actions.localPresentation.annotation.active
+    );
 
-  const modeSelected = useMemo(
-    () => findById({ kinds: annotationStyles }, mode),
-    [mode]
-  );
+    const modeSelected = useMemo(
+      () => findById({ kinds: annotationStyles }, mode),
+      [mode]
+    );
 
-  const cursor = useMemo(() => {
-    const pens = ['pencil', 'ephemeralPencil'];
-    if (active) {
-      if (pens.includes(modeSelected.id)) {
-        const url = generateCircleSVG(color, 4);
-        return `url("${url}") 4 4, auto`;
+    const cursor = useMemo(() => {
+      const pens = ['pencil', 'ephemeralPencil'];
+      if (active) {
+        if (pens.includes(modeSelected.id)) {
+          const url = generateCircleSVG(color, 4);
+          return `url("${url}") 4 4, auto`;
+        }
       }
-    }
 
-    return 'default';
-  }, [modeSelected, active, color]);
+      return 'default';
+    }, [modeSelected, active, color]);
 
-  return (
-    <Box
-      position={'absolute'}
-      id="local-presentation-video-layer"
-      onContextMenu={(e) => e.preventDefault()}
-      top={offsetY}
-      left={offsetX}
-      width={width}
-      height={height}
-      sx={{ cursor }}
-    >
-      <DrawingStageProvider
+    return (
+      <Box
+        position={'absolute'}
+        id="local-presentation-video-layer"
+        onContextMenu={(e) => e.preventDefault()}
+        top={offsetY}
+        left={offsetX}
         width={width}
         height={height}
-        scaleX={scaleX}
-        scaleY={scaleY}
+        sx={{ cursor }}
       >
-        <Layer id="drawing-area-layer">
-          <DrawingArea />
-        </Layer>
-        <Layer id="ephemeral-pencil-layer">
-          <EphemeralPencil />
-        </Layer>
-      </DrawingStageProvider>
-    </Box>
-  );
-};
+        <DrawingStageProvider
+          width={width}
+          height={height}
+          scaleX={scaleX}
+          scaleY={scaleY}
+          ref={ref}
+        >
+          <Layer id="drawing-area-layer">
+            <DrawingArea />
+          </Layer>
+          <Layer id="ephemeral-pencil-layer">
+            <EphemeralPencil />
+          </Layer>
+        </DrawingStageProvider>
+      </Box>
+    );
+  }
+);
+
+DrawingLayer.displayName = 'DrawingLayer';
 
 DrawingLayer.propTypes = {
   width: PropTypes.number,

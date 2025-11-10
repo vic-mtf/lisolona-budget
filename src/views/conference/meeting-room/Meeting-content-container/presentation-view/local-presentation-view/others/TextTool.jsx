@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 const TextTool = ({ data, onErase, onUpdate }) => {
-  const [text, setText] = useState(data.text || 'Nouvel texte');
+  const [text, setText] = useState(data.text || 'Nouveau texte');
   const [isEditing, setIsEditing] = useState(false);
   const [textWidth, setTextWidth] = useState(() =>
     typeof data?.width === 'number' ? data.width : 200

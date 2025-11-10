@@ -103,6 +103,7 @@ const RemoteVideoStream = ({ id, show }) => {
             <Box
               position="absolute"
               component="video"
+              disablePictureInPicture
               ref={videoRef}
               onLoadedMetadata={(e) => {
                 const video = e.target;

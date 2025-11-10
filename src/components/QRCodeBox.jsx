@@ -11,7 +11,7 @@ const CodeQRBox = React.forwardRef(({ value }, ref) => {
       component={QRCode}
       bgColor="transparent"
       fgColor={theme.palette.text.primary}
-      onLoad={console.log}
+      //onLoad={console.log}
       radius={10}
       ref={ref}
       m={2}

@@ -53,7 +53,6 @@ const ScanMeeting = React.memo(({ onClose, onFinish }) => {
 
           if (!connected) {
             setPaused(false);
-            console.log(data);
             navigateTo('/', { replace: true, state: { meeting: data } });
             if (typeof onFinish === 'function') onFinish(data);
             if (typeof onClose === 'function') onClose();

@@ -48,8 +48,6 @@ export default function JoinFormMeeting({ message }) {
     return meetingData?.id || v;
   }, [search, meetingData?.id]);
 
-  console.log(code);
-
   const [{ loading }, refetch] = useAxios(
     {
       url: `api/chat/room/call/${code}`,

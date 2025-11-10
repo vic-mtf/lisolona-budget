@@ -1,26 +1,26 @@
-import React, { useMemo, useState, useRef } from "react";
-import Popper from "@mui/material/Popper";
-import PopupState, { bindHover, bindPopper } from "material-ui-popup-state";
-import Fade from "@mui/material/Fade";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import List from "@mui/material/List";
-import PropTypes from "prop-types";
-import SplitButton from "../../../components/SplitButton";
+import React, { useMemo, useState, useRef } from 'react';
+import Popper from '@mui/material/Popper';
+import PopupState, { bindHover, bindPopper } from 'material-ui-popup-state';
+import Fade from '@mui/material/Fade';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import List from '@mui/material/List';
+import PropTypes from 'prop-types';
+import SplitButton from '../../../../../../../components/SplitButton';
 import annotationStyles, {
   findById,
   onChangeColor,
   onChangeMode,
-} from "./annotationStyles";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../redux/conference/conference";
-import ColorIcon from "./ColorIcon";
-import { useCallback } from "react";
+} from './annotationStyles';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateConferenceData } from '../../../../../../../redux/conference/conference';
+import ColorIcon from './ColorIcon';
+import { useCallback } from 'react';
 
 const MoreMenuStyles = () => {
   const active = useSelector(
@@ -39,7 +39,7 @@ const MoreMenuStyles = () => {
   const onToggleDrawing = useCallback(() => {
     dispatch(
       updateConferenceData({
-        key: ["meeting.actions.localPresentation.annotation.active"],
+        key: ['meeting.actions.localPresentation.annotation.active'],
         data: [!active],
       })
     );
@@ -51,13 +51,13 @@ const MoreMenuStyles = () => {
     () => findById({ kinds: annotationStyles }, mode),
     [mode]
   );
-  const Icon = useMemo(() => modeSelected?.icon || "div", [modeSelected]);
+  const Icon = useMemo(() => modeSelected?.icon || 'div', [modeSelected]);
 
   const handleClick = useCallback(
     (func, type, value) => () => {
       setOpen(false);
-      if (typeof func === "function") func();
-      if (type === "mode" && value) onChangeMode(value);
+      if (typeof func === 'function') func();
+      if (type === 'mode' && value) onChangeMode(value);
     },
     []
   );
@@ -65,7 +65,7 @@ const MoreMenuStyles = () => {
   const mapKinds = useCallback(
     (kinds, type) =>
       kinds.map(({ color, icon: Icon, ...rest }) => {
-        if (type === "color") {
+        if (type === 'color') {
           return {
             ...rest,
             color,
@@ -74,7 +74,7 @@ const MoreMenuStyles = () => {
           };
         }
 
-        if (type === "mode") {
+        if (type === 'mode') {
           return {
             ...rest,
             icon: Icon,
@@ -93,8 +93,8 @@ const MoreMenuStyles = () => {
   return (
     <>
       <SplitButton
-        activeTitle={modeSelected?.label || "Activer les annotations"}
-        inactiveTitle='Activer les annotations'
+        activeTitle={modeSelected?.label || 'Activer les annotations'}
+        inactiveTitle="Activer les annotations"
         icon={<Icon />}
         onClick={onToggleDrawing}
         active={active}
@@ -105,14 +105,15 @@ const MoreMenuStyles = () => {
         open={open}
         slotProps={{ list: { dense: true } }}
         onClose={() => setOpen(false)}
-        anchorEl={anchorElRef.current}>
+        anchorEl={anchorElRef.current}
+      >
         {annotationStyles.map(
-          ({ kinds, id, label, icon: Icon = "div", type, onClick }) =>
+          ({ kinds, id, label, icon: Icon = 'div', type, onClick }) =>
             kinds?.length > 0 ? (
               <MoreItemMenu
                 label={label}
                 onClick={handleClick(onClick)}
-                icon={type === "color" ? getColorIcon(defaultColor) : Icon}
+                icon={type === 'color' ? getColorIcon(defaultColor) : Icon}
                 kinds={mapKinds(kinds, type)}
                 key={id}
               />
@@ -142,20 +143,20 @@ MoreMenuStyles.propTypes = {
 };
 
 const SimpleMenuItem = React.forwardRef(
-  ({ label, icon: Icon = " div", more, onClick, ...otherProps }, ref) => {
+  ({ label, icon: Icon = ' div', more, onClick, ...otherProps }, ref) => {
     return (
       <MenuItem {...otherProps} ref={ref} onClick={onClick}>
         <ListItemIcon>
-          <Icon fontSize='small' />
+          <Icon fontSize="small" />
         </ListItemIcon>
-        <ListItemText slotProps={{ primary: { variant: "body2" } }}>
+        <ListItemText slotProps={{ primary: { variant: 'body2' } }}>
           {label}
         </ListItemText>
         {more && (
-          <ListItemIcon sx={{ justifyContent: "end" }}>
+          <ListItemIcon sx={{ justifyContent: 'end' }}>
             <ExpandMoreOutlinedIcon
-              fontSize='small'
-              sx={{ transform: "rotate(-90deg)" }}
+              fontSize="small"
+              sx={{ transform: 'rotate(-90deg)' }}
             />
           </ListItemIcon>
         )}
@@ -164,7 +165,7 @@ const SimpleMenuItem = React.forwardRef(
   }
 );
 
-SimpleMenuItem.displayName = "SimpleMenuItem";
+SimpleMenuItem.displayName = 'SimpleMenuItem';
 
 SimpleMenuItem.propTypes = {
   label: PropTypes.string,
@@ -187,7 +188,7 @@ const MoreItemMenu = ({ label, icon, kinds, onClick }) => {
   };
 
   return (
-    <PopupState variant='popper'>
+    <PopupState variant="popper">
       {(popupState) => (
         <Box>
           <SimpleMenuItem
@@ -202,7 +203,7 @@ const MoreItemMenu = ({ label, icon, kinds, onClick }) => {
             {...bindPopper(popupState)}
             modifiers={[
               {
-                name: "offset",
+                name: 'offset',
                 options: {
                   offset: [0, 4], // marge horizontale de 12px
                 },
@@ -210,18 +211,20 @@ const MoreItemMenu = ({ label, icon, kinds, onClick }) => {
             ]}
             transition
             sx={{ zIndex: (t) => t.zIndex.tooltip + 10 }}
-            placement='right-start'>
+            placement="right-start"
+          >
             {({ TransitionProps }) => (
               <Fade {...TransitionProps}>
                 <Paper
                   elevation={5}
                   onMouseEnter={handleMouseEnter}
-                  onMouseLeave={() => handleMouseLeave(popupState)}>
+                  onMouseLeave={() => handleMouseLeave(popupState)}
+                >
                   <List dense>
                     {kinds.map(
                       ({
                         label,
-                        icon = "div",
+                        icon = 'div',
                         kinds = [],
                         id,
                         onClick: handleClick,
@@ -233,8 +236,8 @@ const MoreItemMenu = ({ label, icon, kinds, onClick }) => {
                               icon={icon}
                               kinds={kinds}
                               onClick={() => {
-                                if (typeof onClick === "function") onClick();
-                                if (typeof handleClick === "function")
+                                if (typeof onClick === 'function') onClick();
+                                if (typeof handleClick === 'function')
                                   handleClick(id);
                                 popupState.setOpen(false);
                               }}
@@ -245,8 +248,8 @@ const MoreItemMenu = ({ label, icon, kinds, onClick }) => {
                               icon={icon}
                               label={label}
                               onClick={() => {
-                                if (typeof onClick === "function") onClick();
-                                if (typeof handleClick === "function")
+                                if (typeof onClick === 'function') onClick();
+                                if (typeof handleClick === 'function')
                                   handleClick();
                                 popupState.setOpen(false);
                               }}

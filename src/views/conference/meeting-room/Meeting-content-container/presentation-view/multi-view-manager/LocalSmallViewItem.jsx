@@ -3,15 +3,15 @@ import { motion } from 'framer-motion';
 import Box from '@mui/material/Box';
 import ListAvatar from '../../../../../../components/ListAvatar';
 import { useSelector } from 'react-redux';
-import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import getFullName from '../../../../../../utils/getFullName';
+// import { screenShareCompositor } from '../../../../../../utils/ScreenShareCompositor';
+import { videoLayerComposer } from '../../../../../../utils/VideoLayerComposer';
 
 const LocalSmallViewItem = ({ onSelectView, selected }) => {
   const videoRef = useRef(null);
   const user = useSelector((store) => store.user);
-  const [getData] = useLocalStoreData('conference.setup.devices.screen');
   const enabled = useSelector(
     (store) => store.conference.setup.devices.screen.enabled
   );
@@ -19,10 +19,9 @@ const LocalSmallViewItem = ({ onSelectView, selected }) => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const stream = getData('stream');
     video.srcObject = null;
-    if (enabled) video.srcObject = stream;
-  }, [enabled, getData]);
+    if (enabled) video.srcObject = videoLayerComposer.getComposedStream();
+  }, [enabled]);
 
   return (
     <Box
@@ -72,6 +71,7 @@ const LocalSmallViewItem = ({ onSelectView, selected }) => {
       >
         <Box
           component="video"
+          disablePictureInPicture
           ref={videoRef}
           autoPlay
           muted="muted"

@@ -1,6 +1,6 @@
-import { useNotifications } from "@toolpad/core/useNotifications";
-import useSocket from "../useSocket";
-import { useEffect } from "react";
+import { useNotifications } from '@toolpad/core/useNotifications';
+import useSocket from '../useSocket';
+import { useEffect } from 'react';
 
 const useHandleError = () => {
   const socket = useSocket();
@@ -8,12 +8,12 @@ const useHandleError = () => {
 
   useEffect(() => {
     const onHandleError = ({ message }) => {
-      console.log("error => ", message);
-      notifications.show(message, { severity: "error" });
+      console.error('error => ', message);
+      notifications.show(message, { severity: 'error' });
     };
-    socket?.on("error", onHandleError);
+    socket?.on('error', onHandleError);
     return () => {
-      socket?.off("error", onHandleError);
+      socket?.off('error', onHandleError);
     };
   });
 };

@@ -6,15 +6,15 @@ import { useMemo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { RemoteUsersTrackContext } from '../views/conference/meeting-room/agora-actions-wrapper/hooks/useRemoteUsersTrack';
 import { useRTCClient } from 'agora-rtc-react';
+import store from '../redux/store';
 
 AgoraRTC.setLogLevel(4);
 
 export default function AgoraProviderClient({ children }) {
-  const RTCClient = useMemo(
-    () => AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' }),
-    []
+  const [RTCScreenShareClient, setRTCScreenShareClient] = useState(
+    AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' })
   );
-  const RTCScreenShareClient = useMemo(
+  const RTCClient = useMemo(
     () => AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' }),
     []
   );
@@ -22,6 +22,15 @@ export default function AgoraProviderClient({ children }) {
   useEffect(() => {
     AgoraRTC.setLogLevel(4);
     RTCClient.enableAudioVolumeIndicator();
+    const newRTCScreenShareClient = ({ detail }) => {
+      const { client } = detail;
+      setRTCScreenShareClient(client);
+    };
+    const name = '__newRTCScreenShareClient';
+    window.addEventListener(name, newRTCScreenShareClient);
+    return () => {
+      window.removeEventListener(name, newRTCScreenShareClient);
+    };
   }, [RTCClient]);
 
   return (
@@ -39,7 +48,12 @@ export const RemoteUsersTrackProvider = ({ children }) => {
 
   useEffect(() => {
     const onUserPublished = async (user, mediaType) => {
-      await client.subscribe(user, mediaType); // sauf screen
+      const storeState = store.getState();
+      const userId = storeState.user.id;
+      const participants = storeState.conference.meeting.participants;
+      const screenId = participants?.[userId]?.screenId;
+      if (screenId === user.uid) return; // your screen
+      await client.subscribe(user, mediaType);
 
       if (mediaType === 'audio') user.audioTrack.play();
       const key = mediaType + 'Track';

@@ -20,10 +20,10 @@ export default function Discussions() {
   const discussionTarget = useSelector((store) => store.data.discussionTarget);
 
   const favorites = useSelector(
-    (store) => store.app.user[store.user.id]?.discussions?.favorites
+    (store) => store.app.user?.[store.user.id]?.discussions?.favorites
   );
   const pins = useSelector(
-    (store) => store.app.user[store.user.id]?.discussions?.pins
+    (store) => store.app.user?.[store.user.id]?.discussions?.pins
   );
   const [menuItem, setMenuItem] = useState({ contextMenu: null, data: null });
   const [category, setCategory] = useState(filterCategory[0].id);

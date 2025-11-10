@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import React from 'react';
 import MultiViewManager from './multi-view-manager/MultiViewManager';
 import Header from './header/Header';
+import LocalActiveView from './multi-view-manager/LocalActiveView';
 
 const PresentationView = React.forwardRef((_, ref) => {
   return (
@@ -13,7 +14,17 @@ const PresentationView = React.forwardRef((_, ref) => {
       flexDirection="column"
     >
       <Header />
-      <MultiViewManager />
+      <Box
+        sx={{
+          display: 'flex',
+          overflow: 'hidden',
+          position: 'relative',
+          flex: 1,
+        }}
+      >
+        <MultiViewManager />
+        <LocalActiveView />
+      </Box>
     </Box>
   );
 });

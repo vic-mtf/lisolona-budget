@@ -1,27 +1,36 @@
-import React from "react";
-import { Stage } from "react-konva";
-import PropTypes from "prop-types";
-import { DrawingStageContext } from "../hooks/useDrawingStageRef";
+import React from 'react';
+import { Stage } from 'react-konva';
+import PropTypes from 'prop-types';
+import { DrawingStageContext } from '../hooks/useDrawingStageRef';
 
-const DrawingStageProvider = ({ children, width, height, scaleX, scaleY }) => {
-  const stageRef = React.useRef();
+const DrawingStageProvider = React.forwardRef(
+  ({ children, width, height, scaleX, scaleY }, ref) => {
+    const stageRef = React.useRef();
 
-  return (
-    <Provider value={stageRef}>
-      <div style={{ position: "absolute" }}>
-        <Stage
-          width={width}
-          height={height}
-          ref={stageRef}
-          style={{ touchAction: "none" }}
-          scaleX={scaleX}
-          scaleY={scaleY}>
-          {children}
-        </Stage>
-      </div>
-    </Provider>
-  );
-};
+    return (
+      <Provider value={stageRef}>
+        <div style={{ position: 'absolute' }}>
+          <Stage
+            width={width}
+            height={height}
+            ref={(node) => {
+              stageRef.current = node;
+              if (ref && Object.hasOwnProperty.call(ref, 'current'))
+                ref.current = node;
+            }}
+            style={{ touchAction: 'none' }}
+            scaleX={scaleX}
+            scaleY={scaleY}
+          >
+            {children}
+          </Stage>
+        </div>
+      </Provider>
+    );
+  }
+);
+
+DrawingStageProvider.displayName = 'DrawingStageProvider';
 
 const { Provider } = DrawingStageContext;
 
