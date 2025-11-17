@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import getFullName from '../../../../../../utils/getFullName';
 // import { screenShareCompositor } from '../../../../../../utils/ScreenShareCompositor';
-import { videoLayerComposer } from '../../../../../../utils/VideoLayerComposer';
+import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
 
 const LocalSmallViewItem = ({ onSelectView, selected }) => {
   const videoRef = useRef(null);
@@ -19,8 +19,19 @@ const LocalSmallViewItem = ({ onSelectView, selected }) => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.srcObject = null;
-    if (enabled) video.srcObject = videoLayerComposer.getComposedStream();
+    const onCanvasChanged = () => {
+      video.srcObject = null;
+      if (enabled) video.srcObject = canvasStreamComposer.captureStream();
+    };
+    canvasStreamComposer.addEventListener('canvasChanged', onCanvasChanged);
+    onCanvasChanged();
+    return () => {
+      canvasStreamComposer.removeEventListener(
+        'canvasChanged',
+        onCanvasChanged
+      );
+      video.srcObject = null;
+    };
   }, [enabled]);
 
   return (

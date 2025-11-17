@@ -55,7 +55,7 @@ const Pencil = ({ data: { id, points, stroke }, onErase }) => {
       lineCap="round"
       lineJoin="round"
       tension={0.8}
-      draggable={!isGum}
+      draggable={false}
       opacity={isGum && hoveredId === id ? 0.3 : 1}
       onMouseEnter={() => setHoveredId(id)}
       onMouseLeave={() => setHoveredId(null)}
@@ -157,6 +157,8 @@ const PencilMark_ = ({ onFinishDrawing }) => {
           lineCap="round"
           lineJoin="round"
           tension={0.8}
+          draggable={false}
+          name="pencil"
         />
       )}
     </>

@@ -107,6 +107,7 @@ const EphemeralPencil = () => {
           lineCap="round"
           lineJoin="round"
           tension={0.8}
+          draggable={false}
         />
       )}
       {persistePointsData.map(({ points, stroke, id }) => (
@@ -119,6 +120,7 @@ const EphemeralPencil = () => {
           lineJoin="round"
           tension={0.8}
           onFinish={onFinish}
+          draggable={false}
         />
       ))}
     </>
@@ -147,6 +149,7 @@ const CustomLine = ({ id, onFinish, ...otherProps }) => {
       lineCap="round"
       lineJoin="round"
       id={id}
+      draggable={false}
     />
   );
 };

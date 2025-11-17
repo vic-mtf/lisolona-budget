@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSocket from '../../../../../../hooks/useSocket';
 import { updateConferenceData } from '../../../../../../redux/conference/conference';
 import { useRTCScreenShareClient } from 'agora-rtc-react';
-import { videoLayerComposer } from '../../../../../../utils/VideoLayerComposer';
 import AgoraRTC from 'agora-rtc-react';
 import { useEffect } from 'react';
 import { isPlainObject } from 'lodash';
 import store from '../../../../../../redux/store';
 import ringtones from '../../../../../../utils/ringtones';
+import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
 
 const ShareScreenButton = ({ shareScreen }) => {
   const joinedRef = useRef(false);
@@ -113,6 +113,7 @@ const ShareScreenButton = ({ shareScreen }) => {
   const handleStopScreenShare = useCallback(async () => {
     socket.emit('signal-room', { screenShared: false });
     const localScreenTracks = localTracksRef.current;
+    canvasStreamComposer.close();
     if (localScreenTracks?.length)
       await userScreenShareClient.unpublish(localScreenTracks);
     localScreenTracks?.forEach((track) => {
@@ -124,19 +125,20 @@ const ShareScreenButton = ({ shareScreen }) => {
       joinedRef.current = false;
     }
     const stream = getData('stream');
-    videoLayerComposer.close();
     stream.getTracks().forEach((track) => {
       if (track.readyState === 'live') track.stop();
     });
     dispatch(
       updateConferenceData({
         key: [
+          'meeting.actions.localPresentation.view.activeId',
           `meeting.participants.${userId}.state.screenShared`,
           `setup.devices.screen.enabled`,
           'setup.devices.screen.displaySurface',
           //'meeting.view.layoutView',
         ],
         data: [
+          null,
           false,
           false,
           null,
@@ -167,7 +169,7 @@ const ShareScreenButton = ({ shareScreen }) => {
         surfaceSwitching: 'include',
         controller,
       });
-      await videoLayerComposer.setInputStream(stream);
+
       const [videoTrack] = stream.getVideoTracks();
       const displaySurface = videoTrack?.getSettings()?.displaySurface;
 
@@ -175,8 +177,7 @@ const ShareScreenButton = ({ shareScreen }) => {
       stream.getTracks().forEach((track) => {
         track.addEventListener('ended', handleStopScreenShare);
       });
-      videoLayerComposer.start();
-      await handlePublishScreen(videoLayerComposer.getComposedStream());
+
       dispatch(
         updateConferenceData({
           key: [
