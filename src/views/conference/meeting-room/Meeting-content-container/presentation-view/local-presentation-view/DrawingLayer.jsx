@@ -82,17 +82,9 @@ const DrawingLayer = ({ stageRef }) => {
     };
 
     video.addEventListener('loadedmetadata', handleVideoPlay);
-    // video.addEventListener('ended', handleEnd);
-    // video.addEventListener('pause', handleEnd);
-    // video.addEventListener('cancel', handleEnd);
-    // video.addEventListener('abort', handleEnd);
-
     return () => {
       video.removeEventListener('loadedmetadata', handleVideoPlay);
-      // video.removeEventListener('ended', handleEnd);
-      // video.removeEventListener('pause', handleEnd);
-      // video.removeEventListener('cancel', handleEnd);
-      // video.removeEventListener('abort', handleEnd);
+      handleEnd();
     };
   }, [getData, enabled]);
 

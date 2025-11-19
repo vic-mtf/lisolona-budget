@@ -6,6 +6,7 @@ const useSharedScreensParticipants = () => {
   const bulkParticipants = useSelector(
     (store) => store.conference.meeting.participants
   );
+
   const participants = useMemo(
     () =>
       Object.values(bulkParticipants).filter(({ state }) => state?.isInRoom),
@@ -17,7 +18,7 @@ const useSharedScreensParticipants = () => {
     const active = [];
     for (let p of participants) {
       const found = remoteUsers.find(
-        (u) => u.uid === p.screeId && p.state.screenShared
+        (u) => u.uid === p.screenId && p.state.screenShared
       );
       if (found) active.push(p);
     }

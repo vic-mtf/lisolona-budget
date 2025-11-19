@@ -2,7 +2,7 @@ export default class CanvasStreamComposer extends EventTarget {
   #stage = null;
   #canvasStream;
   #ctxStream;
-
+  #initFps = 30;
   #animKonva = null;
 
   constructor() {
@@ -11,22 +11,22 @@ export default class CanvasStreamComposer extends EventTarget {
     this.#ctxStream = this.#canvasStream.getContext('2d');
   }
 
-  setStage(stage) {
+  setStage(stage, fps = this.#initFps) {
     if (!stage || typeof stage.getLayers !== 'function') {
-      throw new TypeError('setStage() attend un Konva.Stage.');
+      console.error('setStage() requires a Konva Stage');
+      return;
     }
 
     this.#stage = stage;
 
-    const w = stage.width();
-    const h = stage.height();
+    const w = stage.width() / stage.scaleX();
+    const h = stage.height() / stage.scaleY();
 
     this.#canvasStream.width = w;
     this.#canvasStream.height = h;
 
-    if (this.#animKonva) {
-      this.#animKonva.stop();
-    }
+    if (this.#animKonva) this.#animKonva.stop();
+    else this.#dispatch('start', { stream: this.captureStream(fps) });
 
     this.#animKonva = new window.Konva.Animation(() => {
       this.#renderAll();
@@ -50,12 +50,18 @@ export default class CanvasStreamComposer extends EventTarget {
     for (const layer of layers) {
       const c = layer.getCanvas()._canvas;
       if (c) {
-        this.#ctxStream.drawImage(c, 0, 0);
+        this.#ctxStream.drawImage(
+          c,
+          0,
+          0,
+          this.#canvasStream.width,
+          this.#canvasStream.height
+        );
       }
     }
   }
 
-  captureStream(fps = 30) {
+  captureStream(fps = this.#initFps) {
     return this.#canvasStream.captureStream(fps);
   }
 
@@ -64,12 +70,9 @@ export default class CanvasStreamComposer extends EventTarget {
       this.#animKonva.stop();
       this.#animKonva = null;
     }
-
-    if (this.#stage) {
-      this.#stage.off('frame');
-    }
-
+    if (this.#stage) this.#stage.off('frame');
     this.#stage = null;
+    this.#dispatch('close');
   }
 
   #dispatch(name, detail = {}) {

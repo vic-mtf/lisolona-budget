@@ -1,14 +1,12 @@
 import ScreenShareOutlinedIcon from '@mui/icons-material/ScreenShareOutlined';
 import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import ActionButton from './ActionButton';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import useSocket from '../../../../../../hooks/useSocket';
 import { updateConferenceData } from '../../../../../../redux/conference/conference';
-import { useRTCScreenShareClient } from 'agora-rtc-react';
-import AgoraRTC from 'agora-rtc-react';
 import { useEffect } from 'react';
 import { isPlainObject } from 'lodash';
 import store from '../../../../../../redux/store';
@@ -16,18 +14,10 @@ import ringtones from '../../../../../../utils/ringtones';
 import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
 
 const ShareScreenButton = ({ shareScreen }) => {
-  const joinedRef = useRef(false);
-  const localTracksRef = useRef([]);
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.id);
-  const userScreenShareClient = useRTCScreenShareClient();
   const notifications = useNotifications();
   const socket = useSocket();
-
-  const AGORA_DATA = useSelector((store) => store.conference.AGORA_DATA);
-  const SCREEN_ID = useSelector(
-    (store) => store.conference.meeting.participants?.[userId]?.screenId
-  );
 
   const screenShared = useSelector(
     (state) => state.conference.setup.devices.screen.enabled
@@ -38,92 +28,9 @@ const ShareScreenButton = ({ shareScreen }) => {
   );
   const [loading, setLoading] = React.useState(false);
 
-  const handlePublishScreen = useCallback(
-    async (stream) => {
-      if (!(stream instanceof MediaStream)) return false;
-
-      if (!joinedRef.current) {
-        const { TOKEN, APP_ID, CHANNEL } = AGORA_DATA;
-        try {
-          await userScreenShareClient.join(APP_ID, CHANNEL, TOKEN, SCREEN_ID);
-          joinedRef.current = true;
-        } catch (e) {
-          console.error(e);
-          notifications.show(
-            "Service de partage d'écran indisponible. Réessayez plus tard.",
-            {
-              severity: 'error',
-              key: 'shareScreenError',
-            }
-          );
-          return false;
-        }
-      }
-
-      const localTracks = localTracksRef.current;
-      if (localTracks.length)
-        try {
-          await userScreenShareClient.unpublish(localTracks);
-        } catch (e) {
-          console.error(e);
-        }
-
-      localTracks.forEach((track) => {
-        track.stop();
-        track.close();
-      });
-
-      localTracksRef.current = [];
-      const [videoTrack] = stream.getVideoTracks();
-      // const [audioTrack] = stream.getAudioTracks();
-
-      if (videoTrack)
-        localTracksRef.current.push(
-          AgoraRTC.createCustomVideoTrack({
-            mediaStreamTrack: videoTrack,
-          })
-        );
-
-      // if(audioTrack)
-      //   localTracksRef.current.push(
-      //     AgoraRTC.createCustomAudioTrack({
-      //       mediaStreamTrack: audioTrack,
-      //     })
-      //   );
-
-      if (localTracksRef.current.length)
-        try {
-          await userScreenShareClient.publish(localTracksRef.current);
-        } catch (e) {
-          console.error(e);
-          notifications.show(
-            "Un problème est survenu lors du partage d'écran. Veuillez recommencer.",
-            {
-              severity: 'error',
-              key: 'shareScreenError',
-            }
-          );
-          return false;
-        }
-      return true;
-    },
-    [AGORA_DATA, userScreenShareClient, SCREEN_ID, notifications]
-  );
-
-  const handleStopScreenShare = useCallback(async () => {
-    socket.emit('signal-room', { screenShared: false });
-    const localScreenTracks = localTracksRef.current;
+  const handleStopScreenShare = useCallback(() => {
+    socket.emit('signal-room', { state: { screenShared: false } });
     canvasStreamComposer.close();
-    if (localScreenTracks?.length)
-      await userScreenShareClient.unpublish(localScreenTracks);
-    localScreenTracks?.forEach((track) => {
-      track.stop();
-      track.close();
-    });
-    if (joinedRef.current) {
-      await userScreenShareClient.leave();
-      joinedRef.current = false;
-    }
     const stream = getData('stream');
     stream.getTracks().forEach((track) => {
       if (track.readyState === 'live') track.stop();
@@ -147,31 +54,30 @@ const ShareScreenButton = ({ shareScreen }) => {
       })
     );
     setData({ stream: null, controller: null });
-  }, [userId, dispatch, setData, getData, userScreenShareClient, socket]);
+  }, [userId, dispatch, setData, getData, socket]);
 
   const handleShareScreen = async () => {
     setLoading(true);
     if (screenShared) {
-      try {
-        await handleStopScreenShare();
-      } catch (e) {
-        console.error(e);
-      }
+      handleStopScreenShare();
       setLoading(false);
       return;
     }
+
     try {
-      const controller =
-        window.CaptureController && new window.CaptureController();
-      const stream = await navigator.mediaDevices.getDisplayMedia({
+      const CapCtrl = window.CaptureController;
+      const controller = CapCtrl && new CapCtrl();
+      const options = {
         video: true,
         audio: true,
         surfaceSwitching: 'include',
         controller,
-      });
+      };
+      const stream = await navigator.mediaDevices.getDisplayMedia(options);
+      if (!stream) return;
 
       const [videoTrack] = stream.getVideoTracks();
-      const displaySurface = videoTrack?.getSettings()?.displaySurface;
+      const { displaySurface } = videoTrack.getSettings();
 
       setData({ stream, controller });
       stream.getTracks().forEach((track) => {
@@ -190,15 +96,14 @@ const ShareScreenButton = ({ shareScreen }) => {
           data: [true, true, displaySurface, 'presentation', userId],
         })
       );
-      socket.emit('signal-room', { screenShared: true });
+      socket.emit('signal-room', { state: { screenShared: true } });
       ringtones.systemAlert.volume = 0.1;
       ringtones.systemAlert.play();
     } catch (e) {
-      if (e.name !== 'NotAllowedError')
-        notifications.show(displayMediaErrors[e.name], {
-          severity: 'error',
-          key: e.name,
-        });
+      notifications.show(displayMediaErrors[e.name], {
+        severity: 'error',
+        key: e.name,
+      });
       console.error(e);
     }
     setLoading(false);
@@ -230,8 +135,8 @@ const ShareScreenButton = ({ shareScreen }) => {
         if (localDevice.enabled === state.screenShared) return;
 
         notifications.close('endScreenShared');
-        const message = `Le modérateur a arrêté le partage d'écran.`;
-        notifications.show(message, { key: 'endScreenShared' });
+        const mss = `Le modérateur a arrêté le partage d'écran.`;
+        notifications.show(mss, { key: 'endScreenShared' });
 
         store.dispatch({
           type: 'conference/updateConferenceData',

@@ -83,6 +83,7 @@ const RemoteSmallViewItem = ({ user, index, onSelectView, selected }) => {
             width: '100%',
             height: '100%',
             position: 'absolute',
+            objectPosition: 'center',
           }}
         />
         <Box

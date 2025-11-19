@@ -65,6 +65,7 @@ const MultiViewManager = () => {
       ];
     for (let i = 0; i < sharedScreensParticipants.length; i++) {
       const p = sharedScreensParticipants[i];
+      if (p.identity.id === userId) continue;
       const id = p.identity.id;
       const index = i + 1;
       const selected = id === activeView;
@@ -98,7 +99,7 @@ const MultiViewManager = () => {
   );
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="popLayout">
       {!showAllViews ? (
         isActiveRemoteView && (
           <RemoteActiveView key="single-view" id={activeView} />

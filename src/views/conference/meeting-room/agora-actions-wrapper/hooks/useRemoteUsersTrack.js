@@ -52,7 +52,7 @@ export const useScreenTrack = (id) => {
   );
   const remoteTracks = useRemoteUsersTrack();
   const screenTrack = useMemo(
-    () => remoteTracks.find((t) => t.uid === screenId)?.screenTrack || null,
+    () => remoteTracks.find((t) => t.uid === screenId)?.videoTrack || null,
     [remoteTracks, screenId]
   );
   return screenTrack;

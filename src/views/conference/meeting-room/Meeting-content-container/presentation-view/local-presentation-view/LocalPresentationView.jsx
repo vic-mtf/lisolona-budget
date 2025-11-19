@@ -2,12 +2,10 @@ import Box from '@mui/material/Box';
 // import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
 import React, { useRef, useEffect } from 'react';
 import DrawingLayer from './DrawingLayer';
-import useAddDrawingLayers from '../../../agora-actions-wrapper/hooks/useAddDrawingLayers';
 import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
 
 const LocalPresentationView = () => {
   const stageRef = useRef();
-  useAddDrawingLayers(stageRef);
   const timer = useRef();
 
   useEffect(() => {

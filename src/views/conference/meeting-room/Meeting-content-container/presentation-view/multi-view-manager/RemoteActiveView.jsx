@@ -3,9 +3,11 @@ import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useScreenTrack } from '../../../agora-actions-wrapper/hooks/useRemoteUsersTrack';
+import useFitVideo from '../../../../../../hooks/useFitVideo';
 
 const RemoteActiveView = ({ id }) => {
   const videoRef = useRef(null);
+  const style = useFitVideo(videoRef);
 
   const screenTrack = useScreenTrack(id);
 
@@ -34,7 +36,9 @@ const RemoteActiveView = ({ id }) => {
         right: 0,
         top: 0,
         bottom: 0,
-        bgcolor: 'red',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Box
@@ -44,16 +48,7 @@ const RemoteActiveView = ({ id }) => {
         playsInline
         ref={videoRef}
         muted
-        width="100%"
-        height="100%"
-        sx={{
-          objectFit: 'contain',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }}
+        sx={{ ...style, objectPosition: 'center' }}
       />
     </Box>
   );
