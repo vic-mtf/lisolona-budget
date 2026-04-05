@@ -1,73 +1,142 @@
 # GEID Lisolo
 
-[**GEID Lisolo**](https://geidbudget.com/apps/lisolo/dev/v2/) est une application web collaborative faisant partie de la plateforme **GEID Budget**. Cette plateforme regroupe plusieurs applications conçues pour répondre à des besoins variés. GEID Lisolo se concentre sur la communication et la collaboration en équipe, permettant d’organiser des réunions en ligne comme sur Slack ou Google Meet, mais avec des fonctionnalités enrichies et un design personnalisé.
+[**GEID Lisolo**](https://geidbudget.com/apps/lisolo/dev/v2/) est une application web collaborative faisant partie de la plateforme **GEID Budget** (Gestion Electronique de l'Information et des Documents). Ce module est dédié à la communication et la collaboration en équipe : réunions en ligne, messagerie, appels audio/vidéo et partage d'écran.
+
+---
+
+## Stack technique
+
+| Technologie | Version | Rôle |
+|---|---|---|
+| **TypeScript** | 6.x | Langage principal |
+| **React** | 19.x | Framework UI |
+| **Vite** | 5.x | Build tool (SWC) |
+| **MUI** | 7.x | Composants UI |
+| **Redux Toolkit** | 1.9 | Gestion d'état |
+| **Redux Persist** | 6.x | Persistance du state |
+| **Socket.IO** | 4.x | Communication temps réel |
+| **Agora RTC** | 2.x | Visioconférence |
+| **Axios** | 1.x | Client HTTP |
 
 ---
 
 ## Fonctionnalités principales
 
-- **Réunions en ligne** : planification, organisation et participation à des réunions en direct.
-- **Communication en temps réel** : chat intégré, appels audio/vidéo, partages de fichiers.
-- **Intégration collaborative** : tableaux de bord d’équipe, gestion de tâches, documentation partagée.
-- **Interface intuitive** : navigation fluide avec une expérience utilisateur moderne.
-- **Sécurité** : gestion des accès et authentification.
+- **Visioconférence** : appels vidéo multi-participants avec Agora RTC, partage d'écran, annotation en direct (Konva)
+- **Messagerie** : chat temps réel via Socket.IO, envoi de fichiers, messages vocaux
+- **Effets vidéo** : flou d'arrière-plan, remplacement de fond (TensorFlow / MediaPipe)
+- **Suppression du bruit** : filtrage audio (RNNoise WASM)
+- **Editeur riche** : texte formaté (Draft.js, Lexical, Slate)
+- **QR Code** : génération et scan de codes pour rejoindre les réunions
+- **Responsive** : interface adaptée mobile, tablette et desktop
 
 ---
 
-## Structure du projet
+## Architecture
 
-L’architecture du projet est soigneusement organisée pour une meilleure maintenabilité :
+```
+src/
+├── assets/          # Médias, polices, images
+├── components/      # Composants React réutilisables
+├── configs/         # Fichiers de configuration (JSON)
+├── database/        # Opérations IndexedDB
+├── hooks/           # Hooks personnalisés
+│   └── events/      # Gestionnaires d'événements Socket.IO
+├── providers/       # Context providers (Theme, Socket, LocalStore)
+├── redux/           # Store Redux Toolkit + slices
+│   ├── app.ts       # État global (thème, langue, utilisateurs)
+│   ├── user.ts      # Authentification
+│   ├── data/        # Données applicatives (contacts, discussions, messages)
+│   └── conference/  # État de la visioconférence
+├── router/          # Configuration React Router
+├── services/        # Services API (à venir)
+├── types/           # Types TypeScript centralisés
+├── utils/           # Fonctions utilitaires
+├── views/           # Pages et vues
+│   ├── home/        # Page d'accueil / connexion
+│   ├── main/        # Interface principale (navigation + messagerie)
+│   ├── conference/  # Visioconférence (setup, meeting, end)
+│   └── cover/       # Écran de chargement
+├── App.tsx          # Composant racine
+└── main.tsx         # Point d'entrée
+```
 
-- `public/` : ressources statiques (HTML, images).
-- `src/` : dossier principal du code source.
-  - `assets/` : fichiers média et ressources.
-  - `components/` : composants réutilisables React.
-  - `configs/` : fichiers de configuration.
-  - `database/` : gestion de la base de données.
-  - `hooks/` : hooks personnalisés.
-  - `icons/`, `svg/` : fichiers graphiques.
-  - `redux/` : gestion d’état globale avec Redux.
-  - `router/` : configuration du routage.
-  - `styles/` : fichiers CSS et thèmes.
-  - `test/` : tests unitaires et d’intégration.
-  - `utils/` : fonctions utilitaires.
-  - `views/` : différentes pages de l’application.
-- Fichiers de configuration :
-  - `App.jsx`, `main.jsx` : composants principaux et point d’entrée.
-  - `.env`, `.gitignore`, `eslint.config.js`, `vite.config.js` : environnement et configurations.
-  - `package.json`, `pnpm-lock.yaml` : gestion des dépendances.
+### Import aliases
+
+Le projet utilise `@/` comme alias pour `src/` :
+
+```typescript
+import { RootState } from "@/redux/store";
+import useTheme from "@/hooks/useTheme";
+```
 
 ---
 
-## Installation & Lancement
+## Installation
 
-1. Clone du dépôt :
-   ```bash
-   git clone https://github.com/vic-mtf/lisolona-budget.git
-   ```
-2. Accès au dossier :
-   ```bash
-   cd lisolona-budget
-   ```
-3. Installation des dépendances :
-   ```bash
-   pnpm install
-   ```
-4. Lancement du serveur local :
-   ```bash
-   pnpm run dev
-   ```
-5. Accès à l’application :
-   - [http://localhost:3000](http://localhost:3000)
+```bash
+# Cloner le dépôt
+git clone https://github.com/vic-mtf/lisolona-budget.git
+cd lisolona-budget
+
+# Installer les dépendances (pnpm uniquement)
+pnpm install
+
+# Lancer le serveur de développement
+pnpm dev
+```
+
+L'application est accessible sur [https://localhost:3000](https://localhost:3000) (HTTPS via mkcert).
+
+---
+
+## Scripts
+
+| Commande | Description |
+|---|---|
+| `pnpm dev` | Serveur de développement (port 3000, HTTPS) |
+| `pnpm build` | Vérification TypeScript + build Vite |
+| `pnpm build:only` | Build Vite sans vérification TypeScript |
+| `pnpm typecheck` | Vérification TypeScript (`tsc --noEmit`) |
+| `pnpm lint` | ESLint |
+| `pnpm preview` | Prévisualisation du build |
+| `pnpm deploy` | Build + déploiement sur le serveur |
+
+---
+
+## Déploiement
+
+```bash
+pnpm deploy
+```
+
+Cette commande build, compresse et envoie les fichiers sur le serveur GEID.
+
+---
+
+## Variables d'environnement
+
+```env
+VITE_SERVER_BASE_URL=https://geidbudget.com
+VITE_RESPONSE_TYPE=json
+VITE_RESPONSE_ENCODING=utf8
+VITE_MAX_CONTENT_LENGTH=4000
+VITE_PROXY=protocol=https
+```
 
 ---
 
 ## Licence
 
-Projet sous licence MIT. Voir le fichier `LICENSE` pour plus d’informations.
+Projet sous licence MIT.
 
 ---
 
-## À propos de GEID Budget
+## Plateforme GEID Budget
 
-GEID Budget est une plateforme modulaire qui centralise plusieurs outils numériques pour la gestion et la collaboration. GEID Lisolo en est un module centré sur la communication en équipe.
+GEID Budget est une plateforme modulaire développée pour le Secrétariat Général du Budget (RDC). Elle comprend :
+
+- **geid-archives-app** : Gestion d'archives (React + TypeScript + Vite)
+- **geid-workspaces-app** : Espace de travail collaboratif (React + TypeScript + Vite)
+- **GEID_Git** : Backend (Express.js + MongoDB + Socket.IO)
+- **lisolona-budget** : Communication et visioconférence (React + TypeScript + Vite)

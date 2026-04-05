@@ -1,0 +1,40 @@
+import { alpha } from '@mui/material/styles';
+import React from 'react';
+import ToggleButton from '@mui/material/ToggleButton';
+import { Tooltip } from '@mui/material';
+
+const ActionButton = React.forwardRef(
+  ({ children, id, title, onClick, selected, disabled }, ref) => {
+    return (
+      <Tooltip title={title}>
+        <div ref={ref}>
+          <ToggleButton
+            value={id || ''}
+            onClick={onClick}
+            selected={selected}
+            disabled={disabled}
+            color={selected ? 'primary' : 'standard'}
+            size="small"
+            sx={{
+              border: 'none',
+              '&:disabled': { border: 'none' },
+              bgcolor: (t) =>
+                alpha(
+                  t.palette.common[
+                    t.palette.mode === 'light' ? 'black' : 'white'
+                  ],
+                  0.03
+                ),
+            }}
+          >
+            {children}
+          </ToggleButton>
+        </div>
+      </Tooltip>
+    );
+  }
+);
+
+ActionButton.displayName = 'ActionButton';
+
+export default ActionButton;
