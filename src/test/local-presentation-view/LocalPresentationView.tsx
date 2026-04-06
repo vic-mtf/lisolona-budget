@@ -8,9 +8,9 @@ import StopScreenShareOutlinedIcon from "@mui/icons-material/StopScreenShareOutl
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
-import useLocalStoreData from "../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 
 const LocalPresentationView = () => {
   const [open, setOpen] = React.useState(true);

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
-import AudioListenerView from "../../../../../../../components/AudioListenerView";
+import AudioListenerView from "@/components/AudioListenerView";
 
 const AudioThumbnail = React.memo(
   React.forwardRef(({ url, id }, ref) => {

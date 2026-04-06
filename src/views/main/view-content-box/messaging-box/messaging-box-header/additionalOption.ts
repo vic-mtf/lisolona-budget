@@ -7,8 +7,8 @@ import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 // import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 // import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 // import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import store from "../../../../../redux/store";
-import { updateData } from "../../../../../redux/data/data";
+import store from "@/redux/store";
+import { updateData } from "@/redux/data/data";
 
 export const fullOptions = [
   {

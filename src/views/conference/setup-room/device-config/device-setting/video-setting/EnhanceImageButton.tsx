@@ -9,7 +9,7 @@ import {
 import React from "react";
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 
 const EnhanceImageButton = () => {
   const enhanced = useSelector(

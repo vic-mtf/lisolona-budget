@@ -6,11 +6,11 @@ import {
   Popper,
   Box,
 } from "@mui/material";
-import ToggleButtonGroup from "../../../../../../../components/ToggleButtonGroup";
-import useLongPress from "../../../../../../../hooks/useLongPress";
+import ToggleButtonGroup from "@/components/ToggleButtonGroup";
+import useLongPress from "@/hooks/useLongPress";
 import { useRef, useState } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import useSmallScreen from "../../../../../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import { useMemo } from "react";
 import TitleOutlinedIcon from "@mui/icons-material/TitleOutlined";
 import { EditorState } from "draft-js";

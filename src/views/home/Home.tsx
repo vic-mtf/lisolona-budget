@@ -3,9 +3,9 @@ import Divider from '@mui/material/Divider';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import logo from '../../assets/geid_logo_blue_without_title.png';
+import logo from '@/assets/geid_logo_blue_without_title.png';
 import CarouselPub from './carousel-pub/CarouselPub';
-import CopyrightFooter from '../../components/CopyrightFooter';
+import CopyrightFooter from '@/components/CopyrightFooter';
 import JoinFormMeeting from './join-form-meeting/JoinFormMeeting';
 import Panel from './join-form-meeting/Panel';
 

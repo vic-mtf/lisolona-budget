@@ -1,13 +1,13 @@
 import { Box, CircularProgress, IconButton } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import useMessagingContext, {
   useSelectorMessage,
-} from "../../../../../../../hooks/useMessagingContext";
-import { axios } from "../../../../../../../hooks/useAxios";
+} from "@/hooks/useMessagingContext";
+import { axios } from "@/hooks/useAxios";
 import { useDispatch } from "react-redux";
-import { updateMessage } from "../../../../../../../redux/data/data";
+import { updateMessage } from "@/redux/data/data";
 import { useCallback } from "react";
 
 const DownloadButton = ({ id, dataKey, downloaded, setSrc }) => {

@@ -2,10 +2,10 @@ import React, { useCallback, useState } from "react";
 import { Divider, Modal } from "@mui/material";
 import MediaViewerHeader from "./MediaViewerHeader";
 import { useSelector } from "react-redux";
-import store from "../../../../redux/store";
-import { updateData } from "../../../../redux/data/data";
+import store from "@/redux/store";
+import { updateData } from "@/redux/data/data";
 import MediaViewerContent from "./media-viewer-content/MediaViewerContent";
-import { MuiModalTransition } from "../../../../components/MuiDialogTransition";
+import { MuiModalTransition } from "@/components/MuiDialogTransition";
 
 const MediaViewer = React.memo(() => {
   const [zoom, setZoom] = useState(false);

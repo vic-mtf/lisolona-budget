@@ -1,6 +1,6 @@
 import { Slider } from "@mui/material";
 import React from "react";
-import useVideoTimer from "../../../../../../hooks/useVideoTimer";
+import useVideoTimer from "@/hooks/useVideoTimer";
 
 const SliderController = React.memo(({ videoRef }) => {
   const [{ currentTime, duration }, { setCurrentTime }] =

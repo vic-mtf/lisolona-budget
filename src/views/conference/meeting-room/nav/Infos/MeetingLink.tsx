@@ -9,7 +9,7 @@ import { useMemo, useState, useRef } from 'react';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import createCallLink from '../../../../../utils/createCallLink';
+import createCallLink from '@/utils/createCallLink';
 
 const MeetingLink = () => {
   const { code } = useParams();

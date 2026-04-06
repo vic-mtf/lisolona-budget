@@ -14,7 +14,7 @@ import ToggleButtonGroup, {
 } from "@mui/material/ToggleButtonGroup";
 import { styled } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   justifyContent: "space-between",

@@ -12,8 +12,8 @@ import {
   Tooltip,
 } from '@mui/material';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
-import AvatarStatus from '../../../../components/AvatarStatus';
-import HighlightWord from '../../../../components/HighlightWord';
+import AvatarStatus from '@/components/AvatarStatus';
+import HighlightWord from '@/components/HighlightWord';
 
 const ContactItem = ({
   selected,

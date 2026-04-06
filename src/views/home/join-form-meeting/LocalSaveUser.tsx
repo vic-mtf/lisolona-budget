@@ -3,17 +3,17 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import ListAvatar from '../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback, useMemo } from 'react';
-import { updateUser } from '../../../redux/user';
-import { updateApp } from '../../../redux/app';
+import { updateUser } from '@/redux/user';
+import { updateApp } from '@/redux/app';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { decrypt, encrypt } from '../../../utils/crypt';
+import { decrypt, encrypt } from '@/utils/crypt';
 
 const LocalSaveUser = ({ setStep, refetch, code }) => {
   const encryptedGuest = useSelector((store) => store.app.guest);

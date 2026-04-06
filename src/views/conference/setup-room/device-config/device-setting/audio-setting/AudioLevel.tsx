@@ -3,9 +3,9 @@ import ListItem from "@mui/material/ListItem";
 import Box from "@mui/material/Box";
 import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 import Typography from "@mui/material/Typography";
-import VolumeBar from "../../VolumeBar";
+import VolumeBar from "@/views/conference/setup-room/device-config/VolumeBar";
 import { useSelector } from "react-redux";
-import { noiseSuppressor } from "../../../../../../utils/NoiseSuppressor";
+import { noiseSuppressor } from "@/utils/NoiseSuppressor";
 
 const AudioLevel = () => {
   const enabled = useSelector(

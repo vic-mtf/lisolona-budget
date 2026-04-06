@@ -2,12 +2,12 @@ import { Box } from "@mui/material";
 import DeviceConfig from "./device-config/DeviceConfig";
 import RoomInfos from "./room-infos/RoomInfos";
 import ToolbarIdentity from "./room-infos/ToolbarIdentity";
-import useSmallScreen from "../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import { useDispatch } from "react-redux";
-import { updateConferenceData } from "../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 import React, { useEffect } from "react";
 import DeviceAlertPermission from "./device-config/DeviceAlertPermission";
-import useSocket from "../../../hooks/useSocket";
+import useSocket from "@/hooks/useSocket";
 
 const SetupRoom = React.forwardRef((_, ref) => {
   const matches = useSmallScreen();

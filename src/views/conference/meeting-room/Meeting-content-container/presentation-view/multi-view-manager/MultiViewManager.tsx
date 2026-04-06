@@ -5,12 +5,12 @@ import Chip from '@mui/material/Chip';
 import { motion, AnimatePresence } from 'framer-motion';
 import RemoteActiveView from './RemoteActiveView';
 import RemoteSmallViewItem from './RemoteSmallViewItem';
-import GridLayoutView from '../../../../../../components/GridLayoutView';
+import GridLayoutView from '@/components/GridLayoutView';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 import { useCallback } from 'react';
 import LocalSmallViewItem from './LocalSmallViewItem';
-import useSharedScreensParticipants from '../../../agora-actions-wrapper/hooks/useSharedScreensParticipants';
+import useSharedScreensParticipants from '@/views/conference/meeting-room/agora-actions-wrapper/hooks/useSharedScreensParticipants';
 import StopScreenShareOutlinedIcon from '@mui/icons-material/StopScreenShareOutlined';
 
 const MultiViewManager = () => {

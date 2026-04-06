@@ -7,13 +7,13 @@ import {
     useTheme
 } from "@mui/material";
 import React from "react";
-import Typography from "../../../../components/Typography";
-import CustomBadge from "../../../../components/CustomBadge";
-import AvatarStatus from "../../../../components/AvatarStatus";
+import Typography from "@/components/Typography";
+import CustomBadge from "@/components/CustomBadge";
+import AvatarStatus from "@/components/AvatarStatus";
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import {  useSelector } from "react-redux";
-import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
-import TimeElapsed from "../../../../components/TimeElapsed";
+import useHandleJoinMeeting from "@/views/main/action/useHandleJoinMeeting";
+import TimeElapsed from "@/components/TimeElapsed";
 
 export default function CurrentCallContactItem ({call}) {
     const {avatarSrc, name, date, type, format, origin, id, avatarsSrc, location, createdAt} = call;

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import NoticeSnack from '../../components/NoticeSnack';
+import NoticeSnack from '@/components/NoticeSnack';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
+import store from '@/redux/store';
 import { createElement } from 'react';
 import Button from '@mui/material/Button';
-import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
-import getFullName, { genNameSummary } from '../../utils/getFullName';
-import ringtones from '../../utils/ringtones';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
+import getFullName, { genNameSummary } from '@/utils/getFullName';
+import ringtones from '@/utils/ringtones';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 

@@ -2,8 +2,8 @@ import { Box, CircularProgress } from "@mui/material";
 import ZoomViewerContent from "./ZoomViewerContent";
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../hooks/useLocalStoreData";
-import useAxios from "../../../../../hooks/useAxios";
+} from "@/hooks/useLocalStoreData";
+import useAxios from "@/hooks/useAxios";
 import { useState, useLayoutEffect } from "react";
 
 const ImageContent = ({ content, mode = "normal", id }) => {

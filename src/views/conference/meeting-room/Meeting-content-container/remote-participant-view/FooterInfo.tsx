@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
-import WavingHand from "../../../../../components/WavingHand";
-import getFullName from "../../../../../utils/getFullName";
+import WavingHand from "@/components/WavingHand";
+import getFullName from "@/utils/getFullName";
 import Typography from "@mui/material/Typography";
 
 const FooterInfo = ({ id }) => {

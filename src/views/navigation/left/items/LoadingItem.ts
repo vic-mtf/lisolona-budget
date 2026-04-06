@@ -6,7 +6,7 @@ import {
     Stack
 } from "@mui/material";
 import React from "react";
-import CustomSkeleton from "../../../../components/Skeleton";
+import CustomSkeleton from "@/components/Skeleton";
 
 
 export default function LoadingItem () {

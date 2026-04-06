@@ -2,10 +2,10 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import AudioWaveSpeaker from './AudioWaveSpeaker';
-import ListAvatar from '../../../../../components/ListAvatar';
-import useLocalStoreData from '../../../../../hooks/useLocalStoreData';
-import getFullName from '../../../../../utils/getFullName';
-import streamSegmenterMediaPipe from '../../../../../utils/StreamSegmenterMediaPipe';
+import ListAvatar from '@/components/ListAvatar';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
+import getFullName from '@/utils/getFullName';
+import streamSegmenterMediaPipe from '@/utils/StreamSegmenterMediaPipe';
 
 const LocalVideoStream = () => {
   const [opacity, setOpacity] = useState(0);

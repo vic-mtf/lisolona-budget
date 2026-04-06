@@ -3,7 +3,7 @@ import { EditorState } from "draft-js";
 import { useMemo } from "react";
 import ToggleStyleButtons from "./ToggleStyleButtons";
 import AddLinkButton from "./buttons/AddLinkButton";
-import ToggleButtonGroup from "../../../../../../components/ToggleButtonGroup";
+import ToggleButtonGroup from "@/components/ToggleButtonGroup";
 import getLinkInSelection from "./buttons/getLinkInSelection";
 import getInlineStylesActive from "./buttons/getInlineStylesActive";
 import getCurrentBlockType from "./buttons/getCurrentBlockType";

@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
+import store from '@/redux/store';
 import { useLocation } from 'react-router-dom';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import getFullName from '../../utils/getFullName';
-import ringtones from '../../utils/ringtones';
-import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
+import getFullName from '@/utils/getFullName';
+import ringtones from '@/utils/ringtones';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 import { useSelector } from 'react-redux';
-import NoticeSnack from '../../components/NoticeSnack';
+import NoticeSnack from '@/components/NoticeSnack';
 
 const useRemoteUserLeave = () => {
   const socket = useSocket();

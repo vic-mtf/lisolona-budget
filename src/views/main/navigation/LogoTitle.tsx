@@ -1,5 +1,5 @@
 import { Divider, Stack, Typography } from '@mui/material';
-import geid_logo from '../../../assets/geid_logo_white_without_title.webp';
+import geid_logo from '@/assets/geid_logo_white_without_title.webp';
 
 export default function LogoTitle() {
   return (

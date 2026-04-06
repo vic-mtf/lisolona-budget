@@ -11,10 +11,10 @@ import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import ZoomInMapOutlinedIcon from "@mui/icons-material/ZoomInMapOutlined";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../redux/conference/conference";
-import useIsOrganizer from "../../../../../hooks/useIsOrganizer";
-import getFullName from "../../../../../utils/getFullName";
-import useSocket from "../../../../../hooks/useSocket";
+import { updateConferenceData } from "@/redux/conference/conference";
+import useIsOrganizer from "@/hooks/useIsOrganizer";
+import getFullName from "@/utils/getFullName";
+import useSocket from "@/hooks/useSocket";
 
 const RemoteOptions = ({ id }) => {
   const containerRef = React.useRef();

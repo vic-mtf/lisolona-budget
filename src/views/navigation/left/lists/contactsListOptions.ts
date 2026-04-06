@@ -1,15 +1,15 @@
-import store from "../../../../redux/store";
-import getFullName from "../../../../utils/getFullName";
-import timeHumanReadable from "../../../../utils/timeHumanReadable";
+import store from "@/redux/store";
+import getFullName from "@/utils/getFullName";
+import timeHumanReadable from "@/utils/timeHumanReadable";
 import CallContactItem from "../items/CallContactItem";
 import CurrentCallContactItem from "../items/CurrentCallContactItem";
 import HistoryToggleOffRoundedIcon from "@mui/icons-material/HistoryToggleOffRounded";
 import MeetingRoomOutlinedIcon from "@mui/icons-material/MeetingRoomOutlined";
 import Groups3OutlinedIcon from "@mui/icons-material/Groups3Outlined";
 import CastRoundedIcon from "@mui/icons-material/CastRounded";
-import { addData } from "../../../../redux/data";
-import { participantsAppel } from "../../../main/chat-box/chat-area/alert/Profile";
-import { getTime } from "../../../../utils/formatTime";
+import { addData } from "@/redux/data";
+import { participantsAppel } from "@/views/main/chat-box/chat-area/alert/Profile";
+import { getTime } from "@/utils/formatTime";
 import { isPlainObject } from "lodash";
 import ScheduleMeetingItem from "../items/ScheduleMeetingItem";
 

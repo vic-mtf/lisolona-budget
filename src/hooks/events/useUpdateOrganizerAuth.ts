@@ -1,8 +1,8 @@
 import useSocket from '../useSocket';
 import React, { useEffect } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import ringtones from '../../utils/ringtones';
-import store from '../../redux/store';
+import ringtones from '@/utils/ringtones';
+import store from '@/redux/store';
 import { useSelector } from 'react-redux';
 
 const useUpdateOrganizerAuth = () => {

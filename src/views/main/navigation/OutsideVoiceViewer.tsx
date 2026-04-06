@@ -9,16 +9,16 @@ import {
   LinearProgress,
   Divider,
 } from "@mui/material";
-import ListAvatar from "../../../components/ListAvatar";
+import ListAvatar from "@/components/ListAvatar";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
-import useLocalStoreData from "../../../hooks/useLocalStoreData";
-import getFullName from "../../../utils/getFullName";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import getFullName from "@/utils/getFullName";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { updateData } from "../../../redux/data/data";
+import { updateData } from "@/redux/data/data";
 
 const OutsideVoiceViewer = () => {
   const discussionTarget = useSelector((store) => store.data.discussionTarget);

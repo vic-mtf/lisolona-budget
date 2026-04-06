@@ -6,8 +6,8 @@ import ToggleToolbarButton from './buttons/ToggleToolbarButton';
 import ToggleEmojiBarButton from './buttons/ToggleEmojiBarButton';
 import ToggleVoiceRecordAndTextMessageButton from './buttons/ToggleVoiceRecordAndTextMessageButton';
 import AddFilesButton from './buttons/AddFilesButton';
-import store from '../../../../../redux/store';
-import { modifyData } from '../../../../../redux/data';
+import store from '@/views/redux/store';
+import { modifyData } from '@/views/redux/data';
 import { useSelector } from 'react-redux';
 
 export default React.memo(function  WritingAreaFooter ({isEmpty, filesRef, hasFocus, onSubmit, editorRef, media}) {

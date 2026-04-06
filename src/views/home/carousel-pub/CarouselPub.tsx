@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
 import pubs from './pubs';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import useSwipe from '../../../hooks/useSwipe';
+import useSwipe from '@/hooks/useSwipe';
 import IconButton from '@mui/material/IconButton';
 import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import NavigateBeforeOutlinedIcon from '@mui/icons-material/NavigateBeforeOutlined';
@@ -199,4 +199,5 @@ const Item = ({ desc, ...otherProps }) => {
     </Card>
   );
 };
-
+
+

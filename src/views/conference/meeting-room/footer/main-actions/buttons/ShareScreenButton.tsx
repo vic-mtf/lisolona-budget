@@ -1,16 +1,16 @@
 import ScreenShareOutlinedIcon from '@mui/icons-material/ScreenShareOutlined';
-import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
 import React, { useCallback, useMemo } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import ActionButton from './ActionButton';
 import { useDispatch, useSelector } from 'react-redux';
-import useSocket from '../../../../../../hooks/useSocket';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
+import useSocket from '@/hooks/useSocket';
+import { updateConferenceData } from '@/redux/conference/conference';
 import { useEffect } from 'react';
 import { isPlainObject } from 'lodash';
-import store from '../../../../../../redux/store';
-import ringtones from '../../../../../../utils/ringtones';
-import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
+import store from '@/redux/store';
+import ringtones from '@/utils/ringtones';
+import { canvasStreamComposer } from '@/utils/CanvasStreamComposer';
 
 const ShareScreenButton = ({ shareScreen }) => {
   const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import PushPinIcon from '@mui/icons-material/PushPin';
-import store from '../../../../redux/store';
+import store from '@/redux/store';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';

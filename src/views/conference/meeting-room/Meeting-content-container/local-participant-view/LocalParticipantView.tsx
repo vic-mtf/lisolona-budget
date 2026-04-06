@@ -1,11 +1,11 @@
 import React, { useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import { useDispatch, useSelector } from "react-redux";
-import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import Typography from "@mui/material/Typography";
 import ViewOptions from "./ViewOptions";
-import { updateConferenceData } from "../../../../../redux/conference/conference";
-import { darkGradientFromId } from "../../../../../utils/color";
+import { updateConferenceData } from "@/redux/conference/conference";
+import { darkGradientFromId } from "@/utils/color";
 import LocalMuteMicro from "./LocalMuteMicro";
 import LocalVideoStream from "./LocalVideoStream";
 

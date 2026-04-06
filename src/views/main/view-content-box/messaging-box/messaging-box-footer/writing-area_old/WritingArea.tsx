@@ -8,7 +8,7 @@ import VoiceRecord from "../voice-record/VoiceRecord";
 import publicDraftStyle from "./style-editor/publicDraftStyle";
 import AnimatedWrapper from "./AnimatedWrapper";
 import TextEditorMessage from "./TextEditorMessage";
-import { MESSAGE_CHANNEL } from "../../ChatBox";
+import { MESSAGE_CHANNEL } from "@/views/main/view-content-box/messaging-box/ChatBox";
 import draftToHtml from "draftjs-to-html";
 import { convertToRaw } from "draft-js";
 import { getTextFromEditorState } from "./countText";

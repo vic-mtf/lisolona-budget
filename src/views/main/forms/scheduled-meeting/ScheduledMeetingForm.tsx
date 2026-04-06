@@ -1,12 +1,12 @@
 import { Box, Toolbar, Typography, TextField } from '@mui/material';
-import ListAvatar from '../../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import DateCalendarMeeting from './DateCalendarMeeting';
 import DateTimeClockMeeting from './DateTimeClockMeeting';
-import scrollBarSx from '../../../../utils/scrollBarSx';
+import scrollBarSx from '@/utils/scrollBarSx';
 import TimeDurationMeeting from './TimeDurationMeeting';
 import { Controller, useFormContext } from 'react-hook-form';
-import FormHelperErrorText from '../../../../components/FormHelperErrorText';
+import FormHelperErrorText from '@/components/FormHelperErrorText';
 import SubHeaderIndicator from './SubHeaderIndicator';
 import React from 'react';
 

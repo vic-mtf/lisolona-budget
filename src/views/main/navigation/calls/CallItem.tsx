@@ -9,15 +9,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ListAvatar from "../../../../components/ListAvatar";
-import getFullName from "../../../../utils/getFullName";
+import ListAvatar from "@/components/ListAvatar";
+import getFullName from "@/utils/getFullName";
 import NotInterestedOutlinedIcon from "@mui/icons-material/NotInterestedOutlined"; // fail
 //import CallMissedOutgoingOutlinedIcon from "@mui/icons-material/CallMissedOutgoingOutlined"; //fail
 import CallMissedOutlinedIcon from "@mui/icons-material/CallMissedOutlined"; // missed
 import CallMadeOutlinedIcon from "@mui/icons-material/CallMadeOutlined"; // outgoing
 import CallReceivedOutlinedIcon from "@mui/icons-material/CallReceivedOutlined"; // incoming
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
-import { formatTime } from "../../../../utils/formatDate";
+import { formatTime } from "@/utils/formatDate";
 
 const CallItem = ({
   location,

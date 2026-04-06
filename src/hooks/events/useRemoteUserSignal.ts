@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
+import store from '@/redux/store';
 import { isPlainObject } from '@reduxjs/toolkit';
-import getFullName, { fname, genNameSummary } from '../../utils/getFullName';
+import getFullName, { fname, genNameSummary } from '@/utils/getFullName';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import ringtones from '../../utils/ringtones';
-import NoticeSnack from '../../components/NoticeSnack';
-import WavingHand from '../../components/WavingHand';
-import HighlightWord from '../../components/HighlightWord';
+import ringtones from '@/utils/ringtones';
+import NoticeSnack from '@/components/NoticeSnack';
+import WavingHand from '@/components/WavingHand';
+import HighlightWord from '@/components/HighlightWord';
 
 const useRemoteUserSignal = () => {
   const socket = useSocket();

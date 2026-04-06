@@ -4,8 +4,8 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import useToken from "../../../../hooks/useToken";
-import { timeElapses } from "../../../../utils/formatDate";
+import useToken from "@/hooks/useToken";
+import { timeElapses } from "@/utils/formatDate";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import {
   Box,
@@ -18,14 +18,14 @@ import {
   AlertTitle,
 } from "@mui/material";
 //import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import ListAvatar from "../../../../components/ListAvatar";
-import { axios } from "../../../../hooks/useAxios";
-import useLocalStoreData from "../../../../hooks/useLocalStoreData";
+import ListAvatar from "@/components/ListAvatar";
+import { axios } from "@/hooks/useAxios";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import { useDispatch } from "react-redux";
-import { updateData } from "../../../../redux/data/data";
-import getFullName from "../../../../utils/getFullName";
-import { NAVIGATE_EVENT_NAME } from "../../navigation/NavTab";
-import store from "../../../../redux/store";
+import { updateData } from "@/redux/data/data";
+import getFullName from "@/utils/getFullName";
+import { NAVIGATE_EVENT_NAME } from "@/views/main/navigation/NavTab";
+import store from "@/redux/store";
 
 const GuestItem = React.memo(({ id, user, divider, createdAt, isRemote }) => {
   const name = getFullName(user);

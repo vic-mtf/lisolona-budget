@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import formatTime from "../../../../../../utils/formatTime";
+import formatTime from "@/utils/formatTime";
 import WaveSurfer from "wavesurfer.js";
 
 const ListeningTimer = React.memo(({ waveSurfer, duration, disabled }) => {

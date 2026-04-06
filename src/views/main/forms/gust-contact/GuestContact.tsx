@@ -14,9 +14,9 @@ import {
   Alert,
   AlertTitle,
 } from "@mui/material";
-import LinearProgressLayer from "../../../../components/LinearProgressLayer";
-import useAxios from "../../../../hooks/useAxios";
-import useToken from "../../../../hooks/useToken";
+import LinearProgressLayer from "@/components/LinearProgressLayer";
+import useAxios from "@/hooks/useAxios";
+import useToken from "@/hooks/useToken";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
 import { useForm } from "react-hook-form";
 import { useNotifications } from "@toolpad/core/useNotifications";

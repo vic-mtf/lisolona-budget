@@ -5,15 +5,15 @@ import NavigateBeforeRoundedIcon from "@mui/icons-material/NavigateBeforeRounded
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import store from "../../../../../../redux/store";
-import { updateData } from "../../../../../../redux/data/data";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
+import store from "@/redux/store";
+import { updateData } from "@/redux/data/data";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import VoiceThumbnail from "./voice-thumbnail/VoiceThumbnail";
 import DocThumbnail from "./doc-thumbnail/DocThumbnail";
 import ImageThumbnail from "./image-thumbnail/ImageThumbnail";
 import AudioThumbnail from "./audio-thumbnail/AudioThumbnail";
 import VideoThumbnail from "./video-thumbnail/VideoThumbnail";
-import useSmallScreen from "../../../../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 
 const FilesThumbnailView = React.memo(
   React.forwardRef(({ id }, ref) => {

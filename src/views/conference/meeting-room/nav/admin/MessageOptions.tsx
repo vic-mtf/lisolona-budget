@@ -8,7 +8,7 @@ import Switch from '@mui/material/Switch';
 // import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import ThreePOutlinedIcon from '@mui/icons-material/ThreePOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import useSocket from '../../../../../hooks/useSocket';
+import useSocket from '@/hooks/useSocket';
 
 const MessageOptions = () => {
   const writeMessage = useSelector(

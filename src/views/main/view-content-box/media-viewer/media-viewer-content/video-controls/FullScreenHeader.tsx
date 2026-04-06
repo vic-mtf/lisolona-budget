@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Typography } from "@mui/material";
-import getFullName from "../../../../../../utils/getFullName";
-import { formatTime } from "../../../../../../utils/formatDate";
-import useMessagingContext from "../../../../../../hooks/useMessagingContext";
+import getFullName from "@/utils/getFullName";
+import { formatTime } from "@/utils/formatDate";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 const FullScreenHeader = () => {
   const userId = useSelector((store) => store.user.id);

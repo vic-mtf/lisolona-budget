@@ -1,8 +1,8 @@
 import React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListAvatar from '../../../../../../components/ListAvatar';
-import WavingHand from '../../../../../../components/WavingHand';
+import ListAvatar from '@/components/ListAvatar';
+import WavingHand from '@/components/WavingHand';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Box from '@mui/material/Box';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
@@ -12,16 +12,16 @@ import Button from '@mui/material/Button';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
-import getFullName from '../../../../../../utils/getFullName';
+import getFullName from '@/utils/getFullName';
 import ParticipantItemMicButton from './ParticipantItemMicButton';
 import { useRef } from 'react';
 import { useState } from 'react';
 import RemoteOptions from './RemoteOptions';
 import LocalOptions from './LocalOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import useSocket from '../../../../../../hooks/useSocket';
+import useSocket from '@/hooks/useSocket';
 
 const ParticipantItem = ({ variant, type, identity, mode, state }) => {
   const name = getFullName(identity);

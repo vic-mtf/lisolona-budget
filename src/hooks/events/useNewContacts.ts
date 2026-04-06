@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import useSocket from "../useSocket";
-import store from "../../redux/store";
-import ringtones, { vibrates } from "../../utils/ringtones";
+import store from "@/redux/store";
+import ringtones, { vibrates } from "@/utils/ringtones";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import NoticeSnack from "../../components/NoticeSnack";
-import { formatUser } from "../../utils/formatObjectData";
-import getFullName from "../../utils/getFullName";
+import NoticeSnack from "@/components/NoticeSnack";
+import { formatUser } from "@/utils/formatObjectData";
+import getFullName from "@/utils/getFullName";
 
 const useNewContacts = () => {
   const socket = useSocket();

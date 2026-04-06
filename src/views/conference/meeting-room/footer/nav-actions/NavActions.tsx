@@ -5,7 +5,7 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import Badge from '@mui/material/Badge';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateConferenceData } from '../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 import { useMemo } from 'react';
 import navActions from './navActions';
 

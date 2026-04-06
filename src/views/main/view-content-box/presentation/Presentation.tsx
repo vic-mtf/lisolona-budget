@@ -1,5 +1,5 @@
 import { Stack, Divider, Typography, Chip } from '@mui/material';
-import _platform_logo from '../../../../assets/geid_logo_blue_without_title.png';
+import _platform_logo from '@/assets/geid_logo_blue_without_title.png';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 
 export default function Presentation() {

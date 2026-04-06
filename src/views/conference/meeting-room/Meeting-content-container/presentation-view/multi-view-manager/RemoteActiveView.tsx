@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
-import { useScreenTrack } from '../../../agora-actions-wrapper/hooks/useRemoteUsersTrack';
-import useFitVideo from '../../../../../../hooks/useFitVideo';
+import { useScreenTrack } from '@/views/conference/meeting-room/agora-actions-wrapper/hooks/useRemoteUsersTrack';
+import useFitVideo from '@/hooks/useFitVideo';
 
 const RemoteActiveView = ({ id }) => {
   const videoRef = useRef(null);

@@ -16,13 +16,13 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { createElement } from 'react';
-import { options } from '../../../navigation/calls/groupCall';
+import { options } from '@/views/main/navigation/calls/groupCall';
 import { useMemo } from 'react';
-import useSmallScreen from '../../../../../hooks/useSmallScreen';
-import ScheduledMeeting from '../../../forms/scheduled-meeting/ScheduledMeeting';
+import useSmallScreen from '@/hooks/useSmallScreen';
+import ScheduledMeeting from '@/views/main/forms/scheduled-meeting/ScheduledMeeting';
 import { useDispatch } from 'react-redux';
-import { updateConferenceData } from '../../../../../redux/conference/conference';
-import { startNewCall } from '../../../../../utils/handleStartNewCall';
+import { updateConferenceData } from '@/redux/conference/conference';
+import { startNewCall } from '@/utils/handleStartNewCall';
 import { useCallback } from 'react';
 
 export default function StartCallButton({ user }) {

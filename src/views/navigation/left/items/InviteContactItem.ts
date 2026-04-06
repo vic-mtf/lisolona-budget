@@ -12,12 +12,12 @@ import {
   IconButton,
 } from "@mui/material";
 import React, { useState } from "react";
-import Avatar from "../../../../components/Avatar";
-import CustomBadge from "../../../../components/CustomBadge";
+import Avatar from "@/components/Avatar";
+import CustomBadge from "@/components/CustomBadge";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import capStr from "../../../../utils/capStr";
+import capStr from "@/utils/capStr";
 import { LoadingButton } from "@mui/lab";
-import useAxios from "../../../../hooks/useAxios";
+import useAxios from "@/hooks/useAxios";
 import { useSelector } from "react-redux";
 
 export default function InviteContactItem({

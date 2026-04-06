@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import Box from '@mui/material/Box';
-import GridLayoutView from '../../../../../components/GridLayoutView';
-import useActiveParticipants from '../../agora-actions-wrapper/hooks/useActiveParticipants';
+import GridLayoutView from '@/components/GridLayoutView';
+import useActiveParticipants from '@/views/conference/meeting-room/agora-actions-wrapper/hooks/useActiveParticipants';
 import LocalParticipantGridView from '../local-participant-view/LocalParticipantGridView';
 import { useSelector } from 'react-redux';
 import RemoteParticipantView from '../remote-participant-view/RemoteParticipantView';

@@ -1,5 +1,5 @@
-import useListenRemoteUserStatus from "../../../../../hooks/events/useListenRemoteUserStatus";
-import { timeElapses } from "../../../../../utils/formatDate";
+import useListenRemoteUserStatus from "@/hooks/events/useListenRemoteUserStatus";
+import { timeElapses } from "@/utils/formatDate";
 
 export default function ContactStatusState({ id }) {
   const status = useListenRemoteUserStatus(id);

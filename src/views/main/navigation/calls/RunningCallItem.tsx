@@ -10,9 +10,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ListAvatar from "../../../../components/ListAvatar";
-import getFullName from "../../../../utils/getFullName";
-import { timeElapses } from "../../../../utils/formatDate";
+import ListAvatar from "@/components/ListAvatar";
+import getFullName from "@/utils/getFullName";
+import { timeElapses } from "@/utils/formatDate";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Groups2OutlinedIcon from "@mui/icons-material/Groups2Outlined";
 

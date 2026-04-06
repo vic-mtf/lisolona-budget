@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import { Tooltip, IconButton, Dialog } from "@mui/material";
-import CreateDiscussionGroup from "../../forms/create-discussion-group/CreateDiscussionGroup";
-import useSmallScreen from "../../../../hooks/useSmallScreen";
+import CreateDiscussionGroup from "@/views/main/forms/create-discussion-group/CreateDiscussionGroup";
+import useSmallScreen from "@/hooks/useSmallScreen";
 
 const CreateDiscussionGroupButton = React.memo(() => {
   const [open, setOpen] = useState(false);

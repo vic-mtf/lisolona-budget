@@ -12,9 +12,9 @@ import { getTextFromEditorState } from './countText';
 import { plugins } from './WritingArea';
 import { blockStyleFn } from './style-editor/style-editor';
 import editorStateEmpty from './editorStateEmpty';
-import store from '../../../../../redux/store';
-import { modifyData } from '../../../../../redux/data';
-import { MESSAGE_CHANNEL } from '../../ChatBox';
+import store from '@/views/redux/store';
+import { modifyData } from '@/views/redux/data';
+import { MESSAGE_CHANNEL } from '@/views/main/view-content-box/messaging-box/ChatBox';
 
 export default function EditorText ({
   onFocus, 

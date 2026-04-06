@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import MessageList from "./MessageList";
-import useMessagingContext from "../../../../../hooks/useMessagingContext";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 export default function MessagingBoxContent() {
   const [{ user, data, VListRef }] = useMessagingContext();

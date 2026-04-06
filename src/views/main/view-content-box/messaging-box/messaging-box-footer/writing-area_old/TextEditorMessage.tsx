@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import AnimatedWrapper from './AnimatedWrapper';
 import EmojiPicker from '../emoji-picker/EmojiPicker';
 import FilesThumbView from '../files-thumb-view/FilesThumbView';
-import { MESSAGE_CHANNEL } from '../../ChatBox';
+import { MESSAGE_CHANNEL } from '@/views/main/view-content-box/messaging-box/ChatBox';
 
 export default function TextEditorMessage ({
   rootRef, 

@@ -1,14 +1,14 @@
 import React, { useRef } from "react";
 import { alpha, Box, Typography } from "@mui/material";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import { useEffect } from "react";
 import EnhanceImageButton from "./EnhanceImageButton";
-import { ToolbarSide } from "../../CameraMirrorVideo";
+import { ToolbarSide } from "@/views/conference/setup-room/device-config/CameraMirrorVideo";
 import ToggleFilterButton from "./ToggleFilterButton";
 import ReplaceBackground from "./ReplaceBackground";
 import CamerasList from "./CamerasList";
 import ResolutionSwitcher from "./ResolutionSwitcher";
-import scrollBarSx from "../../../../../../utils/scrollBarSx";
+import scrollBarSx from "@/utils/scrollBarSx";
 
 const VideoSetting = () => {
   const [getData] = useLocalStoreData("conference.setup.devices");

@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import ListAvatar from '../../../../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 import { useSelector } from 'react-redux';
-import getFullName from '../../../../../../utils/getFullName';
+import getFullName from '@/utils/getFullName';
 
 const RemoteUserInfo = ({ id }) => {
   const user = useSelector(

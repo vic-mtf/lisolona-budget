@@ -5,8 +5,8 @@ import {
   Box as MuiBox,
   Typography,
 } from "@mui/material";
-import Avatar from "../../../../../components/Avatar";
-import InputController from "../../../../../components/InputController";
+import Avatar from "@/components/Avatar";
+import InputController from "@/components/InputController";
 import Diversity3OutlinedIcon from "@mui/icons-material/Diversity3Outlined";
 
 export default function GroupForm({

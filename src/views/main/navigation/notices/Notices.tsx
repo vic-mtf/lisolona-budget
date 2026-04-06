@@ -2,12 +2,12 @@ import { Stack, Toolbar, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import GuestItem from "./GuestItem";
-import toggleFullscreen from "../../../../utils/toggleFullscreen";
-import VirtualList from "../../../../components/VirtualList";
+import toggleFullscreen from "@/utils/toggleFullscreen";
+import VirtualList from "@/components/VirtualList";
 import groupNotices from "./groupNotices";
 import DeleteInvitationButton from "./DeleteInvitationButton";
-import { ItemWrapperFocus } from "../../../../components/BlinkWrapper";
-import ConfirmDeleteItem from "../../../../components/ConfirmDeleteItem";
+import { ItemWrapperFocus } from "@/components/BlinkWrapper";
+import ConfirmDeleteItem from "@/components/ConfirmDeleteItem";
 
 export default function Notices() {
   const bulkNotifications = useSelector(

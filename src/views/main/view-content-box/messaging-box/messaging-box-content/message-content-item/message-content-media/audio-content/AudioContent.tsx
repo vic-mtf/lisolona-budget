@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../../../../hooks/useLocalStoreData";
-import useAxios from "../../../../../../../../hooks/useAxios";
+} from "@/hooks/useLocalStoreData";
+import useAxios from "@/hooks/useAxios";
 import { Box, Fade } from "@mui/material";
-import AudioListenerView from "../../../../../../../../components/AudioListenerView";
+import AudioListenerView from "@/components/AudioListenerView";
 import { useState } from "react";
-import UploadingProgressVoiceButton from "../../message-content-voice/UploadingProgressVoiceButton";
+import UploadingProgressVoiceButton from "@/views/main/view-content-box/messaging-box/messaging-box-content/message-content-item/message-content-voice/UploadingProgressVoiceButton";
 import useMessagingContext, {
   useSelectorMessage,
-} from "../../../../../../../../hooks/useMessagingContext";
-import AudioPlayerSkeleton from "../../../../../../../../components/AudioPlayerSkeleton";
+} from "@/hooks/useMessagingContext";
+import AudioPlayerSkeleton from "@/components/AudioPlayerSkeleton";
 
 const AudioContent = ({ content, id }) => {
   const { key } = useSmartKey({

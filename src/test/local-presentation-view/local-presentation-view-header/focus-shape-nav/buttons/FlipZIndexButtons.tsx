@@ -6,10 +6,10 @@ import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { useState, useCallback } from "react";
 import {} from "react";
-import { EVENT_NAMES } from "../../annotationStyles";
+import { EVENT_NAMES } from "@/test/local-presentation-view/local-presentation-view-header/annotationStyles";
 import Chip from "@mui/material/Chip";
 import RootToggleButtonGroup from "./RootToggleButtonGroup";
-import useLocalStoreData from "../../../../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 
 const FlipZIndexButtons = ({ shapeNode }) => {
   const [getData] = useLocalStoreData(

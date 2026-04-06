@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
-import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
-import VoiceListenerView from "../../../../../../../components/VoiceListenerView";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import VoiceListenerView from "@/components/VoiceListenerView";
 
 const VoiceThumbnail = React.forwardRef(({ src, id }, ref) => {
   const key = `app.uploads.voices.${id}`;

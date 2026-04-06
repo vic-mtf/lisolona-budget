@@ -12,15 +12,15 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import { decrypt } from '../../../utils/crypt';
+import { decrypt } from '@/utils/crypt';
 import Slide from '@mui/material/Slide';
-import useAxios from '../../../hooks/useAxios';
+import useAxios from '@/hooks/useAxios';
 import CodeMeeting from './CodeMeeting';
 import IdentifyForm from './IdentifyForm';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import LocalSaveUser from './LocalSaveUser';
 import { useSelector } from 'react-redux';
-import normalizeObjectKeys from '../../../utils/normalizeObjectKeys';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 
 export default function JoinFormMeeting({ message }) {
   const { state, search } = useLocation();

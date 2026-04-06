@@ -1,8 +1,8 @@
 import { Box, CircularProgress, IconButton } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
-import { useSelectorMessage } from "../../../../../../../hooks/useMessagingContext";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import { useSelectorMessage } from "@/hooks/useMessagingContext";
 
 const UploadingProgressVoiceButton = ({ id, dataKey }) => {
   const loading = useSelectorMessage(id, "request.loading");

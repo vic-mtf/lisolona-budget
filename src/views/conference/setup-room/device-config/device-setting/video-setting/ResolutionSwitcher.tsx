@@ -1,5 +1,5 @@
 import { Box, TextField, MenuItem } from "@mui/material";
-import { streamSegmenterMediaPipe } from "../../../../../../utils/StreamSegmenterMediaPipe";
+import { streamSegmenterMediaPipe } from "@/utils/StreamSegmenterMediaPipe";
 import { useState } from "react";
 import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";

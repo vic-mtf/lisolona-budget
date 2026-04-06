@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Arrow } from "react-konva";
-import useDrawingStageRef from "../../../../../../../hooks/useDrawingStageRef";
+import useDrawingStageRef from "@/hooks/useDrawingStageRef";
 import { useSelector } from "react-redux";
 
 const MIN_LENGTH = 5;

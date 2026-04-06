@@ -1,5 +1,5 @@
-import useLocalStoreData from "../../../../../../../../hooks/useLocalStoreData";
-import { useSelectorMessage } from "../../../../../../../../hooks/useMessagingContext";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import { useSelectorMessage } from "@/hooks/useMessagingContext";
 import { IconButton, Box, LinearProgress } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import deepMerge, { setValueByKey } from '../../utils/mergeDeep';
+import deepMerge, { setValueByKey } from '@/utils/mergeDeep';
 import initialState from './initialState';
 import { isArray, cloneDeep } from 'lodash';
 

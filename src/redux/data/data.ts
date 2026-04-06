@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import deepMerge, { setValueByKey } from "../../utils/mergeDeep";
+import deepMerge, { setValueByKey } from "@/utils/mergeDeep";
 import { initialState } from "./initialState";
 import upArrData from "./updateArraysData";
 import delInArrayData from "./deleteItemById";
 import { isArray } from "lodash";
-import { MAX_POINTS } from "../../hooks/events/useNetworkStat";
+import { MAX_POINTS } from "@/hooks/events/useNetworkStat";
 
 const data = createSlice({
   name: "data",

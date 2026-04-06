@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, CardActionArea, ImageListItemBar } from "@mui/material";
-import resizeImage from "../../../../../../../utils/resizeImage";
+import resizeImage from "@/utils/resizeImage";
 import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
 
 const ImageThumbnail = React.memo(

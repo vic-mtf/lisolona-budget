@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import MemoryProcesses from "./MemoryProcesses";
 import NetworkDiagnostic from "./NetworkDiagnostic";
-import scrollBarSx from "../../../../../../utils/scrollBarSx";
+import scrollBarSx from "@/utils/scrollBarSx";
 
 const Diagnostic = () => {
   return (

@@ -1,6 +1,6 @@
 import { Tooltip, IconButton } from "@mui/material";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import store from "../../../../../redux/store";
+import store from "@/redux/store";
 
 const ScrollToMessageButton = ({ VListRef, messages, data, onClose }) => {
   return (

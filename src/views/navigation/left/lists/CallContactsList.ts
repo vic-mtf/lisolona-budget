@@ -12,22 +12,22 @@ import {
   Toolbar,
   Button,
 } from "@mui/material";
-import db from "../../../../database/db";
+// import db from "@/database/db"; // TODO: database removed
 import { useLiveQuery } from "dexie-react-hooks";
 import AddIcCallOutlinedIcon from "@mui/icons-material/AddIcCallOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import Menu from "../../../../components/Menu";
+import Menu from "@/components/Menu";
 import { escapeRegExp } from "lodash";
 import LoadingList from "./LoadingList";
 import EmptyContentMessage from "./EmptyContentMessage";
-import CustomListItemsGroup from "../../../../components/CustomListItemsGroup";
+import CustomListItemsGroup from "@/components/CustomListItemsGroup";
 import {
   callsItems,
   menuGlobalCall,
   sortMeetings,
 } from "./contactsListOptions";
-import store from "../../../../redux/store";
-import { setData } from "../../../../redux/data";
+import store from "@/redux/store";
+import { setData } from "@/redux/data";
 
 export default function CallContactsList({ navigation }) {
   const [search, setSearch] = useState("");

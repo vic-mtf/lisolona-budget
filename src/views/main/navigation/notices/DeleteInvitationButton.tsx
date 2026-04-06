@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { updateData } from "../../../../redux/data/data";
-import useToken from "../../../../hooks/useToken";
+import { updateData } from "@/redux/data/data";
+import useToken from "@/hooks/useToken";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import store from "../../../../redux/store";
-import useAxios from "../../../../hooks/useAxios";
+import store from "@/redux/store";
+import useAxios from "@/hooks/useAxios";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const DeleteInvitationButton = ({ data: _data, onClose }) => {

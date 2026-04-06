@@ -1,8 +1,8 @@
 import { createElement } from "react";
 import { Badge, BottomNavigation, BottomNavigationAction } from "@mui/material";
 import tabs from "./tabs";
-import useNavTab from "../../../hooks/useNavTab";
-import useSmallScreen from "../../../hooks/useSmallScreen";
+import useNavTab from "@/hooks/useNavTab";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import { useEffect } from "react";

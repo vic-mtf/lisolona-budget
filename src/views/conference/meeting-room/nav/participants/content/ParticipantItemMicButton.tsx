@@ -3,10 +3,10 @@ import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 import MicOffOutlinedIcon from "@mui/icons-material/MicOffOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 import { useCallback, useMemo } from "react";
-import useSocket from "../../../../../../hooks/useSocket";
-import useIsOrganizer from "../../../../../../hooks/useIsOrganizer";
+import useSocket from "@/hooks/useSocket";
+import useIsOrganizer from "@/hooks/useIsOrganizer";
 
 const ParticipantItemMicButton = ({ type, isMicActive, name, id }) => {
   const fn = useMemo(() => name?.split(/\s/)[0], [name]);

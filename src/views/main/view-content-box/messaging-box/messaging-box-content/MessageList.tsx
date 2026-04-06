@@ -4,12 +4,12 @@ import { useSelector } from "react-redux";
 import { VList } from "virtua";
 import MessageItem from "./MessageItem";
 import groupeMessages from "./groupMessage";
-// import useSmallScreen from "../../../../../hooks/useSmallScreen";
+// import useSmallScreen from "@/hooks/useSmallScreen";
 import StickToBottomButton from "./StickToBottomButton";
 import { useCallback } from "react";
 import { useState } from "react";
-import store from "../../../../../redux/store";
-import { updateData } from "../../../../../redux/data/data";
+import store from "@/redux/store";
+import { updateData } from "@/redux/data/data";
 
 const MessageList = ({ user, VListRef, data }) => {
   const [shouldStickToBottom, setShouldStickToBottom] = useState(false);

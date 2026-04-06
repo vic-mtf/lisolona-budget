@@ -1,8 +1,8 @@
 import AgoraRTC, { useRTCClient } from 'agora-rtc-react';
 import { useEffect } from 'react';
-import { noiseSuppressor } from '../../../../../utils/NoiseSuppressor';
+import { noiseSuppressor } from '@/utils/NoiseSuppressor';
 import { useSelector } from 'react-redux';
-import useSocket from '../../../../../hooks/useSocket';
+import useSocket from '@/hooks/useSocket';
 
 let publishing = false;
 

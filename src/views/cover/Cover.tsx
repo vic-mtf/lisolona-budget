@@ -1,5 +1,5 @@
 import React from 'react';
-import _app_logo from '../../assets/group_speak.webp';
+import _app_logo from '@/assets/group_speak.webp';
 import {
   Stack,
   Box,
@@ -8,13 +8,13 @@ import {
   Typography,
   Fade,
 } from '@mui/material';
-import _platform_logo from '../../assets/geid_logo_blue_without_title.webp';
+import _platform_logo from '@/assets/geid_logo_blue_without_title.webp';
 import { useCallback } from 'react';
-import useAxios from '../../hooks/useAxios';
-import SwingAnimation from '../../components/SwingAnimation';
-import store from '../../redux/store';
-import useToken from '../../hooks/useToken';
-import { updateArraysData, updateData } from '../../redux/data/data';
+import useAxios from '@/hooks/useAxios';
+import SwingAnimation from '@/components/SwingAnimation';
+import store from '@/redux/store';
+import useToken from '@/hooks/useToken';
+import { updateArraysData, updateData } from '@/redux/data/data';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Cover = React.forwardRef((_, ref) => {

@@ -7,9 +7,9 @@ import {
   Stack,
 } from "@mui/material";
 import React from "react";
-import timeHumanReadable from "../../../../utils/timeHumanReadable";
-import highlightWord from "../../../../utils/highlightWord";
-import AvatarStatus from "../../../../components/AvatarStatus";
+import timeHumanReadable from "@/utils/timeHumanReadable";
+import highlightWord from "@/utils/highlightWord";
+import AvatarStatus from "@/components/AvatarStatus";
 import Notice from "./Notice";
 
 function DiscussionItem({

@@ -1,16 +1,16 @@
 import React, { useState, useCallback } from 'react';
-import DragDropContainer from '../../../../../components/DragDropContainer';
+import DragDropContainer from '@/components/DragDropContainer';
 import LocalParticipantView from './LocalParticipantView';
 import Typography from '@mui/material/Typography';
-import ParticipantItemMicButton from '../../nav/participants/content/ParticipantItemMicButton';
+import ParticipantItemMicButton from '@/views/conference/meeting-room/nav/participants/content/ParticipantItemMicButton';
 import IconButton from '@mui/material/IconButton';
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../../redux/conference/conference';
-import useSmallScreen from '../../../../../hooks/useSmallScreen';
+import { updateConferenceData } from '@/redux/conference/conference';
+import useSmallScreen from '@/hooks/useSmallScreen';
 
 const LocalViewWrapper = () => {
   const [showSmallView, setShowSmallView] = useState(false);

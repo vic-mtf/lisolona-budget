@@ -1,6 +1,6 @@
 import React from "react";
-import useSmallScreen from "../../../../../hooks/useSmallScreen";
-import NavDrawer from "../../../../../components/NavDrawer";
+import useSmallScreen from "@/hooks/useSmallScreen";
+import NavDrawer from "@/components/NavDrawer";
 import { useState } from "react";
 import { Box, Fade } from "@mui/material";
 import navigation from "./navigation";

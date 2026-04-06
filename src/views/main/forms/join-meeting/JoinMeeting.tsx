@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { IconButton, Box, Typography, Toolbar, Stack } from '@mui/material';
-import LinearProgressLayer from '../../../../components/LinearProgressLayer';
-import useAxios from '../../../../hooks/useAxios';
-import useToken from '../../../../hooks/useToken';
-import InputCode from '../../../../components/InputCode';
+import LinearProgressLayer from '@/components/LinearProgressLayer';
+import useAxios from '@/hooks/useAxios';
+import useToken from '@/hooks/useToken';
+import InputCode from '@/components/InputCode';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import normalizeObjectKeys from '../../../../utils/normalizeObjectKeys';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 
 const JoinMeeting = React.memo(({ onClose }) => {
   const Authorization = useToken();

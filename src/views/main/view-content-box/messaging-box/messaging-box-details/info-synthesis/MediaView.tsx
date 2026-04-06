@@ -12,8 +12,8 @@ import {
 import { useSelector } from "react-redux";
 import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
 import Stack from "@mui/material/Stack";
-import useMessagingContext from "../../../../../../hooks/useMessagingContext";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
+import useMessagingContext from "@/hooks/useMessagingContext";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 
 const MediaView = React.memo(() => {
   const [{ user }] = useMessagingContext();

@@ -7,7 +7,7 @@ import AgoraActionsWrapper from './agora-actions-wrapper/AgoraActionsWrapper';
 import DeviceAlertPermission from '../setup-room/device-config/DeviceAlertPermission';
 import AgoraProviderClient, {
   RemoteUsersTrackProvider,
-} from '../../../components/AgoraProviderClient';
+} from "@/providers/AgoraProviderClient";
 
 const MeetingRoom = React.forwardRef((_, ref) => {
   return (

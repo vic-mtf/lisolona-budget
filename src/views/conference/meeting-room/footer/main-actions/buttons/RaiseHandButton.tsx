@@ -2,8 +2,8 @@ import FrontHandOutlinedIcon from "@mui/icons-material/FrontHandOutlined";
 import React from "react";
 import ActionButton from "./ActionButton";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
-import useSocket from "../../../../../../hooks/useSocket";
+import { updateConferenceData } from "@/redux/conference/conference";
+import useSocket from "@/hooks/useSocket";
 
 const RaiseHandButton = ({ onClose }) => {
   const state = useSelector(

@@ -1,12 +1,12 @@
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../../../../hooks/useLocalStoreData";
+} from "@/hooks/useLocalStoreData";
 import { Box, Fade, CardActionArea } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import ImageLikeSkeleton from "../../../../../../../../components/ImageLikeSkeleton";
-import useAxios from "../../../../../../../../hooks/useAxios";
-import { useSelectorMessage } from "../../../../../../../../hooks/useMessagingContext";
-import useSmallScreen from "../../../../../../../../hooks/useSmallScreen";
+import ImageLikeSkeleton from "@/components/ImageLikeSkeleton";
+import useAxios from "@/hooks/useAxios";
+import { useSelectorMessage } from "@/hooks/useMessagingContext";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import ImageContentLoading from "./ImageContentLoading";
 
 const ImageContent = ({ content, id, onClick }) => {

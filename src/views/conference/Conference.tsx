@@ -10,7 +10,7 @@ import SetupRoom from './setup-room/SetupRoom';
 import { useSelector } from 'react-redux';
 import ListerStream from './ListerStream';
 import MeetingRoom from './meeting-room/MeetingRoom';
-import ConferenceInboundEventDetector from '../../components/ConferenceInboundEventDetector';
+import ConferenceInboundEventDetector from '@/components/ConferenceInboundEventDetector';
 import EndMeeting from './end-meeting-room/EndMeetingRoom';
 
 const Conference = () => {

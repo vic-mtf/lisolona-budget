@@ -1,6 +1,6 @@
 import { createSlice, isPlainObject } from "@reduxjs/toolkit";
 import deepMerge from "../utils/mergeDeep";
-import { openerData } from "../components/MeetingProvider";
+import { openerData } from "@/providers/MeetingProvider";
 
 //mode: 'none' || 'on' || 'outgoing' || 'incoming' || 'join' || 'prepare' , || guest
 const options = openerData?.origin?.callDetails || null;

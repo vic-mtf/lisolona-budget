@@ -5,15 +5,15 @@ import FormLabel from '@mui/material/FormLabel';
 import Dialog from '@mui/material/Dialog';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
-import InputCode from '../../../components/InputCode';
+import InputCode from '@/components/InputCode';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import messages from './messages';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
-import ScanMeeting from '../../main/forms/scan-meeting/ScanMeeting';
-import useSmallScreen from '../../../hooks/useSmallScreen';
+import ScanMeeting from '@/views/main/forms/scan-meeting/ScanMeeting';
+import useSmallScreen from '@/hooks/useSmallScreen';
 
 const CodeMeeting = ({ code, loading, refetch }) => {
   const navigateTo = useNavigate();

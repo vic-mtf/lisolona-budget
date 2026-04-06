@@ -9,18 +9,18 @@ import Stack from '@mui/material/Stack';
 import AccessTime from '@mui/icons-material/AccessTime';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { alpha, AvatarGroup } from '@mui/material';
-import CountdownTimer from '../../../components/CountdownTimer';
+import CountdownTimer from '@/components/CountdownTimer';
 import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
-import ListAvatar from '../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import { darken, lighten } from '@mui/material/styles';
 import {
   initConferenceData,
   updateConferenceData,
-} from '../../../redux/conference/conference';
+} from '@/redux/conference/conference';
 import { useDispatch, useSelector } from 'react-redux';
-import getFullName from '../../../utils/getFullName';
-import useLocalStoreData from '../../../hooks/useLocalStoreData';
+import getFullName from '@/utils/getFullName';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { useNavigate } from 'react-router-dom';
 

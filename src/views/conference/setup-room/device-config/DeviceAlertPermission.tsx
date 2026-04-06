@@ -10,13 +10,13 @@ import {
   Toolbar,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import useLocalStoreData from "../../../../hooks/useLocalStoreData";
-import getDevices from "../../../../utils/getDevices";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import getDevices from "@/utils/getDevices";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import { streamSegmenterMediaPipe } from "../../../../utils/StreamSegmenterMediaPipe";
-import { noiseSuppressor } from "../../../../utils/NoiseSuppressor";
+import { streamSegmenterMediaPipe } from "@/utils/StreamSegmenterMediaPipe";
+import { noiseSuppressor } from "@/utils/NoiseSuppressor";
 
 const DeviceAlertPermission = () => {
   const [getData, setData] = useLocalStoreData("conference.setup.devices");

@@ -5,6 +5,7 @@ import { createElement } from "react";
 import Main from "@/views/main/Main";
 import RouteErrorBoundary from "@/components/RouteErrorBoundary";
 import Conference from "@/views/conference/Conference";
+import SignInPage from "@/views/signin/SignInPage";
 
 const PUBLIC_URL = import.meta.env.BASE_URL;
 
@@ -36,6 +37,10 @@ const PUBLIC_ROUTES: RouteConfig[] = [
   {
     path: "/conference/:code",
     component: Conference,
+  },
+  {
+    path: "/account/signin/*",
+    component: SignInPage,
   },
 ];
 

@@ -16,7 +16,7 @@ import {
   Legend,
 } from "chart.js";
 import { useSelector } from "react-redux";
-import { MAX_POINTS } from "../../../../../../hooks/events/useNetworkStat";
+import { MAX_POINTS } from "@/hooks/events/useNetworkStat";
 import CellTowerOutlinedIcon from "@mui/icons-material/CellTowerOutlined";
 import NetworkAdvice from "./NetworkAdvice";
 

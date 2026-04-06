@@ -1,5 +1,5 @@
 import { useWatch } from 'react-hook-form';
-import formatDate from '../../../../utils/formatDate';
+import formatDate from '@/utils/formatDate';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 

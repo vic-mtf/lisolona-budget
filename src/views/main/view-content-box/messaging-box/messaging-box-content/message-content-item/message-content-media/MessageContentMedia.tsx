@@ -1,6 +1,6 @@
 import React from "react";
 import { alpha, Box } from "@mui/material";
-import { updateData } from "../../../../../../../redux/data/data";
+import { updateData } from "@/redux/data/data";
 import ImageContent from "./image-content/ImageContent";
 import { useDispatch } from "react-redux";
 import VideoContent from "./video-content/VideoContent";

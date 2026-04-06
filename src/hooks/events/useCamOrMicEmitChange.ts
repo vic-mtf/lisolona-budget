@@ -3,7 +3,7 @@ import useSocket from '../useSocket';
 import { useEffect } from 'react';
 import { isPlainObject } from 'lodash';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import store from '../../redux/store';
+import store from '@/redux/store';
 
 const useCamOrMicEmitChange = () => {
   const notifications = useNotifications();

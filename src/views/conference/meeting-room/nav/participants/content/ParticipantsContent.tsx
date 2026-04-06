@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import ListSubheader from '@mui/material/ListSubheader';
 import ParticipantItem from './ParticipantItem';
-import VirtualList from '../../../../../../components/VirtualList';
+import VirtualList from '@/components/VirtualList';
 import { useMemo } from 'react';
 
 const ParticipantsContent = ({ participants, category }) => {

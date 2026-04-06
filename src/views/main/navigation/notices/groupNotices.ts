@@ -1,5 +1,5 @@
-import store from "../../../../redux/store";
-import getFullName from "../../../../utils/getFullName";
+import store from "@/redux/store";
+import getFullName from "@/utils/getFullName";
 
 export const groupContact = (contacts = []) => {
   const sortedContacts = contacts

@@ -10,20 +10,20 @@ import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import { useDispatch } from "react-redux";
 import LoadingList from "./LoadingList";
 import EmptyContentMessage from "./EmptyContentMessage";
-import { addData } from "../../../../redux/data";
+import { addData } from "@/redux/data";
 import InvitationRequestForm from "./InvitationRequestForm";
 import { useLiveQuery } from "dexie-react-hooks";
 import ContactItem from "../items/ContactItem";
-import db from "../../../../database/db";
-import CustomListItemsGroup from "../../../../components/CustomListItemsGroup";
+// import db from "@/database/db"; // TODO: database removed
+import CustomListItemsGroup from "@/components/CustomListItemsGroup";
 import { escapeRegExp } from "lodash";
 import SearchBar from "../SearchBar";
-import IconButton from "../../../../components/IconButton";
+import IconButton from "@/components/IconButton";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 import PersonAddAlt1OutlinedIcon from "@mui/icons-material/PersonAddAlt1Outlined";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
-import Menu from "../../../../components/Menu";
+import Menu from "@/components/Menu";
 
 export default function ContactList({ navigation }) {
   const [search, setSearch] = useState("");

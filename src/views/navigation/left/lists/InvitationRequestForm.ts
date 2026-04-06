@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import InputController from "../../../../components/InputController";
+import InputController from "@/components/InputController";
 import { LoadingButton } from "@mui/lab";
-import useAxios from "../../../../hooks/useAxios";
+import useAxios from "@/hooks/useAxios";
 import { useSelector } from "react-redux";
-import useCustomSnackbar from "../../../../hooks/useSnackbar";
-import IconButton from "../../../../components/IconButton";
+import useCustomSnackbar from "@/hooks/useSnackbar";
+import IconButton from "@/components/IconButton";
 
 export default function InvitationRequestForm({ open, onClose }) {
   const [externalError, setExternalError] = useState(false);

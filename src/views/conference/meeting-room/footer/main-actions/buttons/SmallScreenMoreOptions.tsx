@@ -13,10 +13,10 @@ import {
 import RaiseHandButton from './RaiseHandButton';
 import ReactionButton from './ReactionButton';
 import PresentationViewButton from './PresentationViewButton';
-import navActions from '../../nav-actions/navActions';
+import navActions from '@/views/conference/meeting-room/footer/nav-actions/navActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
-import SettingButton from '../../../../setup-room/device-config/buttons/SettingButton';
+import { updateConferenceData } from '@/redux/conference/conference';
+import SettingButton from '@/views/conference/setup-room/device-config/buttons/SettingButton';
 
 const SmallScreenMoreOptions = ({ reaction }) => {
   const isOrganizer = useSelector(

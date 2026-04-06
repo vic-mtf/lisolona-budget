@@ -9,16 +9,16 @@ import {
 } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import IconButton from "../../../../components/IconButton";
-import highlightWord from "../../../../utils/highlightWord";
+import IconButton from "@/components/IconButton";
+import highlightWord from "@/utils/highlightWord";
 import { useDispatch, useSelector } from "react-redux";
-import AvatarStatus from "../../../../components/AvatarStatus";
-import openNewWindow from "../../../../utils/openNewWindow";
-import { encrypt } from "../../../../utils/crypt";
-import { setData } from "../../../../redux/meeting";
+import AvatarStatus from "@/components/AvatarStatus";
+import openNewWindow from "@/utils/openNewWindow";
+import { encrypt } from "@/utils/crypt";
+import { setData } from "@/redux/meeting";
 
-import useSocket from "../../../../hooks/useSocket";
-import useLocalStoreData from "../../../../hooks/useLocalStoreData";
+import useSocket from "@/hooks/useSocket";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 
 function ContactItem(props) {
   const {

@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
-import useLocalStoreData from "../../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 import { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import useVisibleVideoSize from "../../../hooks/useVisibleVideoSize";
+import useVisibleVideoSize from "@/hooks/useVisibleVideoSize";
 import DrawingLayer from "./DrawingLayer";
 
 const LocalPresentationViewContent = () => {

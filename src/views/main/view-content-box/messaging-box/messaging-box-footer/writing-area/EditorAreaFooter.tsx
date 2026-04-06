@@ -10,7 +10,7 @@ import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfi
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
 import sendData from "./buttons/sendData";
 import { useDispatch, useSelector } from "react-redux";
-import { updateData } from "../../../../../../redux/data/data";
+import { updateData } from "@/redux/data/data";
 import AddFilesButton from "./footer-buttons/AddFilesButton";
 
 const EditorAreaFooter = React.memo(

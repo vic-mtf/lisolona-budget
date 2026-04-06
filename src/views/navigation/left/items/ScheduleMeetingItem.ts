@@ -11,15 +11,15 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import React from "react";
 import { useSelector } from "react-redux";
-import AvatarStatus from "../../../../components/AvatarStatus";
-import formatDates from "../../../../utils/formatDates";
-import addEmDash from "../../../../utils/addEmDash";
+import AvatarStatus from "@/components/AvatarStatus";
+import formatDates from "@/utils/formatDates";
+import addEmDash from "@/utils/addEmDash";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
-import useHandleJoinMeeting from "../../../main/action/useHandleJoinMeeting";
-import IconButton from "../../../../components/IconButton";
-import CopyLinkButton from "../../../../components/CopyLinkButton";
-// import TimeElapsed from "../../../../components/TimeElapsed";
-import useMeetingUrl from "../../../meeting/conference/navigation/details/useMeetingUrl";
+import useHandleJoinMeeting from "@/views/main/action/useHandleJoinMeeting";
+import IconButton from "@/components/IconButton";
+import CopyLinkButton from "@/components/CopyLinkButton";
+// import TimeElapsed from "@/components/TimeElapsed";
+import useMeetingUrl from "@/views/meeting/conference/navigation/details/useMeetingUrl";
 
 export default function ScheduleMeetingItem({ call }) {
   const {

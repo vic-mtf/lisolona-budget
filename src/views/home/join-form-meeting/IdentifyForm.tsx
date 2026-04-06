@@ -6,17 +6,17 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Fade from '@mui/material/Fade';
 // import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
 // import { useDispatch } from "react-redux";
-// import useHandleJoinMeeting from "../../main/action/useHandleJoinMeeting";
+// import useHandleJoinMeeting from "@/views/main/action/useHandleJoinMeeting";
 import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
 // import { CHANNEL } from "../Home";
-// import { setData } from "../../../redux/meeting";
-import { updateUser } from '../../../redux/user';
-import { updateApp } from '../../../redux/app';
-import { encrypt } from '../../../utils/crypt';
+// import { setData } from "@/redux/meeting";
+import { updateUser } from '@/redux/user';
+import { updateApp } from '@/redux/app';
+import { encrypt } from '@/utils/crypt';
 
 const IdentifyForm = ({ loading, code, refetch }) => {
   const {

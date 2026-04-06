@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useMemo } from "react";
-import getFullName from "../../../../../../utils/getFullName";
+import getFullName from "@/utils/getFullName";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 export default function ReplyMessage({

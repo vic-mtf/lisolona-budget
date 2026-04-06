@@ -2,7 +2,7 @@ import { IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
 
 const ToggleListingButton = ({ waveSurfer, duration, disabled }) => {
   const [isPlaying, setIsPlaying] = useState(false);

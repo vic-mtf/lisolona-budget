@@ -1,12 +1,12 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Slide from '@mui/material/Slide';
-import useSmallScreen from '../../../../hooks/useSmallScreen';
+import useSmallScreen from '@/hooks/useSmallScreen';
 import { useSelector } from 'react-redux';
 import RaiseHandSignal from '../footer/main-actions/RaiseHandSignal';
 import LiveInteractionGridView from './live-interaction-grid-view/LiveInteractionGridView';
 import PresentationView from './presentation-view/PresentationView';
-//import DragDropContainer from "../../../../components/DragDropContainer";
+//import DragDropContainer from "@/components/DragDropContainer";
 import Nav from '../nav/Nav';
 //import LocalParticipantView from "./local-participant-view/LocalParticipantView";
 import LocalViewWrapper from './local-participant-view/LocalViewWrapper';

@@ -12,7 +12,7 @@ import React, { useLayoutEffect, useState } from "react";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import ArrowUpwardOutlinedIcon from "@mui/icons-material/ArrowUpwardOutlined";
 import { useDispatch, useSelector } from "react-redux";
-import { updateData } from "../../../../../../redux/data/data";
+import { updateData } from "@/redux/data/data";
 import AudioRecordingViewer from "./AudioRecordingViewer";
 
 const AudioRecording = () => {

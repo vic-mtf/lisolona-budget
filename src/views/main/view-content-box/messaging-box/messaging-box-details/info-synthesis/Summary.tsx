@@ -1,5 +1,5 @@
 import React from "react";
-import store from "../../../../../../redux/store";
+import store from "@/redux/store";
 import {
   Box,
   List,
@@ -10,16 +10,16 @@ import {
   AvatarGroup,
 } from "@mui/material";
 import { useMemo } from "react";
-import getFullName from "../../../../../../utils/getFullName";
-import { formatTime } from "../../../../../../utils/formatDate";
+import getFullName from "@/utils/getFullName";
+import { formatTime } from "@/utils/formatDate";
 import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
-import ListAvatar from "../../../../../../components/ListAvatar";
-import capStr from "../../../../../../utils/capStr";
-import useMessagingContext from "../../../../../../hooks/useMessagingContext";
+import ListAvatar from "@/components/ListAvatar";
+import capStr from "@/utils/capStr";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 const Summary = React.memo(() => {
   const [{ user, contact }] = useMessagingContext();

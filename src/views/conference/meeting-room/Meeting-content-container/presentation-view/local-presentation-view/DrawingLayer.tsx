@@ -1,15 +1,15 @@
 import React, { useMemo, useRef, useEffect } from 'react';
-import useVisibleVideoSizeForDetachedVideo from '../../../../../../hooks/useVisibleVideoSizeForDetachedVideo';
+import useVisibleVideoSizeForDetachedVideo from '@/hooks/useVisibleVideoSizeForDetachedVideo';
 import Box from '@mui/material/Box';
 import { useSelector } from 'react-redux';
 import annotationStyles, {
   findById,
 } from './local-presentation-view-header/annotationStyles';
 import { Layer, Image } from 'react-konva';
-import DrawingStageProvider from '../../../../../../components/DrawingStageProvider';
+import DrawingStageProvider from "@/providers/DrawingStageProvider";
 import DrawingArea from './DrawingArea';
 import EphemeralPencil from './pencils/EphemeralPencil';
-import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
 
 const DrawingLayer = ({ stageRef }) => {
   const containerRef = useRef(null);

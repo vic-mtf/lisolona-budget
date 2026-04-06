@@ -1,5 +1,5 @@
-import { filterByName, filterByKeyword } from "../../../../utils/filterByKey";
-import getFullName from "../../../../utils/getFullName";
+import { filterByName, filterByKeyword } from "@/utils/filterByKey";
+import getFullName from "@/utils/getFullName";
 
 export default function groupContact(bulkContacts = [], search = "") {
   const contacts = bulkContacts?.filter(

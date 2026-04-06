@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
-import ListAvatar from '../../../../../components/ListAvatar';
-import useLocalStoreData from '../../../../../hooks/useLocalStoreData';
-import getFullName from '../../../../../utils/getFullName';
+import ListAvatar from '@/components/ListAvatar';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
+import getFullName from '@/utils/getFullName';
 import RemoteAudioWaveSpeaker from './RemoteAudioWaveSpeaker';
 import Fade from '@mui/material/Fade';
-import { useVideoTrack } from '../../agora-actions-wrapper/hooks/useRemoteUsersTrack';
+import { useVideoTrack } from '@/views/conference/meeting-room/agora-actions-wrapper/hooks/useRemoteUsersTrack';
 import { useEffect } from 'react';
 
 const RemoteVideoStream = ({ id, show }) => {

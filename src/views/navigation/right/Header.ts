@@ -10,8 +10,8 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
-import IconButton from '../../../components/IconButton';
-import appConfig from '../../../configs/app-config.json';
+import IconButton from '@/components/IconButton';
+import appConfig from '@/configs/app-config.json';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import { useSelector } from 'react-redux';
 

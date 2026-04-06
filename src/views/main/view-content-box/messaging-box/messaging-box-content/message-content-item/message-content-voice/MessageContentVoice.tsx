@@ -1,19 +1,19 @@
 import React from "react";
 import { Box, Divider, Fade } from "@mui/material";
 import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
-import useAxios from "../../../../../../../hooks/useAxios";
+import useAxios from "@/hooks/useAxios";
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../../../hooks/useLocalStoreData";
+} from "@/hooks/useLocalStoreData";
 import VoiceRateButton from "./VoiceRateButton";
-import WaveLoader from "../../../../../../../components/WaveLoader";
+import WaveLoader from "@/components/WaveLoader";
 import { useMemo } from "react";
-import VoiceListenerView from "../../../../../../../components/VoiceListenerView";
+import VoiceListenerView from "@/components/VoiceListenerView";
 import { useLayoutEffect } from "react";
 import UploadingProgressVoiceButton from "./UploadingProgressVoiceButton";
 import useMessagingContext, {
   useSelectorMessage,
-} from "../../../../../../../hooks/useMessagingContext";
+} from "@/hooks/useMessagingContext";
 
 const MessageContentVoice = React.forwardRef(({ content, id }, ref) => {
   const { key } = useSmartKey({

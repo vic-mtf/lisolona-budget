@@ -9,17 +9,17 @@ import {
   alpha,
   Stack,
 } from '@mui/material';
-import ListAvatar from '../../../../../../components/ListAvatar';
-import getFullName from '../../../../../../utils/getFullName';
+import ListAvatar from '@/components/ListAvatar';
+import getFullName from '@/utils/getFullName';
 import MessageContentText from './message-content-text/MessageContentText';
-import { formatTime } from '../../../../../../utils/formatDate';
+import { formatTime } from '@/utils/formatDate';
 import MessageActionItem from './Message-action-Item/MessageActionItem';
-import useSmallScreen from '../../../../../../hooks/useSmallScreen';
-import useLongPress from '../../../../../../hooks/useLongPress';
+import useSmallScreen from '@/hooks/useSmallScreen';
+import useLongPress from '@/hooks/useLongPress';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import MessageContentMedia from './message-content-media/MessageContentMedia';
-import { ItemWrapperFocus } from '../../../../../../components/BlinkWrapper';
+import { ItemWrapperFocus } from '@/components/BlinkWrapper';
 import MessageContentVoice from './message-content-voice/MessageContentVoice';
 import MessageContentDoc from './message-content-doc/MessageContentDoc';
 

@@ -7,7 +7,7 @@ import {
   Slide,
   Fade,
 } from '@mui/material';
-import useSmallScreen from '../../../../../hooks/useSmallScreen';
+import useSmallScreen from '@/hooks/useSmallScreen';
 import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';

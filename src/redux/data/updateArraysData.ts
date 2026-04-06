@@ -1,6 +1,6 @@
-import formatObjectData, { formatUser } from '../../utils/formatObjectData';
-import getFullName from '../../utils/getFullName';
-import deepMerge from '../../utils/mergeDeep';
+import formatObjectData, { formatUser } from '@/utils/formatObjectData';
+import getFullName from '@/utils/getFullName';
+import deepMerge from '@/utils/mergeDeep';
 
 const updateArraysData = (state, actions) => {
   const { data, user } = actions.payload;

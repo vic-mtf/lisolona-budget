@@ -1,5 +1,5 @@
 import React from "react";
-import store from "../../../../../../redux/store";
+import store from "@/redux/store";
 import {
   alpha,
   Avatar,
@@ -12,12 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { updateData } from "../../../../../../redux/data/data";
+import { updateData } from "@/redux/data/data";
 import { useMemo } from "react";
-import ListAvatar from "../../../../../../components/ListAvatar";
-import capStr from "../../../../../../utils/capStr";
+import ListAvatar from "@/components/ListAvatar";
+import capStr from "@/utils/capStr";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import useMessagingContext from "../../../../../../hooks/useMessagingContext";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 const ProfileAvatar = React.memo(() => {
   const [{ user, contact }] = useMessagingContext();

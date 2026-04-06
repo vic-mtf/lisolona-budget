@@ -5,8 +5,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { useSelector, useDispatch } from "react-redux";
 import ListSubheader from "@mui/material/ListSubheader";
 import SpeakerGroupOutlinedIcon from "@mui/icons-material/SpeakerGroupOutlined";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
-import ringtones from "../../../../../../utils/ringtones";
+import { updateConferenceData } from "@/redux/conference/conference";
+import ringtones from "@/utils/ringtones";
 
 const SpeakerList = () => {
   const dispatch = useDispatch();

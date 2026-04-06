@@ -1,14 +1,14 @@
 //import { useJoin } from "agora-rtc-react";
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateConferenceData } from '../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import ringtones from '../../../../utils/ringtones';
+import ringtones from '@/utils/ringtones';
 import ActionWrapper from './ActionWrapper';
-import useSocket from '../../../../hooks/useSocket';
+import useSocket from '@/hooks/useSocket';
 import { useParams } from 'react-router-dom';
 import useCustomJoin from './hooks/useCustomJoin';
-import useLocalStoreData from '../../../../hooks/useLocalStoreData';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
 
 const AgoraActionsWrapper = () => {
   const [, setData] = useLocalStoreData('conference.meeting');

@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { joinOptions, options } from './groupCall';
-import useSmallScreen from '../../../../hooks/useSmallScreen';
+import useSmallScreen from '@/hooks/useSmallScreen';
 import { useMemo } from 'react';
 import { useCallback } from 'react';
 import { useRef } from 'react';

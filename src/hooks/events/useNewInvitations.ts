@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
-import ringtones, { vibrates } from '../../utils/ringtones';
+import store from '@/redux/store';
+import ringtones, { vibrates } from '@/utils/ringtones';
 import { isPlainObject } from 'lodash';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import NoticeSnack from '../../components/NoticeSnack';
-import getFullName from '../../utils/getFullName';
-import { NAVIGATE_EVENT_NAME } from '../../views/main/navigation/NavTab';
+import NoticeSnack from '@/components/NoticeSnack';
+import getFullName from '@/utils/getFullName';
+import { NAVIGATE_EVENT_NAME } from '@/views/main/navigation/NavTab';
 
 const useNewInvitations = () => {
   const socket = useSocket();

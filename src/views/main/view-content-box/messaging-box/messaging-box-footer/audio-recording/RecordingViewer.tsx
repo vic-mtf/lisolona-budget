@@ -6,9 +6,9 @@ import RecordingTimer from "./RecordingTimer";
 import ToggleListingButton from "./ToggleListingButton";
 import ListeningTimer from "./ListeningTimer";
 import ProgressSlider from "./ProgressSlider";
-import ringtones from "../../../../../../utils/ringtones";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
-import useWaveSurferStyle from "../../../../../../hooks/useWaveSurferStyle";
+import ringtones from "@/utils/ringtones";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import useWaveSurferStyle from "@/hooks/useWaveSurferStyle";
 
 const RecordingViewer = ({ setPaused, paused, waveSurferData }) => {
   const [duration, setDuration] = useState(0);

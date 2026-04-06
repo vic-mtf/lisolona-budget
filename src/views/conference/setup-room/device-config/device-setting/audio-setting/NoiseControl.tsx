@@ -5,7 +5,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Switch from "@mui/material/Switch";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 
 const NoiseControl = () => {
   const enabled = useSelector(

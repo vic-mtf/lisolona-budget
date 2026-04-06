@@ -2,7 +2,7 @@ import ViewCarouselOutlinedIcon from '@mui/icons-material/ViewCarouselOutlined';
 import React from 'react';
 import ActionButton from './ActionButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 
 const PresentationViewButton = ({ onClose }) => {
   const isPresentationView = useSelector(

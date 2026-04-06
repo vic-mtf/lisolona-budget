@@ -1,9 +1,9 @@
-import store from '../../../../redux/store';
-import { formatTime } from '../../../../utils/formatDate';
-import JoinMeeting from '../../forms/join-meeting/JoinMeeting';
-import ScanMeeting from '../../forms/scan-meeting/ScanMeeting';
-import InstantMeeting from '../../forms/instant-meeting/InstantMeeting';
-import ScheduledMeeting from '../../forms/scheduled-meeting/ScheduledMeeting';
+import store from '@/redux/store';
+import { formatTime } from '@/utils/formatDate';
+import JoinMeeting from '@/views/main/forms/join-meeting/JoinMeeting';
+import ScanMeeting from '@/views/main/forms/scan-meeting/ScanMeeting';
+import InstantMeeting from '@/views/main/forms/instant-meeting/InstantMeeting';
+import ScheduledMeeting from '@/views/main/forms/scheduled-meeting/ScheduledMeeting';
 import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import CastOutlinedIcon from '@mui/icons-material/CastOutlined';
@@ -12,7 +12,7 @@ import PasswordOutlinedIcon from '@mui/icons-material/PasswordOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import OnlinePredictionOutlinedIcon from '@mui/icons-material/OnlinePredictionOutlined';
 import CallSplitOutlinedIcon from '@mui/icons-material/CallSplitOutlined';
-import { startNewCall } from '../../../../utils/handleStartNewCall';
+import { startNewCall } from '@/utils/handleStartNewCall';
 
 const groupCall = (calls = [], type = 'all') => {
   const groupedCalls = [];

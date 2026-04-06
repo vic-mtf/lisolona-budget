@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import SpeakingWave from '../../../../../components/SpeakingWave';
-import useAudioVolume from '../../../../../hooks/useAudioVolume';
-import { noiseSuppressor } from '../../../../../utils/NoiseSuppressor';
-import { generateColorsFromId } from '../../../../../utils/genColorById';
+import SpeakingWave from '@/components/SpeakingWave';
+import useAudioVolume from '@/hooks/useAudioVolume';
+import { noiseSuppressor } from '@/utils/NoiseSuppressor';
+import { generateColorsFromId } from '@/utils/genColorById';
 import { useSelector } from 'react-redux';
 
 const AudioWaveSpeaker = ({ id }) => {

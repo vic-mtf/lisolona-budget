@@ -7,7 +7,7 @@ import {
   Divider,
 } from "@mui/material";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import formatTime from "../../../../../../../utils/formatTime";
+import formatTime from "@/utils/formatTime";
 
 const VideoThumbnail = React.memo(
   React.forwardRef(({ url, name }, ref) => {

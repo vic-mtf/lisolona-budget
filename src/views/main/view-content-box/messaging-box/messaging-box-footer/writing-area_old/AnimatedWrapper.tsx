@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Divider } from "@mui/material";
 import Slide from "./Slide";
 import Fade from "./Fade";
-import store from "../../../../../redux/store";
+import store from "@/views/redux/store";
 
 const AnimatedWrapper = React.memo(
   ({

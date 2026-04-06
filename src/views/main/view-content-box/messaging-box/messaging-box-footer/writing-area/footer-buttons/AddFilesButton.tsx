@@ -9,11 +9,11 @@ import getFile, {
   supportedVideoExtensions,
   supportedDocumentExtensions,
   getName,
-} from "../../../../../../../utils/getFile";
-import store from "../../../../../../../redux/store";
-import { updateData } from "../../../../../../../redux/data/data";
-import useLocalStoreData from "../../../../../../../hooks/useLocalStoreData";
-import getRandomId from "../../../../../../../utils/getRandomId";
+} from "@/utils/getFile";
+import store from "@/redux/store";
+import { updateData } from "@/redux/data/data";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import getRandomId from "@/utils/getRandomId";
 
 const AddFilesButton = ({ disabled }) => {
   const notifications = useNotifications();

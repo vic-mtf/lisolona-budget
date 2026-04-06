@@ -1,4 +1,4 @@
-// import ChatHeader from "../../../../main/chat-box/chat-header/ChatHeader";
+// import ChatHeader from "@/../../../main/chat-box/chat-header/ChatHeader";
 import {
   useCallback,
   useEffect,
@@ -65,4 +65,5 @@ export default function CopyLinkButton({ text, title, url, render }) {
     </>
   );
 }
-
+
+

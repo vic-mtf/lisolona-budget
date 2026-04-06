@@ -1,8 +1,8 @@
 import { Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import DiscussionList from '../../navigation/discussions/DiscussionList';
+import DiscussionList from '@/views/main/navigation/discussions/DiscussionList';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
-import { startNewCall } from '../../../../utils/handleStartNewCall';
+import { startNewCall } from '@/utils/handleStartNewCall';
 
 export default function InstantMeeting({ onClose }) {
   const handleCall = async (_, user) => {

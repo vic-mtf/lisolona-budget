@@ -4,18 +4,18 @@ import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import MicOutlinedIcon from "@mui/icons-material/MicOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { useDispatch } from "react-redux";
-import { updateData } from "../../../../../../redux/data/data";
+import { updateData } from "@/redux/data/data";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
-import store from "../../../../../../redux/store";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import store from "@/redux/store";
 import { useMemo } from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
-import LiveWaveformRecorder from "../../../../../../components/LiveWaveformRecorder";
+import LiveWaveformRecorder from "@/components/LiveWaveformRecorder";
 import AudioRecordingIndicator from "./AudioRecordingIndicator";
-import VoiceListenerView from "../../../../../../components/VoiceListenerView";
-import ringtones from "../../../../../../utils/ringtones";
-import getRandomId from "../../../../../../utils/getRandomId";
+import VoiceListenerView from "@/components/VoiceListenerView";
+import ringtones from "@/utils/ringtones";
+import getRandomId from "@/utils/getRandomId";
 
 const AudioRecordingViewer = () => {
   const [stream, setStream] = useState();

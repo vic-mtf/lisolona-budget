@@ -6,7 +6,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import IconButton from '@mui/material/IconButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 import RemoteUserInfo from './RemoteUserInfo';
 import LocalUserInfo from './LocalUserInfo';
 

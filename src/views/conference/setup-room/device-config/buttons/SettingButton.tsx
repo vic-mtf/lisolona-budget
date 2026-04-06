@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Tooltip, Dialog } from "@mui/material";
-import useSmallScreen from "../../../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import { useCallback } from "react";
 import { CustomIconButton } from "../SplitButton";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";

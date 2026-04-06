@@ -4,7 +4,7 @@ import { Box, CircularProgress, Fade } from "@mui/material";
 import VideoControls from "./video-controls/VideoControls";
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../hooks/useLocalStoreData";
+} from "@/hooks/useLocalStoreData";
 
 const VideoContent = ({ content, id }) => {
   const { key } = useSmartKey({

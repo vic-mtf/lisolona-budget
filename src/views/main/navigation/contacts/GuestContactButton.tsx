@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Tooltip, IconButton, Dialog } from "@mui/material";
-import GuestContact from "../../forms/gust-contact/GuestContact";
+import GuestContact from "@/views/main/forms/gust-contact/GuestContact";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
-import useSmallScreen from "../../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 
 const GuestContactButton = React.memo(() => {
   const [open, setOpen] = useState(false);

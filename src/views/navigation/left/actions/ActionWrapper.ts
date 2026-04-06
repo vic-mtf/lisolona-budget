@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useSocket from "../../../../hooks/useSocket";
-import signal_audio from "../../../../assets/Eventually-Sms.webm";
-import setData from "../../../../utils/setData";
-import { setStatus } from "../../../../redux/status";
-import useAudio from "../../../../hooks/useAudio";
+import useSocket from "@/hooks/useSocket";
+import signal_audio from "@/assets/Eventually-Sms.webm";
+import setData from "@/utils/setData";
+import { setStatus } from "@/redux/status";
+import useAudio from "@/hooks/useAudio";
 import JoinMeetingByCode from "./JoinMeetingByCode";
-import db from "../../../../database/db";
+// import db from "@/database/db"; // TODO: database removed
 
 export default function ActionWrapper() {
   const targetId = useSelector((store) => store.data?.targetId);

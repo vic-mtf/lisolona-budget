@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import openSignIn from '../../../utils/openSignIn';
+import openSignIn from '@/utils/openSignIn';
 import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
 
 export default function Panel() {

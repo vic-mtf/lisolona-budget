@@ -4,8 +4,8 @@ import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
 import AddReactionOutlinedIcon from "@mui/icons-material/AddReactionOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import store from "../../../../../../../redux/store";
-import { updateData } from "../../../../../../../redux/data/data";
+import store from "@/redux/store";
+import { updateData } from "@/redux/data/data";
 
 const messageActions = [
   {

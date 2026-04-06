@@ -1,4 +1,4 @@
-import ringtones from "../../../../../utils/ringtones";
+import ringtones from "@/utils/ringtones";
 import { Tooltip } from "@mui/material";
 import { CustomIconButton } from "../SplitButton";
 import SpeakerOutlinedIcon from "@mui/icons-material/SpeakerOutlined";

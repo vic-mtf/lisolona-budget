@@ -2,11 +2,11 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import ListAvatar from '../../../../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 // import { useSelector } from 'react-redux';
-import getFullName from '../../../../../../utils/getFullName';
+import getFullName from '@/utils/getFullName';
 import { useEffect } from 'react';
-import { useScreenTrack } from '../../../agora-actions-wrapper/hooks/useRemoteUsersTrack';
+import { useScreenTrack } from '@/views/conference/meeting-room/agora-actions-wrapper/hooks/useRemoteUsersTrack';
 
 const RemoteSmallViewItem = ({ user, index, onSelectView, selected }) => {
   const videoRef = useRef(null);

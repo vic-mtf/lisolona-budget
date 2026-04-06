@@ -1,18 +1,18 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import MicButton from '../../../setup-room/device-config/buttons/MicButton';
-import CameraButton from '../../../setup-room/device-config/buttons/CameraButton';
+import MicButton from '@/views/conference/setup-room/device-config/buttons/MicButton';
+import CameraButton from '@/views/conference/setup-room/device-config/buttons/CameraButton';
 import HangUpButton from './buttons/HangUpButton';
 import RaiseHandButton from './buttons/RaiseHandButton';
 import ReactionButton from './buttons/ReactionButton';
 import Divider from '@mui/material/Divider';
 import ShareScreenButton from './buttons/ShareScreenButton';
 import PresentationViewButton from './buttons/PresentationViewButton';
-import useSmallScreen from '../../../../../hooks/useSmallScreen';
+import useSmallScreen from '@/hooks/useSmallScreen';
 import SmallScreenMoreOptions from './buttons/SmallScreenMoreOptions';
-import SettingButton from '../../../setup-room/device-config/buttons/SettingButton';
+import SettingButton from '@/views/conference/setup-room/device-config/buttons/SettingButton';
 import { useSelector } from 'react-redux';
-import useClientCallAuth from '../../../../../hooks/useClientCallAuth';
+import useClientCallAuth from '@/hooks/useClientCallAuth';
 
 const MainActions = () => {
   const matches = useSmallScreen();

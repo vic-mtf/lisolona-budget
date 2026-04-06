@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { canvasStreamComposer } from '../../../../../utils/CanvasStreamComposer';
+import { canvasStreamComposer } from '@/utils/CanvasStreamComposer';
 import { useRef } from 'react';
 import { useRTCScreenShareClient } from 'agora-rtc-react';
-import store from '../../../../../redux/store';
+import store from '@/redux/store';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { useState } from 'react';
 import AgoraRTC from 'agora-rtc-react';

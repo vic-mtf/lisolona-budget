@@ -1,8 +1,8 @@
 import AgoraRTC, { useRTCClient } from 'agora-rtc-react';
 import { useEffect } from 'react';
-import { streamSegmenterMediaPipe } from '../../../../../utils/StreamSegmenterMediaPipe';
+import { streamSegmenterMediaPipe } from '@/utils/StreamSegmenterMediaPipe';
 import { useSelector } from 'react-redux';
-import useSocket from '../../../../../hooks/useSocket';
+import useSocket from '@/hooks/useSocket';
 
 let publishing = false;
 

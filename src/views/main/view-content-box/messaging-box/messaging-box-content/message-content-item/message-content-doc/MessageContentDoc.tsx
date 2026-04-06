@@ -1,16 +1,16 @@
 import React, { useState, useLayoutEffect, useMemo } from "react";
 import { Box, Typography, Avatar, Tooltip, IconButton } from "@mui/material";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import humanReadableSize from "../../../../../../../utils/humanReadableSize";
+import humanReadableSize from "@/utils/humanReadableSize";
 import * as PdfLib from "pdfjs-dist";
 import * as workerSrc from "pdfjs-dist/build/pdf.worker.min.js";
-import iconDoc from "../../../../../../main/view-content-box/messaging-box/messaging-box-footer/files-thumbnail-view/doc-thumbnail/iconDoc";
-import { useSelectorMessage } from "../../../../../../../hooks/useMessagingContext";
+import iconDoc from "@/views/main/view-content-box/messaging-box/messaging-box-footer/files-thumbnail-view/doc-thumbnail/iconDoc";
+import { useSelectorMessage } from "@/hooks/useMessagingContext";
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../../../hooks/useLocalStoreData";
-import { getExtension } from "../../../../../../../utils/getFile";
-import { axios } from "../../../../../../../hooks/useAxios";
+} from "@/hooks/useLocalStoreData";
+import { getExtension } from "@/utils/getFile";
+import { axios } from "@/hooks/useAxios";
 import DownloadButton from "./DownloadButton";
 import { useEffect } from "react";
 

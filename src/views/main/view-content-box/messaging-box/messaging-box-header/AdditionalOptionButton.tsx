@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useMemo } from "react";
 import { createElement } from "react";
 import { useSelector } from "react-redux";
-import useSmallScreen from "../../../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import {
   contacts,
   fullOptions,

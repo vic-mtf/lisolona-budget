@@ -1,5 +1,5 @@
 import { EditorState, Modifier } from "draft-js";
-import { getCharacterFromCodeString } from "../../emoji-picker/EmojiPicker";
+import { getCharacterFromCodeString } from "@/views/main/view-content-box/messaging-box/messaging-box-footer/emoji-picker/EmojiPicker";
 
 export default function addEmoji(editorState, emojiData) {
     const contentState = editorState.getCurrentContent();

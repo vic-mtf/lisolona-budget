@@ -4,13 +4,13 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { Badge, Box, ListItem, ListItemButton, Stack } from "@mui/material";
-import ListAvatar from "../../../../components/ListAvatar";
-import { formatTime } from "../../../../utils/formatDate";
+import ListAvatar from "@/components/ListAvatar";
+import { formatTime } from "@/utils/formatDate";
 import MessageItemContent from "./MessageItemContent";
-import useLongPress from "../../../../hooks/useLongPress";
+import useLongPress from "@/hooks/useLongPress";
 import { useMemo } from "react";
-import AvatarStatus from "../../../../components/AvatarStatus";
-import HighlightWord from "../../../../components/HighlightWord";
+import AvatarStatus from "@/components/AvatarStatus";
+import HighlightWord from "@/components/HighlightWord";
 import PushPinIcon from "@mui/icons-material/PushPin";
 
 const DiscussionItem = ({

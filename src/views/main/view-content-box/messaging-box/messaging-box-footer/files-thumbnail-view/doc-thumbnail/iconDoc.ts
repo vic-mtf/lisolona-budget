@@ -1,10 +1,10 @@
-import _pdf from "../../../../../../../assets/pdf.png";
-import _ppt from "../../../../../../../assets/power-point.png";
-import _xls from "../../../../../../../assets/exceller.png";
-import _zip from "../../../../../../../assets/zipper.png";
-import _doc from "../../../../../../../assets/mot.png";
-import _odt from "../../../../../../../assets/odt.png";
-import _txt from "../../../../../../../assets/sms.png";
+import _pdf from "@/assets/pdf.png";
+import _ppt from "@/assets/power-point.png";
+import _xls from "@/assets/exceller.png";
+import _zip from "@/assets/zipper.png";
+import _doc from "@/assets/mot.png";
+import _odt from "@/assets/odt.png";
+import _txt from "@/assets/sms.png";
 
 const iconDoc = {
   pdf: _pdf,

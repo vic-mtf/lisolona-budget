@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { useRTCClient } from "agora-rtc-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { generateColorsFromId } from "../../../../../utils/genColorById";
+import { generateColorsFromId } from "@/utils/genColorById";
 
 const VolumeIndicator = ({ id }) => {
   const client = useRTCClient();

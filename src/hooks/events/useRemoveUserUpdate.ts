@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useSocket from "../useSocket";
-import normalizeObjectKeys from "../../utils/normalizeObjectKeys";
-import store from "../../redux/store";
+import normalizeObjectKeys from "@/utils/normalizeObjectKeys";
+import store from "@/redux/store";
 
 const useRemoteUserUpdate = () => {
   const socket = useSocket();

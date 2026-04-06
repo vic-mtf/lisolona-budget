@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, Paper } from "@mui/material";
 import { isNumber } from "lodash";
 import WritingArea from "./writing-area/WritingArea";
-import { updateArraysData, updateData } from "../../../../../redux/data/data";
-import useSocket from "../../../../../hooks/useSocket";
+import { updateArraysData, updateData } from "@/redux/data/data";
+import useSocket from "@/hooks/useSocket";
 import AudioRecording from "./audio-recording/AudioRecording";
-import useSendFiles from "../../../../../hooks/useSendFiles";
-import getRandomId from "../../../../../utils/getRandomId";
-import useMessagingContext from "../../../../../hooks/useMessagingContext";
+import useSendFiles from "@/hooks/useSendFiles";
+import getRandomId from "@/utils/getRandomId";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 export default function MessagingBoxFooter() {
   const socket = useSocket();

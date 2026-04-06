@@ -1,16 +1,16 @@
 import { Divider, Toolbar, List, Checkbox, Box as MuiBox } from "@mui/material";
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addData } from "../../../../../redux/data";
-import useScrollEnd from "../../../../../hooks/useScrollEnd";
-import SearchBar from "../../SearchBar";
+import { addData } from "@/redux/data";
+import useScrollEnd from "@/hooks/useScrollEnd";
+import SearchBar from "@/views/navigation/left/SearchBar";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
-import IconButton from "../../../../../components/IconButton";
+import IconButton from "@/components/IconButton";
 import LoadingList from "../LoadingList";
 import EmptyContentMessage from "../EmptyContentMessage";
-import useShadow from "../../../../../hooks/useShadow";
-import ContactItem from "../../items/ContactItem";
-import db from "../../../../../database/db";
+import useShadow from "@/hooks/useShadow";
+import ContactItem from "@/views/navigation/left/items/ContactItem";
+// import db from "@/database/db"; // TODO: database removed
 import { useLiveQuery } from "dexie-react-hooks";
 import { escapeRegExp } from "lodash";
 

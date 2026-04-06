@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import CopyLinkButton from "../../../../components/CopyLinkButton";
+import CopyLinkButton from "@/components/CopyLinkButton";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import { IconButton, Tooltip } from "@mui/material";

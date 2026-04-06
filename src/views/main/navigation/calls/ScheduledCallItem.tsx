@@ -8,11 +8,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import ListAvatar from "../../../../components/ListAvatar";
-import getFullName from "../../../../utils/getFullName";
+import ListAvatar from "@/components/ListAvatar";
+import getFullName from "@/utils/getFullName";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import ScheduledActionButtonItem from "./ScheduledActionButtonItem";
-import formatDate, { calculateDuration } from "../../../../utils/formatDate";
+import formatDate, { calculateDuration } from "@/utils/formatDate";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 
 const ScheduledCallItem = ({

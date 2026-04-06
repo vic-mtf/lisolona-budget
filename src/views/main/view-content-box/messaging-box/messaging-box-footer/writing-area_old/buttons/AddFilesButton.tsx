@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import IconButton from '../../../../../../components/IconButton';
+import IconButton from '@/views/components/IconButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { modifyData } from '../../../../../../redux/data';
-import fileExtensionBase from '../../../../../../utils/fileExtensionBase';
-import getFile from '../../../../../../utils/getFile';
+import { modifyData } from '@/views/redux/data';
+import fileExtensionBase from '@/views/utils/fileExtensionBase';
+import getFile from '@/views/utils/getFile';
 import { uniqWith } from 'lodash';
 
 

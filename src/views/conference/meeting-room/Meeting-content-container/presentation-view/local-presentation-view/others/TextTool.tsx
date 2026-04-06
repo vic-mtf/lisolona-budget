@@ -1,7 +1,7 @@
 import { Text, Transformer } from 'react-konva';
 import { Html } from 'react-konva-utils';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import useDrawingStageRef from '../../../../../../../hooks/useDrawingStageRef';
+import useDrawingStageRef from '@/hooks/useDrawingStageRef';
 import TextEditor from './TextEditor';
 import { useSelector } from 'react-redux';
 

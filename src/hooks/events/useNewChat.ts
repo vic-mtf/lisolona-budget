@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useSocket from "../useSocket";
-import store from "../../redux/store";
-import { updateArraysData } from "../../redux/data/data";
+import store from "@/redux/store";
+import { updateArraysData } from "@/redux/data/data";
 
 const useNewChat = () => {
   const socket = useSocket();

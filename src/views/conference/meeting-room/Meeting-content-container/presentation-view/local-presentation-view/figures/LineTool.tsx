@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
-import useDrawingStageRef from '../../../../../../../hooks/useDrawingStageRef';
+import useDrawingStageRef from '@/hooks/useDrawingStageRef';
 import { useSelector } from 'react-redux';
 
 const LineTool = ({ data, onErase, onUpdate }) => {

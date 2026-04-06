@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import DiscussionList from '../../navigation/discussions/DiscussionList';
+import DiscussionList from '@/views/main/navigation/discussions/DiscussionList';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import { useState, useCallback, useMemo } from 'react';
@@ -15,13 +15,13 @@ import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import ScheduledMeetingForm from './ScheduledMeetingForm';
 import { useForm, FormProvider } from 'react-hook-form';
 import dayjs from 'dayjs';
-import LinearProgressLayer from '../../../../components/LinearProgressLayer';
-import useToken from '../../../../hooks/useToken';
-import useAxios from '../../../../hooks/useAxios';
+import LinearProgressLayer from '@/components/LinearProgressLayer';
+import useToken from '@/hooks/useToken';
+import useAxios from '@/hooks/useAxios';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { useDispatch } from 'react-redux';
-import store from '../../../../redux/store';
-import { updateArraysData } from '../../../../redux/data/data';
+import store from '@/redux/store';
+import { updateArraysData } from '@/redux/data/data';
 
 const ScheduledMeeting = ({ onClose, room }) => {
   const [data, setData] = useState(room);

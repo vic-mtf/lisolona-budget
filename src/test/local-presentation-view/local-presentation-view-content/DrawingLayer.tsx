@@ -5,7 +5,7 @@ import annotationStyles, {
   findById,
 } from "../local-presentation-view-header/annotationStyles";
 import { Layer } from "react-konva";
-import DrawingStageProvider from "../../../components/DrawingStageProvider";
+import DrawingStageProvider from "@/providers/DrawingStageProvider";
 import DrawingArea from "./DrawingArea";
 import EphemeralPencil from "./pencils/EphemeralPencil";
 

@@ -1,9 +1,9 @@
 import { Stack, Box } from "@mui/material";
 import NavTab from "./NavTab";
 import NavigationContent from "./NavigationContent";
-import NavDrawer from "../../../components/NavDrawer";
+import NavDrawer from "@/components/NavDrawer";
 import { useSelector } from "react-redux";
-import useSmallScreen from "../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import OutsideVoiceViewer from "./OutsideVoiceViewer";
 
 export default function Navigation() {

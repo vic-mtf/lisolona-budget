@@ -7,18 +7,18 @@ import {
   MenuItem,
 } from "@mui/material";
 import React from "react";
-import IconButton from "../../../../components/IconButton";
+import IconButton from "@/components/IconButton";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import AvatarProfile from "./AvatarProfile";
 import { useDispatch, useSelector } from "react-redux";
-import CustomSkeleton from "../../../../components/Skeleton";
-import { addData } from "../../../../redux/data";
+import CustomSkeleton from "@/components/Skeleton";
+import { addData } from "@/redux/data";
 import ShortcutAvatar from "./ShortcutAvatar";
 import { useLiveQuery } from "dexie-react-hooks";
 import ContactListForm from "../lists/contact-list-form/ContactListForm";
-import db from "../../../../database/db";
+// import db from "@/database/db"; // TODO: database removed
 
 export default function ShortcutOptions() {
   const groups = useLiveQuery(

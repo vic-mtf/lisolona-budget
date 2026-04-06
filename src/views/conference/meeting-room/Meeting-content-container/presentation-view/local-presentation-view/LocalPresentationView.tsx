@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
-// import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
+// import useLocalStoreData from '@/hooks/useLocalStoreData';
 import React, { useRef, useEffect } from 'react';
 import DrawingLayer from './DrawingLayer';
-import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
+import { canvasStreamComposer } from '@/utils/CanvasStreamComposer';
 
 const LocalPresentationView = () => {
   const stageRef = useRef();

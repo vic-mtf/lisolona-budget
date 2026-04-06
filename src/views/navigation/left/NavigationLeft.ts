@@ -1,6 +1,6 @@
 import Navigation from "../Navigation";
 import { Divider, Stack, useMediaQuery, Box as MuiBox } from "@mui/material";
-import Box from "../../../components/Box";
+import Box from "@/components/Box";
 // import Header from "./Header";
 // import ShortcutOptions from "./shortcut/ShortcutOptions";
 import { useCallback, useEffect, useState } from "react";
@@ -9,9 +9,9 @@ import { useCallback, useEffect, useState } from "react";
 // import CallContactsList from "./lists/CallContactsList";
 // import NotificationList from "./lists/NotificationList";
 import NetworkProblemChecker from "./NetworkProblemChecker";
-import ToggleComponent from "../../../components/ToggleComponent";
-import store from "../../../redux/store";
-import NavDrawer from "../../../components/NavDrawer";
+import ToggleComponent from "@/components/ToggleComponent";
+import store from "@/redux/store";
+import NavDrawer from "@/components/NavDrawer";
 
 export default function NavigationLeft() {
   const [navigation, setNavigation] = useState(0);

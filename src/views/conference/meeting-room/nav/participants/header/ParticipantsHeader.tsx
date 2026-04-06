@@ -4,12 +4,12 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { useDispatch } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
-import InputSearch from "../../../../../../components/InputSearch";
+import { updateConferenceData } from "@/redux/conference/conference";
+import InputSearch from "@/components/InputSearch";
 import FilterCategoryButtons from "./FilterCategoryButtons";
 import { useMemo, useState } from "react";
 import { useEffect } from "react";
-import store from "../../../../../../redux/store";
+import store from "@/redux/store";
 
 const ParticipantsHeader = ({
   category,

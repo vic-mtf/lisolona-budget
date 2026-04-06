@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from "react";
 import { Box, Typography, Avatar, Tooltip } from "@mui/material";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import humanReadableSize from "../../../../../../../utils/humanReadableSize";
+import humanReadableSize from "@/utils/humanReadableSize";
 import * as PdfLib from "pdfjs-dist";
 import * as workerSrc from "pdfjs-dist/build/pdf.worker.min.js";
 import iconDoc from "./iconDoc";

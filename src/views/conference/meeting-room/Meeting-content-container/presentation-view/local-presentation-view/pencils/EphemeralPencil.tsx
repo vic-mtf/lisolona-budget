@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Line } from 'react-konva';
-import useDrawingStageRef from '../../../../../../../hooks/useDrawingStageRef';
+import useDrawingStageRef from '@/hooks/useDrawingStageRef';
 import { useSelector } from 'react-redux';
 import { useCallback } from 'react';
 

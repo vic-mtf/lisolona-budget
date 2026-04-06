@@ -8,7 +8,7 @@ import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 import { htmlToText } from "html-to-text";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
-import getFullName from "../../../../utils/getFullName";
+import getFullName from "@/utils/getFullName";
 
 const MessageItemContent = React.memo(({ message, type }) => {
   const id = useSelector((store) => store.user.id);
@@ -55,7 +55,8 @@ const MessageItemContent = React.memo(({ message, type }) => {
     </>
   );
 });
-
+
+
 
 MessageItemContent.displayName = "MessageItemContent";
 

@@ -3,7 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { fr } from 'date-fns/locale/fr';
-import scrollBarSx from '../../../../utils/scrollBarSx';
+import scrollBarSx from '@/utils/scrollBarSx';
 import { FormLabel } from '@mui/material';
 
 const DateCalendarMeeting = React.forwardRef(

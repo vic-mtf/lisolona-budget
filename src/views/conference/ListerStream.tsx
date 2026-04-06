@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { streamSegmenterMediaPipe } from "../../utils/StreamSegmenterMediaPipe";
-import { noiseSuppressor } from "../../utils/NoiseSuppressor";
+import { streamSegmenterMediaPipe } from "@/utils/StreamSegmenterMediaPipe";
+import { noiseSuppressor } from "@/utils/NoiseSuppressor";
 
 const ListerStream = () => {
   const filter = useSelector(

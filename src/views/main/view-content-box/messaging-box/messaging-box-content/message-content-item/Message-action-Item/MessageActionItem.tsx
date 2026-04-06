@@ -3,7 +3,7 @@ import { Box, IconButton, Paper, Stack, Tooltip } from "@mui/material";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import messageActions from "./messageActions";
 import { useSelector } from "react-redux";
-import useMessagingContext from "../../../../../../../hooks/useMessagingContext";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 const MessageActionItem = React.memo(({ message }) => {
   const messagingData = useMessagingContext();

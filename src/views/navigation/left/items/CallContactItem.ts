@@ -10,20 +10,20 @@ import {
     useTheme
 } from "@mui/material";
 import React, { useMemo } from "react";
-import Avatar from "../../../../components/Avatar";
+import Avatar from "@/components/Avatar";
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import PhoneMissedOutlinedIcon from '@mui/icons-material/PhoneMissedOutlined';
 import MissedVideoCallOutlinedIcon from '@mui/icons-material/MissedVideoCallOutlined';
 import PhoneCallbackOutlinedIcon from '@mui/icons-material/PhoneCallbackOutlined';
 import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined';
-import capStr from '../../../../utils/capStr';
-import IconButton from "../../../../components/IconButton";
-import Typography from "../../../../components/Typography";
-import CustomBadge from "../../../../components/CustomBadge";
-import CustomAvatarGroup from "../../../../components/CustomAvatarGroup";
-import AvatarStatus from "../../../../components/AvatarStatus";
-import timeHumanReadable from "../../../../utils/timeHumanReadable";
+import capStr from '@/utils/capStr';
+import IconButton from "@/components/IconButton";
+import Typography from "@/components/Typography";
+import CustomBadge from "@/components/CustomBadge";
+import CustomAvatarGroup from "@/components/CustomAvatarGroup";
+import AvatarStatus from "@/components/AvatarStatus";
+import timeHumanReadable from "@/utils/timeHumanReadable";
 import { isPlainObject } from "lodash";
 
 // type = incoming | outgoing | missed

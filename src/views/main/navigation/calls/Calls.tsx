@@ -7,12 +7,12 @@ import FilterCallButton from './FilterCallButton';
 import RunningCallItem from './RunningCallItem';
 import ScheduledCallItem from './ScheduledCallItem';
 import CallItem from './CallItem';
-import toggleFullscreen from '../../../../utils/toggleFullscreen';
-import VirtualList from '../../../../components/VirtualList';
-import { updateData } from '../../../../redux/data/data';
+import toggleFullscreen from '@/utils/toggleFullscreen';
+import VirtualList from '@/components/VirtualList';
+import { updateData } from '@/redux/data/data';
 import CallDetailsView from './CallDetailsView';
-import { ItemWrapperFocus } from '../../../../components/BlinkWrapper';
-import { updateConferenceData } from '../../../../redux/conference/conference';
+import { ItemWrapperFocus } from '@/components/BlinkWrapper';
+import { updateConferenceData } from '@/redux/conference/conference';
 
 export default function Calls() {
   const bulkCalls = useSelector((store) => store.data.app.calls);

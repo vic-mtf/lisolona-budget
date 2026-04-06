@@ -1,8 +1,8 @@
-import _image_1 from "../../../assets/discussion.png";
-import _image_2 from "../../../assets/service-cloud.png";
-import _image_3 from "../../../assets/meeting.png";
-import _image_4 from "../../../assets/videoconference.png";
-import _image_5 from "../../../assets/online-meeting.png";
+import _image_1 from "@/assets/discussion.png";
+import _image_2 from "@/assets/service-cloud.png";
+import _image_3 from "@/assets/meeting.png";
+import _image_4 from "@/assets/videoconference.png";
+import _image_5 from "@/assets/online-meeting.png";
 
 const pubs = [
   {

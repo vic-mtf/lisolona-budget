@@ -3,9 +3,9 @@ import { useMemo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Presentation from './presentation/Presentation';
 import MessagingBox from './messaging-box/MessagingBox';
-import useSmallScreen from '../../../hooks/useSmallScreen';
+import useSmallScreen from '@/hooks/useSmallScreen';
 import MessagingBoxDetails from './messaging-box/messaging-box-details/MessagingBoxDetails';
-import { drawerWidth } from '../../../components/MainContent';
+import { drawerWidth } from '@/components/MainContent';
 import MessagingProvider from './messaging-box/MessagingBoxProvider';
 
 export default function Views() {

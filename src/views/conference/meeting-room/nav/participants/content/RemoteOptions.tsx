@@ -16,9 +16,9 @@ import { useLocation } from 'react-router-dom';
 // import PinInvokeOutlinedIcon from '@mui/icons-material/PinInvokeOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import ThreePOutlinedIcon from '@mui/icons-material/ThreePOutlined';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
-import useSocket from '../../../../../../hooks/useSocket';
-import getFullName from '../../../../../../utils/getFullName';
+import { updateConferenceData } from '@/redux/conference/conference';
+import useSocket from '@/hooks/useSocket';
+import getFullName from '@/utils/getFullName';
 import { useMemo } from 'react';
 
 const RemoteOptions = ({ remoteId, onClose }) => {

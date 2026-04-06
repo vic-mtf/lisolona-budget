@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import CallToActionOutlinedIcon from "@mui/icons-material/CallToActionOutlined";
-import IconButton from "../../../../../../components/IconButton";
+import IconButton from "@/views/components/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import { modifyData } from "../../../../../../redux/data";
+import { modifyData } from "@/views/redux/data";
 
 export default function ToggleToolbarButton() {
   const selected = useSelector((store) => store.data.chatBox.footer.toolbar);

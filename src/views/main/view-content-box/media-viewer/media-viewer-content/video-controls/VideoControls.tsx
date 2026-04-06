@@ -12,7 +12,7 @@ import SliderController from "./SliderController";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import VolumeButton from "./VolumeButton";
-import useVideoTimer from "../../../../../../hooks/useVideoTimer";
+import useVideoTimer from "@/hooks/useVideoTimer";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";
 import FullScreenHeader from "./FullScreenHeader";

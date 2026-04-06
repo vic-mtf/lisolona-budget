@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { CALL_CHANNEL } from "../../utils/broadcastChannel";
-import store from "../../redux/store";
+import { CALL_CHANNEL } from "@/utils/broadcastChannel";
+import store from "@/redux/store";
 
 const useBroadcastCall = () => {
   useEffect(() => {

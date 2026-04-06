@@ -1,5 +1,5 @@
 import { styled } from "@mui/material";
-import firaCode from "../../../../../../assets/FiraCode-VariableFont_wght.ttf";
+import firaCode from "@/assets/FiraCode-VariableFont_wght.ttf";
 
 const EditorStyledWrapper = styled("div")(({ theme }) => ({
   overflow: "hidden",

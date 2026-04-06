@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Box from '@mui/material/Box';
-import ListAvatar from '../../../../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 import { useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
-import getFullName from '../../../../../../utils/getFullName';
-// import { screenShareCompositor } from '../../../../../../utils/ScreenShareCompositor';
-import { canvasStreamComposer } from '../../../../../../utils/CanvasStreamComposer';
+import getFullName from '@/utils/getFullName';
+// import { screenShareCompositor } from '@/utils/ScreenShareCompositor';
+import { canvasStreamComposer } from '@/utils/CanvasStreamComposer';
 
 const LocalSmallViewItem = ({ onSelectView, selected }) => {
   const videoRef = useRef(null);

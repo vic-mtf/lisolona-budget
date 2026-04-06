@@ -11,7 +11,7 @@ import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSati
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import useSocket from '../../../../../hooks/useSocket';
+import useSocket from '@/hooks/useSocket';
 
 const ModerationOptions = () => {
   const socket = useSocket();

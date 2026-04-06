@@ -12,11 +12,11 @@ import { alpha } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
-import useLocalStoreData from "../../../../../../hooks/useLocalStoreData";
-import { streamSegmenterMediaPipe } from "../../../../../../utils/StreamSegmenterMediaPipe";
+import { updateConferenceData } from "@/redux/conference/conference";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import { streamSegmenterMediaPipe } from "@/utils/StreamSegmenterMediaPipe";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-import { axios } from "../../../../../../hooks/useAxios";
+import { axios } from "@/hooks/useAxios";
 import { useCallback } from "react";
 
 const ReplaceBackground = () => {

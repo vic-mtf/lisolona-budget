@@ -5,10 +5,10 @@ import ParticipantsHeader from './header/ParticipantsHeader';
 import ParticipantsContent from './content/ParticipantsContent';
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
-import deepMerge from '../../../../../utils/mergeDeep';
+import deepMerge from '@/utils/mergeDeep';
 import { useState } from 'react';
 import { useCallback } from 'react';
-import { filterByName } from '../../../../../utils/filterByKey';
+import { filterByName } from '@/utils/filterByKey';
 
 const Participants = forwardRef((_, ref) => {
   const [category, setCategory] = useState(null);

@@ -1,14 +1,14 @@
 import { Box, IconButton, Slide } from "@mui/material";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { updateData } from "../../../../../redux/data/data";
-import store from "../../../../../redux/store";
-import useSwipe from "../../../../../hooks/useSwipe";
+import { updateData } from "@/redux/data/data";
+import store from "@/redux/store";
+import useSwipe from "@/hooks/useSwipe";
 import NavigateNextOutlinedIcon from "@mui/icons-material/NavigateNextOutlined";
 import NavigateBeforeOutlinedIcon from "@mui/icons-material/NavigateBeforeOutlined";
 import ImageContent from "./ImageContent";
 import VideoContent from "./VideoContent";
-import useMessagingContext from "../../../../../hooks/useMessagingContext";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 const MediaViewerContent = React.memo(({ zoom }) => {
   const messageId = useSelector(

@@ -1,12 +1,12 @@
 import Fab from '@mui/material/Fab';
 import React, { useState } from 'react';
 import CallEndOutlinedIcon from '@mui/icons-material/CallEndOutlined';
-import ringtones from '../../../../../../utils/ringtones';
+import ringtones from '@/utils/ringtones';
 import { useRTCClient, useRTCScreenShareClient } from 'agora-rtc-react';
-import useSocket from '../../../../../../hooks/useSocket';
-import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
+import useSocket from '@/hooks/useSocket';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
 import { useDispatch, useSelector } from 'react-redux';
-import streamSegmenterMediaPipe from '../../../../../../utils/StreamSegmenterMediaPipe';
+import streamSegmenterMediaPipe from '@/utils/StreamSegmenterMediaPipe';
 import {} from 'react';
 import { Dialog } from '@mui/material';
 

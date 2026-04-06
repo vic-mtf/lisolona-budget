@@ -3,14 +3,14 @@ import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { motion } from "framer-motion";
 import useLocalStoreData, {
   useSmartKey,
-} from "../../../../../../../../hooks/useLocalStoreData";
-import { useSelectorMessage } from "../../../../../../../../hooks/useMessagingContext";
+} from "@/hooks/useLocalStoreData";
+import { useSelectorMessage } from "@/hooks/useMessagingContext";
 import { useState } from "react";
-import formatTime from "../../../../../../../../utils/formatTime";
+import formatTime from "@/utils/formatTime";
 import VideoContentLoading from "./VideoContentLoading";
-import useAxios from "../../../../../../../../hooks/useAxios";
+import useAxios from "@/hooks/useAxios";
 import { useLayoutEffect } from "react";
-import VideoSkeleton from "../../../../../../../../components/VideoSkeleton";
+import VideoSkeleton from "@/components/VideoSkeleton";
 
 const VideoContent = ({ content, id, onClick }) => {
   const { key } = useSmartKey({

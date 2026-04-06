@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import { Controller } from "react-hook-form";
-import getFile from "../../../../utils/getFile";
-import FormHelperErrorText from "../../../../components/FormHelperErrorText";
+import getFile from "@/utils/getFile";
+import FormHelperErrorText from "@/components/FormHelperErrorText";
 
 const CreateGroup = ({ register, control, errors }) => {
   return (

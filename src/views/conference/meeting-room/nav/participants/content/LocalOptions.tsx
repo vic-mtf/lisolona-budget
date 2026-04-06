@@ -12,7 +12,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 // import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import PinInvokeOutlinedIcon from "@mui/icons-material/PinInvokeOutlined";
 import { useDispatch, useSelector } from "react-redux";
-import { updateConferenceData } from "../../../../../../redux/conference/conference";
+import { updateConferenceData } from "@/redux/conference/conference";
 
 const LocalOptions = ({ onClose }) => {
   return (

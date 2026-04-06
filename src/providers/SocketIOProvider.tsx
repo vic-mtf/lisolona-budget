@@ -1,12 +1,11 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { io, type Socket } from "socket.io-client";
-import axiosConfig from "@/configs/axios-config.json";
 import { SocketIOContext } from "@/hooks/useSocket";
 import type { RootState } from "@/redux/store";
 
 const DEFAULT_OPTIONS = { transports: ["websocket"] as string[] };
-const BASE_URL = axiosConfig.baseURL;
+const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const Provider = SocketIOContext.Provider;
 let socketIO: Socket | null = null;

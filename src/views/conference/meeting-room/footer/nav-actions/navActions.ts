@@ -2,10 +2,10 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import Messages from '../../nav/messages/Messages';
-import Participants from '../../nav/participants/Participants';
-import Infos from '../../nav/Infos/Infos';
-import Admin from '../../nav/admin/Admin';
+import Messages from '@/views/conference/meeting-room/nav/messages/Messages';
+import Participants from '@/views/conference/meeting-room/nav/participants/Participants';
+import Infos from '@/views/conference/meeting-room/nav/Infos/Infos';
+import Admin from '@/views/conference/meeting-room/nav/admin/Admin';
 
 const navActions = [
   {

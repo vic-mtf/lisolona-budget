@@ -1,17 +1,17 @@
 import React, { useMemo } from "react";
 import { ListItem, ListItemAvatar, ListItemText, Toolbar } from "@mui/material";
-import ListAvatar from "../../../../components/ListAvatar";
-import useSmallScreen from "../../../../hooks/useSmallScreen";
-import capStr from "../../../../utils/capStr";
-import getFullName from "../../../../utils/getFullName";
-import { formatTime } from "../../../../utils/formatDate";
+import ListAvatar from "@/components/ListAvatar";
+import useSmallScreen from "@/hooks/useSmallScreen";
+import capStr from "@/utils/capStr";
+import getFullName from "@/utils/getFullName";
+import { formatTime } from "@/utils/formatDate";
 import { useSelector } from "react-redux";
 import ZoomButton from "./buttons/ZoomButton";
 import ScrollToMessageButton from "./buttons/ScrollToMessageButton";
 import CloseButton from "./buttons/CloseButton";
 import DeleteMediaButton from "./buttons/DeleteMediaButton";
 import DownloadMediaButton from "./buttons/DownloadMediaButton";
-import useMessagingContext from "../../../../hooks/useMessagingContext";
+import useMessagingContext from "@/hooks/useMessagingContext";
 
 const MediaViewerHeader = React.memo(({ onClose, zoom, toggleZoom }) => {
   const matches = useSmallScreen();

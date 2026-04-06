@@ -19,20 +19,20 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
-import Typography from '../../../components/Typography';
-import geid_logo from '../../../assets/geid_logo_white_without_title.webp';
-// import IconButton from "../../../components/IconButton";
-import appConfig from '../../../configs/app-config.json';
+import Typography from '@/components/Typography';
+import geid_logo from '@/assets/geid_logo_white_without_title.webp';
+// import IconButton from "@/components/IconButton";
+import appConfig from '@/configs/app-config.json';
 // import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import MoreOption from './shortcut/MoreOption';
 import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import ActionWrapper from './actions/ActionWrapper';
-import CustomBadge from '../../../components/CustomBadge';
-import store from '../../../redux/store';
+import CustomBadge from '@/components/CustomBadge';
+import store from '@/redux/store';
 import { isBoolean } from 'lodash';
-import observeLastModification from '../../../utils/observeLastModification';
-import db from '../../../database/db';
+import observeLastModification from '@/utils/observeLastModification';
+// import db from '@/database/db'; // TODO: database removed
 import countScheduleMeeting from './countScheduleMeeting';
 
 export default function Header({

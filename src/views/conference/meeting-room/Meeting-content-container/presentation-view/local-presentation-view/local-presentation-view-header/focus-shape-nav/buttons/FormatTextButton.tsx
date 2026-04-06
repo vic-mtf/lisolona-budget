@@ -9,7 +9,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import FormControl from "@mui/material/FormControl";
 import ToggleButton from "@mui/material/ToggleButton";
 import RootToggleButtonGroup from "./RootToggleButtonGroup";
-import { EVENT_NAMES } from "../../annotationStyles";
+import { EVENT_NAMES } from "@/views/conference/meeting-room/Meeting-content-container/presentation-view/local-presentation-view/local-presentation-view-header/annotationStyles";
 
 const FormatTextButtons = ({ shapeNode }) => {
   const [fontStyle, setFontStyle] = useState(

@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
-import Avatar from "../../../../components/Avatar";
-import CustomBadge from "../../../../components/CustomBadge";
-import useOnLine from "../../../../hooks/useOnLine";
-import getFullName from "../../../../utils/getFullName";
-import getShort from "../../../../utils/getShort";
-import { generateColorsFromId } from "../../../../utils/genColorById";
+import Avatar from "@/components/Avatar";
+import CustomBadge from "@/components/CustomBadge";
+import useOnLine from "@/hooks/useOnLine";
+import getFullName from "@/utils/getFullName";
+import getShort from "@/utils/getShort";
+import { generateColorsFromId } from "@/utils/genColorById";
 
 export default function AvatarProfile() {
   const user = useSelector((store) => store.user);

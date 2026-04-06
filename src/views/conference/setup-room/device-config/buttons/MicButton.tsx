@@ -9,7 +9,7 @@ import SplitButton from '../SplitButton';
 import { useDispatch, useSelector } from 'react-redux';
 import MicNoneOutlinedIcon from '@mui/icons-material/MicNoneOutlined';
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
-import useSmallScreen from '../../../../../hooks/useSmallScreen';
+import useSmallScreen from '@/hooks/useSmallScreen';
 import {
   Menu,
   Drawer,
@@ -22,11 +22,11 @@ import {
   Typography,
 } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import useLocalStoreData from '../../../../../hooks/useLocalStoreData';
-import { updateConferenceData } from '../../../../../redux/conference/conference';
-import { stopStream } from '../../../../../utils/getDevices';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
+import { updateConferenceData } from '@/redux/conference/conference';
+import { stopStream } from '@/utils/getDevices';
 import VolumeBar from '../VolumeBar';
-import { noiseSuppressor } from '../../../../../utils/NoiseSuppressor';
+import { noiseSuppressor } from '@/utils/NoiseSuppressor';
 
 const MicButton = ({ activateMic = true }) => {
   const [open, setOpen] = useState(false);

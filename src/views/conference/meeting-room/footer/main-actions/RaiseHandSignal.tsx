@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import BorderAnimated from "../../../../../components/BorderAnimated";
+import BorderAnimated from "@/components/BorderAnimated";
 
 const RaiseHandSignal = () => {
   const raiseHand = useSelector(

@@ -11,13 +11,13 @@ import {
 } from "@mui/material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import LinearProgressLayer from "../../../../components/LinearProgressLayer";
-import useAxios from "../../../../hooks/useAxios";
-import useToken from "../../../../hooks/useToken";
+import LinearProgressLayer from "@/components/LinearProgressLayer";
+import useAxios from "@/hooks/useAxios";
+import useToken from "@/hooks/useToken";
 import { Controller, useForm } from "react-hook-form";
 import CreateGroup from "./CreateGroup";
 import ContactList from "./ContactList";
-import store from "../../../../redux/store";
+import store from "@/redux/store";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import NavigationNextButton from "./NavigationNextButton";
 

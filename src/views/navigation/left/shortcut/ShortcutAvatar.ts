@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
-import Avatar from "../../../../components/Avatar";
-import { generateColorsFromId } from "../../../../utils/genColorById";
-import getShort from "../../../../utils/getShort";
-import useSocket from "../../../../hooks/useSocket";
+import Avatar from "@/components/Avatar";
+import { generateColorsFromId } from "@/utils/genColorById";
+import getShort from "@/utils/getShort";
+import useSocket from "@/hooks/useSocket";
 
 export default function ShortcutAvatar({ name, avatarSrc, id, len, title }) {
   const { background, text } = generateColorsFromId(id);

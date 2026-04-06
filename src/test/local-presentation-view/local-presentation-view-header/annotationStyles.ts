@@ -8,7 +8,7 @@ import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import CleaningServicesOutlinedIcon from "@mui/icons-material/CleaningServicesOutlined";
 import AutoFixHighOutlinedIcon from "@mui/icons-material/AutoFixHighOutlined";
 import DrawOutlinedIcon from "@mui/icons-material/DrawOutlined";
-import store from "../../../redux/store";
+import store from "@/redux/store";
 import {
   blue,
   cyan,

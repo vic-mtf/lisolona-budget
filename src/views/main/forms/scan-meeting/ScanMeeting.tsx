@@ -1,19 +1,19 @@
 import React, { useCallback, useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { IconButton, Box, Typography, Toolbar, Stack } from '@mui/material';
-import LinearProgressLayer from '../../../../components/LinearProgressLayer';
-import useAxios from '../../../../hooks/useAxios';
-import useToken from '../../../../hooks/useToken';
+import LinearProgressLayer from '@/components/LinearProgressLayer';
+import useAxios from '@/hooks/useAxios';
+import useToken from '@/hooks/useToken';
 import CodeScanner from './CodeScanner';
 import parseConferenceUrl, {
   checkPopupPermission,
-} from '../../../../utils/parseConferenceUrl';
-import { updateConferenceData } from '../../../../redux/conference/conference';
+} from '@/utils/parseConferenceUrl';
+import { updateConferenceData } from '@/redux/conference/conference';
 import { useDispatch, useSelector } from 'react-redux';
-import normalizeObjectKeys from '../../../../utils/normalizeObjectKeys';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { useNavigate } from 'react-router-dom';
-// import getLocalIP from '../../../../utils/getLocalIP';
+// import getLocalIP from '@/utils/getLocalIP';
 
 const ScanMeeting = React.memo(({ onClose, onFinish }) => {
   const connected = useSelector((store) => store.user.connected);

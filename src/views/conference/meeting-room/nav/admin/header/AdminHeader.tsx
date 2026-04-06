@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useDispatch } from 'react-redux';
-import { updateConferenceData } from '../../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 
 const AdminHeader = () => {
   const dispatch = useDispatch();

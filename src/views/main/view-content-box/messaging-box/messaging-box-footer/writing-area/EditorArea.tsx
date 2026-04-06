@@ -14,16 +14,16 @@ import { useEffect } from "react";
 import { EVENT_CHANGE_DATA } from "./buttons/buttons";
 import selectLink, { _SELECT_LINK_EVENT } from "./decorator/selectLink";
 import keyBindingFn from "./key-commands/keyBindingFn";
-import useSmallScreen from "../../../../../../hooks/useSmallScreen";
+import useSmallScreen from "@/hooks/useSmallScreen";
 import {
   _SEND_DATA_EVENT,
   convertToEditorState,
   isEditorStateEmpty,
   listenSendData,
 } from "./buttons/sendData";
-import VerticalCollapse from "../../../../../../components/VerticalCollapse";
+import VerticalCollapse from "@/components/VerticalCollapse";
 import { useSelector } from "react-redux";
-import store from "../../../../../../redux/store";
+import store from "@/redux/store";
 
 const EditorArea = React.memo(
   ({

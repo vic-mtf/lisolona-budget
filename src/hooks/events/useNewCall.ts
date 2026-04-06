@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { CALL_CHANNEL } from '../../utils/broadcastChannel';
-import NoticeSnack from '../../components/NoticeSnack';
+import { CALL_CHANNEL } from '@/utils/broadcastChannel';
+import NoticeSnack from '@/components/NoticeSnack';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
-import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
+import store from '@/redux/store';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import { setStatus } from '../../views/main/navigation/calls/groupCall';
-import getFullName from '../../utils/getFullName';
-import formatDate, { calculateDuration } from '../../utils/formatDate';
+import { setStatus } from '@/views/main/navigation/calls/groupCall';
+import getFullName from '@/utils/getFullName';
+import formatDate, { calculateDuration } from '@/utils/formatDate';
 import { Button } from '@mui/material';
-import ringtones, { vibrates } from '../../utils/ringtones';
+import ringtones, { vibrates } from '@/utils/ringtones';
 
 const useNewCall = () => {
   const socket = useSocket();

@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from 'react';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
+import store from '@/redux/store';
 import { useLocation } from 'react-router-dom';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import ringtones from '../../utils/ringtones';
-import normalizeObjectKeys from '../../utils/normalizeObjectKeys';
+import ringtones from '@/utils/ringtones';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 
 const useRemoteUserJoin = () => {
   const socket = useSocket();

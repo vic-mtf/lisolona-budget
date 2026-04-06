@@ -1,19 +1,19 @@
 import { Chip, Stack, Toolbar, Typography, Box } from '@mui/material';
 import filterCategory, { filterByCategory, sortbyKey } from './filterCategory';
 import { createElement, useState, useMemo, useCallback } from 'react';
-import InputSearch from '../../../../components/InputSearch';
+import InputSearch from '@/components/InputSearch';
 import { useSelector } from 'react-redux';
 import DiscussionItem from './DiscussionItem';
-import store from '../../../../redux/store';
-import { updateData } from '../../../../redux/data/data';
-import VirtualizedList from '../../../../components/VirtualizedList';
-import MenuItems from '../../../../components/MenuItems';
+import store from '@/redux/store';
+import { updateData } from '@/redux/data/data';
+import VirtualizedList from '@/components/VirtualizedList';
+import MenuItems from '@/components/MenuItems';
 import CreateDiscussionGroupButton from './CreateDiscussionGroupButton.';
-import toggleFullScreen from '../../../../utils/toggleFullscreen';
-import { filterByName } from '../../../../utils/filterByKey';
+import toggleFullScreen from '@/utils/toggleFullscreen';
+import { filterByName } from '@/utils/filterByKey';
 import { getFilteredMenuItems } from './discussionMenuItems';
-import getCoordContextMenu from '../../../../utils/getCoordContextMenu';
-import useSmallScreen from '../../../../hooks/useSmallScreen';
+import getCoordContextMenu from '@/utils/getCoordContextMenu';
+import useSmallScreen from '@/hooks/useSmallScreen';
 
 export default function Discussions() {
   const bulkDiscussions = useSelector((store) => store.data.app.discussions);

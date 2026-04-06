@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // import { TimeField } from "@mui/x-date-pickers/TimeField";
 import dayjs from 'dayjs';
 import { TimePicker } from '@mui/x-date-pickers';
-import scrollBarSx from '../../../../utils/scrollBarSx';
+import scrollBarSx from '@/utils/scrollBarSx';
 
 const TimeDurationMeeting = React.forwardRef(
   ({ error, onBlur, onChange, ...otherProps }, ref) => {

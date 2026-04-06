@@ -1,9 +1,9 @@
 import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
-import ListAvatar from '../../../../components/ListAvatar';
+import ListAvatar from '@/components/ListAvatar';
 import { useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
-import getFullName from '../../../../utils/getFullName';
-import normalizeObjectKeys from '../../../../utils/normalizeObjectKeys';
+import getFullName from '@/utils/getFullName';
+import normalizeObjectKeys from '@/utils/normalizeObjectKeys';
 
 export const ToolbarIdentity = () => {
   const { state } = useLocation();

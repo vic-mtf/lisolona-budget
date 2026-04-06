@@ -4,12 +4,12 @@ import Box from '@mui/material/Box';
 import { useLocation, useParams } from 'react-router-dom';
 import { useMemo, useRef } from 'react';
 import Button from '@mui/material/Button';
-import QRCodeBox from '../../../../../components/QRCodeBox';
+import QRCodeBox from '@/components/QRCodeBox';
 import CardActions from '@mui/material/CardActions';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import generateSVGImage from '../../../../../utils/generateQRImage';
-import createCallLink from '../../../../../utils/createCallLink';
+import generateSVGImage from '@/utils/generateQRImage';
+import createCallLink from '@/utils/createCallLink';
 import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 

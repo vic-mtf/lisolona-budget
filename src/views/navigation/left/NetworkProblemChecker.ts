@@ -1,8 +1,8 @@
-import useOnLine from "../../../hooks/useOnLine";
+import useOnLine from "@/hooks/useOnLine";
 import { Alert, Slide } from "@mui/material";
 import SignalWifiBadOutlinedIcon from "@mui/icons-material/SignalWifiBadOutlined";
 import { useEffect, useMemo } from "react";
-import useSocket from "../../../hooks/useSocket";
+import useSocket from "@/hooks/useSocket";
 
 export default function NetworkProblemChecker({ direction = "up" }) {
   const online = useOnLine();

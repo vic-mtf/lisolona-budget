@@ -6,10 +6,10 @@ import ArrowTool, { ArrowMark } from './figures/ArrowTool';
 import LineTool, { LineMark } from './figures/LineTool';
 import CircleTool, { CircleMark } from './figures/CircleTool';
 import TextTool from './others/TextTool';
-import store from '../../../../../../redux/store';
+import store from '@/redux/store';
 import { EVENT_NAMES } from './local-presentation-view-header/annotationStyles';
-import useDrawingStageRef from '../../../../../../hooks/useDrawingStageRef';
-import useLocalStoreData from '../../../../../../hooks/useLocalStoreData';
+import useDrawingStageRef from '@/hooks/useDrawingStageRef';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
 
 const DrawingArea = () => {
   const [getData, setData] = useLocalStoreData(

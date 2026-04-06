@@ -10,7 +10,10 @@ import { Box, Fade } from "@mui/material";
 import Cover from "@/views/cover/Cover";
 import { SIGN_IN_CHANNEL } from "@/utils/broadcastChannel";
 import ErrorNetwork from "@/components/ErrorNetwork";
+import SignInPage from "@/views/signin/SignInPage";
 import type { RootState } from "@/redux/store";
+
+const isSignInRoute = window.location.pathname.includes("/account/signin");
 
 export default function App() {
   const connected = useSelector((store: RootState) => store.user.connected);
@@ -33,6 +36,8 @@ export default function App() {
         SIGN_IN_CHANNEL.removeEventListener("message", handleAutoConnection);
     }
   }, [dispatch, connected]);
+
+  if (isSignInRoute) return <SignInPage />;
 
   return (
     <BoxGradient

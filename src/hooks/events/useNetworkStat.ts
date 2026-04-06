@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import useSocket from "../useSocket";
-import store from "../../redux/store";
+import store from "@/redux/store";
 import dayjs from "dayjs";
 
 const useNetworkStat = () => {

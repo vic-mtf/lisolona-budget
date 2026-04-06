@@ -2,14 +2,14 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { displays, filterByType, sortbyKey } from './filterCategory';
 import { useState, useMemo, useCallback } from 'react';
-import InputSearch from '../../../../components/InputSearch';
+import InputSearch from '@/components/InputSearch';
 import { useSelector } from 'react-redux';
-import store from '../../../../redux/store';
-import VirtualizedList from '../../../../components/VirtualizedList';
-import getFullName from '../../../../utils/getFullName';
+import store from '@/redux/store';
+import VirtualizedList from '@/components/VirtualizedList';
+import getFullName from '@/utils/getFullName';
 import DiscussionItem from './DiscussionItem';
 import SortButton from './SortButton';
-import { filterByName } from '../../../../utils/filterByKey';
+import { filterByName } from '@/utils/filterByKey';
 
 const DiscussionList = ({
   onClose,

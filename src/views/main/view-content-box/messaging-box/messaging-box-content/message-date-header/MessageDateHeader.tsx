@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, ListSubheader, Typography } from "@mui/material";
-import { formatTime } from "../../../../../../utils/formatDate";
+import { formatTime } from "@/utils/formatDate";
 
 const MessageDateHeader = React.memo(({ date }) => {
   return (

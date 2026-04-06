@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import Button from '@mui/material/Button'
-import db from "../../../../database/db";
+// import db from "@/database/db"; // TODO: database removed
 
 export default function Panel ({value, index, children, name, search}) {
     const data = useLiveQuery(() => db[name] )

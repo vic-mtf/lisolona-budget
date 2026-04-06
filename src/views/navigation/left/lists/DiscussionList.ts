@@ -7,16 +7,16 @@ import ChatContactItem from '../items/DiscussionItem'
 import { useSelector } from 'react-redux';
 import LoadingList from './LoadingList';
 import EmptyContentMessage from './EmptyContentMessage';
-import { addData } from '../../../../redux/data'
+import { addData } from '@/redux/data'
 import { useLiveQuery } from 'dexie-react-hooks';
-import db from '../../../../database/db';
-import CustomListItems from '../../../../components/CustomListItems';
-import filterByKeyword from '../../../../utils/filterByKeyword';
-import purifyObject from '../../../../utils/purifyObject';
+// import db from '@/database/db'; // TODO: database removed
+import CustomListItems from '@/components/CustomListItems';
+import filterByKeyword from '@/utils/filterByKeyword';
+import purifyObject from '@/utils/purifyObject';
 import SearchBar from '../SearchBar';
-import IconButton from '../../../../components/IconButton';
+import IconButton from '@/components/IconButton';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
-import store from '../../../../redux/store';
+import store from '@/redux/store';
 
 export default function DiscussionList ({navigation}) {
     const [search, setSearch] = useState('');

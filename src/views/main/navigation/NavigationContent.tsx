@@ -1,6 +1,6 @@
 import { Fade, Box } from '@mui/material';
 import tabs from './tabs';
-import useNavTab from '../../../hooks/useNavTab';
+import useNavTab from '@/hooks/useNavTab';
 import { createElement } from 'react';
 
 export default function NavigationContent() {

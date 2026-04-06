@@ -1,4 +1,4 @@
-import store from '../../../../redux/store';
+import store from '@/redux/store';
 import GradeOutlinedIcon from '@mui/icons-material/GradeOutlined';
 import GradeIcon from '@mui/icons-material/Grade';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -6,7 +6,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import { getDiscussionData } from '../discussions/discussionMenuItems';
-import { startNewCall } from '../../../../utils/handleStartNewCall';
+import { startNewCall } from '@/utils/handleStartNewCall';
 
 const menuItems = [
   {

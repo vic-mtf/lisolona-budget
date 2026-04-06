@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Box, Typography } from "@mui/material";
 import DOMPurify from "dompurify";
-import firaCode from "../../../../../../../assets/FiraCode-VariableFont_wght.ttf";
+import firaCode from "@/assets/FiraCode-VariableFont_wght.ttf";
 
 export default function MessageContentText({ content }) {
   const __html = useMemo(

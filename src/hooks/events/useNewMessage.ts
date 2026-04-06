@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import useSocket from '../useSocket';
-import store from '../../redux/store';
+import store from '@/redux/store';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import NoticeSnack from '../../components/NoticeSnack';
-import ringtones, { vibrates } from '../../utils/ringtones';
+import NoticeSnack from '@/components/NoticeSnack';
+import ringtones, { vibrates } from '@/utils/ringtones';
 
 const useNewMessage = () => {
   const socket = useSocket();

@@ -3,9 +3,9 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { alpha } from "@mui/material/styles";
 import React from "react";
-// import useLocalStoreData from "../../../../hooks/useLocalStoreData";
-import useAudioVolume from "../../../../hooks/useAudioVolume";
-import { noiseSuppressor } from "../../../../utils/NoiseSuppressor";
+// import useLocalStoreData from "@/hooks/useLocalStoreData";
+import useAudioVolume from "@/hooks/useAudioVolume";
+import { noiseSuppressor } from "@/utils/NoiseSuppressor";
 
 const VolumeBar = ({ rawStream, enabled }) => {
   const volume = useAudioVolume(

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Paper from "@mui/material/Paper";
 import RemoteParticipantView from "../remote-participant-view/RemoteParticipantView";
 import { useEffect } from "react";
-import store from "../../../../../redux/store";
+import store from "@/redux/store";
 const MotionPaper = motion.create(Paper);
 
 const SpeakerView = () => {

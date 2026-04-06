@@ -13,12 +13,12 @@ import {
 import VideocamOffOutlinedIcon from "@mui/icons-material/VideocamOffOutlined";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect, useState } from "react";
-import useLocalStoreData from "../../../../hooks/useLocalStoreData";
-import { updateConferenceData } from "../../../../redux/conference/conference";
+import useLocalStoreData from "@/hooks/useLocalStoreData";
+import { updateConferenceData } from "@/redux/conference/conference";
 import LensBlurOutlinedIcon from "@mui/icons-material/LensBlurOutlined";
 import BlurOffOutlinedIcon from "@mui/icons-material/BlurOffOutlined";
 import LayersClearOutlinedIcon from "@mui/icons-material/LayersClearOutlined";
-import { streamSegmenterMediaPipe } from "../../../../utils/StreamSegmenterMediaPipe";
+import { streamSegmenterMediaPipe } from "@/utils/StreamSegmenterMediaPipe";
 
 const CameraMirrorVideo = () => {
   const enabled = useSelector(

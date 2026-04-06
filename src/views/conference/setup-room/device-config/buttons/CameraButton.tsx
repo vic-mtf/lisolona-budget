@@ -19,12 +19,12 @@ import {
   Divider,
 } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import useSmallScreen from '../../../../../hooks/useSmallScreen';
-import useLocalStoreData from '../../../../../hooks/useLocalStoreData';
-import { updateConferenceData } from '../../../../../redux/conference/conference';
-import { stopStream } from '../../../../../utils/getDevices';
+import useSmallScreen from '@/hooks/useSmallScreen';
+import useLocalStoreData from '@/hooks/useLocalStoreData';
+import { updateConferenceData } from '@/redux/conference/conference';
+import { stopStream } from '@/utils/getDevices';
 import { useNotifications } from '@toolpad/core/useNotifications';
-import { streamSegmenterMediaPipe } from '../../../../../utils/StreamSegmenterMediaPipe';
+import { streamSegmenterMediaPipe } from '@/utils/StreamSegmenterMediaPipe';
 
 const CameraButton = ({ activateCam = true }) => {
   const [getData, setData] = useLocalStoreData('conference.setup.devices');

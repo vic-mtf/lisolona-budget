@@ -7,13 +7,13 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import useScrollEnd from "../../../../hooks/useScrollEnd";
-import Box from "../../../../components/Box";
+import useScrollEnd from "@/hooks/useScrollEnd";
+import Box from "@/components/Box";
 import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspaceOutlined";
-import useShadow from "../../../../hooks/useShadow";
-import IconButton from "../../../../components/IconButton";
+import useShadow from "@/hooks/useShadow";
+import IconButton from "@/components/IconButton";
 import InviteContactItem from "../items/InviteContactItem";
-import timeHumanReadable from "../../../../utils/timeHumanReadable";
+import timeHumanReadable from "@/utils/timeHumanReadable";
 import LoadingList from "./LoadingList";
 import EmptyContentMessage from "./EmptyContentMessage";
 import { useSelector } from "react-redux";

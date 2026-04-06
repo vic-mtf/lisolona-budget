@@ -8,7 +8,7 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
-import SplitButton from '../../../../../../../components/SplitButton';
+import SplitButton from '@/components/SplitButton';
 import annotationStyles, {
   findById,
   onChangeColor,
@@ -17,7 +17,7 @@ import annotationStyles, {
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateConferenceData } from '../../../../../../../redux/conference/conference';
+import { updateConferenceData } from '@/redux/conference/conference';
 import ColorIcon from './ColorIcon';
 import { useCallback } from 'react';
 

@@ -7,12 +7,12 @@ import {
   ListSubheader,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-import groupContact from '../../navigation/contacts/groupContacts';
-import InputSearch from '../../../../components/InputSearch';
-import VirtualizedList from '../../../../components/VirtualizedList';
-import ContactItem from '../../navigation/contacts/ContactItem';
-import ListAvatar from '../../../../components/ListAvatar';
-import { startNewCall } from '../../../../utils/handleStartNewCall';
+import groupContact from '@/views/main/navigation/contacts/groupContacts';
+import InputSearch from '@/components/InputSearch';
+import VirtualizedList from '@/components/VirtualizedList';
+import ContactItem from '@/views/main/navigation/contacts/ContactItem';
+import ListAvatar from '@/components/ListAvatar';
+import { startNewCall } from '@/utils/handleStartNewCall';
 
 const ContactList = ({ selectedContacts, setSelectedContacts }) => {
   const bulkContacts = useSelector((store) => store.data.app.contacts);

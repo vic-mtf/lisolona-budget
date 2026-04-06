@@ -1,8 +1,8 @@
 import { useRTCClient } from 'agora-rtc-react';
 import { useState, useEffect } from 'react';
 import { useMemo } from 'react';
-import store from '../../../../../redux/store';
-import useSocket from '../../../../../hooks/useSocket';
+import store from '@/redux/store';
+import useSocket from '@/hooks/useSocket';
 import { useSelector } from 'react-redux';
 
 let loading = false;

@@ -12,13 +12,13 @@ import {
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SignalWifiBadOutlinedIcon from '@mui/icons-material/SignalWifiBadOutlined';
-import { addData } from '../../../../redux/data';
-import InputCode from '../../../../components/InputCode';
-import useAxios from '../../../../hooks/useAxios';
-import useCustomSnackbar from '../../../../hooks/useSnackbar';
-import IconButton from '../../../../components/IconButton';
+import { addData } from '@/redux/data';
+import InputCode from '@/components/InputCode';
+import useAxios from '@/hooks/useAxios';
+import useCustomSnackbar from '@/hooks/useSnackbar';
+import IconButton from '@/components/IconButton';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import useHandleJoinMeeting from '../../../main/action/useHandleJoinMeeting';
+import useHandleJoinMeeting from '@/views/main/action/useHandleJoinMeeting';
 const _DIALOG_NAME = 'join-meeting-by-code';
 
 export default function JoinMeetingByCode() {

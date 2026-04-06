@@ -1,7 +1,7 @@
 import React from "react";
 import { ToggleButton, Tooltip, Box } from "@mui/material";
 import { EditorState } from "draft-js";
-import ToggleButtonGroup from "../../../../../../components/ToggleButtonGroup";
+import ToggleButtonGroup from "@/components/ToggleButtonGroup";
 import { createElement } from "react";
 import getStateToggleInlineStyle from "./buttons/getStateToggleInlineStyle";
 import { getStateToggleBlockStyle } from "./buttons/buttons";
